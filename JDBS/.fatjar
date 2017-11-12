@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu Dec 29 16:28:00 CST 2016
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=release\\jees.core.database.support.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|JDBSupport>~com/~jees/~test/;<po|JDBSupport>~jees-core-database.xml;<po|JDBSupport>~jees-database-testa.xml;<po|JDBSupport>~jees-database-testb.xml;<po|JDBSupport>~jta.properties;<po|JDBSupport>~log4j2.xml;<po|JDBSupport>~persistence-mysql.properties;<jar|junit.jar>;<jar|org.hamcrest.core_1.3.0.v201303031735.jar>;<jar|spring-aspects-4.2.0.RELEASE.jar>;<jar|spring-beans-4.2.0.RELEASE.jar>;<jar|spring-tx-4.2.0.RELEASE.jar>;<jar|spring-context-4.2.0.RELEASE.jar>;<jar|spring-core-4.2.0.RELEASE.jar>;<jar|spring-aop-4.2.0.RELEASE.jar>;<jar|spring-expression-4.2.0.RELEASE.jar>;<jar|hibernate-commons-annotations-4.0.5.Final.jar>;<jar|hibernate-core-4.3.11.Final.jar>;<jar|hibernate-jpa-2.1-api-1.0.0.Final.jar>;<jar|spring-test-4.2.0.RELEASE.jar>;<jar|commons-logging.jar>;<jar|aopalliance.jar>;<jar|atomikos-util-4.0.2.jar>;<jar|transactions-4.0.2.jar>;<jar|mysql-connector-5.1.8.jar>;<jar|spring-orm-4.2.0.RELEASE.jar>;<jar|dom4j-1.6.1.jar>;<jar|jboss-logging-3.1.3.GA.jar>;<jar|javassist-3.18.1-GA.jar>;<jar|antlr-2.7.7.jar>;<jar|transactions-jdbc-4.0.2.jar>;<jar|transactions-jta-4.0.2.jar>;<jar|transactions-api-4.0.2.jar>;<jar|jta-1.1.jar>;<jar|log4j-1.2-api-2.6.2.jar>;<jar|log4j-api-2.6.2.jar>;<jar|log4j-core-2.6.2.jar>
+includes=
