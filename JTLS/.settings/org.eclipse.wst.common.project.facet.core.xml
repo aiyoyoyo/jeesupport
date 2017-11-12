@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faceted-project>
+  <runtime name="com.genuitec.runtime.generic.jee70"/>
+  <fixed facet="java"/>
+  <installed facet="java" version="1.8"/>
+  <installed facet="maven.deps" version="1.0"/>
+  <installed facet="me.spring" version="4.1"/>
+</faceted-project>
