@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jees</groupId>
-	<artifactId>jtls</artifactId>
+	<artifactId>jees-jtls</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>JTLS</name>
+	<name>Java Tools Support</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -49,9 +49,9 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<sourceDirectory>X:\JTLS\src.tool</sourceDirectory>
-		<testSourceDirectory>X:\JTLS\src.test</testSourceDirectory>
-		<outputDirectory>X:\JTLS\target\classes</outputDirectory>
-		<testOutputDirectory>X:\JTLS\target\test-classes</testOutputDirectory>
+		<sourceDirectory>${basedir}\src.tool</sourceDirectory>
+		<testSourceDirectory>${basedir}\src.test</testSourceDirectory>
+		<outputDirectory>${basedir}\target\classes</outputDirectory>
+		<testOutputDirectory>${basedir}\target\test-classes</testOutputDirectory>
 	</build>
 </project>
