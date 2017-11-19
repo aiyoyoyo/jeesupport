@@ -12,7 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
  * A entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table ( name = "a" , catalog = "testa" )
+@Table( name = "a" , catalog = "testa" )
 public class TabA implements java.io.Serializable {
 
 	// Fields
@@ -20,8 +20,9 @@ public class TabA implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8191860597764392455L;
-	private Integer id;
+	private static final long	serialVersionUID	= 8191860597764392455L;
+	private Integer				id;
+	private String				str;
 
 	// Constructors
 
@@ -30,11 +31,11 @@ public class TabA implements java.io.Serializable {
 	}
 
 	// Property accessors
-	@GenericGenerator ( name = "generator" , strategy = "identity" )
+	@GenericGenerator( name = "generator" , strategy = "identity" )
 	@Id
-	@GeneratedValue ( generator = "generator" )
+	@GeneratedValue( generator = "generator" )
 
-	@Column ( name = "id" , unique = true , nullable = false )
+	@Column( name = "id" , unique = true , nullable = false )
 
 	public Integer getId() {
 		return this.id;
@@ -42,6 +43,16 @@ public class TabA implements java.io.Serializable {
 
 	public void setId( Integer id ) {
 		this.id = id;
+	}
+
+	@Column( name = "str" )
+
+	public String getStr() {
+		return str;
+	}
+
+	public void setStr( String str ) {
+		this.str = str;
 	}
 
 }
