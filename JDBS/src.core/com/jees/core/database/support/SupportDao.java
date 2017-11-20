@@ -58,7 +58,9 @@ public class SupportDao implements ISupportDao {
 	 */
 	@Override
 	public void insert( String _db , Object _entity ) {
-		getSession( _db ).save( _entity );
+		Session ses = getSession( _db );
+		ses.save( _entity );
+		ses.flush();
 	}
 
 	/**
