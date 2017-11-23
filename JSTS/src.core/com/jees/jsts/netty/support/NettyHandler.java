@@ -62,8 +62,9 @@ public class NettyHandler implements INettyHandler {
 	@Override
 	public void channelRead( ChannelHandlerContext _ctx , Object _obj ) throws Exception {
 		logger.debug( _handler_info( _ctx, "channelRead" ) ) ;
-
-		service.receive( _ctx , _obj ) ;
+		
+		if( _obj != null )
+			service.receive( _ctx , _obj ) ;
 	}
 
 	@Override
