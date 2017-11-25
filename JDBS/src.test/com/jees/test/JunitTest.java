@@ -16,8 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith( SpringJUnit4ClassRunner.class )
 @ContextConfiguration( locations = { "classpath:jees-core-database.xml" } )
-public class TestDatabase implements Runnable {
-	static Logger			logger	= LogManager.getLogger( TestDatabase.class );
+public class JunitTest implements Runnable {
+	static Logger			logger	= LogManager.getLogger( JunitTest.class );
 
 	public long				id;
 	public int				right;
@@ -26,35 +26,59 @@ public class TestDatabase implements Runnable {
 	public int				faild_r;
 
 	@Autowired
-	public DatabaseService	service;
+	public TestController	ctr;
 
-	/**
-	 * 单项测试
-	 */
-//	@Test
-	public void test1() {
-		logger.info( "----------------run test1 start---------------" );
+	@Test
+	public void ExTest() {
 		try {
-			// service.testInsertA0();
-			// service.testInsertB0();
-			// service.testInsertB1();
-			// service.testInsertB2();
-			// service.testInsertC0();
-			// service.testInsertAA0();
-			// service.testInsertAA1();
-			// service.testInsertAA2();
-			// service.testInsertAB0();
-			// service.testInsertAB1();
-			// service.testInsertAB2();
-			// service.testUpdateA0();
-			// service.testUpdateA1();
-			// service.testUpdateA2();
-			// service.testUpdateA3();
-			// service.testUpdateA4();
-			// service.testUpdateA5();
-			// service.testDeleteA0();
-			// service.testDeleteA1();
-			// service.testSelectA0();
+			ctr.insertA();
+		} catch ( Exception e ) {}
+		try {
+			ctr.insertATransSucc();
+		} catch ( Exception e ) {}
+		try {
+			ctr.insertATransFail();
+		} catch ( Exception e ) {}
+		try {
+			ctr.updateA();
+		} catch ( Exception e ) {}
+		try {
+			ctr.updateATransSucc();
+		} catch ( Exception e ) {}
+		try {
+			ctr.updateATransFail();
+		} catch ( Exception e ) {}
+		try {
+			ctr.deleteA();
+		} catch ( Exception e ) {}
+		try {
+			ctr.deleteATransSucc();
+		} catch ( Exception e ) {}
+		try {
+			ctr.deleteATransFail();
+		} catch ( Exception e ) {}
+	}
+
+	@Test
+	public void ExMoreDBTest() {
+		try {
+			ctr.insertAB();
+		} catch ( Exception e ) {}
+		try {
+			ctr.insertABTransSucc();
+		} catch ( Exception e ) {}
+		try {
+			ctr.insertABTransFail();
+		} catch ( Exception e ) {}
+		try {
+			ctr.otherTest();
+		} catch ( Exception e ) {}
+	}
+
+	@Test
+	public void test1() {
+		try {
+			ctr.insertAB();
 		} catch ( RuntimeException e ) {
 			String str = e.toString();
 
@@ -76,14 +100,14 @@ public class TestDatabase implements Runnable {
 	/**
 	 * 并发测试。1000个线程各100次访问。
 	 */
-	 @Test
+	@Test
 	public void test2() {
 		logger.debug( "----------------run test2 start---------------" );
 		for ( int i = 0; i < 1000; i++ ) {
-			TestDatabase t = new TestDatabase();
-			t.id = i;
-			t.service = service;
-			new Thread( t ).start();
+			 JunitTest t = new JunitTest();
+			 t.id = i;
+			 t.ctr = ctr;
+			 new Thread( t ).start();
 		}
 
 		// 这里是主应用程序,多长时间后一定结束。
@@ -93,70 +117,14 @@ public class TestDatabase implements Runnable {
 		logger.debug( "----------------run test2 end---------------" );
 	}
 
-	public void testRun() {
-		int run = new java.util.Random().nextInt( 15 );
-
-		switch ( run ) {
-			case 0:
-				service.testInsertA0();
-				break;
-			case 1:
-				service.testInsertB0();
-				break;
-			case 2:
-				service.testInsertB1();
-				break;
-			case 3:
-				service.testInsertC0();
-				break;
-			case 4:
-				service.testInsertAA0();
-				break;
-			case 5:
-				service.testInsertAA1();
-				break;
-			case 6:
-				service.testInsertAA2();
-				break;
-			case 7:
-				service.testInsertAB0();
-				break;
-			case 8:
-				service.testInsertAB1();
-				break;
-			case 9:
-				service.testInsertAB2();
-				break;
-			case 10:
-				service.testUpdateA0();
-				break;
-			case 11:
-				service.testUpdateA1();
-				break;
-			case 12:
-				service.testUpdateA2();
-				break;
-			case 13:
-				service.testDeleteA0();
-				break;
-			case 14:
-				service.testDeleteA1();
-				break;
-			case 15:
-				service.testSelectA0();
-				break;
-		}
-	}
-
 	@Override
 	public void run() {
 		int c = 0;
 		while ( c < 100 ) {
 			try {
 				Thread.sleep( 30 );
-
-				testRun();
-
+				if( c % 2 == 0 ) ExTest();
+				else ExMoreDBTest();
 				right++;
 			} catch ( ArithmeticException e ) {
 				// 这里可以认为是正确，程序代码逻辑错误导致运算异常，比如 变量除以零
@@ -165,12 +133,12 @@ public class TestDatabase implements Runnable {
 				faild_i++;
 			} catch ( RuntimeException e ) {
 				faild_r++;
-			} catch ( Exception e ) {
-			} finally {
+			} catch ( Exception e ) {} finally {
 				c++;
 			}
 		}
 
-		logger.info( "Thread[" + id + "] 统计的总数 错误(线程/事件/逻辑) / 成功 : " + faild_i + ":" + faild_r + "/" + faild_a + ":" + right );
+		logger.info( "Thread[" + id + "] 统计的总数 错误(线程/事件/逻辑) / 成功 : " + faild_i + ":" + faild_r + "/" + faild_a + ":"
+				+ right );
 	}
 }
