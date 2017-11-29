@@ -16,16 +16,6 @@ public interface ISupportDao {
 	int		DEFAULT_LIMIT	= 1000;
 	int		DEFAULT_FIRST	= 0;
 	int		DEFAULT_FLUSH	= 100;
-	boolean	FINISH_CLOSE	= true;
-	boolean	FINISH_FLUSH	= false;
-
-	void beging( String... _dbs );
-
-	void finish();
-
-	void finish( boolean _close );
-
-	void flush( boolean _close );
 
 	void insert( String _db , Object _entity );
 

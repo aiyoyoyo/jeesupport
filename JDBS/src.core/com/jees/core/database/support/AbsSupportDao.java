@@ -23,10 +23,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 	/**
 	 * 从配置文件中获取数据库链接对象。
 	 */
-	@Resource( name = DEFAULT_SFMAP )
-	private HashMap< String , SessionFactory >	sessionFactoryMap;
 
-	private HashMap< String , Session >			sessionMap	= new HashMap<>();
+	private static HashMap< String , SessionFactory >	sessionFactoryMap;
+
+	@Resource( name = DEFAULT_SFMAP )
+	protected void setSessionFactoryMap( HashMap< String , SessionFactory > sessionFactoryMap ) {
+		AbsSupportDao.sessionFactoryMap = sessionFactoryMap;
+	}
 
 	protected Session _open_session( String _db ) {
 		if ( sessionFactoryMap.containsKey( _db ) ) {
@@ -38,51 +41,19 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	protected Session _get_session( String _db ) {
-		if ( sessionMap.containsKey( _db ) ) {
-			Session sess = sessionMap.get( _db );
-			return sess;
+		if ( sessionFactoryMap.containsKey( _db ) ) {
+			SessionFactory sessFactory = sessionFactoryMap.get( _db );
+			if( sessFactory.isClosed()) return sessFactory.openSession();
+			return sessFactory.getCurrentSession();
 		}
 
-		throw new NullPointerException( "没有找到数据库[" + _db + "]的对应Session容器，请确认是否执行了beging()。" );
+		throw new NullPointerException( "没有找到数据库[" + _db + "]的对应Session容器，请检查配置文件中的[ " + DEFAULT_SFMAP + " ]是否正确。" );
 	}
 
 	protected void _flush_session( Session _sess ) {
-		if( _sess == null ) return;
+		if ( _sess == null ) return;
 		_sess.flush();
 		_sess.clear();
-	}
-
-	@Override
-	public void beging( String... _dbs ) {
-		finish( true );
-
-		for ( String db : _dbs ) {
-			Session sess = _open_session( db );
-			sessionMap.put( db , sess );
-		}
-	}
-
-	@Override
-	public void finish() {
-		finish( FINISH_CLOSE );
-	}
-
-	@Override
-	public void finish( boolean _close ) {
-		if ( sessionMap == null ) return;
-
-		flush( _close );
-
-		if ( _close ) sessionMap = new HashMap< String , Session >();
-	}
-
-	@Override
-	public void flush( boolean _close ) {
-		sessionMap.values().forEach( s -> {
-			s.flush();
-			s.clear();
-			if ( _close ) s.close();
-		} );
 	}
 
 	// insert /////////////////////////////////////////////////////////////
@@ -90,7 +61,6 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public void insert( String _db , Object _entity ) {
 		Session ses = _get_session( _db );
 		ses.save( _entity );
-		ses.flush();
 	}
 
 	@Override
@@ -118,7 +88,6 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public void delete( String _db , Object _entity ) {
 		Session ses = _get_session( _db );
 		ses.delete( _entity );
-		ses.flush();
 	}
 
 	@Override
@@ -146,7 +115,6 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public void update( String _db , Object _entity ) {
 		Session ses = _get_session( _db );
 		ses.update( _entity );
-		ses.flush();
 	}
 
 	@Override
@@ -209,7 +177,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
-			Class< T > _cls ) {
+					Class< T > _cls ) {
 		Session sess = _get_session( _db );
 		Query query = sess.createQuery( _hql );
 		query.setFirstResult( _first );
@@ -228,7 +196,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Object[] _param ,
-			Class< T > _cls ) {
+					Class< T > _cls ) {
 		Session sess = _get_session( _db );
 		Query query = sess.createSQLQuery( _sql );
 		query.setFirstResult( _first );
@@ -261,13 +229,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	public int executeByHQL( String _db , String _hql , Object[] _param ) {
 		Session sess = _get_session( _db );
-		try{
+		try {
 			Query query = _get_session( _db ).createQuery( _hql );
 			int i = 0;
 			if ( _param != null ) for ( Object o : _param )
 				query.setParameter( i++ , o );
 			return query.executeUpdate();
-		}finally{
+		} finally {
 			_flush_session( sess );
 		}
 	}
@@ -275,13 +243,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	public int executeBySQL( String _db , String _sql , Object[] _param ) {
 		Session sess = _get_session( _db );
-		try{
+		try {
 			Query query = _get_session( _db ).createSQLQuery( _sql );
 			int i = 0;
 			if ( _param != null ) for ( Object o : _param )
 				query.setParameter( i++ , o );
 			return query.executeUpdate();
-		}finally{
+		} finally {
 			_flush_session( sess );
 		}
 	}

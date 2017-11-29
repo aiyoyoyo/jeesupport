@@ -1,5 +1,7 @@
 package com.jees.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,7 @@ public class TestController {
 		TabA a = new TabA();
 		a.setStr( System.currentTimeMillis() + "" );
 
-		ex.beging( DB_A );
-
 		ex.insert( DB_A , a );
-
-		ex.finish( ExtendDao.FINISH_CLOSE );
 	}
 
 	@Transactional
@@ -44,15 +42,11 @@ public class TestController {
 	}
 
 	public void updateA() {
-		ex.beging( DB_A );
-
 		TabA a = ex.select( DB_A , TabA.class ).get( 0 );
 
 		a.setStr( a.getStr() + " change" );
 
 		ex.update( DB_A , a );
-
-		ex.finish( ExtendDao.FINISH_CLOSE );
 	}
 
 	@Transactional
@@ -69,13 +63,9 @@ public class TestController {
 	}
 
 	public void deleteA() {
-		ex.beging( DB_A );
-
 		TabA a = ex.select( DB_A , TabA.class ).get( 0 );
 
 		ex.delete( DB_A , a );
-
-		ex.finish( ExtendDao.FINISH_CLOSE );
 	}
 
 	@Transactional
@@ -92,8 +82,6 @@ public class TestController {
 	}
 
 	public void insertAB() {
-		ex.beging( DB_A , DB_B );
-
 		TabA a = new TabA();
 		a.setStr( System.currentTimeMillis() + "" );
 
@@ -103,8 +91,6 @@ public class TestController {
 		b.setNum( new Random().nextInt() );
 
 		ex.insert( DB_B , b );
-
-		ex.finish( ExtendDao.FINISH_CLOSE );
 	}
 
 	@Transactional
@@ -119,11 +105,29 @@ public class TestController {
 		@SuppressWarnings( "unused" )
 		int n = 1 / 0;
 	}
-
+	
+	@Transactional
+	public void insertAList(){
+		List<TabA> list =new ArrayList<>();
+		
+		for( int i = 0; i < 5; i++ ){
+			list.add( new TabA() );
+		}
+		
+		ex.insertAll( DB_A , list );
+		
+		@SuppressWarnings( "unused" )
+		int n = 1/ 0;
+	}
+	
+	@Transactional
+	public void selectA(){
+		System.out.println( "--SELECT ID:" + ex.selectById( DB_A , TabA.class , 1 ) );
+	}
+	
 	@Transactional
 	public void otherTest() {
-		ex.beging( DB_A , DB_B );
-
+		ex.insert( DB_A , new TabA() );
 		System.out.println( "--SELECT ID:" + ex.selectById( DB_A , TabA.class , 1 ) );
 		System.out.println( "--EXECUTE HQL:"
 				+ ex.executeByHQL( DB_A , "UPDATE TabA SET str = ? WHERE id = ?" , new Object [] { "change" , 1 } ) );
@@ -132,7 +136,22 @@ public class TestController {
 		System.out.println( "--SELECT COUNT:" + ex.selectCount( DB_A , TabA.class ) );
 		System.out.println(
 				"--SELECT COUNT SQL:" + ex.selectCount( DB_A , "SELECT count( * ) FROM TabA WHERE str like 'change%'" , null ) );
-		
-		ex.finish( ExtendDao.FINISH_CLOSE );
+		@SuppressWarnings( "unused" )
+		int n = 1 / 0;
+	}
+	@Transactional
+	public void moreThreadTestA(){
+		insertA();
+	}
+	@Transactional
+	public void moreThreadTestB(){
+		updateA();
+		TabB b = new TabB();
+		b.setNum( new Random().nextInt() );
+		ex.insert( DB_B , b );
+	}
+	@Transactional
+	public void moreThreadTestC(){
+		deleteA();
 	}
 }
