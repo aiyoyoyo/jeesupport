@@ -3,7 +3,7 @@
 
 	<properties>
 		<property name="LOG_HOME">logs</property>
-		<property name="FILE_NAME">jtls</property>
+		<property name="FILE_NAME">jees-jtls</property>
 	</properties>
 
 	<Appenders>
