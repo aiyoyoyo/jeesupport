@@ -47,6 +47,13 @@ public class CommonConfig {
 			return 0.f;
 		}
 	}
+	public static long	getLong( String _key ){
+		try{
+			return Long.parseLong( getString( _key ) );
+		}catch (Exception e) {
+			return 0L;
+		}
+	}
 	public static boolean getEquals( String _key, String _word ){
 		String val = getString( _key );
 		return val.equalsIgnoreCase( _word );
