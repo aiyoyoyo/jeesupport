@@ -21,7 +21,7 @@
 		<!-- jees -->
 		<dependency>
 			<groupId>com.jees</groupId>
-			<artifactId>jtls</artifactId>
+			<artifactId>jees-jtls</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- junit -->
