@@ -44,8 +44,10 @@ public interface ISupportDao {
 	< T > T selectById( String _db , Class< T > _cls , Serializable _id );
 
 	< T > List< T > selectByExample( String _db , Object _entity );
-
+	
 	< T > List< T > selectByHQL( String _db , String _hql , Object[] _param , Class< T > _cls );
+	
+	< T > List< T > selectByHQL( String _db , String _hql , String[] _param , Object[] _value, Class< T > _cls );
 
 	< T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
 			Class< T > _cls );

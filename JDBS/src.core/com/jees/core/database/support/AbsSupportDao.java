@@ -1,6 +1,7 @@
 package com.jees.core.database.support;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -173,7 +174,26 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > selectByHQL( String _db , String _hql , Object[] _param , Class< T > _cls ) {
 		return selectByHQL( _db , _hql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _cls );
 	}
-
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public < T > List< T > selectByHQL( String _db , String _hql , String[] _param , Object[] _value, Class< T > _cls ){
+		Session sess = _get_session( _db );
+		try {
+			Query query = _get_session( _db ).createQuery( _hql );
+			if ( _param != null && _value != null ) {
+				for( int i = 0; i < _param.length; i ++ ){
+					if( _value[i] instanceof Collection )
+						query.setParameterList( _param[i] , ( Collection<?> ) _value[i] );
+					else
+						query.setParameter( _param[i] ,_value[i] );
+				}
+			}
+				
+			return query.list();
+		} finally {
+			_flush_session( sess );
+		}
+	}
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
@@ -239,7 +259,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 			_flush_session( sess );
 		}
 	}
-
+	
 	@Override
 	public int executeBySQL( String _db , String _sql , Object[] _param ) {
 		Session sess = _get_session( _db );
