@@ -2,11 +2,11 @@ package com.jees.test;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//import org.springframework.test.context.ContextConfiguration;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * 测试方法,执行日志默认在工程目录/logs下
@@ -14,8 +14,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author aiyoyoyo
  * 
  */
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = { "classpath:jees-core-database.xml" } )
+//@RunWith( SpringJUnit4ClassRunner.class )
+//@ContextConfiguration( locations = { "classpath:jees-core-database.xml" } )
 public class JunitTest implements Runnable {
 	static Logger			logger	= LogManager.getLogger( JunitTest.class );
 
@@ -96,7 +96,7 @@ public class JunitTest implements Runnable {
 	/**
 	 * 并发测试。1000个线程各100次访问。
 	 */
-	 @Test
+//	 @Test
 	public void test2() {
 		logger.debug( "----------------run test2 start---------------" );
 		for ( int i = 0; i < 30; i++ ) {
