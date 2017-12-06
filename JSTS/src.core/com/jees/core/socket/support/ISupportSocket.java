@@ -7,11 +7,13 @@ package com.jees.core.socket.support;
  *
  */
 public interface ISupportSocket {
-
+	
+	/** 显示用端口 **/
 	public String	SOCKET_PORT0	= "socket.port0";
+	/** 显示用地址 **/
 	public String	SOCKET_HOST0	= "socket.host0";
+	/** 服务端口 **/
 	public String	SOCKET_PORT1	= "socket.port1";
-	public String	SOCKET_SUPER	= "supportSocket";
 	/**
 	 * 服务加载
 	 */

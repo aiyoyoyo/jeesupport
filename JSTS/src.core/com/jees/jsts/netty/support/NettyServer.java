@@ -20,8 +20,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel ;
  * @author aiyoyoyo
  *
  */
-@Component( value = ISupportSocket.SOCKET_SUPER )
-public class NettyServer extends AbsSupportSocket implements Runnable{
+@Component
+public class NettyServer extends AbsSupportSocket implements ISupportSocket, Runnable{
 	private static Logger		logger	= LogManager.getLogger( NettyServer.class ) ;
 	private EventLoopGroup		boss ;
 	private EventLoopGroup		work ;

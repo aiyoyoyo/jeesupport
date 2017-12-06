@@ -11,6 +11,6 @@ public class Start {
 	@SuppressWarnings( "resource" )
 	public static void main( String[] args ) {
 		new ClassPathXmlApplicationContext( ICommonConfig.CFG_DEFAULT ) ;
-		((ISupportSocket) CommonContextHolder.getBean( ISupportSocket.SOCKET_SUPER ) ).onload();
+		CommonContextHolder.getBean( ISupportSocket.class ).onload();
 	}
 }

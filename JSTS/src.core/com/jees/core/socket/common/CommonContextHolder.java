@@ -1,6 +1,7 @@
 package com.jees.core.socket.common ;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager ;
 import org.apache.logging.log4j.Logger ;
@@ -38,18 +39,19 @@ public class CommonContextHolder implements ApplicationContextAware {
 	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
 	 */
 	@SuppressWarnings( "unchecked" )
-	public static < T > T getBean( String name ) {
+	public static < T > T getBean( String _name ) {
 		_check_application_context() ;
-		return ( T ) applicationContext.getBean( name ) ;
+		return ( T ) applicationContext.getBean( _name ) ;
 	}
 
 	/**
 	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
 	 */
-	@SuppressWarnings( "unchecked" )
-	public static < T > T getBean( Class< T > clazz ) {
+	public static < T > T getBean( Class< T > _cls ) {
 		_check_application_context() ;
-		return ( T ) applicationContext.getBeansOfType( clazz ) ;
+		Collection< T > beans = applicationContext.getBeansOfType( _cls ).values();
+		if( beans.size() != 1 ) throw new RuntimeException( _cls.getName() + "没有注入或者注入了多个对象。" );
+		return beans.iterator().next() ;
 	}
 
 	/**

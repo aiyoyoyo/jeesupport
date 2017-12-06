@@ -13,48 +13,53 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CommonConfig {
-	
-	private static Properties	defineConfig;
-	
+
+	private static Properties defineConfig;
+
 	@Autowired
 	protected void setDefineConfig( Properties defineConfig ) {
 		CommonConfig.defineConfig = defineConfig;
 	}
-	
+
 	public static String get( String _key ) {
 		return defineConfig.getProperty( _key );
 	}
-	
-	public static String getString( String _key ){
+
+	public static String getString( String _key ) {
 		String val = defineConfig.getProperty( _key );
 		return val == null ? "" : val;
 	}
-	public static boolean getBoolean( String _key ){
+
+	public static boolean getBoolean( String _key ) {
 		String val = getString( _key );
 		return val.equalsIgnoreCase( "true" ) ? true : false;
 	}
-	public static int getInteger( String _key ){
-		try{
+
+	public static int getInteger( String _key ) {
+		try {
 			return Integer.parseInt( getString( _key ) );
-		}catch (Exception e) {
+		} catch ( Exception e ) {
 			return 0;
 		}
 	}
-	public static float getFloat( String _key ){
-		try{
+
+	public static float getFloat( String _key ) {
+		try {
 			return Float.parseFloat( getString( _key ) );
-		}catch (Exception e) {
+		} catch ( Exception e ) {
 			return 0.f;
 		}
 	}
-	public static long	getLong( String _key ){
-		try{
+
+	public static long getLong( String _key ) {
+		try {
 			return Long.parseLong( getString( _key ) );
-		}catch (Exception e) {
+		} catch ( Exception e ) {
 			return 0L;
 		}
 	}
-	public static boolean getEquals( String _key, String _word ){
+
+	public static boolean getEquals( String _key , String _word ) {
 		String val = getString( _key );
 		return val.equalsIgnoreCase( _word );
 	}

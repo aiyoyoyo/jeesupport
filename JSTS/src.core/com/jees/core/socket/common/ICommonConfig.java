@@ -7,8 +7,5 @@ package com.jees.core.socket.common ;
  *
  */
 public interface ICommonConfig {
-
 	public String	CFG_DEFAULT	= "classpath*:jees-core-dispatcher.xml" ;
-
-	public String	DB_DEFAULT	= "default" ;
 }
