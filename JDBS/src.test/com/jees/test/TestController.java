@@ -81,6 +81,7 @@ public class TestController {
 		int n = 1 / 0;
 	}
 
+	@Transactional
 	public void insertAB() {
 		TabA a = new TabA();
 		a.setStr( System.currentTimeMillis() + "" );
