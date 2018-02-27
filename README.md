@@ -1,38 +1,6 @@
-# Jeesupport½éÉÜ
-
-ÕâÀïÊÇÁÐ±íÎÄ±¾Jeesupport£¬ÒÔÏÂ¼ò³ÆJEES£¬ÊÇÎÒÔÚ¿ª·¢¹ý³ÌÖÐ»ýÀÛµÄ¶à¸ö·½ÃæµÄÓ¦ÓÃ¿ò¼Ü¼¯ºÏ¡£
-
-Éæ¼°µÄÄÚÈÝ±È½Ï¶à£¬ÏÖÔÚ·ÖÏí¸ø¸÷Î»¹ã´óÕýÔÚÑ§Ï°ºÍÊ¹ÓÃJava¿ª·¢ÕßÃÇ¡£Ï£ÍûÄãÃÇÄÜÔÚÕâÀï»ñµÃÄãÏëÒªµÄÄÚÈÝºÍ°ïÖú¡£
-
-JEESºËÐÄÄÚÈÝÓÉSpring¹¹³É£¬±¾À´ÏëÌùÏÂ¿ò¼ÜµÄ½á¹¹Í¼µÄ£¬µ«×Ô¼ºÈÏÎª²»×¨Òµ£¬ËùÒÔÃ»ÓÐ·ÅÉÏÀ´¡£ÓÐÊ±¼äºóÃæ²¹ÉÏ¡£
-
-»ùÓÚJEES¿ª·¢Ê±£¬ÎÒÊ¹ÓÃÁË´óÁ¿µÄ×¢ÈëºÍ×¢½â£¬²¢¹æ»®ÁËÒ»²¿·ÖÔ¼¶¨ºÍ¿ò¼Ü·ÖÀà¡£³õÊ¼µÄÄ¿µÄÊÇÎªÁËWebÏîÄ¿·þÎñ£¬ËùÒÔÊÇJEE¿ªÍ·,µ«ÓÉÓÚJEEÌåÏµÉæ¼°µÄÄÚÈÝÌ«ÅÓ´óºÍ·±¶à£¬ËùÒÔÏÖÔÚÔÚÕûÀíºÍÐÞ¸ÄÖ÷Ìå´úÂëÖÐ¡£
-
-Éæ¼°µÄÄÚÈÝÓÐ£ºÇ°¶Ë¿ª·¢¿ò¼ÜJEESJS¡¢ÖÐ¼ä¼þJEESºÍJSTS¡¢ºó¶Ë¿ª·¢JDBS¡¢¹¤¾ß°üJTLS¡£Ã¿¸ö²¿·Ö¶¼¿ÉÒÔ¶ÀÁ¢Ê¹ÓÃ£¬ºÍ¸ù¾ÝÐèÒªÀ©Õ¹¡£×öÕâ¸öµÄÊ±ºò£¬Ò²ËÑ¼¯ÁË²»ÉÙµÄ×ÊÁÏ£¬ÒÔ±ã¿ò¼ÜÊÊÓÃÓÚ¸´ÔÓµÄ³¡¾°¡£Ä¿Ç°·ÅÉÏÀ´µÄÄÚÈÝÊÇÎÒÈÏÎªÏà¶Ô¶ÀÁ¢ºÍÍêÉÆµÄ²¿·Ö¡£
-
-# JEESÄÚÈÝ¼ò½é£¨ÓÉÏÂÍùÉÏ£©
- **JTLS**      ¹¤¾ß°ü£¬Ìá¹©ÁËÒ»Ð©¾­³£»áÓÃµ½µÄ¹¤¾ßÀà»òËã·¨£¬´ýÍêÉÆ¡£
-
- **JDBS**      Êý¾Ý¿â°ü£¬Ìá¹©ÁË»ùÓÚAtomikosµÄ·Ö²¼Ê½Êý¾Ý¿â½â¾ö·½°¸£¬²àÖØµãÔÚÓÚ¹æ»®ÁËÅäÖÃ·½Ê½ºÍDao²ãµÄ´úÂë½á¹¹¡£Ä¿Ç°ºó¶ËÊ¹ÓÃµÄHibernate×÷ÎªÊý¾Ý¿âÖ§³Ö¡£ºóÐø¿ÉÄÜ»áÔö¼ÓMybaitsÒÔ¼°²»Í¬Êý¾Ý¿âµÄÅäÖÃ·½°¸¡£
-
- **JEES**      J2EE°ü£¬Ìá¹©ÁË»ùÓÚSpringMVCµÄWeb¿ª·¢·½°¸£¬¹æ»®ÁËÍøÕ¾·ÃÎÊ½á¹¹£¬ºÍÏà¹ØµÄ³£ÓÃÈë¿Ú¡£ºó¶ËÊ¹ÓÃÁËJDBS×÷ÎªÊý¾Ý¿âÖ§³Ö£¬Ç°¶ËÊ¹ÓÃÁËThymeleaf¡£ 
-
-¸öÈËÈÏÎªÕâ¸ö½á¹¹ÊÊºÏ´ó¶àÊýÖÐÐ¡ÀàÐÍµÄÍøÕ¾¿ª·¢£¬³ýÁËThymeleafÊÇÎÒÕâ¼¸Äê¼ÓÈëµÄ£¬ÕûÌå½á¹¹´ÓSpring2.0¾Í¿ªÊ¼Éè¼ÆÁË£¬Öð½¥µ½ÏÖÔÚµÄSpring4.0£¬ÎªÁË±£Ö¤ÏîÄ¿ÄÜÏòÇ°¼æÈÝ£¬ËùÓÚµÚÈý·½¿âÐÂµÄ°æ±¾ÒýÈëµÄÂý¡£
-
-ÀýÈçJDBSÖÁ½ñÎÒÃ»ÓÐÉý¼¶µ½Spring5£¬ÒòÎª±ä»¯Ì«´ó£¬´ýµ÷ÕûµÄµØ·½Ì«¶à¡£ÁíÍâ²¹³äÒ»ÏÂ£¬×÷ÎªWeb¿ª·¢ÖÐÓÃµ½µÄAjax£¬ÎÒÒýÈëÁËdwr°ü¡£ÎÒ¾õµÃÔÚ³£¹æ¿ª·¢ÖÐ£¬Dwr¼ò»¯ÁË¶ÔjsonµÄ´¦Àí£¬Ò²¼ò»¯ÁË·þÎñÆ÷½á¹¹¡£ÆäÊµÊÇ·Ç³£ÖµµÃÊ¹ÓÃºÍÑ§Ï°µÄÒ»¸ö¿ò¼Ü¡£¶ÔÓÚ¶àÊý¾õµÃDwr²»ºÃ£¬Ã»ÓÐJson·½±ãµÄÈË£¬ÎÒÏëËµ£ºÕâ2ÖÖ¸ù¾ÝÐèÒªÄãÑ¡ÔñÆäÒ»¾ÍºÃ¡£Ã»±ØÒª¾À½á¡£ÊÊºÏ×Ô¼ºµÄ²ÅÊÇ×îºÃµÄ¡£
-
-ËùÒÔJEESÖÐ²¢Ã»ÓÐÏÞÖÆ´¿Json»òÕß´¿DwrµÄ½á¹¹¡£ÖØµãÔÚÓÚÈçºÎ¹æ»®ÄãµÄWebÌåÏµµÄ·ÃÎÊ½á¹¹ÒÔ¼°Êý¾Ý´«µÝ£¬ÁË½âSessionµÄ»úÖÆºÍ¶ÔÄÚ´æµÄ¿ØÖÆ£¬¿ÉÒÔ±£Ö¤´ó¶àÊýÀàÐÍµÄWeb·þÎñÎÈ¶¨ºÍ¸ßÐ§µÄÔËÐÐ¡£
-
- **JSTS**       Socket°ü£¬Ìá¹©ÁË¼¸ÖÖSocketÁ¬½Ó·½Ê½£¨Ä¿Ç°Ö»·ÅÉÏÀ´NettyÕâÒ»¸ö£©¡£×÷ÎªSocket·þÎñÆ÷£¬ÎÒ¾õµÃNettyÏàµ±¼òµ¥ºÃÓÃ£¬Ã»ÓÐ¸´ÔÓµÄ½á¹¹Éè¼Æ£¬²»ÓÃÐ´¹ý¶àµÄñîºÏ´úÂë¡£¼òµ¥¾ÍÏñÎÒÏ²»¶DwrÒ»ÑùÏ²»¶Ëü¡£
-
- **JEESJS**     H5°ü£¬»ùÓÚCreateJs·â×°µÄÇ°¶ËH5¿ò¼Ü¡£ÕûÌåÉæ¼°´ý¸Ä½ø£¬Ä¿Ç°¿ÉÒÔÈÏÎªÊÇCreateJsµÄÒ»ÖÖÓÃ·¨²Î¿¼¡£Ï£ÍûÄÜÎªÄÇÐ©ÕýÔÚÑ§Ï°CreateJsµÄÍ¬°ûÌá¹©Ò»Ð©°ïÖú¡£
-
-# ¹ØÓÚJEESÖ§³Ö
-
-ÒÔÉÏÄÚÈÝ£¬¾ùÓÉÎÒ¸öÈËÌá¹©Î¬»¤£¬µ«ÎÒÏ£ÍûÄÜÓÐ¸ü¶àÈËµÄ°ïÎÒÀ´ÍêÉÆËü¡£ÏîÄ¿ÌÖÂÛÍøÕ¾£¬ÕýÔÚÖÆ×÷£¨È»¶ø½üÆÚÃ»¿Õ...)¡£Ïà¹ØÄÚÈÝÔÝÊ±Í¨¹ýÏÂÁÐ·½Ê½ÁË½â»òÁªÏµÎÒ£º
-
-²©¿Í£ºhttp://blog.csdn.net/aiyoyoyo/
-
-QQÌÖÂÛÈº£º8802330, »¶Ó­¸÷Î»¼ÓÈëÌÖÂÛ¡£
-
-ÂÛÌ³£ºhttp://www.jeesupport.com
+#è¯´æ˜Ž
+JEESçŽ°å·²æ‹†åˆ†ä¸º3ä¸ªé¡¹ç›®ç‹¬ç«‹å±•ç¤ºï¼Œ Â å¹¶æä¾›ä¸­å¤®ä»“åº“ç‰ˆæœ¬ã€‚
+è¯¦ç»†å†…å®¹è§ï¼š Â 
+jdbs: [https://github.com/aiyoyoyo/jees-jdbs](https://github.com/aiyoyoyo/jees-jdbs)
+jsts: [https://github.com/aiyoyoyo/jees-jsts](https://github.com/aiyoyoyo/jees-jsts)
+jtls: [https://github.com/aiyoyoyo/jees-jtls](https://github.com/aiyoyoyo/jees-jtls)
