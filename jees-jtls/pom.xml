@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jees-jtls</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <name>Java Tool Support</name>
+    <description>jees-jtls contains classes of some common tools or algorithms.</description>
+    <url>${jees.url}</url>
+
+    <!-- Project Information -->
+    <properties>
+        <main.basedir>${basedir}/..</main.basedir>
+        <jees.artifactId>jees-jtls</jees.artifactId>
+    </properties>
+
+    <parent>
+        <groupId>com.github.aiyoyoyo</groupId>
+        <artifactId>jees-boot</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../jees-boot/pom.xml</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <includes>
+                        <include>
+                            <groupId>${jees.groupId}</groupId>
+                            <artifactId>${jees.artifactId}</artifactId>
+                        </include>
+                    </includes>
+                    <fork>true</fork>
+                    <classifier>exec</classifier>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!--Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!-- Joda Time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+    </dependencies>
+</project>
