@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jees-boot</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <name>Java Srping Boot Support</name>
+    <description>Java Srping Boot Support</description>
+    <url>http://www.jeesupport.com/</url>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.1.BUILD-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>../jees-jtls</module>
+    </modules>
+    <!-- 自定义配置 -->
+    <properties>
+        <jees.groupId>com.github.aiyoyoyo</jees.groupId>
+        <jees.artifactId>jeesupport</jees.artifactId>
+        <jees.url>http://www.jeesupport.com</jees.url>
+        <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
+        <spring.boot.version>2.0.1.BUILD-SNAPSHOT</spring.boot.version>
+        <main.basedir>${basedir}</main.basedir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+    </properties>
+    <!-- OSS配置，用于Maven Central -->
+    <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>aiyoyoyo</name>
+            <email>aiyoyoyo@163.com</email>
+        </developer>
+    </developers>
+    <profiles>
+        <profile>
+            <id>oss</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+    <scm>
+        <connection>${jees.scm}/${jees.artifactId}.git</connection>
+        <developerConnection>${jees.scm}/${jees.artifactId}.git</developerConnection>
+        <url>${jees.scm}/${jees.artifactId}.git</url>
+    </scm>
+
+    <!-- Spring Boot 快照版仓库地址 -->
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- 项目环境 -->
+    <build>
+        <sourceDirectory>${basedir}\src.tool</sourceDirectory>
+        <testSourceDirectory>${basedir}\src.test</testSourceDirectory>
+        <outputDirectory>${basedir}\target\classes</outputDirectory>
+        <testOutputDirectory>${basedir}\target\test-classes</testOutputDirectory>
+        <resources>
+            <resource>
+                <directory>${basedir}\src.resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- 非继承项 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+            <!-- MySQL -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.44</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+    </dependencies>
+</project>
