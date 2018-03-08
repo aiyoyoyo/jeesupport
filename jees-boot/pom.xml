@@ -11,15 +11,18 @@
     <description>Java Srping Boot Support</description>
     <url>http://www.jeesupport.com/</url>
     <packaging>pom</packaging>
-
+    <!--
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.1.BUILD-SNAPSHOT</version>
     </parent>
-
+    -->
     <modules>
         <module>../jees-jtls</module>
+        <!--
+        <module>../jees-jdbs</module>
+        -->
     </modules>
     <!-- 自定义配置 -->
     <properties>
@@ -27,12 +30,14 @@
         <jees.artifactId>jeesupport</jees.artifactId>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
-        <spring.boot.version>2.0.1.BUILD-SNAPSHOT</spring.boot.version>
+        <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
         <main.basedir>${basedir}</main.basedir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipTests>true</skipTests>
+        <spring.boot.version>2.0.1.BUILD-SNAPSHOT</spring.boot.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -50,37 +55,52 @@
     </developers>
     <profiles>
         <profile>
-            <id>oss</id>
+            <id>jees</id>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss</id>
+                    <id>jees</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss</id>
+                    <id>jees</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
         </profile>
     </profiles>
     <scm>
-        <connection>${jees.scm}/${jees.artifactId}.git</connection>
-        <developerConnection>${jees.scm}/${jees.artifactId}.git</developerConnection>
-        <url>${jees.scm}/${jees.artifactId}.git</url>
+        <connection>${jees.scm.url}</connection>
+        <developerConnection>${jees.scm.url}</developerConnection>
+        <url>${jees.scm.url}</url>
     </scm>
-
     <!-- Spring Boot 快照版仓库地址 -->
     <repositories>
         <repository>
             <id>spring-snapshots</id>
             <url>https://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
         </repository>
         <repository>
             <id>spring-milestones</id>
             <url>https://repo.spring.io/milestone</url>
         </repository>
+        <repository>
+            <id>jees</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>spring-snapshots</id>
@@ -94,21 +114,15 @@
 
     <!-- 项目环境 -->
     <build>
-        <sourceDirectory>${basedir}\src.tool</sourceDirectory>
+        <sourceDirectory>${basedir}\src.core</sourceDirectory>
         <testSourceDirectory>${basedir}\src.test</testSourceDirectory>
         <outputDirectory>${basedir}\target\classes</outputDirectory>
         <testOutputDirectory>${basedir}\target\test-classes</testOutputDirectory>
-        <resources>
-            <resource>
+        <testResources>
+            <testResource>
                 <directory>${basedir}\src.resources</directory>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+            </testResource>
+        </testResources>
     </build>
 
     <!-- 非继承项 -->
@@ -122,12 +136,20 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <optional>true</optional>
             </dependency>
+            <!-- jees-jtls -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <artifactId>spring-boot-starter-security</artifactId>
             </dependency>
+            <!-- jees-jdbs -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
@@ -138,8 +160,21 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.1.44</version>
             </dependency>
+            <!-- Joda Time -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9.9</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>${spring.boot.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
