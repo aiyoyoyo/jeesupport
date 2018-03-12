@@ -61,7 +61,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.9.9</version>
+            <version>${jodatime.version}</version>
         </dependency>
     </dependencies>
 </project>
