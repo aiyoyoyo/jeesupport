@@ -11,18 +11,10 @@
     <description>Java Srping Boot Support</description>
     <url>http://www.jeesupport.com/</url>
     <packaging>pom</packaging>
-    <!--
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.BUILD-SNAPSHOT</version>
-    </parent>
-    -->
+
     <modules>
         <module>../jees-jtls</module>
-        <!--
         <module>../jees-jdbs</module>
-        -->
     </modules>
     <!-- 自定义配置 -->
     <properties>
@@ -31,6 +23,8 @@
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
+        <jees.jtls.version>1.0.2-SNAPSHOT</jees.jtls.version>
+        <jees.jdbs.version>1.1.0-SNAPSHOT</jees.jdbs.version>
         <main.basedir>${basedir}</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -38,6 +32,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
         <spring.boot.version>2.0.1.BUILD-SNAPSHOT</spring.boot.version>
+        <mysql.version>5.1.44</mysql.version>
+        <jodatime.version>2.9.9</jodatime.version>
+        <lombok.version>1.16.20</lombok.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -149,6 +146,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-jta-atomikos</artifactId>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -158,13 +159,20 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.44</version>
+                <version>${mysql.version}</version>
             </dependency>
             <!-- Joda Time -->
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.9.9</version>
+                <version>${jodatime.version}</version>
+            </dependency>
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
