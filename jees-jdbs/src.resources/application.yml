@@ -1,0 +1,12 @@
+#日志配置，此处使用默认日志
+logging:
+ config:
+  classpath: log4j2.xml
+ level:
+  com:
+   atomikos: WARN
+
+spring:
+ application:
+  name: jees-jdbs
+
