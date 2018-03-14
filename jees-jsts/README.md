@@ -22,7 +22,7 @@
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jsts</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1.3-SNAPSHOT</version>
 </dependency>
 ```
 ## 配置文件说明
