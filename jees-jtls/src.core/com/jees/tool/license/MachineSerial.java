@@ -1,13 +1,14 @@
 package com.jees.tool.license;
 
+import com.jees.common.CommonLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Scanner;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * 获取计算机的相关信息
@@ -15,9 +16,6 @@ import org.apache.logging.log4j.Logger;
  * @author aiyoyoyo
  */
 public class MachineSerial {
-
-	private static Logger logger = LogManager.getLogger( MachineSerial.class );
-
 	/**
 	 * 获取CPU序列号
 	 * @return
@@ -31,14 +29,14 @@ public class MachineSerial {
 			sc.next();
 			return sc.next();
 		} catch ( IOException e ) {
-			logger.error( "生成CPUSerial失败" , e );
+			CommonLogger.error( MachineSerial.class, "生成CPUSerial失败" , e );
 		}
 		return null;
 	}
 
 	/**
 	 * 获取磁盘卷标
-	 * @param drive
+	 * @param _drive
 	 *            硬盘驱动器分区 如C,D
 	 * @return
 	 */
@@ -61,10 +59,10 @@ public class MachineSerial {
 			}
 			file.delete();
 		} catch ( Throwable e ) {
-			logger.error( "生成HDSerial失败" , e );
+			CommonLogger.error( MachineSerial.class,  "生成HDSerial失败" , e );
 		}
 		if ( result.length() < 1 ) {
-			logger.info( "无磁盘ID被读取" );
+			CommonLogger.error( MachineSerial.class,  "无磁盘ID被读取" );
 		}
 
 		return result.toString();
@@ -94,7 +92,7 @@ public class MachineSerial {
 			}
 		}
 
-		logger.info( "本机MAC地址:" + sb.toString().toUpperCase() );
+		CommonLogger.error( MachineSerial.class,  "本机MAC地址:" + sb.toString().toUpperCase() );
 	}
 	
 	/**

@@ -1,9 +1,8 @@
 package com.jees.tool.license;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.jees.tool.crypto.MD5Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 通过计算机信息生成可用许可
@@ -11,7 +10,7 @@ import com.jees.tool.crypto.MD5Utils;
  * @author aiyoyoyo
  */
 public class LicenseSequences {
-	private static Logger			logger			= LogManager.getLogger( LicenseSequences.class );
+	private static Logger logger			= LoggerFactory.getLogger( LicenseSequences.class );
 	
 	/** 
      * 将信息加密，并格式化为:<br/>

@@ -108,11 +108,11 @@ public class LicenseUtils {
 	
 	/**
 	 * 解码密文内容
-	 * @param _txt
+	 * @param _data
 	 * @return
 	 */
-	public static String[] s_decode_string( byte[] data ){
-		StringTokenizer st = new StringTokenizer( new String( data ) , ":" );
+	public static String[] s_decode_string( byte[] _data ){
+		StringTokenizer st = new StringTokenizer( new String( _data ) , ":" );
 		
 		String[] str = new String[3];
 		int idx = 0;

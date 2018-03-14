@@ -1,10 +1,11 @@
 package com.jees.tool.license;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.jees.common.CommonConfig;
+import com.jees.common.CommonLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ public class LicenseClient {
 	/** License加载 **/
 	public static final int		STATE_NONE			= 0;
 	/** License无效或文件错误等 **/
-	public static final int		STATE_FAILD		= 1;
+	public static final int		STATE_FAILD			= 1;
 	/** License超时 **/
 	public static final int		STATE_TIMEOUT		= 2;
 	/** License非本机运行 **/
@@ -47,21 +48,19 @@ public class LicenseClient {
 	/** 总可用时长 **/
 	public static final int		CONTENT_TIME		= 2;
 	
-	private static Logger			logger				= LogManager.getLogger( LicenseClient.class );
-	
 	/** 验证状态 **/
 	private static int			license_state		= STATE_NONE;
 	/** License内容 **/
-	private static byte[]			license_content;
+	private static byte[]		license_content;
 	/** 用户公钥 **/
-	private static byte[]			license_keys;
+	private static byte[]		license_keys;
 	
 	/**
 	 * 启用服务10秒后，加载License，并检查有效性，无效时将停止服务。
 	 */
 	@Scheduled( fixedRate=1000 * 60 * 60 * 24 * 360, initialDelay = 1000 * 10 ) 
 	public void scheduledOnStart() {
-		logger.info( "检查License是否有效..." );
+		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
 		File file = new File( "" , "application.license" );
 		String[] txt = LicenseUtils.s_read_license( file );
 		
@@ -70,7 +69,7 @@ public class LicenseClient {
 		license_content = B64Utils.s_decode( txt[ 1 ] );
 		
 		_validateLicense();
-		logger.info( "License有效，服务器可正常运行。" );
+		CommonLogger.info( LicenseClient.class, "License有效，服务器可正常运行。" );
 	}
 	
 	/**
@@ -78,10 +77,10 @@ public class LicenseClient {
 	 */
 	@Scheduled( fixedRate = 1000 * 60 * 60 * 24 * 1, initialDelay = 1000 * 60 )// * 60 * 24 * 1 ) 
 	public void scheduledOnRunnig() {
-		logger.info( "检查License是否有效..." );
+		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
 		
 		_validateLicense();
-		logger.info( "License有效，服务器可正常运行。" );
+		CommonLogger.info( LicenseClient.class,"License有效，服务器可正常运行。" );
 	}
 	
 	/**
@@ -102,7 +101,7 @@ public class LicenseClient {
 		case STATE_FAILD:
 		case STATE_TIMEOUT:
 		case STATE_CODEERR:
-			logger.error( "用户License信息无效，将停止服务器运行。错误代码：" + license_state );
+			CommonLogger.error( LicenseClient.class, "用户License信息无效，将停止服务器运行。错误代码：" + license_state );
 			System.exit( 0 );
 			break;
 		case STATE_SUCCESS:
@@ -128,7 +127,7 @@ public class LicenseClient {
 			license_state = STATE_SUCCESS;
 		}else{
 			license_state = STATE_CODEERR;
-			logger.fatal( "用户License信息无效，将再下次运行时停止服务器运行。" );
+			CommonLogger.error( LicenseClient.class, "用户License信息无效，将再下次运行时停止服务器运行。" );
 		}
 	}
 }
