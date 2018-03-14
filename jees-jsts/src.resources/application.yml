@@ -1,0 +1,21 @@
+#日志配置，此处使用默认日志
+logging:
+ config: classpath:log4j2.xml
+ level:
+  org:
+   springframework: WARN
+  com:
+   jees: DEBUG
+
+spring:
+ application:
+  name: jees-jsts
+
+netty:
+ socket:
+  standTime: 60000
+  port: 8000
+ websocket:
+  standTime: 60000
+  port: 8001
+

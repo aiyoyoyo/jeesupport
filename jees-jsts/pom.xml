@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--  Maven Central  -->
+	<groupId>com.github.aiyoyoyo</groupId>
+	<artifactId>jees-jsts</artifactId>
+	<version>1.1.3-SNAPSHOT</version>
+	<name>Java Netty Support</name>
+
+	<description>Netty socket server supprot</description>
+	<url>${jees.url}</url>
+
+	<!-- Project Information -->
+	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
+		<jees.artifactId>jees-jsts</jees.artifactId>
+	</properties>
+
+	<parent>
+		<groupId>com.github.aiyoyoyo</groupId>
+		<artifactId>jees-boot</artifactId>
+		<version>1.1.3-SNAPSHOT</version>
+		<relativePath>../jees-boot/pom.xml</relativePath>
+	</parent>
+	<dependencies>
+		<!-- jees -->
+		<dependency>
+			<groupId>com.github.aiyoyoyo</groupId>
+			<artifactId>jees-jtls</artifactId>
+			<version>${jees.version}</version>
+		</dependency>
+		<!-- netty -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${netty.version}</version>
+		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>
