@@ -89,6 +89,9 @@ dao.executeByHQL( key, _hql );
     </property>
 </bean>
 ```
+* SpringBoot 配置文件
+> application.yml
+关于SpringBoot配置，这里仅作参考，暂不启用。
 ## 程序实现Demo
 * DAO继承
 ```
@@ -118,3 +121,8 @@ public class MyController{
 QQ群：8802330  
 论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
+## 新内容说明
+* com.jees.core.database.config  
+该内容为减少配置化文件所写的内容，部分内容尚未生效。
+* com.jees.core.database.repository
+该内容为JPA方式的数据库操作，部分内容尚未生效。

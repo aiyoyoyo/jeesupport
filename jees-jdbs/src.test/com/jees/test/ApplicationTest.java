@@ -1,22 +1,21 @@
 package com.jees.test;
 
+import com.jees.common.CommonContextHolder;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.*;
 
 /**
  * 这里暂时不可以加入@SpringBootApplication注解，原因带分析。
  * @author aiyoyoyo
  */
-@ImportResource(locations={"classpath:jees-core-database.xml"})
-public class MainTest {
-
+//@SpringBootApplication
+//@SpringBootConfiguration
+@ImportResource("classpath:jees-core-database.xml")
+public class ApplicationTest {
 	public static void main( String[] args ) {
-		@SuppressWarnings( "resource" )
-		ApplicationContext ctx = SpringApplication.run( MainTest.class, args);
+		SpringApplication.run( ApplicationTest.class, args);
 
-		TestController ctr = ctx.getBean( TestController.class );
+		TestController ctr = CommonContextHolder.getBean( TestController.class );
 
 		ctr.simpleTest();
 

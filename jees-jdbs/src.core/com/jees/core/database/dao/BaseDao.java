@@ -2,7 +2,6 @@ package com.jees.core.database.dao;
 
 import com.jees.core.database.support.AbsSupportDao;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -20,7 +19,7 @@ public class BaseDao extends AbsSupportDao{
         List<Object> list = _map.getOrDefault( _db, new ArrayList<>() );
 
         if( _obj instanceof Collection )
-            list.addAll( ( Collection< Object > ) _obj );
+            list.addAll( ( Collection< ? > ) _obj );
         else
             list.add( _obj );
 
@@ -29,8 +28,8 @@ public class BaseDao extends AbsSupportDao{
 
     /**
      * 需要通过调用commit()方法，正式提交到数据库
-     * @param _db
-     * @param _obj
+     * @param _db 数据库标识
+     * @param _obj 映射类
      */
     public void insert( String _db, Object _obj ){
         _push( _db, _obj, insertMap );
@@ -38,8 +37,8 @@ public class BaseDao extends AbsSupportDao{
 
     /**
      * 需要通过调用commit()方法，正式提交到数据库
-     * @param _db
-     * @param _obj
+     * @param _db 数据库标识
+     * @param _obj 映射类
      */
     public void update( String _db, Object _obj ){
         _push( _db, _obj, updateMap );
@@ -47,8 +46,8 @@ public class BaseDao extends AbsSupportDao{
 
     /**
      * 需要通过调用commit()方法，正式提交到数据库
-     * @param _db
-     * @param _obj
+     * @param _db 数据库标识
+     * @param _obj 映射类
      */
     public void delete( String _db, Object _obj ){
         _push( _db, _obj, deleteMap );
@@ -59,9 +58,9 @@ public class BaseDao extends AbsSupportDao{
      */
     public void commit(){
         deleteMap.keySet().forEach( key -> {
-            List<Object> delList = deleteMap.get( key );
-            List<Object> updList = updateMap.get( key );
-            List<Object> insList = insertMap.get( key );
+            List<Object> delList = deleteMap.getOrDefault( key, new ArrayList<>() );
+            List<Object> updList = updateMap.getOrDefault( key, new ArrayList<>() );
+            List<Object> insList = insertMap.getOrDefault( key, new ArrayList<>() );
 
             Iterator< Object > it = insList.iterator();
 
@@ -87,13 +86,9 @@ public class BaseDao extends AbsSupportDao{
             deleteAll( key, delList );
         } );
 
-        insertMap.keySet().forEach( key -> {
-            insertAll( key, insertMap.get( key ) );
-        } );
+        insertMap.keySet().forEach( key -> insertAll( key, insertMap.getOrDefault( key, new ArrayList<>() ) ));
 
-        updateMap.keySet().forEach( key -> {
-            updateAll( key, updateMap.get( key ) );
-        } );
+        updateMap.keySet().forEach( key -> updateAll( key, updateMap.getOrDefault( key, new ArrayList<>() ) ));
 
         deleteMap.clear();
         updateMap.clear();

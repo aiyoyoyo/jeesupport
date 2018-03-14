@@ -115,7 +115,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	public void update( String _db , Object _entity ) {
 		Session ses = _get_session( _db );
-		ses.update( _entity );
+		ses.merge( _entity );
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 		int monum = _flush - 1;
 
 		for ( T e : _list ) {
-			session.update( e );
+			session.merge( e );
 			if ( ++exnum % _flush == monum ) _flush_session( session );
 		}
 
