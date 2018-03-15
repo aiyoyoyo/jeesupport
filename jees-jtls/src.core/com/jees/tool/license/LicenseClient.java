@@ -21,7 +21,6 @@ import com.jees.tool.crypto.RSAUtils;
  * @version 1.0
  *       
  */
-@Component
 public class LicenseClient {
 	/** 单机模式  **/
 	public static final int		MODE_SINGLE		= 0;
@@ -58,7 +57,6 @@ public class LicenseClient {
 	/**
 	 * 启用服务10秒后，加载License，并检查有效性，无效时将停止服务。
 	 */
-	@Scheduled( fixedRate=1000 * 60 * 60 * 24 * 360, initialDelay = 1000 * 10 ) 
 	public void scheduledOnStart() {
 		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
 		File file = new File( "" , "application.license" );
@@ -75,10 +73,8 @@ public class LicenseClient {
 	/**
 	 * 服务启动后检查License有效性，每24小时检查一次
 	 */
-	@Scheduled( fixedRate = 1000 * 60 * 60 * 24 * 1, initialDelay = 1000 * 60 )// * 60 * 24 * 1 ) 
 	public void scheduledOnRunnig() {
 		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
-		
 		_validateLicense();
 		CommonLogger.info( LicenseClient.class,"License有效，服务器可正常运行。" );
 	}

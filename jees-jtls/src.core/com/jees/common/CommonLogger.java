@@ -11,11 +11,15 @@ import java.util.Map;
 public class CommonLogger {
     private static Logger logger = LoggerFactory.getLogger( CommonLogger.class );
 
-    private static Map< String , Logger > loggerMap = new HashMap<>();
+    private static Map< Class , Logger > loggerMap = new HashMap<>();
 
     private static Logger get( Class<?> _cls ){
-        logger.debug( "--记录类：CLS=[" + _cls.getSimpleName() + "]" );
-        return loggerMap.putIfAbsent( _cls.getSimpleName(), LoggerFactory.getLogger( _cls ) );
+        if( loggerMap.containsKey( _cls ) )
+            return loggerMap.getOrDefault( _cls, logger );
+
+        Logger clsLogger = LoggerFactory.getLogger( _cls );
+        loggerMap.put( _cls, clsLogger );
+        return clsLogger;
     }
 
     public static void debug( Class<?> _cls, String _s ){
