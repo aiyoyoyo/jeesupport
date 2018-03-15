@@ -7,7 +7,6 @@ import com.jees.core.socket.support.ISupportWebSocket;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
 @ComponentScan({"com.jees.*" })
 public class ApplicationTest {
 
