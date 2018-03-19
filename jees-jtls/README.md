@@ -10,6 +10,8 @@
 	<artifactId>jees-boot</artifactId>
 	<version>1.1.4-SNAPSHOT</version>
 </parent>
+```
+```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jtls</artifactId>

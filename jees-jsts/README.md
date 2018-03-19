@@ -5,24 +5,17 @@
 ## 基本用法
 在pom.xml中加入下面2段内容。
 ```
-<repository>
-    <id>oss</id>
-    <url>https://oss.sonatype.org/content/groups/public/</url>
-    <releases>
-        <enabled>true</enabled>
-    </releases>
-    <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-    </snapshots>
-</repository>
+<parent>
+	<groupId>com.github.aiyoyoyo</groupId>
+	<artifactId>jees-boot</artifactId>
+	<version>1.1.4-SNAPSHOT</version>
+</parent>
 ```
 ```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jsts</artifactId>
-	<version>1.1.3-SNAPSHOT</version>
+	<version>${jees.jsts.version}</version>
 </dependency>
 ```
 ## 配置文件说明
