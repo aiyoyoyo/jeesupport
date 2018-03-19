@@ -62,7 +62,7 @@ public class BaseDao extends AbsSupportDao{
             List<Object> updList = updateMap.getOrDefault( key, new ArrayList<>() );
             List<Object> insList = insertMap.getOrDefault( key, new ArrayList<>() );
 
-            Iterator< Object > it = insList.iterator();
+            Iterator< Object > it = delList.iterator();
 
             while ( it.hasNext() ) {
                 Object x = it.next();
@@ -71,11 +71,6 @@ public class BaseDao extends AbsSupportDao{
                     insList.remove(insert.get());
                     break;
                 }
-            }
-
-            it = updList.iterator();
-            while ( it.hasNext() ) {
-                Object x = it.next();
                 Optional< Object > update = updList.stream().filter(o -> o.equals( x ) ).findFirst();
                 if ( update.isPresent() ) {
                     updList.remove( update.get() );
