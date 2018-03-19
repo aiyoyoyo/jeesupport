@@ -12,3 +12,40 @@ logging:
 spring:
  application:
   name: jees-jdbs
+
+jees:
+ jdbs:
+  defaultDB: testa
+  dbNames: testa, testb
+  trans:
+   timeout: 3000
+   allowCustomIsolationLevels: true
+  config:
+   testa:
+    dbtype: mysql
+    orm: hibernate
+    user: root
+    password: root
+    url: jdbc:mysql://localhost:3306/testa
+    pinGlobalTxToPhysicalConnection: true
+    uniqueResourceName: datasourceA
+    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    packagesToScan: com.jees.test.entity
+    hibernate:
+     dialect: org.hibernate.dialect.MySQL55Dialect
+     showSql: true
+     factoryClass: org.hibernate.transaction.JTATransactionFactory
+     hbm2ddl: none
+     platform: com.jees.core.database.config.AtomikosJtaPlatform
+     coordinatorClass: jta
+   testb:
+    dbtype: mysql
+    orm: hibernate
+    user: root
+    password: root
+    url: jdbc:mysql://localhost:3306/testb
+    pinGlobalTxToPhysicalConnection: true
+    uniqueResourceName: datasourceB
+    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    packagesToScan: com.jees.test.entity
+

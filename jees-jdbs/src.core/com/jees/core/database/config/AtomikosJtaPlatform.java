@@ -1,5 +1,6 @@
 package com.jees.core.database.config;
 
+import com.jees.common.CommonLogger;
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,6 +34,7 @@ public class AtomikosJtaPlatform extends AbstractJtaPlatform {
     }
 
     public void setJtaTransactionManager( JtaTransactionManager jtaTransactionManager ){
+        CommonLogger.debug( "设置JtaTransactionManager：" + jtaTransactionManager );
         AtomikosJtaPlatform.jtaTransactionManager = jtaTransactionManager;
     }
 

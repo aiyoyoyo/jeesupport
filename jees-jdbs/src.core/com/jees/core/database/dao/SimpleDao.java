@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
 public class SimpleDao extends AbsSupportDao {
 	// 一些常用的SQL查询
 

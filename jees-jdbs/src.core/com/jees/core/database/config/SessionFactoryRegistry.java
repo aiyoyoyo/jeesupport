@@ -1,74 +1,111 @@
 package com.jees.core.database.config;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.jees.common.CommonLogger;
 
+import com.jees.core.database.support.AbsSupportDao;
+import com.jees.core.database.support.ISupportDao;
+import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.PropertyEditorRegistrar;
+import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.Scope;
 import org.springframework.beans.factory.support.*;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import java.util.Properties;
 
 public class SessionFactoryRegistry {
-    static Logger logger =  LoggerFactory.getLogger( SessionFactoryRegistry.class );
+    public void registerSessionFactory(String _name) {
+        AtomikosDataSourceBean ds = createXADataSource(_name);
+        SessionFactoryImpl bean = createSessionFactoryBean( _name, ds );
 
-    public LocalSessionFactoryBean registerSessionFactory(String _name ){
-        Properties hibernateProperties = new Properties();
-
-        hibernateProperties.setProperty( "hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        hibernateProperties.setProperty( "hibernate.dialect", "org.hibernate.dialect.MySQL55Dialect");
-        hibernateProperties.setProperty( "hibernate.hbm2ddl.auto", "create");
-        hibernateProperties.setProperty( "hibernate.show_sq", "true");
-        hibernateProperties.setProperty( "hibernate.transaction.factory_class",
-                "org.hibernate.transaction.JTATransactionFactory");
-        hibernateProperties.setProperty( "hibernate.transaction.jta.platform",
-                "com.jees.core.database.config.AtomikosJtaPlatform");
-        hibernateProperties.setProperty( "hibernate.transaction.coordinator_class", "jta");
-        hibernateProperties.setProperty( "hibernate.current_session_context_class",
-                "org.springframework.orm.hibernate5.SpringSessionContext" );
-
-        LocalSessionFactoryBean lsfb = getSessionFactoryBean( _name );
-
-        AtomikosDataSourceBean ds = createXADataSource( _name );
-
-        lsfb.setHibernateProperties( hibernateProperties );
-        lsfb.setDataSource( ds );
-        lsfb.setPackagesToScan( "com.jees.test.entity" );
-
-        logger.debug( "--registerSessionFactory[" + _name + "]。" );
-
-        return lsfb;
+        ISupportDao dao = CommonContextHolder.getBean(ISupportDao.class);
+        dao.putSessionFactory( _name , bean );
     }
 
-    private AtomikosDataSourceBean createXADataSource( String _name ){
+    private AtomikosDataSourceBean createXADataSource(String _name) {
+        String head = "jees.jdbs.config." + _name + ".";
+        String type = CommonConfig.getString( head + "dbtype" );
+        String bean = _name + "XADataSource";
         Properties xaProperties = new Properties();
 
-        xaProperties.setProperty( "username", "root" );
-        xaProperties.setProperty( "password", "root" );
-        xaProperties.setProperty( "url", "jdbc:mysql://localhost:3306/testa" );
-        xaProperties.setProperty( "pinGlobalTxToPhysicalConnection", "true" );
+        xaProperties.setProperty("user", CommonConfig.getString(head + "user"));
+        xaProperties.setProperty("password", CommonConfig.getString(head + "password"));
+        xaProperties.setProperty("url", CommonConfig.getString(head + "url"));
 
-        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
-        xaDataSource.setUniqueResourceName( _name );
-        xaDataSource.setXaProperties( xaProperties );
+        BeanDefinitionBuilder beanDefinitionBuilder =
+                BeanDefinitionBuilder.rootBeanDefinition(AbsXADataSource.class);
 
-        logger.debug( "--创建AbsXADataSource[" + _name + "]。" );
+        if( type.equalsIgnoreCase( "mysql" ) ) {
+            xaProperties.setProperty("pinGlobalTxToPhysicalConnection",
+                    CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
+
+            beanDefinitionBuilder.addPropertyValue("uniqueResourceName",
+                    CommonConfig.getString( head + "uniqueResourceName" ));
+            beanDefinitionBuilder.addPropertyValue("xaDataSourceClassName",
+                    CommonConfig.getString( head + "xaDataSourceClassName" ) );
+
+            beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
+        }
+
+        ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
+
+        beanFactory.registerBeanDefinition( bean, beanDefinitionBuilder.getBeanDefinition() );
+
+        AbsXADataSource xaDataSource = CommonContextHolder.getBean( bean );
+        CommonLogger.debug("--创建AbsXADataSource[" + bean + "]。");
         return xaDataSource;
     }
 
-    private LocalSessionFactoryBean getSessionFactoryBean( String _name ){
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition( LocalSessionFactoryBean.class );
+    private SessionFactoryImpl createSessionFactoryBean( String _name, AtomikosDataSourceBean _ds ) {
+        String head = "jees.jdbs.config." + _name + ".";
+        String hibernate = head + "hibernate.";
+        String orm = CommonConfig.getString( head + "orm" );
+        String bean = _name + "SessionFactory";
+
+        BeanDefinitionBuilder beanDefinitionBuilder =
+                BeanDefinitionBuilder.rootBeanDefinition(LocalSessionFactoryBean.class);
+
+        if( orm.equalsIgnoreCase("hibernate") ){
+            Properties hibernateProperties = new Properties();
+
+            hibernateProperties.setProperty("hibernate.dialect",
+                    CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.MySQL55Dialect") );
+            hibernateProperties.setProperty("hibernate.show_sql",
+                    CommonConfig.getString( hibernate + "showSql","true" ) );
+            hibernateProperties.setProperty("hibernate.transaction.factory_class",
+                    CommonConfig.getString( hibernate + "factoryClass","org.hibernate.transaction.JTATransactionFactory" ) );
+            hibernateProperties.setProperty("hibernate.hbm2ddl.auto",
+                    CommonConfig.getString( hibernate + "hbm2ddl", "none" ) );
+            hibernateProperties.setProperty("hibernate.transaction.jta.platform",
+                    CommonConfig.getString( hibernate + "platform", "com.jees.core.database.config.AtomikosJtaPlatform" ) );
+            hibernateProperties.setProperty("hibernate.transaction.coordinator_class",
+                    CommonConfig.getString( hibernate + "coordinatorClass","jta" ) );
+
+            beanDefinitionBuilder.addPropertyValue("dataSource", _ds);
+            beanDefinitionBuilder.addPropertyValue("packagesToScan",
+                    CommonConfig.getString( head + "packagesToScan" ) );
+            beanDefinitionBuilder.addPropertyValue("hibernateProperties", hibernateProperties);
+        }
 
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory)context.getBeanFactory();
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
 
-        beanFactory.registerBeanDefinition( _name, beanDefinitionBuilder.getBeanDefinition() );
+        CommonLogger.debug("--创建LocalSessionFactoryBean[" + bean + "]。");
 
-        logger.debug( "--创建LocalSessionFactoryBean[" + _name + "]。" );
-        return beanFactory.getBean( _name, LocalSessionFactoryBean.class );
+        beanFactory.registerBeanDefinition(bean, beanDefinitionBuilder.getBeanDefinition());
+
+        return CommonContextHolder.getBean( bean );
     }
 }

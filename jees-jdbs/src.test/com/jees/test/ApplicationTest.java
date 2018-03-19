@@ -2,15 +2,19 @@ package com.jees.test;
 
 import com.jees.common.CommonContextHolder;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.*;
 
 /**
  * 这里暂时不可以加入@SpringBootApplication注解，原因带分析。
  * @author aiyoyoyo
  */
-//@SpringBootApplication
-//@SpringBootConfiguration
-@ImportResource("classpath:jees-core-database.xml")
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
+@ComponentScan("com.jees")
 public class ApplicationTest {
 	public static void main( String[] args ) {
 		SpringApplication.run( ApplicationTest.class, args);

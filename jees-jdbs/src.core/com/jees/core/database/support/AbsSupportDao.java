@@ -2,6 +2,7 @@ package com.jees.core.database.support;
 
 import com.atomikos.icatch.jta.UserTransactionManager;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.jees.common.CommonLogger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
@@ -29,8 +30,11 @@ import java.util.*;
  */
 public abstract class AbsSupportDao implements ISupportDao {
 	/** 从配置文件中获取数据库链接对象。**/
-	@Resource
-	private Map< String , SessionFactory > sessionFactoryMap = new HashMap<>();
+	private static Map< String , SessionFactory > sessionFactoryMap = new HashMap<>();
+
+	private void setSessionFactoryMap( Map< String , SessionFactory > sessionFactoryMap ){
+		AbsSupportDao.sessionFactoryMap = sessionFactoryMap;
+	}
 
 	protected Session _open_session( String _db ) {
 		if ( sessionFactoryMap.containsKey( _db ) ) {
@@ -57,6 +61,9 @@ public abstract class AbsSupportDao implements ISupportDao {
 		_session.clear();
 	}
 
+	public void putSessionFactory( String _db, SessionFactory _sf ){
+		sessionFactoryMap.put( _db, _sf );
+	}
 	// insert /////////////////////////////////////////////////////////////
 	@Override
 	public void insert( String _db , Object _entity ) {

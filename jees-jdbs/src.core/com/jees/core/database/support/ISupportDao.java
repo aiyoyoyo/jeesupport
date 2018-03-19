@@ -1,5 +1,6 @@
 package com.jees.core.database.support;
 
+import org.hibernate.SessionFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,8 @@ public interface ISupportDao {
 	int		DEFAULT_LIMIT	= 1000;
 	int		DEFAULT_FIRST	= 0;
 	int		DEFAULT_FLUSH	= 100;
+
+	public void putSessionFactory(String _db, SessionFactory _sf );
 
 	void insert( String _db , Object _entity );
 

@@ -14,8 +14,8 @@ import com.jees.test.entity.TabB;
 @Controller
 public class TestController {
 
-	static final String	DB_A	= "a";
-	static final String	DB_B	= "b";
+	static final String	DB_A	= "testa";
+	static final String	DB_B	= "testb";
 	static final String	DB_C	= "c";
 
 	@Autowired
@@ -165,14 +165,12 @@ public class TestController {
 
 		a.setId( 1 );
 		ex.insert( DB_A, a );
-		a.setStr("aaa");
+		a.setStr("aaa1");
 		ex.update( DB_A, a );
 
 //		ex.delete( DB_A, a );
 		ex.commit();
 
 //		int n = 1 / 0;
-
-//		ex.selectBy_News( DB_A, TabA.class,"tab_a", "str", "str", 10 );
 	}
 }

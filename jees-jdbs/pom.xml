@@ -5,7 +5,7 @@
 	<!--  Maven Central  -->
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jdbs</artifactId>
-	<version>1.1.3-SNAPSHOT</version>
+	<version>1.1.4-SNAPSHOT</version>
 	<name>Java Database Support</name>
 
 	<description>Spring Atomikos database supprot</description>
@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.1.3-SNAPSHOT</version>
+		<version>1.1.4-SNAPSHOT</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>com.github.aiyoyoyo</groupId>
 			<artifactId>jees-jtls</artifactId>
-			<version>${jees.version}</version>
+			<version>${jees.jtls.version}</version>
 		</dependency>
 		<!--Spring Boot -->
 		<dependency>

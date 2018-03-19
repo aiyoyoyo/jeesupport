@@ -9,7 +9,6 @@ import java.util.*;
  * 通过缓存操作的形式，先记录要操作的数据（不包含查询），在需要的时候通过commit()提交。
  * @author aiyoyoyo
  */
-@Component
 public class BaseDao extends AbsSupportDao{
     private Map< String, List<Object> > insertMap = new HashMap<>();
     private Map< String, List<Object> > deleteMap = new HashMap<>();

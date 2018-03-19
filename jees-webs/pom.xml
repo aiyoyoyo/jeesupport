@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.aiyoyoyo</groupId>
-    <artifactId>jees-jtls</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
-    <name>Java Tool Support</name>
-    <description>jees-jtls contains classes of some common tools or algorithms.</description>
-    <url>${jees.url}</url>
-
-    <!-- Project Information -->
-    <properties>
-        <main.basedir>${basedir}/..</main.basedir>
-        <jees.artifactId>jees-jtls</jees.artifactId>
-    </properties>
+    <artifactId>jees-webs</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+    <name>Java Web Support</name>
+    <description>Jees with SpringBoot Support</description>
+    <url>http://www.jeesupport.com/</url>
 
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
@@ -23,11 +17,23 @@
         <version>1.1.4-SNAPSHOT</version>
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
+
     <dependencies>
-        <!--Spring Boot -->
+        <!-- Jees -->
+        <dependency>
+            <groupId>com.github.aiyoyoyo</groupId>
+            <artifactId>jees-jtls</artifactId>
+            <version>${jees.jtls.version}</version>
+        </dependency>
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
         <!-- Test -->
@@ -35,13 +41,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring.boot.version}</version>
-            <scope>test</scope>
         </dependency>
-        <!-- Joda Time -->
+        <!-- Lombok -->
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

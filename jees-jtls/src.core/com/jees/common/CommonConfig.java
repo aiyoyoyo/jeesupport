@@ -1,14 +1,11 @@
 package com.jees.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * 调用参数配置，大多数内容由.properties内容获取。
@@ -33,41 +30,66 @@ public class CommonConfig {
 	}
 
 	public static String getString( String _key ) {
-		String val = get( _key );
-		return val == null ? "" : val;
+		return getString( _key, "" );
 	}
 
 	public static boolean getBoolean( String _key ) {
-		String val = getString( _key );
-		return val.equalsIgnoreCase( "true" ) ? true : false;
+		return getBoolean( _key, false );
 	}
 
 	public static int getInteger( String _key ) {
-		try {
-			return Integer.parseInt( getString( _key ) );
-		} catch ( Exception e ) {
-			return 0;
-		}
+		return getInteger( _key , 0 );
 	}
 
 	public static float getFloat( String _key ) {
-		try {
-			return Float.parseFloat( getString( _key ) );
-		} catch ( Exception e ) {
-			return 0.f;
-		}
+		return getFloat( _key, 0.F );
 	}
 
 	public static long getLong( String _key ) {
+		return getLong( _key, 0L );
+	}
+
+	public static String getString( String _key, String _def ) {
+		String val = get( _key );
+		return val == null ? _def : val;
+	}
+
+	public static boolean getBoolean( String _key, boolean _def ) {
+		String val = getString( _key );
+		return val.equalsIgnoreCase( "true" ) ? true : _def;
+	}
+
+	public static int getInteger( String _key, int _def ) {
+		try {
+			return Integer.parseInt( getString( _key ) );
+		} catch ( Exception e ) {
+			return _def;
+		}
+	}
+
+	public static float getFloat( String _key, float _def ) {
+		try {
+			return Float.parseFloat( getString( _key ) );
+		} catch ( Exception e ) {
+			return _def;
+		}
+	}
+
+	public static long getLong( String _key, long _def ) {
 		try {
 			return Long.parseLong( getString( _key ) );
 		} catch ( Exception e ) {
-			return 0L;
+			return _def;
 		}
 	}
 
 	public static boolean getEquals( String _key , String _word ) {
 		String val = getString( _key );
 		return val.equalsIgnoreCase( _word );
+	}
+
+	public static StringTokenizer getStringTokenizer( String _key ){
+		String val = getString( _key );
+		return new StringTokenizer( val, "," );
 	}
 }
