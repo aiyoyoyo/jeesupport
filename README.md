@@ -29,11 +29,11 @@ jeesupport提供了Java开发中常用的一些技术和框架供使用和参考
 </repository>
 ```
 ```
-<dependency>
+<parent>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-boot</artifactId>
 	<version>1.1.4-SNAPSHOT</version>
-</dependency>
+</parent>
 ```
 ## 其他
 后续内容请关注JEES讨论群或者论坛（未开放，主要没时间[懒]） 
@@ -45,11 +45,12 @@ QQ群：8802330
 
 ## 更新内容
 ### Jees-Boot Ver.1.1.4-SNAPSHOT
-[JDBS] 
+> [JDBS] 
 1. 更新了jdbs配置方案，由多文件形式转为集中到application.yml中。详细内容见测试代码和配置文件。
 2. 程序配置使用了较多的约定形式，如果不理解，请参考SpringBoot官方文档，或加群咨询。
 3. 建议自定义Dao继承BaseDao来重写自己所需的数据库操作。
 4. 对于Web应用，现在不确定，@Controller尽量还是独立扫描，不要像示例中使用@ComponentScan("com.jees")这种范围较广的方式避免事务失效。
-[JTLS]
+
+> [JTLS]
 1. 增加CommonConfig读取配置时的方法。 
 
