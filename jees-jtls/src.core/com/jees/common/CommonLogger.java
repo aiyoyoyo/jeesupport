@@ -15,7 +15,7 @@ public class CommonLogger {
 
     private static Logger get( Class<?> _cls ){
         if( loggerMap.containsKey( _cls ) )
-            return loggerMap.getOrDefault( _cls, logger );
+            return loggerMap.get(_cls);
 
         Logger clsLogger = LoggerFactory.getLogger( _cls );
         loggerMap.put( _cls, clsLogger );

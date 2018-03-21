@@ -1,5 +1,6 @@
 package com.jees.test.utils;
 
+import com.jees.common.CommonLogger;
 import org.joda.time.*;
 import org.junit.Test;
 
@@ -8,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DateTest {
-	static Logger logger =  LoggerFactory.getLogger( DateTest.class );
 	@Test
 	public void test() {
 		DateTime dt = new DateTime( 2017 , 9 , 11 , 10 , 30 , 50 , 333 );// 2010年2月13日10点30分50秒333毫秒
 		int[] d = DateUtils.dateBeforeNow( dt );
 
-		logger.debug( "原时间：" + dt );
-		logger.debug( "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
+		CommonLogger.debug( DateTest.class, "原时间：" + dt );
+		CommonLogger.debug( DateTest.class, "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
 	}
 
 	/*
