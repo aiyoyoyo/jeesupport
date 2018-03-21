@@ -6,11 +6,7 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.common.CommonLogger;
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -22,9 +18,8 @@ import java.util.StringTokenizer;
 
 @Configuration
 @EnableTransactionManagement( proxyTargetClass = true )
+@DependsOn( { "commonContextHolder", "commonLogger" } )
 public class SupportConfig {
-    static Logger logger =  LoggerFactory.getLogger( SupportConfig.class );
-
     /**
      * atomikos事务管理器，一般情况无需修改
      * @return
@@ -35,7 +30,7 @@ public class SupportConfig {
 
         utm.setForceShutdown( false );
 
-        logger.debug( "--Spring Bean[atomikosTM]初始化." );
+        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosTM]初始化." );
         return utm;
     }
 
@@ -49,7 +44,7 @@ public class SupportConfig {
 
         uti.setTransactionTimeout( CommonConfig.getInteger("jees.jdbs.trans.timeout", 300 ) );
 
-        logger.debug( "--Spring Bean[atomikosUT]初始化." );
+        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosUT]初始化." );
         return uti;
     }
 
@@ -70,13 +65,13 @@ public class SupportConfig {
         jtm.setAllowCustomIsolationLevels(
                 CommonConfig.getBoolean("jees.jdbs.trans.allowCustomIsolationLevels", false ) );
 
-        logger.debug( "--Spring Bean[defaultTM]初始化." );
+        CommonLogger.debug( SupportConfig.class, "--Spring Bean[defaultTM]初始化." );
         return jtm;
     }
 
     @Bean
     public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
-        logger.debug( "--Spring Bean[atomikosJP]初始化." );
+        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosJP]初始化." );
         return new AtomikosJtaPlatform( _jtm );
     }
 
@@ -85,7 +80,7 @@ public class SupportConfig {
      * @return
      */
     @Bean
-    @DependsOn( { "commonContextHolder", "atomikosJP" } )
+    @DependsOn( "atomikosJP" )
     public SessionFactory sessionFactory(){
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
 

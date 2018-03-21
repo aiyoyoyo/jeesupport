@@ -4,10 +4,9 @@ logging:
  level:
   com:
    atomikos: WARN
+   jees: DEBUG
   org:
    springframework: WARN
-  com:
-   jees: DEBUG
 
 spring:
  application:
