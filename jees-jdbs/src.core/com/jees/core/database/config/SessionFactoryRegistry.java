@@ -64,7 +64,7 @@ public class SessionFactoryRegistry {
         beanFactory.registerBeanDefinition( bean, beanDefinitionBuilder.getBeanDefinition() );
 
         AbsXADataSource xaDataSource = CommonContextHolder.getBean( bean );
-        CommonLogger.debug("--创建AbsXADataSource[" + bean + "]。");
+        CommonLogger.getLogger().debug("--创建AbsXADataSource[" + bean + "]。");
         return xaDataSource;
     }
 
@@ -102,7 +102,7 @@ public class SessionFactoryRegistry {
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
 
-        CommonLogger.debug("--创建LocalSessionFactoryBean[" + bean + "]。");
+        CommonLogger.getLogger().debug("--创建LocalSessionFactoryBean[" + bean + "]。");
 
         beanFactory.registerBeanDefinition(bean, beanDefinitionBuilder.getBeanDefinition());
 

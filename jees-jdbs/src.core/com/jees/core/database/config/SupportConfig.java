@@ -30,7 +30,7 @@ public class SupportConfig {
 
         utm.setForceShutdown( false );
 
-        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosTM]初始化." );
+        CommonLogger.getLogger().debug( "--Spring Bean[atomikosTM]初始化." );
         return utm;
     }
 
@@ -44,7 +44,7 @@ public class SupportConfig {
 
         uti.setTransactionTimeout( CommonConfig.getInteger("jees.jdbs.trans.timeout", 300 ) );
 
-        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosUT]初始化." );
+        CommonLogger.getLogger().debug( "--Spring Bean[atomikosUT]初始化." );
         return uti;
     }
 
@@ -65,13 +65,13 @@ public class SupportConfig {
         jtm.setAllowCustomIsolationLevels(
                 CommonConfig.getBoolean("jees.jdbs.trans.allowCustomIsolationLevels", false ) );
 
-        CommonLogger.debug( SupportConfig.class, "--Spring Bean[defaultTM]初始化." );
+        CommonLogger.getLogger().debug( "--Spring Bean[defaultTM]初始化." );
         return jtm;
     }
 
     @Bean
     public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
-        CommonLogger.debug( SupportConfig.class, "--Spring Bean[atomikosJP]初始化." );
+        CommonLogger.getLogger().debug( "--Spring Bean[atomikosJP]初始化." );
         return new AtomikosJtaPlatform( _jtm );
     }
 

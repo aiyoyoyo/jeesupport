@@ -34,7 +34,7 @@ public class AtomikosJtaPlatform extends AbstractJtaPlatform {
     }
 
     public void setJtaTransactionManager( JtaTransactionManager jtaTransactionManager ){
-        CommonLogger.debug( "设置JtaTransactionManager：" + jtaTransactionManager );
+        CommonLogger.getLogger().debug( "设置JtaTransactionManager：" + jtaTransactionManager );
         AtomikosJtaPlatform.jtaTransactionManager = jtaTransactionManager;
     }
 

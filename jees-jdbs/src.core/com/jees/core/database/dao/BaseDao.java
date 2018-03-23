@@ -17,10 +17,17 @@ public class BaseDao extends AbsSupportDao{
     private void _push( String _db, Object _obj, Map< String, List<Object> > _map ){
         List<Object> list = _map.getOrDefault( _db, new ArrayList<>() );
 
-        if( _obj instanceof Collection )
-            list.addAll( ( Collection< ? > ) _obj );
-        else
-            list.add( _obj );
+        if( _obj instanceof Collection ) {
+            Collection<?> coll = (Collection<?>) _obj;
+            list.forEach( o -> {
+                if( coll.contains( o ) ) coll.remove( o );
+            } );
+
+            list.addAll( coll );
+        }else {
+            if( !list.contains( _obj ) )
+                list.add(_obj);
+        }
 
         _map.put( _db, list );
     }
@@ -56,36 +63,39 @@ public class BaseDao extends AbsSupportDao{
      * 正式提交到数据库，该方法会剔除insert/update数据中已经被声明在delete中的重复对象
      */
     public void commit(){
-        deleteMap.keySet().forEach( key -> {
-            List<Object> delList = deleteMap.getOrDefault( key, new ArrayList<>() );
-            List<Object> updList = updateMap.getOrDefault( key, new ArrayList<>() );
-            List<Object> insList = insertMap.getOrDefault( key, new ArrayList<>() );
+        try {
+            deleteMap.keySet().forEach(key -> {
+                List<Object> delList = deleteMap.getOrDefault(key, new ArrayList<>());
+                List<Object> updList = updateMap.getOrDefault(key, new ArrayList<>());
+                List<Object> insList = insertMap.getOrDefault(key, new ArrayList<>());
 
-            Iterator< Object > it = delList.iterator();
+                Iterator<Object> it = delList.iterator();
 
-            while ( it.hasNext() ) {
-                Object x = it.next();
-                Optional< Object > insert = insList.stream().filter(o -> o.equals( x ) ).findFirst();
-                if ( insert.isPresent() ) {
-                    insList.remove(insert.get());
-                    break;
+                while (it.hasNext()) {
+                    Object x = it.next();
+                    Optional<Object> insert = insList.stream().filter(o -> o.equals(x)).findFirst();
+                    if (insert.isPresent()) {
+                        insList.remove(insert.get());
+                        break;
+                    }
+                    Optional<Object> update = updList.stream().filter(o -> o.equals(x)).findFirst();
+                    if (update.isPresent()) {
+                        updList.remove(update.get());
+                        break;
+                    }
                 }
-                Optional< Object > update = updList.stream().filter(o -> o.equals( x ) ).findFirst();
-                if ( update.isPresent() ) {
-                    updList.remove( update.get() );
-                    break;
-                }
-            }
 
-            deleteAll( key, delList );
-        } );
+                deleteAll(key, delList);
+            });
 
-        insertMap.keySet().forEach( key -> insertAll( key, insertMap.getOrDefault( key, new ArrayList<>() ) ));
+            insertMap.keySet().forEach(key -> insertAll(key, insertMap.getOrDefault(key, new ArrayList<>())));
 
-        updateMap.keySet().forEach( key -> updateAll( key, updateMap.getOrDefault( key, new ArrayList<>() ) ));
+            updateMap.keySet().forEach(key -> updateAll(key, updateMap.getOrDefault(key, new ArrayList<>())));
 
-        deleteMap.clear();
-        updateMap.clear();
-        insertMap.clear();
+        }finally {
+            deleteMap.clear();
+            updateMap.clear();
+            insertMap.clear();
+        }
     }
 }
