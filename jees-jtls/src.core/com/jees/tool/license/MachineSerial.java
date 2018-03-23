@@ -29,7 +29,7 @@ public class MachineSerial {
 			sc.next();
 			return sc.next();
 		} catch ( IOException e ) {
-			CommonLogger.error( MachineSerial.class, "生成CPUSerial失败" , e );
+			CommonLogger.getLogger().error( "生成CPUSerial失败" , e );
 		}
 		return null;
 	}
@@ -59,10 +59,10 @@ public class MachineSerial {
 			}
 			file.delete();
 		} catch ( Throwable e ) {
-			CommonLogger.error( MachineSerial.class,  "生成HDSerial失败" , e );
+			CommonLogger.getLogger().error( "生成HDSerial失败" , e );
 		}
 		if ( result.length() < 1 ) {
-			CommonLogger.error( MachineSerial.class,  "无磁盘ID被读取" );
+			CommonLogger.getLogger().error( "无磁盘ID被读取" );
 		}
 
 		return result.toString();
@@ -92,7 +92,7 @@ public class MachineSerial {
 			}
 		}
 
-		CommonLogger.error( MachineSerial.class,  "本机MAC地址:" + sb.toString().toUpperCase() );
+		CommonLogger.getLogger().error( "本机MAC地址:" + sb.toString().toUpperCase() );
 	}
 	
 	/**

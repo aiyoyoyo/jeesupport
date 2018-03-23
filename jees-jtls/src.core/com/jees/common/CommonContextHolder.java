@@ -20,7 +20,7 @@ public class CommonContextHolder implements ApplicationContextAware {
 	 */
 	@Override
 	public void setApplicationContext( ApplicationContext applicationContext ) {
-		CommonLogger.debug( "初始化Spring组件：" + applicationContext );
+		CommonLogger.getLogger().debug( "初始化Spring组件：" + applicationContext );
 		CommonContextHolder.applicationContext = applicationContext ; // NOSONAR
 	}
 

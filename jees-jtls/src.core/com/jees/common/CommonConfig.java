@@ -25,11 +25,11 @@ public class CommonConfig {
 
 	public static String get( String _key ) {
 		if( environment == null ) {
-			CommonLogger.warn(CommonConfig.class, "获取上下文失败。");
+			CommonLogger.getLogger().warn( "获取上下文失败。");
 			return "";
 		}
 		String val = environment.getProperty( _key );
-		CommonLogger.debug( CommonConfig.class,"获取上下文：KEY=[" + _key + "], VAL=[" + val + "]");
+		CommonLogger.getLogger().debug( "获取上下文：KEY=[" + _key + "], VAL=[" + val + "]");
 		return val;
 	}
 

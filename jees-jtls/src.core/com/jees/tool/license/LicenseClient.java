@@ -58,7 +58,7 @@ public class LicenseClient {
 	 * 启用服务10秒后，加载License，并检查有效性，无效时将停止服务。
 	 */
 	public void scheduledOnStart() {
-		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
+		CommonLogger.getLogger().info( "检查License是否有效..." );
 		File file = new File( "" , "application.license" );
 		String[] txt = LicenseUtils.s_read_license( file );
 		
@@ -67,16 +67,16 @@ public class LicenseClient {
 		license_content = B64Utils.s_decode( txt[ 1 ] );
 		
 		_validateLicense();
-		CommonLogger.info( LicenseClient.class, "License有效，服务器可正常运行。" );
+		CommonLogger.getLogger().info( "License有效，服务器可正常运行。" );
 	}
 	
 	/**
 	 * 服务启动后检查License有效性，每24小时检查一次
 	 */
 	public void scheduledOnRunnig() {
-		CommonLogger.info( LicenseClient.class, "检查License是否有效..." );
+		CommonLogger.getLogger().info( "检查License是否有效..." );
 		_validateLicense();
-		CommonLogger.info( LicenseClient.class,"License有效，服务器可正常运行。" );
+		CommonLogger.getLogger().info( "License有效，服务器可正常运行。" );
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class LicenseClient {
 		case STATE_FAILD:
 		case STATE_TIMEOUT:
 		case STATE_CODEERR:
-			CommonLogger.error( LicenseClient.class, "用户License信息无效，将停止服务器运行。错误代码：" + license_state );
+			CommonLogger.getLogger().error( "用户License信息无效，将停止服务器运行。错误代码：" + license_state );
 			System.exit( 0 );
 			break;
 		case STATE_SUCCESS:
@@ -123,7 +123,7 @@ public class LicenseClient {
 			license_state = STATE_SUCCESS;
 		}else{
 			license_state = STATE_CODEERR;
-			CommonLogger.error( LicenseClient.class, "用户License信息无效，将再下次运行时停止服务器运行。" );
+			CommonLogger.getLogger().error( "用户License信息无效，将再下次运行时停止服务器运行。" );
 		}
 	}
 }

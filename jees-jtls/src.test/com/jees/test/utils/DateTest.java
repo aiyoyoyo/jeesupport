@@ -14,8 +14,8 @@ public class DateTest {
 		DateTime dt = new DateTime( 2017 , 9 , 11 , 10 , 30 , 50 , 333 );// 2010年2月13日10点30分50秒333毫秒
 		int[] d = DateUtils.dateBeforeNow( dt );
 
-		CommonLogger.debug( DateTest.class, "原时间：" + dt );
-		CommonLogger.debug( DateTest.class, "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
+		CommonLogger.getLogger().debug( "原时间：" + dt );
+		CommonLogger.getLogger().debug( "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
 	}
 
 	/*
