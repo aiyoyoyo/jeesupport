@@ -27,7 +27,8 @@
 > CryptoTest 加密测试类，包含了：AES/MD5/Base64/DES/RSA这几种。
 > LicenseTest 证书本地化测试，待完善
 > PaginationTest 分页算法，待完善
-> SortListTest 对象排序
+> SortListTest 对象排序测试类
+> <font color=#F00>新</font> RandomTest 随机算法测试类
 ## 其他
 后续内容请关注JEES讨论群或者论坛（未开放）  
 QQ群：8802330  
