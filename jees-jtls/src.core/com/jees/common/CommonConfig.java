@@ -59,8 +59,8 @@ public class CommonConfig {
 	}
 
 	public static boolean getBoolean( String _key, boolean _def ) {
-		String val = getString( _key );
-		return val.equalsIgnoreCase( "true" ) ? true : _def;
+		String val = getString( _key, _def ? "true" : "false" );
+		return val.equalsIgnoreCase( "true" );
 	}
 
 	public static int getInteger( String _key, int _def ) {

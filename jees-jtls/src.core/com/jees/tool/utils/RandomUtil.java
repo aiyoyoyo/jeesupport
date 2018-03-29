@@ -58,5 +58,26 @@ public class RandomUtil {
         return s_random_probability( (int)( _percentage * 100 ), 10000 );
     }
 
+    /**
+     * 生成对应长度的随机字符串，字符范围[A-Z][a~z][0-9]
+     * @param _length
+     * @return
+     */
+    public static String  s_random_string( int _length ){
+        int num_char_min = 48, num_char_max = 57; //0~9
+        int ltl_char_min = 65, ltl_char_max = 90; //A~Z
+        int ltu_char_min = 97, ltu_char_max = 122;//a~z
 
+        String str = "";
+        while( str.length() < _length ){
+            int r = RandomUtil.s_random_integer( 48, 122 );
+
+            // 跳过特殊字符
+            if( ( r > num_char_max && r < ltl_char_min ) || ( r > ltl_char_max && r < ltu_char_min ) ) continue;
+
+            str += ( char ) r;
+        }
+
+        return str;
+    }
 }
