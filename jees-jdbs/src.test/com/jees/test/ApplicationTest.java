@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.*;
 
 /**
- * 这里暂时不可以加入@SpringBootApplication注解，原因带分析。
+ * 启动时需要剔除DataSourceAutoConfiguration，HibernateJpaAutoConfiguration的自动配置器。
  * @author aiyoyoyo
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })

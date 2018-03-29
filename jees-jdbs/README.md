@@ -27,13 +27,17 @@
 ```
 jees:
  jdbs:
+  #指定默认的数据库
   defaultDB: testa
+  #设定数据库连接的别名清单，程序通过别名引用
   dbNames: testa, testb
   trans:
    timeout: 3000
    allowCustomIsolationLevels: true
   config:
+   #基于别名的数据库配置
    testa:
+    # 根据数据类型和ORM类型使用对应的配置方案，暂时仅支持MySQL和Hibernate
     dbtype: mysql
     orm: hibernate
     user: root
@@ -50,6 +54,7 @@ jees:
      hbm2ddl: none
      platform: com.jees.core.database.config.AtomikosJtaPlatform
      coordinatorClass: jta
+   # 基于别名的数据库配置
    testb:
     dbtype: mysql
     orm: hibernate
