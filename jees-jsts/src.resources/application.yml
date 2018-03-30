@@ -11,11 +11,13 @@ spring:
  application:
   name: jees-jsts
 
-netty:
- socket:
-  standTime: 60000
-  port: 8000
- websocket:
-  standTime: 60000
-  port: 8001
+jees:
+ jsts:
+  socket:
+   standTime: 60000
+   port: 8000
+  websocket:
+   url: /ws
+   standTime: 60000
+   port: 8001
 

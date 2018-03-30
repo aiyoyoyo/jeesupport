@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.core.socket.support.ISocketBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,7 @@ public class WebSocketInitializer extends ChannelInitializer< SocketChannel > {
 		 */
 		pipeline.addLast( new HttpObjectAggregator( 8192 ) );
 		// 用于处理websocket, /ws为访问websocket时的uri
-		pipeline.addLast( new WebSocketServerProtocolHandler( CommonConfig.get( "websocket.url" ) ) );
+		pipeline.addLast( new WebSocketServerProtocolHandler( CommonConfig.get( ISocketBase.Netty_WebSocket_Url ) ) );
 		pipeline.addLast( CommonContextHolder.getBean( WebSocketHandler.class ) );
 
 	}

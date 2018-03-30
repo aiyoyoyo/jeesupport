@@ -19,27 +19,21 @@
 </dependency>
 ```
 ## 配置文件说明
-* 环境配置
-> define.cfg
+* 核心配置
+> application.yml
 ```
-#Netty Socket
-#socket服务使用的端口
-socket.port1	= 8001 
-#Netty WebSocket
-#websocket服务使用的端口
-websocket.port1 = 8002
+jees:
+ jsts:
+  socket:
+   standTime: 60000
+   port: 8000
+  websocket:
+   url: /ws
+   standTime: 60000
+   port: 8001
 ```
 * 日志配置
 > log4j2.xml
-* 核心文件配置
-> jees-core-dispatcher.xml
-核心配置主要声明启动时的配置，使用socket服务或使用websocket服务，可以根据需要自行调整。
-```
-<!-- 使用Netty作为Socket服务器  -->
-<context:component-scan base-package="com.jees.jsts.netty.*" />
-<!-- 使用Netty作为WebSocket服务器  -->
-<context:component-scan base-package="com.jees.jsts.websocket.*" />
-```
 ## 程序实现Demo
 ```
 // 启动服务

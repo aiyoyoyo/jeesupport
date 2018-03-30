@@ -10,8 +10,9 @@ public interface ISocketBase {
     /** 服务重启 **/
     void reload();
 
-    String Netty_Socket_Port        = "netty.socket.port";
-    String Netty_Socket_LostTime    = "netty.socket.lostTime";
-    String Netty_WebSocket_Port     = "netty.websocket.port";
-    String Netty_WebSocket_LostTime = "netty.websocket.lostTime";
+    String Netty_Socket_Port        = "jees.jsts.socket.port";
+    String Netty_Socket_LostTime    = "jees.jsts.socket.lostTime";
+    String Netty_WebSocket_Port     = "jees.jsts.websocket.port";
+    String Netty_WebSocket_LostTime = "jees.jsts.websocket.lostTime";
+    String Netty_WebSocket_Url      = "jees.jsts.websocket.url";
 }
