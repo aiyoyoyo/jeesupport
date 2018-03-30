@@ -2,12 +2,69 @@
 logging:
   config: classpath:config/log4j2.xml
   level:
-    com:
-     jees: DEBUG
-    org:
-     springframework: WARN
+   com.atomikos: WARN
+   com.jees: DEBUG
+   com.jees.common: ERROR
+   org.springframework: INFO
 
 spring:
  config:
-   location: config/
- port: 8000
+  location: config/
+ mvc:
+  static-path-pattern: /**
+ devtools:
+  restart:
+   enabled: false
+ thymeleaf:
+  cache: false
+  prefix: classpath:/templates/
+  check-template-location: true
+  suffix: .html
+  encoding: UTF-8
+  content-type: text/html
+  mode: LEGACYHTML5
+ resources:
+  static-locations: ["classpath:/templates/", "classpath:/resources/","classpath:/static/","classpath:/public/"]
+
+server:
+ port: 8080
+
+jees:
+ webs:
+  superman: superman
+  superpwd: 6
+  def-page: index
+  templates: default, other
+  login: login
+  default:
+   themes: default
+   assets: assets
+   access: false
+  other:
+   themes: default
+   assets: assets
+   access: true
+ jdbs:
+  defaultDB: default
+  dbNames: default
+  trans:
+   timeout: 3000
+   allowCustomIsolationLevels: true
+  config:
+   default:
+    dbtype: mysql
+    orm: hibernate
+    user: root
+    password: root
+    url: jdbc:mysql://localhost:3306/jees_common
+    pinGlobalTxToPhysicalConnection: true
+    uniqueResourceName: datasourceCommon
+    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    packagesToScan: com.jees.test.entity
+    hibernate:
+     dialect: org.hibernate.dialect.MySQL55Dialect
+     showSql: true
+     factoryClass: org.hibernate.transaction.JTATransactionFactory
+     hbm2ddl: validate
+     platform: com.jees.core.database.config.AtomikosJtaPlatform
+     coordinatorClass: jta

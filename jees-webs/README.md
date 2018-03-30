@@ -26,11 +26,40 @@
 </dependency>
 ```
 ## 配置文件说明
-* 暂无
+* 核心配置
+> application.yml
+```
+jees:
+ webs:
+  # 超级账号，密码由服务器生成，开启com.jees.webs.support日志DEBUG级可见
+  superman: superman
+  # 超级账号密码位数，最小为6，最大20
+  superpwd: 6
+  # 指定默认页，即 /结束的地址    
+  def-page: index
+  # 指定模版清单，默认第一个为基础模版
+  templates: default, other
+  # 多模版通用登陆地址
+  login: login
+  # 各个模版信息，模版间可以同时访问，主题只能通过切换访问其中一个
+  # 简单可以理解为默认为前端模版，其他为后端模版
+  default:
+   # 多主题配置，默认第一个。
+   themes: default
+   # 资源路径
+   assets: assets
+   # 基本访问权限， 为false由数据库配置决定，无配置内容可见。true时无配置内容不可见。
+   access: false
+  other:
+   themes: default
+   assets: assets
+   access: true
+#数据库部分参考jees-jdbs
+```
 * 日志配置
 > log4j2.xml
 ## 程序实现Demo
-暂无
+见src.test
 ## 其他
 后续内容请关注JEES讨论群或者论坛（未开放）  
 QQ群：8802330  

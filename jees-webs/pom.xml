@@ -18,12 +18,27 @@
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
 
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <version>${spring.boot.version}</version>
+                <optional>true</optional>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <!-- Jees -->
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
-            <artifactId>jees-jtls</artifactId>
-            <version>${jees.jtls.version}</version>
+            <artifactId>jees-jdbs</artifactId>
+            <version>${jees.jdbs.version}</version>
         </dependency>
         <!-- Spring Boot -->
         <dependency>
