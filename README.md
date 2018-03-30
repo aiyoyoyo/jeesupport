@@ -45,12 +45,22 @@ QQ群：8802330
 
 ## 更新内容
 ### Jees-Boot Ver.1.1.4-SNAPSHOT
-> [JDBS] 
+> [JTLS] Ver 1.1.4-SNAPSHOT
+1. 增加CommonConfig读取配置时的方法。 
+2. 增加RandomUtil工具包。
+
+> [JDBS] Ver 1.1.4-SNAPSHOT
 1. 更新了jdbs配置方案，由多文件形式转为集中到application.yml中。详细内容见测试代码和配置文件。
 2. 程序配置使用了较多的约定形式，如果不理解，请参考SpringBoot官方文档，或加群咨询。
 3. 建议自定义Dao继承BaseDao来重写自己所需的数据库操作。
-4. 对于Web应用，现在不确定，@Controller尽量还是独立扫描，不要像示例中使用@ComponentScan("com.jees")这种范围较广的方式避免事务失效。
 
-> [JTLS]
-1. 增加CommonConfig读取配置时的方法。 
+> [JSTS] Ver 1.1.3-SNAPSHOT
+1. 偷偷修改了配置参数命名，统一结构。
+2. 暂时不会增加更多内容，但可能会做细节优化。
+
+> [WEBS] Ver 1.1.0-SNAPSHOT
+1. 提供一套初级WEB开发框架，通过较少的约定完成一套多模版多主题的WEB开发结构。
+2. 基于SpringBoot和Thymeleaf搭建的完整模版框架。
+3. 提供一套SpringSecurity数据库权限和栏目配置方案。
+4. 数据服务基于JDBS实现。
 
