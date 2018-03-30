@@ -97,11 +97,14 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
         }
 
         template = getemplate( _tpl );
-        String theme = getTheme( template, session );
-
         session.setAttribute( Template_Current_EL, template );
         _request.setAttribute( Template_Current_EL, template );
+
+        String theme = getTheme( template, session );
         _request.setAttribute( Theme_Current_EL, theme );
+
+        String assets = getAssets( template, session );
+        _request.setAttribute( Assets_Current_EL, assets );
 
         return template.getName() + "/" + theme;
     }
@@ -130,5 +133,15 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
         }
 
         return theme;
+    }
+
+    public String getAssets( TemplateConfig _tpl, HttpSession _session ){
+        String assets = (String) _session.getAttribute( Assets_Current_EL );
+        if( assets == null ){
+            assets = _tpl.getAssets();
+            _session.setAttribute( Assets_Current_EL, _tpl.getName() + "/" + assets );
+        }
+
+        return assets;
     }
 }

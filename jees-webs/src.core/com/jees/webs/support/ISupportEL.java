@@ -8,6 +8,7 @@ public interface ISupportEL {
     String Template_Assets_EL           = "TPL_A_";
     String Template_Theme_EL            = "TPL_T_";
     String Theme_Current_EL             = "THEME";
+    String Assets_Current_EL            = "RES";
 
     String Session_User_EL              = "User";
 
