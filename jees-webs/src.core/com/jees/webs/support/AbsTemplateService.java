@@ -106,7 +106,9 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
         String assets = getAssets( template, session );
         _request.setAttribute( Assets_Current_EL, assets );
 
-        return template.getName() + "/" + theme;
+        String ret_tpl_theme = template.getName() + "/" + theme;
+        _request.setAttribute( Template_Theme_Current_EL, ret_tpl_theme );
+        return ret_tpl_theme;
     }
 
     public TemplateConfig getemplate( String _tpl ){
