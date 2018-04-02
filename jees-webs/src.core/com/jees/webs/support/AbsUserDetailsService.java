@@ -37,7 +37,7 @@ public abstract class AbsUserDetailsService implements UserDetailsService, ISupp
     protected UserDetails checkSuperman(String _username ){
         SuperUser user = new SuperUser();
         if( _username.equals( CommonConfig.getString("jees.webs.superman", USER_SUPERMAN ) ) ){
-            CommonLogger.getLogger( this.getClass()  ).warn("--使用超级账号登陆。" + supermanPassword );
+            CommonLogger.getLogger( this.getClass()  ).warn("--使用超级账号登陆。" );
 
             user.setUsername( _username );
             user.setPassword( MD5Utils.s_encode( supermanPassword ) );

@@ -60,6 +60,21 @@ jees:
 > log4j2.xml
 ## 程序实现Demo
 见src.test
+## 一个引用问题：
+```
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>${spring.boot.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+热更支持需要在项目中以该形式定义，否则会抛出一个异常导致应用停止。
+暂时只知道为什么，未明白原因。
+```
 ## 其他
 后续内容请关注JEES讨论群或者论坛（未开放）  
 QQ群：8802330  

@@ -27,7 +27,7 @@ spring:
   static-locations: ["classpath:/templates/", "classpath:/resources/","classpath:/static/","classpath:/public/"]
 
 server:
- port: 8080
+ port: 8081
 
 jees:
  webs:
