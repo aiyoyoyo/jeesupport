@@ -14,10 +14,12 @@ spring:
 jees:
  jsts:
   socket:
+   lostTime: 0
    standTime: 60000
    port: 8000
   websocket:
    url: /ws
+   lostTime: 0
    standTime: 60000
    port: 8001
 
