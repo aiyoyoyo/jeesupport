@@ -23,25 +23,23 @@ spring:
   encoding: UTF-8
   content-type: text/html
   mode: LEGACYHTML5
- resources:
-  static-locations: ["classpath:/templates/", "classpath:/resources/","classpath:/static/","classpath:/public/"]
 
 server:
  port: 8081
 
 jees:
  webs:
+  maxSession: 1000
   superman: superman
   superpwd: 6
-  def-page: index
+  defPage: index
   templates: default, other
   login: login
+  logout: logout
   default:
-   themes: default
    assets: assets
    access: false
   other:
-   themes: default
    assets: assets
    access: true
  jdbs:

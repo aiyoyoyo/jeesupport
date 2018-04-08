@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+	默认登陆后可以访问<br/>
+	获取当前资源路径: RES=<span th:text="${RES}"></span><br/>
+	获取当前模版对象: TEMPLATE=<span th:text="${TEMPLATE}"></span><br/>
+	获取当前模版路径: TPL=<span th:text="${TPL}"></span><br/>
+	<img th:src="|${RES}/default.jpg|"></img><br/>
+
+	<a href="/" >返回首页</a>
+</body>
+</html>

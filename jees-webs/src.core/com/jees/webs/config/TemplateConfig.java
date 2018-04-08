@@ -13,13 +13,4 @@ import java.util.Set;
 public class TemplateConfig {
     private String name;
     private String assets;
-    private String theme;
-    private Set<String> themes;
-
-    public String getTheme(){
-        if( theme == null )
-            setTheme( themes.iterator().next() );
-
-        return theme;
-    }
 }

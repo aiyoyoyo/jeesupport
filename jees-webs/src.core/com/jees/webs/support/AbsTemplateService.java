@@ -56,94 +56,55 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
         tplCfg.setName( tpl );
         tplCfg.setAssets( CommonConfig.getString( "jees.webs." + tpl + ".assets", "assets" ) );
 
-        StringTokenizer the_st = CommonConfig.getStringTokenizer( "jees.webs." + tpl + ".themes" );
-        Set<String> thes = new HashSet<>();
-
-        while( the_st.hasMoreTokens() ){
-            String the = the_st.nextToken().trim().toLowerCase();
-            thes.add( the );
-        }
-
-        if( thes.size() == 0 ){
-            thes.add( "default" );
-
-            CommonLogger.getLogger( this.getClass() ).warn( "--模版[" + tpl + "]未找到有效主题，将使用默认主题路径：default" );
-        }
-
-        tplCfg.setThemes( thes );
-
         if( defTemplate == null ) defTemplate = tplCfg;
-
-        CommonLogger.getLogger( this.getClass() ).info( "--模版[" + tpl + "]已加载主题：" + Arrays.toString( thes.toArray() ) );
         return tplCfg;
     }
 
     /**
      * 通过模版，设置用户Session信息，用于页面显示
-     * @param _tpl
      * @param _request
      * @return
      */
-    public String getTemplateAndTheme( String _tpl, HttpServletRequest _request ){
+    @Override
+    public void loadTemplate( String _tpl, HttpServletRequest _request ){
         HttpSession session = _request.getSession();
 
         TemplateConfig template = (TemplateConfig) session.getAttribute( Template_Current_EL );
         if( template == null ){
             templates.values().forEach( t -> {
-                session.setAttribute( Template_EL + t.getName(), t.getName() );
-                session.setAttribute( Template_Theme_EL + t.getName(), t.getName() + "/" + t.getTheme() );
+                session.setAttribute( Template_EL + t.getName(), t );
                 session.setAttribute( Template_Assets_EL + t.getName(), t.getName() + "/" + t.getAssets() );
             } );
         }
 
-        template = getemplate( _tpl );
-        session.setAttribute( Template_Current_EL, template );
-        _request.setAttribute( Template_Current_EL, template );
-
-        String theme = getTheme( template, session );
-        _request.setAttribute( Theme_Current_EL, theme );
-
-        String assets = getAssets( template, session );
-        _request.setAttribute( Assets_Current_EL, assets );
-
-        String ret_tpl_theme = template.getName() + "/" + theme;
-        _request.setAttribute( Template_Theme_Current_EL, ret_tpl_theme );
-        return ret_tpl_theme;
+        template = getTemplate( _tpl );
+        _request.setAttribute( Template_Object_EL, template );
+        _request.setAttribute( Assets_Current_EL, "/" + template.getName() + "/" + template.getAssets() );
+        _request.setAttribute( Template_Current_EL, template.getName() );
     }
 
-    public TemplateConfig getemplate( String _tpl ){
+    @Override
+    public TemplateConfig getTemplate( String _tpl ){
         return templates.getOrDefault( _tpl, defTemplate );
     }
-
+    @Override
     public List<String>  getTemplateNames() {
         return templates.keySet().stream().collect(Collectors.toList());
     }
-
+    @Override
     public TemplateConfig getDefaultTemplate(){
         return defTemplate;
     }
-
+    @Override
+    public List<TemplateConfig> getTemplateAll(){
+        return templates.values().stream().collect( Collectors.toList() );
+    }
+    @Override
     public boolean isTemplate( String _tpl ){
         return templates.containsKey( _tpl );
     }
-
-    public String getTheme( TemplateConfig _tpl, HttpSession _session ){
-        String theme = (String) _session.getAttribute( Theme_Current_EL );
-        if( theme == null ){
-            theme = _tpl.getTheme();
-            _session.setAttribute( Theme_Current_EL, theme );
-        }
-
-        return theme;
-    }
-
-    public String getAssets( TemplateConfig _tpl, HttpSession _session ){
-        String assets = (String) _session.getAttribute( Assets_Current_EL );
-        if( assets == null ){
-            assets = _tpl.getAssets();
-            _session.setAttribute( Assets_Current_EL, _tpl.getName() + "/" + assets );
-        }
-
-        return assets;
+    @Override
+    public boolean isDefault( String _tpl ) {
+        return defTemplate.getName().equalsIgnoreCase( _tpl );
     }
 }

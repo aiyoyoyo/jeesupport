@@ -31,7 +31,7 @@ public class SuperUser<ID extends Serializable, R extends SuperRole> implements 
     private boolean enabled;
     @Column( name = "locked" , nullable = false )
     private boolean locked;
-    @OneToMany( cascade = CascadeType.REMOVE , fetch = FetchType.LAZY )
+    @OneToMany( cascade = CascadeType.REMOVE , fetch = FetchType.EAGER )
     @MapKey( name = "id" )
     private Map<Integer, R> roles = new HashMap<>();
 

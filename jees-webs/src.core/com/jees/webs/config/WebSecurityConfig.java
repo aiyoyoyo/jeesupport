@@ -1,4 +1,4 @@
-package com.jees.webs.security;
+package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonLogger;
@@ -13,9 +13,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +26,9 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -59,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             public void onAuthenticationSuccess( HttpServletRequest _request, HttpServletResponse _response, Authentication _auth ) throws IOException, ServletException {
                 CommonLogger.getLogger( this.getClass() ).debug( "--登陆成功" );
 
-                _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getDetails() );
+                _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getPrincipal() );
 
                 sessionRegistry().registerNewSession( _request.getSession().getId(), _auth.getPrincipal() );
 
@@ -85,8 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new AuthenticationFailureHandler(){
             @Override
             public void onAuthenticationFailure( HttpServletRequest _request, HttpServletResponse _response, AuthenticationException _e ) throws IOException, ServletException {
-                CommonLogger.getLogger( this.getClass() ).debug( "--登陆失败：" + _e.toString() );
-
+                CommonLogger.getLogger( this.getClass() ).debug( "--登陆失败：" + _e.getMessage() );
                 redirectStrategy().sendRedirect( _request, _response,
                         "/" + CommonConfig.getString( "jees.webs.login", "login") + "?" + ISupportEL.Login_Err );
             }
@@ -117,7 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             List<SuperMenu> menus = templateService.loadTemplateMenus( tpl );
             boolean is_default = tpl_default.getName().equalsIgnoreCase( tpl );
             boolean tpl_access = CommonConfig.getBoolean( "jees.webs." + tpl + ".access" );
-            String  tpl_url    = is_default ? "/" : "/" + tpl;
+            String  tpl_url    = is_default ? "/" : "/" + tpl + "/";
 
             CommonLogger.getLogger( this.getClass() ).debug(
                     "--读取各栏目权限：TPL=[" + tpl_url + "], MENU=["+menus.size()+"], TPL=[" + tpl + "], ACCESS=[" + tpl_access + "]" );
@@ -144,9 +148,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         _hs.authorizeRequests()
                 .and().formLogin().loginPage( "/" + CommonConfig.getString( "jees.webs.login", "login") )
                 .successHandler( successHandler() ).failureHandler( failureHandler() ).permitAll()
-                .and().logout().logoutUrl("/logout").permitAll();
+                .and().logout().logoutUrl("/" + CommonConfig.getString( "jees.webs.logout", "logout" )).permitAll();
 
-        _hs.sessionManagement().maximumSessions(1000).sessionRegistry( sessionRegistry() );
+        _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) ).sessionRegistry( sessionRegistry() );
     }
 
     /**
@@ -157,12 +161,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         _auth.userDetailsService( userDetailsService ).passwordEncoder(new PasswordEncoder() {
             @Override
             public String encode( CharSequence _pwd ) {
+                CommonLogger.getLogger( this.getClass() ).debug( "--ENCODE PWD: [" + _pwd + "]");
                 String encode = MD5Utils.s_encode( (String) _pwd );
+                CommonLogger.getLogger( this.getClass() ).debug( "--ENCODE PWD: [" + encode + "]");
                 return encode;
             }
             @Override
             public boolean matches(CharSequence _pwd , String _encode ) {
-                boolean matches = _encode.equals( MD5Utils.s_encode((String)_pwd));
+                String encode_pwd = MD5Utils.s_encode( (String)_pwd );
+                CommonLogger.getLogger( this.getClass() ).debug( "--MATCHES PWD: [" + _pwd+ "]->[" + encode_pwd + "]");
+                CommonLogger.getLogger( this.getClass() ).debug( "--MATCHES ENCODE: [" + _encode + "]");
+                boolean matches = _encode.equals( encode_pwd );
                 return matches;
             }
         });

@@ -21,10 +21,4 @@ public class SuperRole <ID extends Serializable, U extends SuperUser, M extends 
     int id;
     @Column( name = "name" , unique = true, nullable = false )
     String name;
-    @ManyToOne( cascade = CascadeType.REMOVE , fetch = FetchType.LAZY )
-    @JoinColumn( name = "id", unique = true , nullable = false, insertable = false , updatable = false )
-    M menu;
-    @ManyToOne( cascade = CascadeType.REMOVE , fetch = FetchType.LAZY )
-    @JoinColumn( name = "id", unique = true , nullable = false, insertable = false , updatable = false )
-    U user;
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    default index<br/>
+    获取模版: session.TPL_[template]=<span th:text="${session.TPL_default}"></span><br/>
+    获取资源路径：session.TPL_A_[template]=<span th:text="${session.TPL_A_default}"></span><br/>
+
+    获取模版: session.TPL_[template]=<span th:text="${session.TPL_other}"></span><br/>
+    获取资源路径：session.TPL_A_[template]=<span th:text="${session.TPL_A_other}"></span><br/>
+
+    获取当前资源路径: RES=<span th:text="${RES}"></span><br/>
+    获取当前模版对象: TEMPLATE=<span th:text="${TEMPLATE}"></span><br/>
+    获取当前模版路径: TPL=<span th:text="${TPL}"></span><br/>
+    <img th:src="|${RES}/default.jpg|"></img><br/>
+
+    <img th:src="|${session.TPL_A_other}/default.jpg|"></img><br/>
+
+    <img src="default/assets/default.jpg"></img><br/>
+
+    <a href="/menu1/">menu1 </a><br/>
+    <a href="/menu1/menu1-1/">menu1/menu1-1 </a><br/>
+    <a href="/menu1/menu1-1/index2">menu1/menu1-1/index2 </a><br/>
+
+    <a href="/other/">其他模版 </a><br/>
+
+    <a href="/logout/">登出 </a><br/>
+</body>
+</html>

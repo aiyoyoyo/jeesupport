@@ -80,3 +80,6 @@ jees:
 QQ群：8802330  
 论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
+## 最新更新
+* 提供基于文件路径的模版抓取方式，并完全了权限认证细节。
+

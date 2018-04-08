@@ -7,13 +7,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ITemplateService {
-    String getTemplateAndTheme( String _tpl, HttpServletRequest _request );
+    TemplateConfig getTemplate( String _tpl );
+
+    List<TemplateConfig> getTemplateAll();
+
+    void loadTemplate( String _tpl, HttpServletRequest _request );
 
     List<String> getTemplateNames();
 
     TemplateConfig getDefaultTemplate();
 
     boolean isTemplate( String _tpl );
+
+    boolean isDefault( String _tpl );
 
     List<SuperMenu> loadTemplateMenus(String tpl);
 }

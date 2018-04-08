@@ -23,6 +23,7 @@ public class UserDetailsServiceImpl extends AbsUserDetailsService {
     private SuperUser _find_user(String _username ) throws UsernameNotFoundException{
         //TODO 执行数据库查询
         SuperUser user = daoService.selectUserByName( _username );
+        CommonLogger.getLogger( this.getClass() ).debug( "--查找登陆用户信息：U=[" + user + "]" );
         if( user == null ) throw new UsernameNotFoundException("用户不存在");
         return user;
     }
@@ -30,12 +31,13 @@ public class UserDetailsServiceImpl extends AbsUserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername( String _username ) throws UsernameNotFoundException {
-        CommonLogger.getLogger().debug( "--加载登陆用户信息：U=[" + _username + "]" );
         UserDetails user = checkSuperman( _username );
 
         if( user == null ) user = _find_user( _username );
 
+        CommonLogger.getLogger( this.getClass() ).debug( "--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]" );
         super.build( user );
+        CommonLogger.getLogger( this.getClass() ).debug( "--用户信息：U=[" + user + "]" );
 
         return user;
     }
