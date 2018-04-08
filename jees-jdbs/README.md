@@ -8,7 +8,7 @@
 <parent>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-boot</artifactId>
-	<version>1.1.4-SNAPSHOT</version>
+	<version>1.1.5-SNAPSHOT</version>
 </parent>
 ```
 ```
@@ -100,3 +100,5 @@ QQ群：8802330
 现已有原来的多配置文件形式简化到application.yml中。详情请参考Github中示例。
 * com.jees.core.database.repository
 该内容为JPA方式的数据库操作，部分内容尚未生效。
+* com.jees.core.database.support
+AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。

@@ -25,7 +25,7 @@ public class SimpleDao extends AbsSupportDao {
 			String _group , int _limit ) {
 		String sql = "SELECT * FROM ( SELECT * FROM " + _table + " ORDER BY " + _time + " DESC ) AS temp GROUP BY "
 				+ _group + " ORDER BY " + _time + " DESC LIMIT " + _limit;
-		return selectBySQL( _db , sql , new Object [] {} , _cls );
+		return selectBySQL( _db , sql , null, null , _cls );
 	}
 
 	/**

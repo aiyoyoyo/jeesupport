@@ -20,7 +20,7 @@ public interface ISupportDao {
 	int		DEFAULT_FIRST	= 0;
 	int		DEFAULT_FLUSH	= 100;
 
-	public void putSessionFactory(String _db, SessionFactory _sf );
+	void putSessionFactory(String _db, SessionFactory _sf );
 
 	void insert( String _db , Object _entity );
 
@@ -48,26 +48,24 @@ public interface ISupportDao {
 
 	< T > T selectById( String _db , Class< T > _cls , Serializable _id );
 
-	< T > List< T > selectByExample( String _db , Object _entity );
-	
-	< T > List< T > selectByHQL( String _db , String _hql , Object[] _param , Class< T > _cls );
-	
 	< T > List< T > selectByHQL( String _db , String _hql , String[] _param , Object[] _value, Class< T > _cls );
 
-	< T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
+	< T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , String[] _param , Object[] _value,
 			Class< T > _cls );
 
-	< T > List< T > selectBySQL( String _db , String _sql , Object[] _param , Class< T > _cls );
+	< T > List< T > selectBySQL( String _db , String _sql , String[] _param , Object[] _value, Class< T > _cls );
 
-	< T > List< T > selectBySQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
+	< T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , String[] _param , Object[] _value,
 			Class< T > _cls );
 
 	< T > long selectCount( String _db , Class< T > _cls );
 
-	long selectCount( String _db , String _hql , Object[] _param );
+	long selectCountByHQL( String _db , String _hql , String[] _param , Object[] _value );
 
-	int executeByHQL( String _db , String _hql , Object[] _param );
+	long selectCountBySQL( String _db , String _sql , String[] _param , Object[] _value );
 
-	int executeBySQL( String _db , String _sql , Object[] _param );
+	int executeByHQL( String _db , String _hql , String[] _param, Object[] _value );
+
+	int executeBySQL( String _db , String _sql , String[] _param, Object[] _value );
 
 }

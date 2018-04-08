@@ -1,22 +1,10 @@
 package com.jees.core.database.support;
 
-import com.atomikos.icatch.jta.UserTransactionManager;
-import com.atomikos.jdbc.AtomikosDataSourceBean;
-import com.jees.common.CommonLogger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Example;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.jta.JtaTransactionManager;
 
-import javax.annotation.Resource;
-import javax.sql.DataSource;
+import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.*;
 
@@ -34,6 +22,17 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 	private void setSessionFactoryMap( Map< String , SessionFactory > sessionFactoryMap ){
 		AbsSupportDao.sessionFactoryMap = sessionFactoryMap;
+	}
+
+	private void _set_parameter( Query _query, String[] _param, Object[] _value ){
+		if ( _param != null && _value != null ) {
+			for( int i = 0; i < _param.length; i ++ ){
+				if( _value[i] instanceof Collection )
+					_query.setParameterList( _param[i] , ( Collection<?> ) _value[i] );
+				else
+					_query.setParameter( _param[i] ,_value[i] );
+			}
+		}
 	}
 
 	protected Session _open_session( String _db ) {
@@ -153,15 +152,17 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 	@Override
 	public < T > List< T > select( String _db , Class< T > _cls , int _limit ) {
-		return select( _db , _cls , DEFAULT_FIRST , DEFAULT_LIMIT );
+		return select( _db , _cls , DEFAULT_FIRST , _limit );
 	}
 
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > select( String _db , Class< T > _cls , int _first , int _limit ) {
 		Session session = _get_session( _db );
-		return session.createQuery( session.getCriteriaBuilder().createQuery( _cls ) )
-				.setFirstResult( _first ).setMaxResults( _limit ).list();
+		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
+		criteria.from( _cls );
+		return session.createQuery( criteria )
+				.setFirstResult( _first ).setMaxResults( _limit ).getResultList();
 	}
 
 	@Override
@@ -171,98 +172,71 @@ public abstract class AbsSupportDao implements ISupportDao {
 		return ( T ) session.get( _cls , _id );
 	}
 
-	@Override
-	@SuppressWarnings( "unchecked" )
-	@Deprecated
-	public < T > List< T > selectByExample( String _db , Object _obj ) {
-		Session session = _get_session( _db );
-		return session.createCriteria( _obj.getClass() ).add( Example.create( _obj ) ).list();
-	}
-
-	@Override
-	public < T > List< T > selectByHQL( String _db , String _hql , Object[] _param , Class< T > _cls ) {
-		return selectByHQL( _db , _hql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _cls );
-	}
 	@SuppressWarnings( "unchecked" )
 	@Override
 	public < T > List< T > selectByHQL( String _db , String _hql , String[] _param , Object[] _value, Class< T > _cls ){
-		Session session = _get_session( _db );
-		try {
-			Query query = session.createQuery(_hql);
-			if ( _param != null && _value != null ) {
-				for( int i = 0; i < _param.length; i ++ ){
-					if( _value[i] instanceof Collection )
-						query.setParameterList( _param[i] , ( Collection<?> ) _value[i] );
-					else
-						query.setParameter( _param[i] ,_value[i] );
-				}
-			}
-				
-			return query.list();
-		} finally {
-			_flush_session( session );
-		}
+		return selectByHQL( _db, _hql, DEFAULT_FIRST, DEFAULT_LIMIT, _param, _value, _cls );
 	}
 	@Override
 	@SuppressWarnings( "unchecked" )
-	public < T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Object[] _param ,
+	public < T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , String[] _param , Object[] _value,
 					Class< T > _cls ) {
 		Session session = _get_session( _db );
-		Query query = session.createQuery( _hql );
+		Query< T > query = session.createQuery( _hql );
 		query.setFirstResult( _first );
 		query.setMaxResults( _limit );
-		int i = 0;
-		if ( _param != null ) for ( Object o : _param )
-			query.setParameter( i++ , o );
-		return query.list();
+
+		_set_parameter( query, _param, _value );
+		return query.getResultList();
 	}
 
 	@Override
-	public < T > List< T > selectBySQL( String _db , String _sql , Object[] _param , Class< T > _cls ) {
-		return selectBySQL( _db , _sql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _cls );
+	public < T > List< T > selectBySQL( String _db , String _sql , String[] _param , Object[] _value, Class< T > _cls ) {
+		return selectBySQL( _db , _sql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _value, _cls );
 	}
 
 	@Override
 	@SuppressWarnings( "unchecked" )
-	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Object[] _param ,
+	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , String[] _param , Object[] _value,
 					Class< T > _cls ) {
 		Session session = _get_session( _db );
-		Query query = session.createNativeQuery( _sql );
+		Query< T > query = session.createNativeQuery( _sql, _cls );
 		query.setFirstResult( _first );
 		query.setMaxResults( _limit );
-		int i = 0;
-		if ( _param != null ) for ( Object o : _param )
-			query.setParameter( i++ , o );
-		return query.list();
+
+		_set_parameter( query, _param, _value );
+		return query.getResultList();
 	}
 
 	@Override
 	public < T > long selectCount( String _db , Class< T > _cls ) {
 		String hql = "SELECT COUNT(*) FROM ";
 
-		Query query = _get_session( _db ).createNativeQuery( hql + _cls.getName() );
+		Query query = _get_session( _db ).createQuery( hql + _cls.getName() );
 
 		return ( long ) query.iterate().next();
 	}
 
 	@Override
-	public long selectCount( String _db , String _hql , Object[] _param ) {
+	public long selectCountBySQL( String _db , String _sql , String[] _param , Object[] _value ) {
+		Query query = _get_session( _db ).createNativeQuery( _sql );
+		_set_parameter( query, _param, _value );
+		return ( long ) query.iterate().next();
+	}
+
+	@Override
+	public long selectCountByHQL( String _db , String _hql , String[] _param , Object[] _value ) {
 		Query query = _get_session( _db ).createQuery( _hql );
-		int i = 0;
-		if ( _param != null ) for ( Object o : _param )
-			query.setParameter( i++ , o );
-
+		_set_parameter( query, _param, _value );
 		return ( long ) query.iterate().next();
 	}
 
 	@Override
-	public int executeByHQL( String _db , String _hql , Object[] _param ) {
+	public int executeByHQL( String _db , String _hql , String[] _param, Object[] _value ) {
 		Session session = _get_session( _db );
 		try {
 			Query query = _get_session( _db ).createQuery( _hql );
-			int i = 0;
-			if ( _param != null ) for ( Object o : _param )
-				query.setParameter( i++ , o );
+			_set_parameter( query, _param, _value );
 			return query.executeUpdate();
 		} finally {
 			_flush_session( session );
@@ -270,13 +244,11 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 	
 	@Override
-	public int executeBySQL( String _db , String _sql , Object[] _param ) {
+	public int executeBySQL( String _db , String _sql , String[] _param, Object[] _value ) {
 		Session session = _get_session( _db );
 		try {
 			Query query = _get_session( _db ).createNativeQuery( _sql );
-			int i = 0;
-			if ( _param != null ) for ( Object o : _param )
-				query.setParameter( i++ , o );
+			_set_parameter( query, _param, _value );
 			return query.executeUpdate();
 		} finally {
 			_flush_session( session );

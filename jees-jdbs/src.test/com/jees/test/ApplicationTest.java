@@ -21,7 +21,9 @@ public class ApplicationTest {
 
 		TestController ctr = CommonContextHolder.getBean( TestController.class );
 
-		ctr.simpleTest();
+//		ctr.simpleTest();
+
+		ctr.absTest();
 
 //		ExTest( ctr );
 
