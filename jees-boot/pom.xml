@@ -29,7 +29,7 @@
         <jees.version>1.1.3-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
         <jees.jtls.version>1.1.4-SNAPSHOT</jees.jtls.version>
-        <jees.jdbs.version>1.1.4-SNAPSHOT</jees.jdbs.version>
+        <jees.jdbs.version>1.1.5-SNAPSHOT</jees.jdbs.version>
         <jees.jsts.version>1.1.3-SNAPSHOT</jees.jsts.version>
         <jees.webs.version>1.1.0-SNAPSHOT</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
