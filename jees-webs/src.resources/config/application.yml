@@ -38,7 +38,7 @@ jees:
   logout: logout
   default:
    assets: assets
-   access: false
+   access: true
   other:
    assets: assets
    access: true

@@ -8,8 +8,10 @@ import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.support.ITemplateService;
 import com.jees.webs.support.ISupportEL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring security核心配置项
@@ -52,6 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     UserDetailsService              userDetailsService;
+
+    @Autowired
+    AbsWebConfig                    webConfig;
 
     /**
      * 登陆成功后的处理
@@ -125,14 +131,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
             CommonLogger.getLogger( this.getClass() ).debug(
                     "--读取各栏目权限：TPL=[" + tpl_url + "], MENU=["+menus.size()+"], TPL=[" + tpl + "], ACCESS=[" + tpl_access + "]" );
-            if( tpl_access ) _hs.authorizeRequests().antMatchers( tpl_url ).hasAuthority( ISupportEL.ROLE_SUPERMAN ).anyRequest().permitAll();
-            else _hs.authorizeRequests().antMatchers( tpl_url ).permitAll();
+            if( tpl_access ) {
+                _hs.authorizeRequests().antMatchers( tpl_url ).hasAuthority( ISupportEL.ROLE_SUPERMAN );
+                webConfig.getTemplatePages( tpl ).forEach( p -> {
+                    Optional<SuperMenu> finder = menus.stream().filter(m -> {
+                        String t = m.getTpl();
+
+                        if( templateService.isDefault( t ) ) t = "/";
+                        else t += "/";
+
+                        String menu_url = t + m.getUrl();
+                        return menu_url.equalsIgnoreCase(p.getUrl() );
+                    }).findFirst();
+
+                    if( !finder.isPresent() ) {
+                        try {
+                            String p_url = p.getUrl();
+                            if( !templateService.isDefault( p.getTpl() ) ) p_url = "/" + p_url ;
+                            if (!p_url.equalsIgnoreCase("/" + CommonConfig.getString("jees.webs.login", "login"))) {
+                                _hs.authorizeRequests().antMatchers(p_url ).hasAuthority(ISupportEL.ROLE_SUPERMAN);
+                                CommonLogger.getLogger(this.getClass()).debug("--未配置的受限访问路径：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                } );
+            } else _hs.authorizeRequests().antMatchers( tpl_url );
 
             for( SuperMenu m : menus ){
                 tpl_url = is_default ? "/" + m.getUrl() : m.getTpl() + "/" + m.getUrl();
                 if( m.isPermit() && !tpl_access ){
                     CommonLogger.getLogger( this.getClass() ).debug( "--访问权限：URL=[" + tpl_url + "], ROLE=[]" );
-                    _hs.authorizeRequests().antMatchers( tpl_url ).permitAll();
+                    _hs.authorizeRequests().antMatchers( tpl_url );
                 }else{
                     @SuppressWarnings("unchecked")
                     List<String> list = m.getRoleNames();
@@ -145,6 +175,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 }
             }
         }
+
         _hs.authorizeRequests()
                 .and().formLogin().loginPage( "/" + CommonConfig.getString( "jees.webs.login", "login") )
                 .successHandler( successHandler() ).failureHandler( failureHandler() ).permitAll()

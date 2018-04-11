@@ -11,14 +11,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class AbsWebConfig implements WebMvcConfigurer {
-    public String               defPage;
+    public static String               defPage;
 
+    public static Map<String , Page>   pages;
     @Autowired
     ITemplateService            templateService;
     @Autowired
@@ -28,8 +30,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
     private List<Page> _load_template_2_page(){
         if( defPage == null ) defPage = CommonConfig.getString( "jees.webs.defPage", "index" );
-
-        Map<String , Page> page_map = new HashMap<>();
+        if( pages == null ) pages = new HashMap<>();
 
         String root_tpl = "classpath:/templates/";
 
@@ -51,6 +52,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                     String r_path = r.getURI().getPath();
 
                     if( r_path.indexOf( "/" + t.getAssets() + "/" ) != -1 ) continue;
+                    if( r_path.startsWith("_") ) continue;
                     r_path = r_path.replace( root_path , "" );
 
                     int b_idx = r_path.indexOf( "/" );
@@ -68,8 +70,8 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
                     if( templateService.isDefault( tpl ) ) url = url.replace( tpl, "" );
 
-                    if( !page_map.containsKey( url ) ){
-                        page_map.put( url, new Page( url, path ) );
+                    if( !pages.containsKey( url ) ){
+                        pages.put( url, new Page( url, path, tpl ) );
                         CommonLogger.getLogger( this.getClass() ).debug( "--配置访问路径：URL=[" + url + "], PATH=[" + path + "]" );
                     }else{
                         CommonLogger.getLogger( this.getClass() ).warn( "存在重复的访问路径：URL=[" + url + "], PATH=[" + path + "]" );
@@ -80,17 +82,26 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
             }
         } );
 
-        return page_map.values().stream().collect(Collectors.toList());
+        return pages.values().stream().collect(Collectors.toList());
+    }
+
+    public List<Page> getTemplatePages(String _tpl) {
+        return pages.values().stream().filter( p -> p.getTpl().equalsIgnoreCase( _tpl ) ).collect( Collectors.toList() );
+    }
+    public Page getPage( String _url ){
+        return pages.getOrDefault( _url, null );
     }
 
     @Data
-    private class Page{
+    public class Page{
         private String path;
         private String url;
+        private String tpl;
 
-        public Page( String _url, String _path ){
+        public Page( String _url, String _path, String _tpl ){
             this.path = _path;
             this.url = _url;
+            this.tpl = _tpl;
         }
     }
     /**

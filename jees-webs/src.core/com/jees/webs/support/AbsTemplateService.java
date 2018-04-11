@@ -101,10 +101,12 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
     }
     @Override
     public boolean isTemplate( String _tpl ){
+        if( _tpl.isEmpty() || _tpl.equals("/") ) return true;
         return templates.containsKey( _tpl );
     }
     @Override
     public boolean isDefault( String _tpl ) {
+        if( _tpl.isEmpty() || _tpl.equals("/") ) return true;
         return defTemplate.getName().equalsIgnoreCase( _tpl );
     }
 }
