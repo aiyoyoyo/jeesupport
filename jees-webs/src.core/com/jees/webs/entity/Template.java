@@ -1,4 +1,4 @@
-package com.jees.webs.config;
+package com.jees.webs.entity;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.util.Set;
  * @author aiyoyoyo
  */
 @Data
-public class TemplateConfig {
+public class Template {
     private String name;
     private String assets;
 }

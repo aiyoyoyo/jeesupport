@@ -22,13 +22,16 @@ spring:
   suffix: .html
   encoding: UTF-8
   content-type: text/html
-  mode: LEGACYHTML5
+  mode: HTML
 
 server:
  port: 8081
 
 jees:
  webs:
+  dwr:
+   debug: true
+   url: /dwr
   maxSession: 1000
   superman: superman
   superpwd: 6
@@ -38,7 +41,7 @@ jees:
   logout: logout
   default:
    assets: assets
-   access: true
+   access: false
   other:
    assets: assets
    access: true

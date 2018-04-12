@@ -22,7 +22,7 @@ import java.io.IOException;
  * 路径访问控制，需配合WebConfig
  * @author aiyoyoyo
  */
-public abstract class AbsControllerConfig {
+public abstract class AbsController {
 
     @Autowired
     SessionRegistry     sessionRegistry;

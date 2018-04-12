@@ -3,23 +3,19 @@ package com.jees.webs.config;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonLogger;
 import com.jees.tool.crypto.MD5Utils;
-import com.jees.webs.config.TemplateConfig;
+import com.jees.webs.entity.Template;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.support.ITemplateService;
 import com.jees.webs.support.ISupportEL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,9 +24,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -121,7 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure( HttpSecurity _hs ) throws Exception {
         List<String> tpl_names = templateService.getTemplateNames();
-        TemplateConfig tpl_default = templateService.getDefaultTemplate();
+        Template tpl_default = templateService.getDefaultTemplate();
 
         for( String tpl : tpl_names ) {
             List<SuperMenu> menus = templateService.loadTemplateMenus( tpl );
@@ -175,6 +168,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 }
             }
         }
+        String dwr_url = CommonConfig.getString("jees.webs.dwr.url", "/dwr" );
+        _hs.csrf().ignoringAntMatchers( dwr_url + "/**");
 
         _hs.authorizeRequests()
                 .and().formLogin().loginPage( "/" + CommonConfig.getString( "jees.webs.login", "login") )
@@ -182,6 +177,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .and().logout().logoutUrl("/" + CommonConfig.getString( "jees.webs.logout", "logout" )).permitAll();
 
         _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) ).sessionRegistry( sessionRegistry() );
+
     }
 
     /**

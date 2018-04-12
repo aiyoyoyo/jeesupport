@@ -53,6 +53,8 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
                     if( r_path.indexOf( "/" + t.getAssets() + "/" ) != -1 ) continue;
                     if( r_path.startsWith("_") ) continue;
+                    if( r_path.indexOf("/_") != -1 ) continue;
+
                     r_path = r_path.replace( root_path , "" );
 
                     int b_idx = r_path.indexOf( "/" );
@@ -119,7 +121,6 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
             R.excludePathPatterns( "/" + t.getName() + "/" + t.getAssets() + "/**" );
         } );
-
     }
 
     /**

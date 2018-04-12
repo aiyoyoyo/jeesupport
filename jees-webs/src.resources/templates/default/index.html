@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script th:src="|${RES}/jquery-3.2.1.min.js|"></script><br/>
 </head>
 <body>
     default index<br/>
@@ -20,6 +21,50 @@
     <img th:src="|${session.TPL_A_other}/default.jpg|"></img><br/>
 
     <img src="default/assets/default.jpg"></img><br/>
+
+    <script type='text/javascript' src='/dwr/engine.js'></script>
+    <script type='text/javascript' src='/dwr/interface/DemoService.js'></script>
+
+    <script>
+        $(document).ready(function() {
+            DemoService.echo('测试', function (str) {
+                console.log( str );
+            });
+            DemoService.user( function (user) {
+                console.log( user.username );
+            });
+            DemoService.user({username: "aaa"}, function (user) {
+                console.log( user.username );
+            });
+			$.ajax({
+			    url: "/echo1",
+			    data: {"aaa":"aaa" },
+			    success: function( data ){
+			        console.log( "echo1->" , data );
+                }
+            });
+
+            $.ajax({
+			    url: "/echo2",
+			    data: { "_str": "aaa" },
+			    success: function( data ){
+			        console.log( "echo2->" , data );
+                }
+            });
+
+            $.ajax({
+			    url: "/echo3",
+			    data: { "username": "aaa" } ,
+			    contentType:"application/json",
+			    dataType:"json",
+			    success: function( data ){
+			        console.log( "echo3->" , data.username );
+                }
+            });
+		});
+    </script>
+
+    <a href="/test/">Controller测试 </a><br/>
 
     <a href="/menu1/">menu1 </a><br/>
     <a href="/menu1/menu1-1/">menu1/menu1-1 </a><br/>
