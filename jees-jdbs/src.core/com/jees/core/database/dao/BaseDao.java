@@ -4,15 +4,16 @@ import com.jees.core.database.support.AbsSupportDao;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通过缓存操作的形式，先记录要操作的数据（不包含查询），在需要的时候通过commit()提交。
  * @author aiyoyoyo
  */
 public class BaseDao extends AbsSupportDao{
-    private Map< String, List<Object> > insertMap = new HashMap<>();
-    private Map< String, List<Object> > deleteMap = new HashMap<>();
-    private Map< String, List<Object> > updateMap = new HashMap<>();
+    private Map< String, List<Object> > insertMap = new ConcurrentHashMap<>();
+    private Map< String, List<Object> > deleteMap = new ConcurrentHashMap<>();
+    private Map< String, List<Object> > updateMap = new ConcurrentHashMap<>();
 
     private void _push( String _db, Object _obj, Map< String, List<Object> > _map ){
         List<Object> list = _map.getOrDefault( _db, new ArrayList<>() );
@@ -88,9 +89,15 @@ public class BaseDao extends AbsSupportDao{
                 deleteAll(key, delList);
             });
 
-            insertMap.keySet().forEach(key -> insertAll(key, insertMap.getOrDefault(key, new ArrayList<>())));
+            insertMap.keySet().forEach(key -> {
+                List<?> list = insertMap.getOrDefault(key, null );
+                if( list != null ) insertAll(key, list );
+            });
 
-            updateMap.keySet().forEach(key -> updateAll(key, updateMap.getOrDefault(key, new ArrayList<>())));
+            updateMap.keySet().forEach(key ->{
+                List<?> list = updateMap.getOrDefault(key, null );
+                if( list != null ) updateAll(key, list );
+            });
 
         }finally {
             deleteMap.clear();
