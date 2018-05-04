@@ -2,28 +2,17 @@ package com.jees.core.database.config;
 
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
-import com.jees.common.CommonLogger;
-
-import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.ISupportDao;
-import org.hibernate.SessionFactory;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.internal.SessionFactoryImpl;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyEditorRegistrar;
-import org.springframework.beans.PropertyEditorRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.Scope;
 import org.springframework.beans.factory.support.*;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import java.util.Properties;
 
+@Log4j2
 public class SessionFactoryRegistry {
     public void registerSessionFactory(String _name) {
         AtomikosDataSourceBean ds = createXADataSource(_name);
@@ -64,7 +53,7 @@ public class SessionFactoryRegistry {
         beanFactory.registerBeanDefinition( bean, beanDefinitionBuilder.getBeanDefinition() );
 
         AbsXADataSource xaDataSource = CommonContextHolder.getBean( bean );
-        CommonLogger.getLogger().debug("--创建AbsXADataSource[" + bean + "]。");
+        log.debug("--创建AbsXADataSource[" + bean + "]。");
         return xaDataSource;
     }
 
@@ -102,7 +91,7 @@ public class SessionFactoryRegistry {
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
 
-        CommonLogger.getLogger().debug("--创建LocalSessionFactoryBean[" + bean + "]。");
+        log.debug("--创建LocalSessionFactoryBean[" + bean + "]。");
 
         beanFactory.registerBeanDefinition(bean, beanDefinitionBuilder.getBeanDefinition());
 

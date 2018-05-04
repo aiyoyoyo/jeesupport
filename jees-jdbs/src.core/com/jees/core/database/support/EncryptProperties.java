@@ -3,8 +3,7 @@ package com.jees.core.database.support ;
 import java.util.Enumeration ;
 import java.util.Properties ;
 
-import org.apache.logging.log4j.LogManager ;
-import org.apache.logging.log4j.Logger ;
+import lombok.extern.log4j.Log4j2;
 
 import com.jees.tool.crypto.AESUtils ;
 
@@ -14,10 +13,10 @@ import com.jees.tool.crypto.AESUtils ;
  * @author aiyoyoyo
  *
  */
+@Log4j2
 public class EncryptProperties extends Properties {
 
 	private static final long	serialVersionUID	= - 8248130519122355306L ;
-	private static Logger		logger				= LogManager.getLogger( EncryptProperties.class ) ;
 
 	/**
 	 * 解密用密钥
@@ -45,7 +44,7 @@ public class EncryptProperties extends Properties {
 				return super.setProperty( _key , AESUtils.s_decrypt( this.keys , _val ) ) ;
 			else return super.setProperty( _key , _val ) ;
 		} catch ( Exception e ) {
-			logger.error( "密钥错误，请确认密钥和密文是否配套。" ) ;
+			log.error( "密钥错误，请确认密钥和密文是否配套。" ) ;
 		}
 		return super.setProperty( _key , "" ) ;
 	}

@@ -1,14 +1,7 @@
 package com.jees.core.database.config;
 
-import com.jees.common.CommonLogger;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.transaction.TransactionManager;
@@ -21,6 +14,7 @@ import javax.transaction.UserTransaction;
  * @author aiyoyoyo
  *
  */
+@Log4j2
 public class AtomikosJtaPlatform extends AbstractJtaPlatform {
 
     static JtaTransactionManager   jtaTransactionManager;
@@ -34,7 +28,7 @@ public class AtomikosJtaPlatform extends AbstractJtaPlatform {
     }
 
     public void setJtaTransactionManager( JtaTransactionManager jtaTransactionManager ){
-        CommonLogger.getLogger().debug( "设置JtaTransactionManager：" + jtaTransactionManager );
+        log.debug( "设置JtaTransactionManager：" + jtaTransactionManager );
         AtomikosJtaPlatform.jtaTransactionManager = jtaTransactionManager;
     }
 

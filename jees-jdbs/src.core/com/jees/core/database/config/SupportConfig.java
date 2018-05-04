@@ -4,7 +4,7 @@ import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
-import com.jees.common.CommonLogger;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,8 @@ import java.util.StringTokenizer;
 
 @Configuration
 @EnableTransactionManagement( proxyTargetClass = true )
-@DependsOn( { "commonContextHolder", "commonLogger" } )
+@DependsOn( { "commonContextHolder" } )
+@Log4j2
 public class SupportConfig {
     /**
      * atomikos事务管理器，一般情况无需修改
@@ -30,7 +31,7 @@ public class SupportConfig {
 
         utm.setForceShutdown( false );
 
-        CommonLogger.getLogger().debug( "--Spring Bean[atomikosTM]初始化." );
+        log.debug( "--Spring Bean[atomikosTM]初始化." );
         return utm;
     }
 
@@ -44,7 +45,7 @@ public class SupportConfig {
 
         uti.setTransactionTimeout( CommonConfig.getInteger("jees.jdbs.trans.timeout", 300 ) );
 
-        CommonLogger.getLogger().debug( "--Spring Bean[atomikosUT]初始化." );
+        log.debug( "--Spring Bean[atomikosUT]初始化." );
         return uti;
     }
 
@@ -65,13 +66,13 @@ public class SupportConfig {
         jtm.setAllowCustomIsolationLevels(
                 CommonConfig.getBoolean("jees.jdbs.trans.allowCustomIsolationLevels", false ) );
 
-        CommonLogger.getLogger().debug( "--Spring Bean[defaultTM]初始化." );
+        log.debug( "--Spring Bean[defaultTM]初始化." );
         return jtm;
     }
 
     @Bean
     public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
-        CommonLogger.getLogger().debug( "--Spring Bean[atomikosJP]初始化." );
+        log.debug( "--Spring Bean[atomikosJP]初始化." );
         return new AtomikosJtaPlatform( _jtm );
     }
 

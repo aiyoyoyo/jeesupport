@@ -1,7 +1,6 @@
 package com.jees.core.database.dao;
 
 import com.jees.core.database.support.AbsSupportDao;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

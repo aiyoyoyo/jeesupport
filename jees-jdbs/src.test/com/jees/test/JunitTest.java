@@ -1,13 +1,11 @@
 package com.jees.test;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
@@ -21,9 +19,8 @@ import javax.transaction.Transactional;
 @RunWith( SpringJUnit4ClassRunner.class )
 @SpringBootTest
 @ComponentScan("com.jees")
+@Log4j2
 public class JunitTest implements Runnable {
-	static Logger			logger	= LogManager.getLogger( JunitTest.class );
-
 	public long				id;
 	public int				right;
 	public int				faild_a;
@@ -91,15 +88,15 @@ public class JunitTest implements Runnable {
 		} catch ( Exception e ) {
 			String str = e.toString();
 			if ( str.indexOf( "identifier of an instance of" ) != - 1 )
-				logger.error( "--执行的实体对象不符合操作规则，例如ID发生了变化后执行了更新操作。" );
+				log.error( "--执行的实体对象不符合操作规则，例如ID发生了变化后执行了更新操作。" );
 			else if ( str.indexOf( "The given object has a null identifier" ) != - 1 )
-				logger.error( "--执行的实体对象不符合操作规则，例如更新或删除为Null的对象。" );
+				log.error( "--执行的实体对象不符合操作规则，例如更新或删除为Null的对象。" );
 			else if ( str.indexOf( "Could not obtain transaction-synchronized Session for current thread" ) != - 1 )
-				logger.error( "--业务方法没有显式声明事务注解@Transactional。" );
-			else if ( str.indexOf( "没有找到数据库" ) != - 1 ) logger.error( "--没有配置的数据库连接池。" );
-			else logger.error( "--其他错误，待分类说明：" , e );
+				log.error( "--业务方法没有显式声明事务注解@Transactional。" );
+			else if ( str.indexOf( "没有找到数据库" ) != - 1 ) log.error( "--没有配置的数据库连接池。" );
+			else log.error( "--其他错误，待分类说明：" , e );
 		}
-		logger.info( "----------------run test1 end---------------" );
+		log.info( "----------------run test1 end---------------" );
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class JunitTest implements Runnable {
 	 */
 //	 @Test
 	public void test2() {
-		logger.debug( "----------------run test2 start---------------" );
+		log.debug( "----------------run test2 start---------------" );
 		for ( int i = 0; i < 30; i++ ) {
 			JunitTest t = new JunitTest();
 			t.id = i;
@@ -119,7 +116,7 @@ public class JunitTest implements Runnable {
 		try {
 			Thread.sleep( 1000 * 60 * 1 );
 		} catch ( InterruptedException e ) {}
-		logger.debug( "----------------run test2 end---------------" );
+		log.debug( "----------------run test2 end---------------" );
 	}
 
 	@Override
@@ -148,7 +145,7 @@ public class JunitTest implements Runnable {
 			}
 		}
 
-		logger.info( "Thread[" + id + "] 统计的总数 错误: 线程-" + faild_i + "/事件-" + faild_r + "/逻辑-" + faild_a + "/成功-"
+		log.info( "Thread[" + id + "] 统计的总数 错误: 线程-" + faild_i + "/事件-" + faild_r + "/逻辑-" + faild_a + "/成功-"
 						+ right );
 	}
 }
