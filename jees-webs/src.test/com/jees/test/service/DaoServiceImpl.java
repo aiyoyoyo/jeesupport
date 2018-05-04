@@ -19,6 +19,7 @@ public class DaoServiceImpl extends BaseDao {
         return list.size() == 1 ? list.get(0) : null;
     }
 
+    @SuppressWarnings( "unchecked" )
     public List<SuperMenu> selectTemplateMenus( String _tpl ) {
         String hql = "FROM Menu WHERE tpl = :TPL" ;
         List<? extends SuperMenu> list = this.selectByHQL( DB_Default, hql, new String[]{"TPL"}, new Object[]{ _tpl }, Menu.class );

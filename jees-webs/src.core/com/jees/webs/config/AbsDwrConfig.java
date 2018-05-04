@@ -4,12 +4,12 @@ import com.jees.common.CommonConfig;
 import org.directwebremoting.spring.DwrSpringServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.ImportResource;
 
 @ImportResource(locations = "classpath:config/dwr.xml")
 public abstract class AbsDwrConfig {
+    @SuppressWarnings( "unchecked" )
     @Bean
     @DependsOn( "commonConfig" )
     public ServletRegistrationBean servletRegistrationBean() {

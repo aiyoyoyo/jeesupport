@@ -1,12 +1,12 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
-import com.jees.common.CommonLogger;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.entity.Template;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.support.ITemplateService;
 import com.jees.webs.support.ISupportEL;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +42,7 @@ import java.util.Optional;
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled=true)
+@Log4j2
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     ITemplateService                templateService;
@@ -61,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess( HttpServletRequest _request, HttpServletResponse _response, Authentication _auth ) throws IOException, ServletException {
-                CommonLogger.getLogger( this.getClass() ).debug( "--登陆成功" );
+                log.debug( "--登陆成功" );
 
                 _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getPrincipal() );
 
@@ -72,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 SavedRequest savedRequest = requestCache.getRequest( _request, _response );
                 String url = null;
                 if(savedRequest != null) url = savedRequest.getRedirectUrl();
-                CommonLogger.getLogger( this.getClass() ).debug( "--登陆后转向：" + url );
+                log.debug( "--登陆后转向：" + url );
 
                 if(url == null) redirectStrategy().sendRedirect( _request, _response, "/" );
                 else _response.sendRedirect( url );
@@ -89,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new AuthenticationFailureHandler(){
             @Override
             public void onAuthenticationFailure( HttpServletRequest _request, HttpServletResponse _response, AuthenticationException _e ) throws IOException, ServletException {
-                CommonLogger.getLogger( this.getClass() ).debug( "--登陆失败：" + _e.getMessage() );
+                log.debug( "--登陆失败：" + _e.getMessage() );
                 redirectStrategy().sendRedirect( _request, _response,
                         "/" + CommonConfig.getString( "jees.webs.login", "login") + "?" + ISupportEL.Login_Err );
             }
@@ -122,7 +123,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             boolean tpl_access = CommonConfig.getBoolean( "jees.webs." + tpl + ".access" );
             String  tpl_url    = is_default ? "/" : "/" + tpl + "/";
 
-            CommonLogger.getLogger( this.getClass() ).debug(
+            log.debug(
                     "--读取各栏目权限：TPL=[" + tpl_url + "], MENU=["+menus.size()+"], TPL=[" + tpl + "], ACCESS=[" + tpl_access + "]" );
             if( tpl_access ) {
                 _hs.authorizeRequests().antMatchers( tpl_url ).hasAuthority( ISupportEL.ROLE_SUPERMAN );
@@ -143,7 +144,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                             if( !templateService.isDefault( p.getTpl() ) ) p_url = "/" + p_url ;
                             if (!p_url.equalsIgnoreCase("/" + CommonConfig.getString("jees.webs.login", "login"))) {
                                 _hs.authorizeRequests().antMatchers(p_url ).hasAuthority(ISupportEL.ROLE_SUPERMAN);
-                                CommonLogger.getLogger(this.getClass()).debug("--未配置的受限访问路径：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
+                                log.debug("--未配置的受限访问路径：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
                             }
                         } catch (Exception e) {
                         }
@@ -154,7 +155,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             for( SuperMenu m : menus ){
                 tpl_url = is_default ? "/" + m.getUrl() : m.getTpl() + "/" + m.getUrl();
                 if( m.isPermit() && !tpl_access ){
-                    CommonLogger.getLogger( this.getClass() ).debug( "--访问权限：URL=[" + tpl_url + "], ROLE=[]" );
+                    log.debug( "--访问权限：URL=[" + tpl_url + "], ROLE=[]" );
                     _hs.authorizeRequests().antMatchers( tpl_url );
                 }else{
                     @SuppressWarnings("unchecked")
@@ -163,7 +164,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     String[] roles = new String[list.size()];
                     list.toArray( roles );
 
-                    CommonLogger.getLogger( this.getClass() ).debug( "--访问权限：URL=[" + tpl_url + "], ROLE=" + Arrays.toString( roles )  );
+                    log.debug( "--访问权限：URL=[" + tpl_url + "], ROLE=" + Arrays.toString( roles )  );
                     _hs.authorizeRequests().antMatchers( tpl_url ).hasAnyAuthority( roles );
                 }
             }
@@ -188,16 +189,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         _auth.userDetailsService( userDetailsService ).passwordEncoder(new PasswordEncoder() {
             @Override
             public String encode( CharSequence _pwd ) {
-                CommonLogger.getLogger( this.getClass() ).debug( "--ENCODE PWD: [" + _pwd + "]");
+                log.debug( "--ENCODE PWD: [" + _pwd + "]");
                 String encode = MD5Utils.s_encode( (String) _pwd );
-                CommonLogger.getLogger( this.getClass() ).debug( "--ENCODE PWD: [" + encode + "]");
+                log.debug( "--ENCODE PWD: [" + encode + "]");
                 return encode;
             }
             @Override
             public boolean matches(CharSequence _pwd , String _encode ) {
                 String encode_pwd = MD5Utils.s_encode( (String)_pwd );
-                CommonLogger.getLogger( this.getClass() ).debug( "--MATCHES PWD: [" + _pwd+ "]->[" + encode_pwd + "]");
-                CommonLogger.getLogger( this.getClass() ).debug( "--MATCHES ENCODE: [" + _encode + "]");
+                log.debug( "--MATCHES PWD: [" + _pwd+ "]->[" + encode_pwd + "]");
+                log.debug( "--MATCHES ENCODE: [" + _encode + "]");
                 boolean matches = _encode.equals( encode_pwd );
                 return matches;
             }
