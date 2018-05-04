@@ -2,8 +2,8 @@ package com.jees.jsts.netty.support;
 
 import com.jees.common.CommonConfig;
 import com.jees.core.socket.support.ISocketBase;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,8 @@ import io.netty.handler.timeout.IdleStateEvent;
  */
 @Component
 @Scope( value = INettyHandler.SCOPE_CREATOR )
-public class NettyHandler implements INettyHandler {
-	private static Logger										logger	= LogManager.getLogger( NettyHandler.class );
+@Log4j2
+public class NettyHandler extends ChannelInboundHandlerAdapter implements INettyHandler {
 	private static Long											maxLost = null;
 	private long												lastTime = 0L;
 	private boolean												stand = false;
@@ -43,61 +43,28 @@ public class NettyHandler implements INettyHandler {
 	// == 连接方法序 == //
 	@Override
 	public void handlerAdded( ChannelHandlerContext _ctx ){
-		logger.debug( _handler_info( _ctx , "handlerAdded" ) );
+		log.debug( _handler_info( _ctx , "handlerAdded" ) );
 		handler.enter( _ctx );
 	}
-
-	@Override
-	public void channelRegistered( ChannelHandlerContext _ctx ) {
-		logger.debug( _handler_info( _ctx , "channelRegistered" ) );
-	}
-
-	@Override
-	public void channelActive( ChannelHandlerContext _ctx ) {
-		logger.debug( _handler_info( _ctx , "channelActive" ) );
-	}
-
 	// == 接收方法序 == //
 	@Override
 	public void channelRead( ChannelHandlerContext _ctx , Object _obj ) {
-		logger.debug( _handler_info( _ctx , "channelRead" ) );
-
-		if ( _obj != null ) handler.receive( _ctx , _obj );
-	}
-
-	@Override
-	public void channelReadComplete( ChannelHandlerContext _ctx ) {
-		logger.debug( _handler_info( _ctx , "channelReadComplete" ) );
+		log.debug( _handler_info( _ctx , "channelRead" ) );
+		handler.receive( _ctx , _obj );
 	}
 
 	// == 断开方法序 == //
 	@Override
-	public void channelInactive( ChannelHandlerContext _ctx ){
-		logger.debug( _handler_info( _ctx , "channelInactive" ) );
-	}
-
-	@Override
-	public void channelUnregistered( ChannelHandlerContext _ctx ){
-		logger.debug( _handler_info( _ctx , "channelUnregistered" ) );
-	}
-
-	@Override
 	public void handlerRemoved( ChannelHandlerContext _ctx ){
-		logger.debug( _handler_info( _ctx , "handlerRemoved" ) );
+		log.debug( _handler_info( _ctx , "handlerRemoved" ) );
 		handler.leave( _ctx );
 	}
 
 	// == 状态方法序 == //
 	@Override
-	@Deprecated
 	public void exceptionCaught( ChannelHandlerContext _ctx , Throwable _thr ) {
-		logger.error( _handler_info( _ctx , "exceptionCaught" + _thr.toString() ) );
+		log.error( _handler_info( _ctx , "exceptionCaught" + _thr.toString() ) );
 		handler.error( _ctx , _thr );
-	}
-
-	@Override
-	public void channelWritabilityChanged( ChannelHandlerContext _ctx ) {
-		logger.debug( _handler_info( _ctx , "channelWritabilityChanged" ) );
 	}
 
 	/**
@@ -105,7 +72,7 @@ public class NettyHandler implements INettyHandler {
 	 */
 	@Override
 	public void userEventTriggered( ChannelHandlerContext _ctx , Object _obj ){
-		logger.debug( _handler_info( _ctx , "userEventTriggered" ) );
+		log.debug( _handler_info( _ctx , "userEventTriggered" ) );
 		if( maxLost == null )
 			maxLost = CommonConfig.getLong( ISocketBase.Netty_Socket_LostTime );
 		if ( _obj instanceof IdleStateEvent ) {
@@ -113,7 +80,7 @@ public class NettyHandler implements INettyHandler {
 			if ( event.state() == IdleState.READER_IDLE ) {
 				long now = System.currentTimeMillis();
 				long lost = now - lastTime;
-				logger.debug( _handler_info( _ctx , "待机时长:" + lost ) );
+				log.debug( _handler_info( _ctx , "待机时长:" + lost ) );
 				if( lastTime == 0L ) {
 					lastTime = now;
 				}else if( !stand && lost >= maxLost ){
@@ -121,13 +88,13 @@ public class NettyHandler implements INettyHandler {
 					stand = true;
 				}
 			}else if ( stand && event.state() == IdleState.WRITER_IDLE ) {
-				logger.debug( _handler_info( _ctx , "待机恢复." ) );
+				log.debug( _handler_info( _ctx , "待机恢复." ) );
 				handler.recovery( _ctx );
 				stand = false;
 				lastTime = 0L;
 			}
 		} else {
-			logger.warn( _handler_info( _ctx , " was discard" ) );
+			log.warn( _handler_info( _ctx , " was discard" ) );
 		}
 	}
 }

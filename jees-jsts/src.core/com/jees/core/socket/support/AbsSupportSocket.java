@@ -1,4 +1,4 @@
-package com.jees.core.socket.support ;
+package com.jees.core.socket.support;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public abstract class AbsSupportSocket implements ISupportSocket{
+public abstract class AbsSupportSocket implements ISupportSocket {
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();

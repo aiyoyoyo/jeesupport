@@ -1,4 +1,4 @@
-package com.jees.jsts.netty.support ;
+package com.jees.jsts.netty.support;
 
 import java.nio.ByteOrder ;
 

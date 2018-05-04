@@ -2,10 +2,8 @@
 logging:
  config: classpath:log4j2.xml
  level:
-  org:
-   springframework: WARN
-  com:
-   jees: DEBUG
+  org.springframework: WARN
+  com.jees: DEBUG
 
 spring:
  application:
@@ -14,12 +12,21 @@ spring:
 jees:
  jsts:
   socket:
+   enable: true
    lostTime: 0
    standTime: 60000
    port: 8000
   websocket:
+   enable: true
    url: /ws
    lostTime: 0
    standTime: 60000
    port: 8001
+  connector:
+   enable: true
+   retry:
+    max: 3
+    rate: 10000
+    delay: 300000
+   hosts: 127.0.0.1:8000
 

@@ -12,7 +12,10 @@ public interface ISocketBase {
 
     String Netty_Socket_Port        = "jees.jsts.socket.port";
     String Netty_Socket_LostTime    = "jees.jsts.socket.lostTime";
+    String Netty_Socket_Enable      = "jees.jsts.socket.enable";
     String Netty_WebSocket_Port     = "jees.jsts.websocket.port";
     String Netty_WebSocket_LostTime = "jees.jsts.websocket.lostTime";
     String Netty_WebSocket_Url      = "jees.jsts.websocket.url";
+    String Netty_WebSocket_Enable   = "jees.jsts.websocket.enable";
+    String Netty_Connector_Enable   = "jees.jsts.connector.enable";
 }

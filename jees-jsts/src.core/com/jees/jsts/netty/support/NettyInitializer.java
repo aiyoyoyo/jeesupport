@@ -3,8 +3,7 @@ package com.jees.jsts.netty.support ;
 import java.util.concurrent.TimeUnit ;
 
 import com.jees.common.CommonContextHolder;
-import org.apache.logging.log4j.LogManager ;
-import org.apache.logging.log4j.Logger ;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component ;
 
 import io.netty.channel.ChannelInitializer ;
@@ -19,11 +18,11 @@ import io.netty.handler.timeout.IdleStateHandler ;
  *
  */
 @Component
+@Log4j2
 public class NettyInitializer extends ChannelInitializer< SocketChannel > {
-	private static Logger logger = LogManager.getLogger( NettyInitializer.class ) ;
 	@Override
 	protected void initChannel( SocketChannel _channel ) throws Exception {
-		logger.info( "Netty Server init channel: " + _channel.isActive() ) ;
+		log.info( "Socket Server初始化: " + _channel.isActive() ) ;
 
 		ChannelPipeline pipeline = _channel.pipeline() ;
 
