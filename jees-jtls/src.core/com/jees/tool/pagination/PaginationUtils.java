@@ -1,8 +1,13 @@
 package com.jees.tool.pagination;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class PaginationUtils {
 	public static int		TYPE_A = 0;
 	private int max;
@@ -64,36 +69,5 @@ public class PaginationUtils {
 				indexes.add( pages );
 			}
 		}
-	}
-
-	public int getMax() {
-		return max;
-	}
-	public void setMax( int max ) {
-		this.max = max;
-	}
-	public int getIndex() {
-		return index;
-	}
-	public void setIndex( int index ) {
-		this.index = index;
-	}
-	public int getPages() {
-		return pages;
-	}
-	public void setPages( int pages ) {
-		this.pages = pages;
-	}
-	public int getMin() {
-		return min;
-	}
-	public void setMin( int min ) {
-		this.min = min;
-	}
-	public List< Integer > getIndexes() {
-		return indexes;
-	}
-	public void setIndexes( List< Integer > indexes ) {
-		this.indexes = indexes;
 	}
 }

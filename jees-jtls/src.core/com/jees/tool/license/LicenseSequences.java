@@ -1,16 +1,15 @@
 package com.jees.tool.license;
 
 import com.jees.tool.crypto.MD5Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * 通过计算机信息生成可用许可
  * 
  * @author aiyoyoyo
  */
+@Log4j2
 public class LicenseSequences {
-	private static Logger logger			= LoggerFactory.getLogger( LicenseSequences.class );
 	
 	/** 
      * 将信息加密，并格式化为:<br/>
@@ -24,7 +23,7 @@ public class LicenseSequences {
     	try {
 			return _s_format_code( txt );
 		} catch ( Exception e ) {
-			logger.error( "MD5摘要失败！", e );
+            log.error( "MD5摘要失败！", e );
 		}
     	return null;
     }
@@ -44,8 +43,8 @@ public class LicenseSequences {
         String c3 = _str.substring( 16, 32 );
     	
     	String new_str = c0 + "-" + c1 + "-" + c2 + "-" + c3;
-    	
-    	logger.debug( "格式化编码：" + new_str );
+
+        log.debug( "--格式化编码：" + new_str );
     	return new_str;
     }
     

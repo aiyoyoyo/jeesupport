@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Deprecated
 public class CommonLogger {
     private static Logger logger = LoggerFactory.getLogger( CommonLogger.class );
     private static Map< Class, Logger > loggerMap = new HashMap<>();

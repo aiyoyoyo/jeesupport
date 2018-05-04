@@ -1,5 +1,6 @@
 package com.jees.common;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.util.Collection;
  * 
  * @author aiyoyoyo
  */
+@Log4j2
 @Component
 public class CommonContextHolder implements ApplicationContextAware {
 	private static ApplicationContext	applicationContext ;
@@ -20,7 +22,7 @@ public class CommonContextHolder implements ApplicationContextAware {
 	 */
 	@Override
 	public void setApplicationContext( ApplicationContext applicationContext ) {
-		CommonLogger.getLogger().debug( "初始化Spring组件：" + applicationContext );
+		log.debug( "--初始化Spring组件：" + applicationContext );
 		CommonContextHolder.applicationContext = applicationContext ; // NOSONAR
 	}
 

@@ -1,8 +1,6 @@
 package com.jees.tool.license;
 
-import com.jees.common.CommonLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -15,6 +13,7 @@ import java.util.Scanner;
  * 
  * @author aiyoyoyo
  */
+@Log4j2
 public class MachineSerial {
 	/**
 	 * 获取CPU序列号
@@ -29,7 +28,7 @@ public class MachineSerial {
 			sc.next();
 			return sc.next();
 		} catch ( IOException e ) {
-			CommonLogger.getLogger().error( "生成CPUSerial失败" , e );
+			log.error( "生成CPUSerial失败" , e );
 		}
 		return null;
 	}
@@ -59,10 +58,10 @@ public class MachineSerial {
 			}
 			file.delete();
 		} catch ( Throwable e ) {
-			CommonLogger.getLogger().error( "生成HDSerial失败" , e );
+			log.error( "生成HDSerial失败" , e );
 		}
 		if ( result.length() < 1 ) {
-			CommonLogger.getLogger().error( "无磁盘ID被读取" );
+			log.error( "无磁盘ID被读取" );
 		}
 
 		return result.toString();
@@ -92,7 +91,7 @@ public class MachineSerial {
 			}
 		}
 
-		CommonLogger.getLogger().error( "本机MAC地址:" + sb.toString().toUpperCase() );
+		log.error( "本机MAC地址:" + sb.toString().toUpperCase() );
 	}
 	
 	/**

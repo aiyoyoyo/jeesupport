@@ -1,5 +1,6 @@
 package com.jees.common;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -13,6 +14,7 @@ import java.util.StringTokenizer;
  * @author aiyoyoyo
  * @version 1.0
  */
+@Log4j2
 @Component
 @Configuration
 public class CommonConfig {
@@ -25,11 +27,11 @@ public class CommonConfig {
 
 	public static String get( String _key ) {
 		if( environment == null ) {
-			CommonLogger.getLogger().warn( "获取上下文失败。");
+			log.warn( "获取上下文失败。");
 			return "";
 		}
 		String val = environment.getProperty( _key );
-		CommonLogger.getLogger().debug( "获取上下文：KEY=[" + _key + "], VAL=[" + val + "]");
+		log.debug( "--获取上下文：KEY=[" + _key + "], VAL=[" + val + "]");
 		return val;
 	}
 

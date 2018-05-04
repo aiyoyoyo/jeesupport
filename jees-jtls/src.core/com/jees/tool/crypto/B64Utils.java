@@ -1,7 +1,5 @@
 package com.jees.tool.crypto;
 
-import java.io.UnsupportedEncodingException;
-
 import org.springframework.util.Base64Utils;
 
 /**
