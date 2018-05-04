@@ -1,21 +1,20 @@
 package com.jees.test.utils;
 
-import com.jees.common.CommonLogger;
+import lombok.extern.log4j.Log4j2;
 import org.joda.time.*;
 import org.junit.Test;
 
 import com.jees.tool.joda.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Log4j2
 public class DateTest {
 	@Test
 	public void test() {
 		DateTime dt = new DateTime( 2017 , 9 , 11 , 10 , 30 , 50 , 333 );// 2010年2月13日10点30分50秒333毫秒
 		int[] d = DateUtils.dateBeforeNow( dt );
 
-		CommonLogger.getLogger().debug( "原时间：" + dt );
-		CommonLogger.getLogger().debug( "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
+		log.debug( "原时间：" + dt );
+		log.debug( "相差 ：年-" + d[ 0 ] + ", 月-" + d[ 1 ] + ",日-" + d[ 2 ] + ",时-" + d[ 3 ] + ",分-" + d[ 4 ] + ",秒-" + d[ 5 ] );
 	}
 
 	/*

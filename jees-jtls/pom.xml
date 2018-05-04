@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jees-boot</artifactId>
-        <version>1.1.5-SNAPSHOT</version>
+        <version>1.1.6-SNAPSHOT</version>
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
 
@@ -31,6 +31,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+        <!-- Joda Time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,11 +44,12 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Joda Time -->
+        <!-- Lombok -->
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
