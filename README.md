@@ -44,10 +44,16 @@ QQ群：8802330
 在版本2.0.0之前，都会是快照版本。在此之前会逐步完善相关内容。
 
 ## 更新内容
+### Jees-Boot Ver.1.1.5-SNAPSHOT
+> [JSTS] Ver 1.1.4-SNAPSHOT
+1. 提供了服务器套件，以便于各类项目直接应用。
+2. 提供了服务器之间通讯方案，详细使用方法，请参考Demo。
+
 ### Jees-Boot Ver.1.1.4-SNAPSHOT
 > [JTLS] Ver 1.1.4-SNAPSHOT
 1. 增加CommonConfig读取配置时的方法。 
 2. 增加RandomUtil工具包。
+3. 增加DataUtil工具包
 
 > [JDBS] Ver 1.1.4-SNAPSHOT
 1. 更新了jdbs配置方案，由多文件形式转为集中到application.yml中。详细内容见测试代码和配置文件。
