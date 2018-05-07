@@ -1,8 +1,8 @@
 package com.jees.webs.support;
 
 import com.jees.common.CommonConfig;
-import com.jees.common.CommonLogger;
 import com.jees.webs.entity.Template;
+import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * 模版和主题管理类， 模版代表不同的可访问应用，主题代表应用展示样式。
  * @author aiyoyoyo
  */
+@Log4j2
 public abstract class AbsTemplateService implements ITemplateService, ISupportEL{
 
     private Map<String, Template> templates;
@@ -37,10 +38,10 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
 
             templates.put( tpl, tplCfg );
 
-            CommonLogger.getLogger( this.getClass() ).warn( "未找到有效模版，将使用默认模版路径：" + tpl );
+            log.warn( "未找到有效模版，将使用默认模版路径：" + tpl );
         }
 
-        CommonLogger.getLogger( this.getClass() ).info( "已加载模版：" + Arrays.toString( templates.keySet().toArray() ) );
+        log.info( "已加载模版：" + Arrays.toString( templates.keySet().toArray() ) );
     }
 
     /**

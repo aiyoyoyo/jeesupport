@@ -1,9 +1,9 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
-import com.jees.common.CommonLogger;
 import com.jees.webs.support.ITemplateService;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -11,12 +11,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Log4j2
 public abstract class AbsWebConfig implements WebMvcConfigurer {
     public static String               defPage;
 
@@ -38,7 +38,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
         try {
             tmp_path = resourcePatternResolver.getResource( root_tpl ).getURL().getPath();
         } catch (IOException e) {
-            CommonLogger.getLogger(this.getClass() ).error( "模版路径错误：PATH=[" + root_tpl + "]" );
+            log.error( "模版路径错误：PATH=[" + root_tpl + "]" );
         }
 
         String root_path = tmp_path;
@@ -74,13 +74,13 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
                     if( !pages.containsKey( url ) ){
                         pages.put( url, new Page( url, path, tpl ) );
-                        CommonLogger.getLogger( this.getClass() ).debug( "--配置访问路径：URL=[" + url + "], PATH=[" + path + "]" );
+                        log.debug( "--配置访问路径：URL=[" + url + "], PATH=[" + path + "]" );
                     }else{
-                        CommonLogger.getLogger( this.getClass() ).warn( "存在重复的访问路径：URL=[" + url + "], PATH=[" + path + "]" );
+                        log.warn( "存在重复的访问路径：URL=[" + url + "], PATH=[" + path + "]" );
                     }
                 }
             } catch (IOException e) {
-                CommonLogger.getLogger( this.getClass() ).warn( "模版加载失败：" + tpl_path );
+                log.warn( "模版加载失败：" + tpl_path );
             }
         } );
 
@@ -132,7 +132,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
         templateService.getTemplateAll().forEach( t-> {
             String url = "/" + t.getName() + "/" + t.getAssets();
             String path = "classpath:/templates" + url + "/";
-            CommonLogger.getLogger( this.getClass() ).debug( "--注册静态资源：RES=[" + url + "], PATH=[" + path + "]" );
+            log.debug( "--注册静态资源：RES=[" + url + "], PATH=[" + path + "]" );
             if( templateService.isDefault( t.getName() ) ){
                 _registry.addResourceHandler("/" + t.getAssets() + "/**" ).addResourceLocations( path );
             }

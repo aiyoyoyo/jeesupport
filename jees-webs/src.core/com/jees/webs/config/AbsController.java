@@ -1,17 +1,14 @@
 package com.jees.webs.config;
 
-import com.jees.common.CommonConfig;
-import com.jees.common.CommonLogger;
 import com.jees.webs.support.ITemplateService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +19,7 @@ import java.io.IOException;
  * 路径访问控制，需配合WebConfig
  * @author aiyoyoyo
  */
+@Log4j2
 public abstract class AbsController {
 
     @Autowired
@@ -31,7 +29,7 @@ public abstract class AbsController {
 
     @RequestMapping( "/${jees.webs.logout}")
     String logout( HttpServletRequest _request, HttpServletResponse _response ) throws IOException {
-        CommonLogger.getLogger( this.getClass() ).debug( "--用户登出" );
+        log.debug( "--用户登出" );
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null)
@@ -48,7 +46,7 @@ public abstract class AbsController {
      */
     @Bean
     public HandlerInterceptor handlerInterceptor(){
-        CommonLogger.getLogger( this.getClass() ).debug( "--应用AbsControllerConfing拦截器。");
+        log.debug( "--应用AbsControllerConfing拦截器。");
         return new HandlerInterceptor() {
             @Override
             public boolean preHandle( HttpServletRequest _request, HttpServletResponse _response, Object _handler ) throws Exception {

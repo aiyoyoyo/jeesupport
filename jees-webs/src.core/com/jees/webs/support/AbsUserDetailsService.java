@@ -1,11 +1,11 @@
 package com.jees.webs.support;
 
 import com.jees.common.CommonConfig;
-import com.jees.common.CommonLogger;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * UserDetailsService抽象实现类，超级账号验证，普通账号验证通过继承该类自定义实现。
  * @author aiyoyoyo
  */
+@Log4j2
 public abstract class AbsUserDetailsService implements UserDetailsService, ISupportEL {
     private final String    USER_SUPERMAN       = "sUpermAn";
 
@@ -27,7 +28,7 @@ public abstract class AbsUserDetailsService implements UserDetailsService, ISupp
         if( len < 6 ) len = 6;
         if( len > 20 ) len = 20;
         if( supermanPassword == null ) supermanPassword = RandomUtil.s_random_string( len );
-        CommonLogger.getLogger( this.getClass() ).debug( "--超级密码：" + supermanPassword );
+        log.debug( "--超级密码：" + supermanPassword );
     }
 
     /**
@@ -37,7 +38,7 @@ public abstract class AbsUserDetailsService implements UserDetailsService, ISupp
     protected UserDetails checkSuperman(String _username ){
         SuperUser user = new SuperUser();
         if( _username.equals( CommonConfig.getString("jees.webs.superman", USER_SUPERMAN ) ) ){
-            CommonLogger.getLogger( this.getClass()  ).warn("--使用超级账号登陆。" );
+            log.warn("--使用超级账号登陆。" );
 
             user.setUsername( _username );
             user.setPassword( MD5Utils.s_encode( supermanPassword ) );
