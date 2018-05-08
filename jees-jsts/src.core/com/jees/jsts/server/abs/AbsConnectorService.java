@@ -124,6 +124,14 @@ public abstract class AbsConnectorService implements IConnectorService{
         }
     }
 
+    @Override
+    public void unload() {
+    }
+
+    @Override
+    public void reload() {
+    }
+
     public ChannelInitializer< SocketChannel > clientInitializer() {
         return new ChannelInitializer< SocketChannel >() {
             @Override

@@ -26,20 +26,12 @@ public class JstsApplication {
 	// 以下为自定义实现 ======
 	@Bean
 	public IServerService serverService(){
-		return new AbsServerService() {};
+		return new AbsServerService(){};
 	}
 
 	@Bean
 	public IConnectorService connectorService(){
-		return new AbsConnectorService(){
-			@Override
-			public void unload() {
-			}
-
-			@Override
-			public void reload() {
-			}
-		};
+		return new AbsConnectorService(){};
 	}
 	/**
 	 * 客户端事件处理器
@@ -50,32 +42,30 @@ public class JstsApplication {
 		return new AbsHandlerService<ChannelHandlerContext, Object>() {
 			@SuppressWarnings( "unchecked" )
 			@Override
+			/** 收到客户端消息 **/
 			public void receive(ChannelHandlerContext _ctx, Object _obj) {
 				CommonContextHolder.getBean( IRequestHandler.class ).request( _ctx, _obj );
 			}
 
 			@Override
-			public void enter(ChannelHandlerContext _ctx) {
-			}
+			/** 客户端连接 **/
+			public void enter(ChannelHandlerContext _ctx) {}
 
 			@Override
-			public void leave(ChannelHandlerContext _ctx) {
-			}
+			/** 客户端断开 **/
+			public void leave(ChannelHandlerContext _ctx) {}
 
 			@Override
-			public void standby(ChannelHandlerContext _ctx) {
-
-			}
-
-			@Override
-			public void recovery(ChannelHandlerContext _ctx) {
-
-			}
+			/** 客户端中断 **/
+			public void standby(ChannelHandlerContext _ctx) {}
 
 			@Override
-			public void error(ChannelHandlerContext _ctx, Throwable _thr) {
+			/** 客户端恢复连接 **/
+			public void recovery(ChannelHandlerContext _ctx) {}
 
-			}
+			@Override
+			/** 客户端连接异常 **/
+			public void error(ChannelHandlerContext _ctx, Throwable _thr) {}
 		};
 	}
 

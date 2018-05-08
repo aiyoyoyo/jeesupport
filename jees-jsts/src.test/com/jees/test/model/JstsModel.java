@@ -25,7 +25,7 @@ public class JstsModel {
     }
 
     @MessageResponse( CMD_TEST )
-    public void reesponse0( ChannelHandlerContext _ctx, Message _msg ){
+    public void response0( ChannelHandlerContext _ctx, Message _msg ){
         System.out.println( "--response0" );
     }
 }
