@@ -51,7 +51,7 @@ public class MessageException extends RuntimeException {
 	 * @throws MessageException
 	 */
 	public static void thrs( int _id, int _err , Object... _params ) throws MessageException {
-		String tip = "写回异常消息（中断模式）: ID[" + getLabel( _id ) + "]->ERR=[" + _err + "], PARAM=" + Arrays.toString( _params );
+		String tip = "写回异常消息（中断模式）: ID[" + getLabel( _id ) + "]->ERR=[" + getLabel( _err ) + "], PARAM=" + Arrays.toString( _params );
 
 		MessageException me = new MessageException( tip );
 
@@ -67,7 +67,7 @@ public class MessageException extends RuntimeException {
 	 * @return
 	 */
 	public static Message mesg( int _id, int _err , Object... _params ) {
-		String tip = "写回异常消息: ID[" + getLabel( _id ) + "]->ERR=[" + _err + "], PARAM=" + Arrays.toString( _params );
+		String tip = "写回异常消息: ID[" + getLabel( _id ) + "]->ERR=[" + getLabel( _err ) + "], PARAM=" + Arrays.toString( _params );
 
 		MessageException me = new MessageException( tip );
 		me.msg = _s_set_message( _id, _err , _params );
@@ -82,7 +82,7 @@ public class MessageException extends RuntimeException {
 	 * @param _params
 	 */
 	public static void fail( int _id, int _err , Object... _params ) throws MessageException {
-		String tip = "发生异常: ID[" + getLabel( _id ) + "]->CMD=[" + _err + "], PARAM=" + Arrays.toString( _params );
+		String tip = "发生异常: ID[" + getLabel( _id ) + "]->ERR=[" + getLabel( _err ) + "], PARAM=" + Arrays.toString( _params );
 		
 		MessageException me = new MessageException( tip );
 		me.msg = _s_set_message( _id, _err , _params );
@@ -94,6 +94,6 @@ public class MessageException extends RuntimeException {
 	}
 
 	public static String getLabel( int _id ){
-		return msgIdMaps.getOrDefault( _id , "" );
+		return msgIdMaps.getOrDefault( _id , "" + _id );
 	}
 }
