@@ -72,6 +72,16 @@ public class DataUtil {
 	}
 
 	/**
+	 * 将long类型的数字进行高低位互转
+	 *
+	 * @param _val
+	 * @return
+	 */
+	public static long warpHL( long _val ) {
+		return ByteBuffer.wrap( long2Bytes( _val ) ).order( ByteOrder.LITTLE_ENDIAN ).getLong();
+	}
+
+	/**
 	 * 截取bytes
 	 * 
 	 * @param _data
@@ -85,5 +95,33 @@ public class DataUtil {
 			ret[i] = _data[_start + i];
 		}
 		return ret;
+	}
+
+	/**
+	 * long转bytes
+	 * @param _val
+	 * @return
+	 */
+	public static byte[] long2Bytes( long _val ) {
+		byte[] ret = new byte[ 8 ] ;
+		for ( int i = 0; i < 8; ++i ) {
+			int offset = 64 - ( i + 1 ) * 8;
+			ret[ i ] = (byte) ( ( _val >> offset ) & 0xff );
+		}
+		return ret;
+	}
+
+	/**
+	 * bytes转long
+	 * @param _val
+	 * @return
+	 */
+	public static long bytes2Long( byte[] _val ) {
+		long num = 0;
+		for ( int i = 0; i < 8; ++i ) {
+			num <<= 8;
+			num |= ( _val[ i ] & 0xff );
+		}
+		return num;
 	}
 }
