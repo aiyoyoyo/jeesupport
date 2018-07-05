@@ -20,9 +20,16 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > imp
         if( m.getType() == Message.TYPE_WEBSOCKET ){
             TextWebSocketFrame tws = new TextWebSocketFrame( m.dataString() );
             _ctx.writeAndFlush( tws );
-        }else{
+        }else if( m.getType() == Message.TYPE_SOCKET ){
             final ByteBuf buf = _ctx.alloc().buffer();
             MessageDecoder.buff( buf , m );
+            _ctx.writeAndFlush( buf );
+        }else if( m.getType() == Message.TYPE_BYTES ){
+            final ByteBuf buf = _ctx.alloc().buffer();
+
+            buf.writeInt( m.getId() );
+            buf.writeBytes( m.getBytes( 0 ) );
+
             _ctx.writeAndFlush( buf );
         }
     }

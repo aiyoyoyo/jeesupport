@@ -1,10 +1,7 @@
 package com.jees.jsts.server.message;
 
 import java.nio.ByteOrder;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.jees.tool.utils.DataUtil;
@@ -57,7 +54,15 @@ public class MessageDecoder extends AbsNettyDecoder {
 
 		_buf.markReaderIndex();
 		int dataLength = DataUtil.warpHL( _buf.readInt() );
-		if ( dataLength < 0 ) _ctx.close();
+
+		// 长度为负数作为特定消息通道
+		if( dataLength < 0 ){
+			Message m = new Message();
+			m.setId( dataLength );
+			m.setType( Message.TYPE_BYTES );
+
+			return m;
+		}
 
 		if ( _buf.readableBytes() < dataLength ) {
 			_buf.resetReaderIndex();
@@ -75,6 +80,11 @@ public class MessageDecoder extends AbsNettyDecoder {
 		byte[] byt_data = serializer( _msg );
 		_buf.writeInt( DataUtil.warpHL( byt_data.length ) );
 		_buf.writeBytes( byt_data );
+	}
+
+	public static void buff( ByteBuf _buf, byte[] _bytes ) {
+		_buf.writeInt( DataUtil.warpHL( _bytes.length ) );
+		_buf.writeBytes( _bytes );
 	}
 
 	// socket序列化部分 ============================================================
@@ -179,15 +189,15 @@ public class MessageDecoder extends AbsNettyDecoder {
 			} );
 		} catch ( Exception e ) {}
 
-		String msg_type =  _rw ? "接收消息" : "发送消息";
-		String msg_buff = "-- [" + msg_type + "->"
-				+ _msg.getId()
-				+ "] ------------------------------" + "\n ID=" + _msg.getId() + " Boo"
+		String msg_type =  getLabel( _msg.getId(), _rw );
+		String msg_buff = ""
+				+ "\n[" + msg_type + "] -------------------------------------------------"
+				+ "\n ID=" + _msg.getId() + " UID=" + _msg.getUserId() + " Boo"
 				+ _msg_data( _msg.getBooData() ) + " Lon" + _msg_data( _msg.getLonData() ) + " Flo"
 				+ _msg_data( _msg.getFloData() ) + " Int" + _msg_data( _msg.getIntData() ) + " Str"
 				+ _msg_data( _msg.getStrData() )
 				+ ( msg_msg_buff.length() > 0 ? "\n    Byt[" + msg_msg_buff.toString() + "\n    ]" : " Byt[]" )
-				+ "\n ---------------------------------------------------";
+				+ "\n[" + msg_type + "]------------------------------------------------";
 		log.debug( msg_buff );
 	}
 
@@ -199,4 +209,16 @@ public class MessageDecoder extends AbsNettyDecoder {
 
 		return data.toString();
 	}
+
+	private static Map< Integer, String > requestIdMaps = new HashMap<>();
+	private static Map< Integer, String > responseIdMaps = new HashMap<>();
+
+	public static void addLabel( int _id, String _label , boolean _request ){
+		if( _request ) requestIdMaps.put( _id, _label );
+		else responseIdMaps.put( _id, _label );
+	}
+	public static String getLabel( int _id , boolean _request  ){
+		return _request ? requestIdMaps.getOrDefault( _id , "" + _id ) :  responseIdMaps.getOrDefault( _id , "" + _id ) ;
+	}
+
 }

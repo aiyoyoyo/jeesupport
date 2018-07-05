@@ -18,11 +18,11 @@ public class Message {
 	public static final String	DELIM_STR		= ";";
 	public static final int		TYPE_SOCKET 	= 0;
 	public static final int		TYPE_WEBSOCKET	= 1;
+	public static final int		TYPE_BYTES		= 2;
 
 	private int					id;					// 协议号
 
 	private int					userId;
-
 
 	private List< Integer >		intData;
 
@@ -139,7 +139,7 @@ public class Message {
 	}
 
 	public byte[] getBytes( int _idx ) {
-		if ( _idx >= this.lonData.size() ) return null;
+		if ( _idx >= this.bytData.size() ) return null;
 		return this.bytData.get( _idx );
 	}
 

@@ -44,6 +44,7 @@ public interface ISupportHandler<T, M> {
 	 * @param _ctx 客户端对象
 	 */
 	void recovery( T _ctx );
+
 	/**
 	 * 连接过程中出现错误
 	 * @param _ctx 客户端对象
