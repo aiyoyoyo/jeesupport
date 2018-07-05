@@ -63,6 +63,6 @@ jees:
      dialect: org.hibernate.dialect.MySQL55Dialect
      showSql: true
      factoryClass: org.hibernate.transaction.JTATransactionFactory
-     hbm2ddl: validate
+     hbm2ddl: update
      platform: com.jees.core.database.config.AtomikosJtaPlatform
      coordinatorClass: jta

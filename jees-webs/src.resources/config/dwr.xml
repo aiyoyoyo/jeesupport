@@ -7,4 +7,16 @@
 
     <dwr:annotation-config/>
     <dwr:annotation-scan base-package="com.jees"/>
+    <dwr:configuration>
+        <dwr:convert class="org.springframework.security.core.authority.SimpleGrantedAuthority" type="bean" />
+        <dwr:signatures>
+            <![CDATA[
+                import java.util.Map;
+                import com.jees.test.entity.Role;
+                import com.jees.test.entity.Menu;
+                import com.jees.test.remote.SuperRemote;
+                SuperRemote.saveRoleData( Role _role, Map<Integer, Menu> _menu );
+            ]]>
+        </dwr:signatures>
+    </dwr:configuration>
 </beans>

@@ -18,7 +18,6 @@ public class UserDetailsServiceImpl extends AbsUserDetailsService {
     DaoServiceImpl              daoService;
 
     private SuperUser _find_user(String _username ) throws UsernameNotFoundException{
-        //TODO 执行数据库查询
         SuperUser user = daoService.selectUserByName( _username );
         log.debug( "--查找登陆用户信息：U=[" + user + "]" );
         if( user == null ) throw new UsernameNotFoundException("用户不存在");

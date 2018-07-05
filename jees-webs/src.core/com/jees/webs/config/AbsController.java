@@ -1,9 +1,13 @@
 package com.jees.webs.config;
 
+import com.jees.webs.support.ISuperService;
+import com.jees.webs.support.ISupportEL;
 import com.jees.webs.support.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
@@ -20,15 +24,19 @@ import java.io.IOException;
  * @author aiyoyoyo
  */
 @Log4j2
-public abstract class AbsController {
+public abstract class AbsController implements ISupportEL {
 
     @Autowired
     SessionRegistry     sessionRegistry;
     @Autowired
     ITemplateService    templateService;
+    @Autowired
+    ISuperService       superService;
+    @Autowired
+    ResourcePatternResolver resourcePatternResolver;
 
     @RequestMapping( "/${jees.webs.logout}")
-    String logout( HttpServletRequest _request, HttpServletResponse _response ) throws IOException {
+    public String logout( HttpServletRequest _request, HttpServletResponse _response ) throws IOException {
         log.debug( "--用户登出" );
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,11 +60,14 @@ public abstract class AbsController {
             public boolean preHandle( HttpServletRequest _request, HttpServletResponse _response, Object _handler ) throws Exception {
                 String uri = _request.getRequestURI();
                 if( !uri.equals("/") && uri.startsWith( "/" ) ) uri = uri.substring( 1 );
+
                 int idx = uri.indexOf( "/" );
                 if( idx != -1 ) uri = uri.substring( 0, idx );
-
                 templateService.loadTemplate( uri, _request );
 
+                superService.loadUserMenus( _request );
+                superService.loadUserBreadcrumb( _request );
+                superService.loadUserActiveMenus( _request );
                 return true;
             }
         };

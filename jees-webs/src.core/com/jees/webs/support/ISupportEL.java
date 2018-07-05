@@ -10,6 +10,13 @@ public interface ISupportEL {
     String Assets_Current_EL            = "RES";
 
     String Session_User_EL              = "USER";
+    String Session_Templates_EL         = "TEMPLATES";
+    String Session_Menus_EL             = "MENUS";
+    String Session_Breadcrumb_EL        = "BREADCRUMB";
+
+    String Request_Menu_EL              = "MENU";
+    String Request_Page_EL              = "PAGE";
+    String Request_Actives_EL           = "ACTIVES";
 
     String Login_Err                    = "ERR";
 }

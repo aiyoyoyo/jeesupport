@@ -46,13 +46,8 @@ import java.util.Optional;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     ITemplateService                templateService;
-
     @Autowired
     UserDetailsService              userDetailsService;
-
-    @Autowired
-    AbsWebConfig                    webConfig;
-
     /**
      * 登陆成功后的处理
      * @return
@@ -126,8 +121,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             log.debug(
                     "--读取各栏目权限：TPL=[" + tpl_url + "], MENU=["+menus.size()+"], TPL=[" + tpl + "], ACCESS=[" + tpl_access + "]" );
             if( tpl_access ) {
-                _hs.authorizeRequests().antMatchers( tpl_url ).hasAuthority( ISupportEL.ROLE_SUPERMAN );
-                webConfig.getTemplatePages( tpl ).forEach( p -> {
+                _hs.authorizeRequests().antMatchers( tpl_url ).hasAnyAuthority( ISupportEL.ROLE_SUPERMAN );
+                templateService.getTemplate( tpl ).getPages().values().forEach( p -> {
                     Optional<SuperMenu> finder = menus.stream().filter(m -> {
                         String t = m.getTpl();
 
@@ -135,7 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                         else t += "/";
 
                         String menu_url = t + m.getUrl();
-                        return menu_url.equalsIgnoreCase(p.getUrl() );
+                        return menu_url.equalsIgnoreCase( p.getUrl() );
                     }).findFirst();
 
                     if( !finder.isPresent() ) {
@@ -143,8 +138,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                             String p_url = p.getUrl();
                             if( !templateService.isDefault( p.getTpl() ) ) p_url = "/" + p_url ;
                             if (!p_url.equalsIgnoreCase("/" + CommonConfig.getString("jees.webs.login", "login"))) {
-                                _hs.authorizeRequests().antMatchers(p_url ).hasAuthority(ISupportEL.ROLE_SUPERMAN);
-                                log.debug("--未配置的受限访问路径：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
+                                _hs.authorizeRequests().antMatchers( p_url ).hasAnyAuthority(ISupportEL.ROLE_SUPERMAN);
+                                log.debug("--配置默认访问路径和权限：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
                             }
                         } catch (Exception e) {
                         }
@@ -153,7 +148,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             } else _hs.authorizeRequests().antMatchers( tpl_url );
 
             for( SuperMenu m : menus ){
-                tpl_url = is_default ? "/" + m.getUrl() : m.getTpl() + "/" + m.getUrl();
+                tpl_url = is_default ?  m.getUrl() : m.getTpl() + "/" + m.getUrl();
                 if( m.isPermit() && !tpl_access ){
                     log.debug( "--访问权限：URL=[" + tpl_url + "], ROLE=[]" );
                     _hs.authorizeRequests().antMatchers( tpl_url );
@@ -189,18 +184,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         _auth.userDetailsService( userDetailsService ).passwordEncoder(new PasswordEncoder() {
             @Override
             public String encode( CharSequence _pwd ) {
-                log.debug( "--ENCODE PWD: [" + _pwd + "]");
                 String encode = MD5Utils.s_encode( (String) _pwd );
-                log.debug( "--ENCODE PWD: [" + encode + "]");
+                log.debug( "--ENCODE PWD: [" + _pwd + "]->ENCODE: [" + encode + "]");
                 return encode;
             }
             @Override
-            public boolean matches(CharSequence _pwd , String _encode ) {
-                String encode_pwd = MD5Utils.s_encode( (String)_pwd );
-                log.debug( "--MATCHES PWD: [" + _pwd+ "]->[" + encode_pwd + "]");
-                log.debug( "--MATCHES ENCODE: [" + _encode + "]");
-                boolean matches = _encode.equals( encode_pwd );
-                return matches;
+            public boolean matches( CharSequence _pwd , String _encode ) {
+                return _encode.equals( MD5Utils.s_encode( (String)_pwd ) );
             }
         });
     }

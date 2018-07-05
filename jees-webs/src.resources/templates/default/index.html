@@ -1,77 +1,83 @@
 <!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
+<!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script th:src="|${RES}/jquery-3.2.1.min.js|"></script><br/>
-</head>
+<!--<![endif]-->
+<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | 首页', '' )" />
 <body>
-    default index<br/>
-    获取模版: session.TPL_[template]=<span th:text="${session.TPL_default}"></span><br/>
-    获取资源路径：session.TPL_A_[template]=<span th:text="${session.TPL_A_default}"></span><br/>
+	<!-- begin page-cover -->
+	<div class="page-cover"></div>
+	<!-- end page-cover -->
+	
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		<div th:replace="|${TPL}/_inc/_header|::html" />
+		<!-- end #header -->
+		
+		<!-- begin #sidebar -->
+		<div th:replace="|${TPL}/_inc/_sidebar|::html" />
+		<div class="sidebar-bg"></div>
+		<!-- end #sidebar -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<!-- begin breadcrumb -->
+			<ol th:replace="|${TPL}/_inc/_breadcrumb|::html" />
+			<!-- end breadcrumb -->
+			<!-- begin page-header -->
+			<h1 class="page-header">版本说明<small>更多请关注QQ群号<t class="text-success">8802330</t></small></h1>
+			<!-- end page-header -->
+			<!-- begin row -->
+			<div class="row">
+				<!-- begin col-6 -->
+				<div class="col-lg-6 col-md-6">
+					<div class="card">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								网页模版为
+								<a href="https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK" target="_blank">Color Admin</a>。
+							</li>
+							<li class="list-group-item">
+								初始安装时需要使用超级账号<t class="text-warning">superman</t>登陆进行安装并创建初始账号。
+							</li>
+							<li class="list-group-item">
+								超级密码为系统生成，获取方式通过打开调试日志获得。
+							</li>
+							<li class="list-group-item">
+								请自行维护初始账及后台栏目、权限等。
+							</li>
+							<li class="list-group-item">
+								<h4 class="text-red">本系统除模版外，均采用第三方开源框架，请勿将此系统或此系统使用的框架或模版用作商业用途。</h4>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end #content -->
+		
+        <!-- begin theme-panel -->
+        <div th:replace="|${TPL}/_inc/_theme|::html" />
+        <!-- end theme-panel -->
+		
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
 
-    获取模版: session.TPL_[template]=<span th:text="${session.TPL_other}"></span><br/>
-    获取资源路径：session.TPL_A_[template]=<span th:text="${session.TPL_A_other}"></span><br/>
-
-    获取当前资源路径: RES=<span th:text="${RES}"></span><br/>
-    获取当前模版对象: TEMPLATE=<span th:text="${TEMPLATE}"></span><br/>
-    获取当前模版路径: TPL=<span th:text="${TPL}"></span><br/>
-    <img th:src="|${RES}/default.jpg|"></img><br/>
-
-    <img th:src="|${session.TPL_A_other}/default.jpg|"></img><br/>
-
-    <img src="default/assets/default.jpg"></img><br/>
-
-    <script type='text/javascript' src='/dwr/engine.js'></script>
-    <script type='text/javascript' src='/dwr/interface/DemoService.js'></script>
-
-    <script>
-        $(document).ready(function() {
-            DemoService.echo('测试', function (str) {
-                console.log( str );
-            });
-            DemoService.user( function (user) {
-                console.log( user.username );
-            });
-            DemoService.user({username: "aaa"}, function (user) {
-                console.log( user.username );
-            });
-			$.ajax({
-			    url: "/echo1",
-			    data: {"aaa":"aaa" },
-			    success: function( data ){
-			        console.log( "echo1->" , data );
-                }
-            });
-
-            $.ajax({
-			    url: "/echo2",
-			    data: { "_str": "aaa" },
-			    success: function( data ){
-			        console.log( "echo2->" , data );
-                }
-            });
-
-            $.ajax({
-			    url: "/echo3",
-			    data: { "username": "aaa" } ,
-			    contentType:"application/json",
-			    dataType:"json",
-			    success: function( data ){
-			        console.log( "echo3->" , data.username );
-                }
-            });
+	<c th:include="|${TPL}/_inc/_base|::js( '' )" />
+	<script>
+		$(document).ready(function() {
+			App.init();
 		});
-    </script>
-
-    <a href="/test/">Controller测试 </a><br/>
-
-    <a href="/menu1/">menu1 </a><br/>
-    <a href="/menu1/menu1-1/">menu1/menu1-1 </a><br/>
-    <a href="/menu1/menu1-1/index2">menu1/menu1-1/index2 </a><br/>
-
-    <a href="/other/">其他模版 </a><br/>
-
-    <a href="/logout/">登出 </a><br/>
+	</script>
+	
 </body>
 </html>

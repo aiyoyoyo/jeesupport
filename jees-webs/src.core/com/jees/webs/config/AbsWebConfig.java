@@ -1,8 +1,8 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
+import com.jees.webs.entity.Page;
 import com.jees.webs.support.ITemplateService;
-import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -11,16 +11,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Log4j2
 public abstract class AbsWebConfig implements WebMvcConfigurer {
     public static String               defPage;
-
-    public static Map<String , Page>   pages;
     @Autowired
     ITemplateService            templateService;
     @Autowired
@@ -29,8 +25,8 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
     HandlerInterceptor          handlerInterceptor;
 
     private List<Page> _load_template_2_page(){
+        List<Page> view_pages = new ArrayList<>();
         if( defPage == null ) defPage = CommonConfig.getString( "jees.webs.defPage", "index" );
-        if( pages == null ) pages = new HashMap<>();
 
         String root_tpl = "classpath:/templates/";
 
@@ -71,41 +67,17 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                     }
 
                     if( templateService.isDefault( tpl ) ) url = url.replace( tpl, "" );
-
-                    if( !pages.containsKey( url ) ){
-                        pages.put( url, new Page( url, path, tpl ) );
-                        log.debug( "--配置访问路径：URL=[" + url + "], PATH=[" + path + "]" );
-                    }else{
-                        log.warn( "存在重复的访问路径：URL=[" + url + "], PATH=[" + path + "]" );
-                    }
+                    t.addPage( new Page( url, path, tpl ) );
                 }
             } catch (IOException e) {
                 log.warn( "模版加载失败：" + tpl_path );
             }
+
+            view_pages.addAll( t.getPages().values() );
         } );
-
-        return pages.values().stream().collect(Collectors.toList());
+        return view_pages;
     }
 
-    public List<Page> getTemplatePages(String _tpl) {
-        return pages.values().stream().filter( p -> p.getTpl().equalsIgnoreCase( _tpl ) ).collect( Collectors.toList() );
-    }
-    public Page getPage( String _url ){
-        return pages.getOrDefault( _url, null );
-    }
-
-    @Data
-    public class Page{
-        private String path;
-        private String url;
-        private String tpl;
-
-        public Page( String _url, String _path, String _tpl ){
-            this.path = _path;
-            this.url = _url;
-            this.tpl = _tpl;
-        }
-    }
     /**
      * 拦截器
      * @param _registry

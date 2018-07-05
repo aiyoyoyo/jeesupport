@@ -82,6 +82,8 @@ public abstract class AbsTemplateService implements ITemplateService, ISupportEL
         _request.setAttribute( Template_Object_EL, template );
         _request.setAttribute( Assets_Current_EL, "/" + template.getName() + "/" + template.getAssets() );
         _request.setAttribute( Template_Current_EL, template.getName() );
+
+        session.setAttribute( Session_Templates_EL, templates.values() );
     }
 
     @Override

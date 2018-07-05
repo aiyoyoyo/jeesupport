@@ -19,6 +19,10 @@ public class TemplateServiceImpl extends AbsTemplateService{
     @Override
     @Transactional
     public List<SuperMenu> loadTemplateMenus( String _tpl ) {
-        return (List<SuperMenu>) daoService.selectTemplateMenus( _tpl );
+        List<SuperMenu> list = daoService.selectTemplateMenus( _tpl );
+
+        // 加载页面所需要的权限
+        list.forEach( m -> m.getRoles().size() );
+        return list;
     }
 }
