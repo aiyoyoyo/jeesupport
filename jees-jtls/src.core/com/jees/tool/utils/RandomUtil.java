@@ -80,4 +80,36 @@ public class RandomUtil {
 
         return str;
     }
+
+    /**
+     * 根据权重数组，随机一个返回索引
+     * @param _widgets
+     * @return
+     */
+    public static int   s_random_widget( int[] _widgets ){
+        int odds[] = new int[ _widgets.length];
+        int range = 0;
+        int idx = 0;
+
+        int max_idx = 0;
+        int max_widget = 0;
+        for( int w : _widgets ) {
+            range += w;
+            if( idx == 0 ) odds[idx] = w;
+            else odds[idx] = odds[idx-1] + w;
+
+            if( w > max_widget ){
+                max_widget = w;
+                max_idx = idx;
+            }
+            idx ++;
+        }
+
+        int result = s_random_integer( range );
+
+        for( int i = 0; i < odds.length; i ++ )
+            if( result < odds[i] ) return i;
+
+        return max_idx;
+    }
 }

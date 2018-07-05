@@ -2,22 +2,38 @@ package com.jees.tool.joda;
 
 import org.joda.time.*;
 
+import java.util.Date;
+
 public class DateUtils {
 	/**
-	 * 返回时间距离当前时间多久
+	 * 返回时间距离当前时间多久, 正数为未来几天，负数为过去几天
 	 * 
 	 * @param _dt
 	 * @return [yy, MM, ww, d, h, m, s]
 	 */
 	public static int[] dateBeforeNow( DateTime _dt ) {
 		DateTime now = new DateTime( System.currentTimeMillis() );
-		int yy = Years.yearsBetween( _dt , now ).getYears();
-		int MM = Months.monthsBetween( _dt , now ).getMonths();
-		int ww = Weeks.weeksBetween( _dt , now ).getWeeks();
-		int d = Days.daysBetween( _dt , now ).getDays();
-		int h = Hours.hoursBetween( _dt , now ).getHours();
-		int m = Minutes.minutesBetween( _dt , now ).getMinutes();
-		int s = Seconds.secondsBetween( _dt , now ).getSeconds();
+		int yy = Years.yearsBetween( now , _dt ).getYears();
+		int MM = Months.monthsBetween( now , _dt ).getMonths();
+		int ww = Weeks.weeksBetween( now , _dt ).getWeeks();
+		int d = Days.daysBetween( now , _dt ).getDays();
+		int h = Hours.hoursBetween( now , _dt ).getHours();
+		int m = Minutes.minutesBetween( now , _dt ).getMinutes();
+		int s = Seconds.secondsBetween( now , _dt ).getSeconds();
 		return new int[] { yy , MM , ww , d , h , m , s };
+	}
+
+	/**
+	 * 和当前时间相差多少天, 正数为未来几天，负数为过去几天
+	 * @param _dt
+	 * @return
+	 */
+	public static int dateDiffDay( DateTime _dt ){
+		DateTime now = new DateTime( System.currentTimeMillis() );
+
+		LocalDate start = new LocalDate( now.getYear(), now.getMonthOfYear(), now.getDayOfMonth() );
+		LocalDate end = new LocalDate( _dt.getYear(), _dt.getMonthOfYear(), _dt.getDayOfMonth() );
+	 	int days = Days.daysBetween( start , end ).getDays();
+		return days;
 	}
 }

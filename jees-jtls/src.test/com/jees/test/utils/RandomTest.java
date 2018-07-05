@@ -4,6 +4,8 @@ import com.jees.tool.utils.RandomUtil;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 @Log4j2
 public class RandomTest {
 
@@ -80,5 +82,19 @@ public class RandomTest {
                     RandomUtil.s_random_string( 10 ) + "," +
                     RandomUtil.s_random_string( 128 ) + ","
             );
+    }
+
+    @Test
+    public void testRandomWidget(){
+        int widgets[] = new int[]{ 2000, 3000,4400, 0, 1600 };
+        int count[] = new int[]{ 0,0,0,0,0};
+
+        for( int i = 0; i < 10000; i ++){
+            int r = RandomUtil.s_random_widget( widgets );
+
+            count[r] ++;
+        }
+
+        System.out.println( Arrays.toString( count ) );
     }
 }
