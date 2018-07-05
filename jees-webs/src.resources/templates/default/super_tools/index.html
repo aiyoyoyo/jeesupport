@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | Super Files', 'jstree' )" />
+<body>
+	<!-- begin page-cover -->
+	<div class="page-cover"></div>
+	<!-- end page-cover -->
+	
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		<div th:replace="|${TPL}/_inc/_header|::html" />
+		<!-- end #header -->
+		
+		<!-- begin #sidebar -->
+		<div th:replace="|${TPL}/_inc/_sidebar|::html" />
+		<div class="sidebar-bg"></div>
+		<!-- end #sidebar -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<!-- begin breadcrumb -->
+			<ol th:replace="|${TPL}/_inc/_breadcrumb|::html" />
+			<!-- end breadcrumb -->
+			<!-- begin page-header -->
+			<h1 class="page-header" th:text="${MENU eq null ? PAGE : MENU.name}" />
+			<!-- end page-header -->
+			<!-- begin row -->
+			<div class="row">
+				<!-- begin col-6 -->
+				<div class="col-lg-6">
+					<!-- begin panel -->
+					<div class="panel panel-inverse" data-sortable-id="tree-view-1">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+							</div>
+							<h4 class="panel-title">模版可访问地址和文件路径</h4>
+						</div>
+						<div class="panel-body">
+							<div id="jstree-default">
+								<ul>
+									<li th:each="t, st:${session.TEMPLATES}" data-jstree='{"opened":true}' >
+										<t th:text="${t.name}"></t>
+										<ul>
+											<li th:text="${t.assets}"></li>
+											<li th:each="p:${t.pages}">
+												<t th:text="${p.value.url}"></t>
+												->
+												<t th:text="${p.value.path} + '.html'"></t>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- end panel -->
+				</div>
+				<!-- end col-6 -->
+		</div>
+		<!-- end #content -->
+		
+        <!-- begin theme-panel -->
+        <div th:replace="|${TPL}/_inc/_theme|::html" />
+        <!-- end theme-panel -->
+		
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+
+	<c th:include="|${TPL}/_inc/_base|::js( 'jstree' )" />
+	<script>
+		var handleJstreeDefault = function() {
+			$('#jstree-default').jstree({
+				"core": {
+					"themes": {
+						"responsive": false
+					}
+				},
+				"types": {
+					"default": {
+						"icon": "fa fa-folder text-warning fa-lg"
+					},
+					"file": {
+						"icon": "fa fa-file text-inverse fa-lg"
+					}
+				},
+				"plugins": ["types"]
+			});
+
+			$('#jstree-default').on('select_node.jstree', function(e,data) {
+				var link = $('#' + data.selected).find('a');
+				if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
+					if (link.attr("target") == "_blank") {
+						link.attr("href").target = "_blank";
+					}
+					document.location.href = link.attr("href");
+					return false;
+				}
+			});
+		};
+		var FilesView = function () {
+			"use strict";
+			return {
+				//main function
+				init: function () {
+					handleJstreeDefault();
+				}
+			};
+		}();
+		$(document).ready(function() {
+			App.init();
+			FilesView.init();
+		});
+	</script>
+</body>
+</html>

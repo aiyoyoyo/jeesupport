@@ -1,0 +1,62 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
+Version: 4.1.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.1/admin/
+*/
+
+.header .navbar-nav > li > a .label,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+    background: #999;
+}
+.header.navbar-inverse .navbar-brand {
+    color: #fff !important;
+}
+.text-theme {
+    color: #999;
+}
+a,
+.breadcrumb > li a,
+.header .navbar-brand > b {
+    color: #999;
+}
+a:hover,
+a:focus,
+.breadcrumb > li a:hover,
+.breadcrumb > li a:focus {
+	color: #ccc;
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled .header .navbar-nav > li > a .label,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top,
+.gradient-enabled .top-menu .nav > li.active > a, 
+.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a:hover {
+	color: #fff !important;
+	background: rgb(179,179,179) !important;
+	background: -moz-linear-gradient(top, rgba(179,179,179,1) 0%, rgba(115,115,115,1) 100%) !important;
+	background: -webkit-linear-gradient(top, rgba(179,179,179,1) 0%,rgba(115,115,115,1) 100%) !important;
+	background: linear-gradient(to bottom, rgba(179,179,179,1) 0%,rgba(115,115,115,1) 100%) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3b3b3', endColorstr='#737373',GradientType=0 ) !important;
+}
+.gradient-enabled .sidebar .nav > li.active > a {
+	z-index: 10;
+}
+.pace-progress {
+    background: #999;
+}
+.pace .pace-activity {
+    border-top-color: #999;
+    border-left-color: #999;
+}

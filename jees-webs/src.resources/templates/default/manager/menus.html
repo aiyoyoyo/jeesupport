@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | Menus Manager', 'editable' )" />
+<body>
+    <!-- begin page-cover -->
+    <div class="page-cover"></div>
+    <!-- end page-cover -->
+
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade show"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+        <!-- begin #header -->
+        <div th:replace="|${TPL}/_inc/_header|::html" />
+        <!-- end #header -->
+
+        <!-- begin #sidebar -->
+        <div th:replace="|${TPL}/_inc/_sidebar|::html" />
+        <div class="sidebar-bg"></div>
+        <!-- end #sidebar -->
+
+        <!-- begin #content -->
+        <div id="content" class="content">
+            <!-- begin breadcrumb -->
+            <ol th:replace="|${TPL}/_inc/_breadcrumb|::html" />
+            <!-- end breadcrumb -->
+            <!-- begin page-header -->
+            <h1 class="page-header" th:text="${MENU eq null ? PAGE : MENU.name}" />
+            <!-- end page-header -->
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-12 -->
+                <div class="col-lg-12">
+                    <!-- begin panel -->
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">栏目清单</h4>
+                        </div>
+                        <!-- begin table-responsive -->
+                        <div class="table-responsive">
+                            <table id="tab-menus" class="table table-condensed table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="5%">ID</th>
+                                    <th>栏目名称</th>
+                                    <th>访问地址</th>
+                                    <th>上级栏目</th>
+                                    <th width="5%">是否可见</th>
+                                    <th width="5%">显示顺序</th>
+                                    <th>其他操作</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end #content -->
+
+            <!-- begin theme-panel -->
+            <div th:replace="|${TPL}/_inc/_theme|::html" />
+            <!-- end theme-panel -->
+
+            <!-- begin scroll to top btn -->
+            <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+            <!-- end scroll to top btn -->
+        </div>
+        <!-- end page container -->
+    </div>
+    <c th:include="|${TPL}/_inc/_base|::js( 'editable, sweetalert, dwr' )" />
+    <c th:include="|${TPL}/_inc/_base|::dwr( 'SuperRemote' )" />
+    <script>
+        var Change = false;
+        var Menus = [];
+        var Menu_Save = function( _id ){
+            Change = false;
+            var o = Menus[_id];
+
+            SuperRemote.saveMenuData( o );
+        };
+
+        var On_Edit_Click = function( _id ){
+            var btn = $("#B-" + _id );
+            var del = $("#D-" + _id );
+            $("#E-" + _id + " .editable").editable("toggleDisabled");
+
+            btn.toggleClass( "btn-default " ).toggleClass( "btn-success" );
+            btn.html( btn.hasClass( "btn-default" ) ? "编辑" : "保存" );
+
+            if( btn.hasClass( "btn-default" ) ) del.hide();
+            else del.show();
+
+            if( Change && btn.hasClass( "btn-default" ) )
+                Menu_Save( _id );
+        };
+        var On_Edit_Submit = function( _e ){
+            var o = Menus[_e.pk];
+
+            if( _e.name.indexOf( "NAME-" ) != -1 )
+                o.name = _e.value;
+            if( _e.name.indexOf( "PARENT-" ) != -1 )
+                o.parentId = _e.value;
+
+            Change = true;
+        };
+        var On_Remove_Click = function( _id ){
+            var o = Menus[_id];
+
+            jeesjs.SweetAlert.confirm( "删除确认", "确定删除栏目[" + o.name + "]吗？", "warning", function(){
+                SuperRemote.removeMenuData( o ,function(){
+                    location.reload()
+                });
+            });
+
+        };
+        var handleMenusLoad = function( datas ){
+            $.fn.editable.defaults.mode = 'inline';
+            $.fn.editable.defaults.inputclass = 'form-control input-sm';
+            $.fn.editable.defaults.url = On_Edit_Submit;
+            var dom_tab = $("#tab-menus tbody:last");
+            Menus = [];
+
+            var parent_group = [];
+            for( var k in datas ){
+                var o = datas[k];
+                parent_group.push({ value: o.id, text: o.name });
+            }
+
+            for( var k in datas ){
+                var o = datas[k];
+                Menus[o.id] = o;
+
+                var e_name_id = "NAME-" + o.id;
+                var e_parent_id = "PARENT-" + o.id;
+
+                var e_parent_txt = "顶级菜单";
+                for( var i in parent_group ){
+                    var g = parent_group[i];
+                    if( g.value == o.parentId ){
+                        e_parent_txt = g.text;
+                        break;
+                    }
+                }
+                var row = "<tr id='E-" + o.id + "'>"
+                        + "<td>" + o.id + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.TEXT, e_name_id, o.name ) + "</td>"
+                        + "<td>" + o.url + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.SELECT, e_parent_id, e_parent_txt )  + "</td>"
+                        + "<td>" + o.visible + "</td>"
+                        + "<td>" + o.index + "</td>"
+                        + "<td>"
+                            + "<button id='B-" + o.id + "' class='btn btn-success' onclick='On_Edit_Click( " + o.id + " )'></button>"
+                            + "&nbsp;&nbsp;&nbsp;&nbsp;"
+                            + "<button id='D-" + o.id + "' class='btn btn-danger' onclick='On_Remove_Click( " + o.id + " )'>删除</button>"
+                        + "</td>"
+                        + "</tr>";
+                dom_tab.append( row );
+                jeesjs.Editable.text( $( "#" + e_name_id ) );
+                jeesjs.Editable.select( $( "#" + e_parent_id ), o.parentId, parent_group );
+
+                On_Edit_Click( o.id );
+            }
+        };
+        var MenuView = function () {
+			"use strict";
+			return {
+				//main function
+				init: function () {
+				    SuperRemote.loadMenuData( handleMenusLoad );
+				}
+
+			};
+		}();
+		$(document).ready(function() {
+			App.init();
+			MenuView.init();
+		});
+	</script>
+</body>
+</html>

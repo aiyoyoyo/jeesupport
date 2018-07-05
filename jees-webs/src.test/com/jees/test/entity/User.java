@@ -2,18 +2,17 @@ package com.jees.test.entity;
 
 import com.jees.webs.entity.SuperUser;
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
+@DataTransferObject
 @Entity
 @Table( name = "js_user" , catalog = "jees_common" )
-@DataTransferObject
-public class User extends SuperUser<Integer, Role> {
+public class User extends SuperUser< Integer, Role, Menu > {
+
+    @Override
+    public SuperUser build() {
+        return new User();
+    }
 }

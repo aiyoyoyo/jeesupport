@@ -1,0 +1,71 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
+Version: 4.1.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.1/admin/
+*/
+
+.header .navbar-nav > li > a .label,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+    background: #ff3502;
+}
+.header.navbar-inverse .navbar-brand {
+    color: #fff !important;
+}
+.text-theme {
+    color: #ff3502;
+}
+a,
+.breadcrumb > li a,
+.header .navbar-brand > b {
+    color: #ff8c77;
+}
+a:hover,
+a:focus,
+.breadcrumb > li a:hover,
+.breadcrumb > li a:focus {
+	color: #fdb7aa;
+}
+.header .navbar-logo:before {
+	border-color: rgba(255, 140, 119, 0.75);
+}
+.header .navbar-brand .navbar-logo:after {
+	background: #ff8c77;
+}
+.header .navbar-logo {
+	border-color: rgba(255, 140, 119, 0.5);
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled .header .navbar-nav > li > a .label,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top,
+.gradient-enabled .top-menu .nav > li.active > a, 
+.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a:hover {
+	color: #fff !important;
+	background: rgb(255,104,65) !important;
+	background: -moz-linear-gradient(top, rgba(255,104,65,1) 0%, rgba(191,40,1,1) 100%) !important;
+	background: -webkit-linear-gradient(top, rgba(255,104,65,1) 0%,rgba(191,40,1,1) 100%) !important;
+	background: linear-gradient(to bottom, rgba(255,104,65,1) 0%,rgba(191,40,1,1) 100%) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff6841', endColorstr='#bf2801',GradientType=0 ) !important;
+}
+.gradient-enabled .sidebar .nav > li.active > a {
+	z-index: 10;
+}
+.pace-progress {
+    background: #ff3502;
+}
+.pace .pace-activity {
+    border-top-color: #ff3502;
+    border-left-color: #ff3502;
+}

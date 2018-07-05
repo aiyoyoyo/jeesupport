@@ -1,0 +1,64 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
+Version: 4.1.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.1/admin/
+*/
+
+.header .navbar-nav > li > a .label,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+    background: #00cbff;
+}
+.header.navbar-inverse .navbar-brand {
+    color: #fff !important;
+}
+.text-theme {
+    color: #fff;
+}
+a,
+.breadcrumb > li a,
+.header .navbar-brand > b {
+    color: #86e0ff;
+}
+a:hover,
+a:focus,
+.breadcrumb > li a:hover,
+.breadcrumb > li a:focus {
+	color: #c3efff;
+}
+.header .navbar-logo:before {
+	border-color: rgba(134, 224, 255, 0.75);
+}
+.header .navbar-brand .navbar-logo:after {
+	background: #86e0ff;
+}
+.header .navbar-logo {
+	border-color: rgba(134, 224, 255, 0.5);
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled .header .navbar-nav > li > a .label,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top,
+.gradient-enabled .top-menu .nav > li.active > a, 
+.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a:hover {
+	color: #fff !important;
+	background: rgb(109,197,222) !important;
+	background: -moz-linear-gradient(top, rgba(109,197,222,1) 0%, rgba(73,182,214,1) 100%) !important;
+	background: -webkit-linear-gradient(top, rgba(109,197,222,1) 0%,rgba(73,182,214,1) 100%) !important;
+	background: linear-gradient(to bottom, rgba(109,197,222,1) 0%,rgba(73,182,214,1) 100%) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6dc5de', endColorstr='#00cbff',GradientType=0 ) !important;
+}
+.gradient-enabled .sidebar .nav > li.active > a {
+	z-index: 10;
+}
