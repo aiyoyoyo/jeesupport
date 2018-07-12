@@ -29,6 +29,7 @@ public class SuperServiceImpl implements ISuperService, ISupportEL {
     @Override
     public List< User > loadUsers() {
         List<User> list = daoService.select( User.class );
+        list.forEach( u -> u.getRoles().values().forEach( r -> r.getMenus().size() ) );
         return list;
     }
 

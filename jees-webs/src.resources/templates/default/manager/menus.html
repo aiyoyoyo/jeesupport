@@ -114,7 +114,7 @@
 
             jeesjs.SweetAlert.confirm( "删除确认", "确定删除栏目[" + o.name + "]吗？", "warning", function(){
                 SuperRemote.removeMenuData( o ,function(){
-                    location.reload()
+                    location.reload();
                 });
             });
 

@@ -4,6 +4,8 @@ import com.jees.test.entity.Menu;
 import com.jees.test.entity.Role;
 import com.jees.test.entity.User;
 import com.jees.test.service.DaoServiceImpl;
+import com.jees.tool.crypto.MD5Utils;
+import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.support.AbsInstallService;
@@ -49,19 +51,19 @@ public class SuperRemote implements ISupportEL {
 
     @Transactional
     @RemoteMethod
-    public <M extends Menu > List< M > loadMenuData( HttpServletRequest _request ){
+    public <M extends Menu > List< M > loadMenuData(){
         return superService.loadMenus();
     }
 
     @Transactional
     @RemoteMethod
-    public <R extends Role > List< R > loadRoleData( HttpServletRequest _request ){
+    public <R extends Role > List< R > loadRoleData(){
         return superService.loadRoles();
     }
 
     @Transactional
     @RemoteMethod
-    public <U extends User > List< U > loadUserData( HttpServletRequest _request ){
+    public <U extends User > List< U > loadUserData(){
         return superService.loadUsers();
     }
 
@@ -120,11 +122,13 @@ public class SuperRemote implements ISupportEL {
 
     @Transactional
     @RemoteMethod
-    public void addRoleData( String _name ){
+    public void addRoleData( String _name, HttpServletRequest _request ){
         // TIPS
         Role role = new Role();
         role.setName( _name );
 
+        User user = ( User ) _request.getSession().getAttribute( Session_User_EL);
+        role.getUsers().put( user.getId(), user);
         daoService.insert( DaoServiceImpl.DB_Default, role );
         daoService.commit();
     }
@@ -135,4 +139,31 @@ public class SuperRemote implements ISupportEL {
         daoService.delete( DaoServiceImpl.DB_Default, _role );
         daoService.commit();
     }
+
+    @Transactional
+    @RemoteMethod
+    public void addUserData( HttpServletRequest _request ){
+        User user = new User();
+
+        user.setUsername( RandomUtil.s_random_string( 6 ) );
+        user.setPassword( MD5Utils.s_encode( "123456" ) );
+        user.setEnabled( false );
+        user.setLocked( false );
+
+        daoService.insert( DaoServiceImpl.DB_Default, user );
+        daoService.commit();
+    }
+
+    @Transactional
+    @RemoteMethod
+    public void saveUserData( User _user, Map<Serializable, Role> _roles ) {
+        _user.setRoles( _roles );
+//        e10ad c3949 ba59a bbe56 e057f 20f88 3e
+        if( _user.getPassword().length() != 32 ){
+            _user.setPassword( MD5Utils.s_encode( _user.getPassword() ) );
+        }
+
+        superService.saveUser( _user );
+    }
+
 }

@@ -39,7 +39,7 @@ public abstract class AbsUserDetailsService implements UserDetailsService, ISupp
         SuperUser user = new SuperUser();
         if( _username.equals( CommonConfig.getString("jees.webs.superman", USER_SUPERMAN ) ) ){
             log.warn("--使用超级账号登陆。" );
-
+            user.setId( 0 );
             user.setUsername( _username );
             user.setPassword( MD5Utils.s_encode( supermanPassword ) );
             user.setEnabled( true );

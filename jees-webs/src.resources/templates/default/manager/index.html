@@ -52,6 +52,8 @@
                                 <th width="5%">ID</th>
                                 <th width="15%">账号</th>
                                 <th width="15%">重置密码</th>
+                                <th width="5%">启用账号</th>
+                                <th width="5%">锁定账号</th>
                                 <th>权限清单</th>
                                 <th width="10%">操作</th>
                             </tr>
@@ -78,20 +80,39 @@
 <c th:include="|${TPL}/_inc/_base|::dwr( 'SuperRemote' )" />
 <script>
         var Change = false;
-        var Menus = [];
-        var Menu_Save = function( _id ){
+        var UserId = [[${session.USER.id}]];
+        var Datas = [];
+        var Roles = [];
+        var Data_Save = function( _id ){
             Change = false;
-            var o = Menus[_id];
+            var o = Datas[_id];
+            var rs = o.roles;
+            for( var id in rs ){
+                if( rs[id] != null )
+                    rs[id].menus = null;
+            }
+            o.roles = null;
 
-            SuperRemote.saveMenuData( o ,function(){
-                console.log( "saved" );
-            });
+            SuperRemote.saveUserData( o, rs, function(){
+                location.reload();
+            } );
         };
 
         var On_Edit_Click = function( _id ){
             var btn = $("#B-" + _id );
             var del = $("#D-" + _id );
+            if( btn.hasClass( "btn-inverse" ) ) return;
+
             $("#E-" + _id + " .editable").editable("toggleDisabled");
+            if( _id == UserId ){
+                btn.toggleClass( "btn-inverse" ).toggleClass( "btn-success" );
+                btn.html( "禁用" );
+
+                if( btn.hasClass( "btn-inverse" ) ){
+                    del.hide()
+                }
+                return;
+            }
 
             btn.toggleClass( "btn-default " ).toggleClass( "btn-success" );
             btn.html( btn.hasClass( "btn-default" ) ? "编辑" : "保存" );
@@ -100,63 +121,89 @@
             else del.show();
 
             if( Change && btn.hasClass( "btn-default" ) )
-                Menu_Save( _id );
+                Data_Save( _id );
         };
         var On_Edit_Submit = function( _e ){
-            var o = Menus[_e.pk];
+            var o = Datas[_e.pk];
 
             if( _e.name.indexOf( "NAME-" ) != -1 )
-                o.name = _e.value;
-            if( _e.name.indexOf( "PARENT-" ) != -1 )
-                o.parentId = _e.value;
+                o.username = _e.value;
+            if( _e.name.indexOf( "PWD-" ) != -1 )
+                o.password = _e.value;
+            if( _e.name.indexOf( "ENABLED-" ) != -1 )
+                o.enabled = _e.value == 1 ? true : false;
+            if( _e.name.indexOf( "LOCKED-" ) != -1 )
+                o.locked = _e.value == 1 ? true : false;
+
+            if( _e.name.indexOf( "ROLE-" ) != -1 ){
+                var rs = _e.value;
+                for( var id in o.roles ){
+                    o.roles[id] = null;
+                }
+                for( var id in rs ){
+                    var r = Roles[rs[id]];
+                    o.roles[r.id] = r;
+                }
+            }
 
             Change = true;
         };
         var On_Remove_Click = function( _id ){
-            var o = Menus[_id];
+            var o = Datas[_id];
 
-            jeesjs.SweetAlert.confirm( "删除确认", "确定删除栏目[" + o.name + "]吗？", "warning", function(){
-                SuperRemote.removeMenuData( o ,function(){
-                    location.reload()
+            var title = "确定删除账号 [" + o.username + "]吗？)";
+            var tips = "warning";
+
+            jeesjs.SweetAlert.confirm( "删除确认", title, tips, function(){
+                SuperRemote.removeRoleData( o ,function(){
+                    location.reload();
                 });
             });
-
         };
-        var handleMenusLoad = function( datas ){
+        var On_Add_Click = function(){
+            SuperRemote.addUserData( function(){
+                location.reload();
+            } );
+        };
+        var check_group = [];
+        check_group.push({value: 0, text:"否"});
+        check_group.push({value: 1, text:"是"});
+
+        var handleDatasLoad = function( datas ){
             $.fn.editable.defaults.mode = 'inline';
             $.fn.editable.defaults.inputclass = 'form-control input-sm';
             $.fn.editable.defaults.url = On_Edit_Submit;
             var dom_tab = $("#tab-menus tbody:last");
-            Menus = [];
-
-            var parent_group = [];
+            Datas = [];
+            Roles = [];
+            var select_group = [];
             for( var k in datas ){
                 var o = datas[k];
-                parent_group.push({ value: o.id, text: o.name });
-            }
-
-            for( var k in datas ){
-                var o = datas[k];
-                Menus[o.id] = o;
+                Datas[o.id] = o;
 
                 var e_name_id = "NAME-" + o.id;
-                var e_parent_id = "PARENT-" + o.id;
+                var e_pwd_id = "PWD-" + o.id;
+                var e_role_id = "ROLE-" + o.id;
+                var e_enabled_id = "ENABLED-" + o.id;
+                var e_locked_id = "LOCKED-" + o.id;
 
-                var e_parent_txt = "顶级菜单";
-                for( var i in parent_group ){
-                    var g = parent_group[i];
-                    if( g.value == o.parentId ){
-                        e_parent_txt = g.text;
-                        break;
-                    }
+                var e_role_txt = "";
+                for( var i in o.roles ){
+                    var r = o.roles[i];
+                    e_role_txt += r.name + ", ";
+                    select_group.push( r.name );
+                    if( o.id == UserId )
+                        Roles[r.name] = r;
                 }
+                if ( e_role_txt != "" ) e_role_txt = e_role_txt.substring( 0, e_role_txt.length - 2 );
+
                 var row = "<tr id='E-" + o.id + "'>"
                         + "<td>" + o.id + "</td>"
-                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.TEXT, e_name_id, o.name ) + "</td>"
-                        + "<td>" + o.url + "</td>"
-                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.SELECT, e_parent_id, e_parent_txt )  + "</td>"
-                        + "<td>" + o.visible + "</td>"
-                        + "<td>" + o.index + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.TEXT, e_name_id, o.username ) + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.PASSWORD, e_pwd_id, "****" ) + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.SELECT, e_enabled_id, o.enabled ? "是" : "否" ) + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.SELECT, e_locked_id, o.locked ? "是" : "否" ) + "</td>"
+                        + "<td>" + jeesjs.Editable.generate( o.id, jeesjs.Editable.TYPE.TAGS, e_role_id, e_role_txt )  + "</td>"
                         + "<td>"
                             + "<button id='B-" + o.id + "' class='btn btn-success' onclick='On_Edit_Click( " + o.id + " )'></button>"
                             + "&nbsp;&nbsp;&nbsp;&nbsp;"
@@ -165,24 +212,26 @@
                         + "</tr>";
                 dom_tab.append( row );
                 jeesjs.Editable.text( $( "#" + e_name_id ) );
-                jeesjs.Editable.select( $( "#" + e_parent_id ), o.parentId, parent_group );
+                jeesjs.Editable.password( $( "#" + e_pwd_id ) );
+                jeesjs.Editable.tags( $( "#" + e_role_id ), select_group );
+                jeesjs.Editable.select( $( "#" + e_enabled_id ), o.enabled ? 1 : 0, check_group );
+                jeesjs.Editable.select( $( "#" + e_locked_id ), o.locked ? 1 : 0, check_group );
 
                 On_Edit_Click( o.id );
             }
         };
-        var MenuView = function () {
+        var DataView = function () {
 			"use strict";
 			return {
 				//main function
 				init: function () {
-				    SuperRemote.loadMenuData( handleMenusLoad );
+				    SuperRemote.loadUserData( handleDatasLoad );
 				}
-
 			};
 		}();
 		$(document).ready(function() {
 			App.init();
-			<!--MenuView.init();-->
+			DataView.init();
 		});
 	</script>
 </body>

@@ -138,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                             String p_url = p.getUrl();
                             if( !templateService.isDefault( p.getTpl() ) ) p_url = "/" + p_url ;
                             if (!p_url.equalsIgnoreCase("/" + CommonConfig.getString("jees.webs.login", "login"))) {
-                                _hs.authorizeRequests().antMatchers( p_url ).hasAnyAuthority(ISupportEL.ROLE_SUPERMAN);
+                                _hs.authorizeRequests().antMatchers( p_url ).hasAuthority(ISupportEL.ROLE_SUPERMAN);
                                 log.debug("--配置默认访问路径和权限：URL=[" + p_url + "], ROLE=[" + ISupportEL.ROLE_SUPERMAN + "]");
                             }
                         } catch (Exception e) {

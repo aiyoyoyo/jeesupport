@@ -108,6 +108,9 @@
                 o.name = _e.value;
             if( _e.name.indexOf( "MENU-" ) != -1 ){
                 var ms = _e.value;
+                for( var id in o.menus ) {
+                    o.menus[id] = null;
+                }
                 for( var id in ms ){
                     var m = Menus[ms[id]];
                     o.menus[m.id] = m;

@@ -40,8 +40,4 @@ public class DaoServiceImpl extends BaseDao {
     public <T> List<T> select( Class<T> _cls ) {
         return select( DB_Default, _cls );
     }
-
-    public void saveOrUpdate( Map menus ) {
-
-    }
 }

@@ -27,6 +27,7 @@ public abstract class AbsDwrConfig {
      * @return
      */
 //    @Bean
+    @SuppressWarnings( "unchecked" )
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         OpenSessionInViewFilter filter = new OpenSessionInViewFilter();

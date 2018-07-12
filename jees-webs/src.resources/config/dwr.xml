@@ -12,10 +12,14 @@
         <dwr:signatures>
             <![CDATA[
                 import java.util.Map;
+                import java.io.Serializable;
                 import com.jees.test.entity.Role;
                 import com.jees.test.entity.Menu;
+                import com.jees.test.entity.User;
                 import com.jees.test.remote.SuperRemote;
-                SuperRemote.saveRoleData( Role _role, Map<Integer, Menu> _menu );
+                Map<Integer, Menu> Role.getMenus();
+                SuperRemote.saveRoleData( Role _role, Map<Integer, Menu> _menus );
+                SuperRemote.saveUserData( User _user, Map<Integer, Role> _roles );
             ]]>
         </dwr:signatures>
     </dwr:configuration>

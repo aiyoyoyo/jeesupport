@@ -1,8 +1,8 @@
 package com.jees.webs.entity;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.directwebremoting.annotations.RemoteProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,19 +23,25 @@ public class SuperUser<ID extends Serializable, R extends SuperRole, M extends  
     @GeneratedValue( strategy = IDENTITY )
     @GenericGenerator( name = "generator" , strategy = "identity" )
     @Column( name = "id" , unique = true , nullable = false )
+    @RemoteProperty
     private ID id;
     @Column( name = "username" , nullable = false )
+    @RemoteProperty
     private String username;
     @Column( name = "password" , nullable = false )
+    @RemoteProperty
     private String password;
     @Column( name = "enabled" , nullable = false )
+    @RemoteProperty
     private boolean enabled;
     @Column( name = "locked" , nullable = false )
+    @RemoteProperty
     private boolean locked;
     @ManyToMany(cascade=CascadeType.REMOVE,fetch=FetchType.LAZY)
     @JoinTable( name="user_role",joinColumns = {@JoinColumn(name="user_id")},
             inverseJoinColumns =@JoinColumn(name = "role_id"))
     @MapKey( name = "id" )
+    @RemoteProperty
     private Map<Serializable, R> roles = new HashMap<>();
     @Transient
     private Set<M> menus = new HashSet<>();
@@ -67,6 +73,7 @@ public class SuperUser<ID extends Serializable, R extends SuperRole, M extends  
         roles.put( _role.getId(), _role );
     }
 
+    @SuppressWarnings( "unchecked" )
     public Set<M> getMenus(){
         if( menus.size() == 0 ){
             roles.values().forEach( r ->{

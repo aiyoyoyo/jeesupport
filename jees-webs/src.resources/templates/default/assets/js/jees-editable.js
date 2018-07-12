@@ -22,6 +22,8 @@ this.jeesjs = this.jeesjs || {};
 	    TEXT : "text",
 	    SELECT : "select",
 	    TAGS : "select2",
+	    PASSWORD : "password",
+	    CHECK : "checklist",
 	}
     // private static methods: ================================================
 	// public static methods: =================================================
@@ -32,6 +34,15 @@ this.jeesjs = this.jeesjs || {};
      * @public
      */
 	Editable.text = function( _e ){
+        _e.editable();
+    };
+    /**
+     * @method password
+     * @param {Dom} _e
+     * @static
+     * @public
+     */
+    Editable.password = function( _e ){
         _e.editable();
     };
     /**
@@ -65,6 +76,17 @@ this.jeesjs = this.jeesjs || {};
         });
     };
     /**
+     * @method check
+     * @param {Dom} _e
+     * @static
+     * @public
+     */
+    Editable.check = function( _e, _s ){
+        _e.editable({
+            source: _s
+        });
+    };
+    /**
      * @method generate
      * @param {Number|String} _p
      * @param {jeesjs.TYPE|String} _t0
@@ -77,6 +99,8 @@ this.jeesjs = this.jeesjs || {};
     Editable.generate = function( _p, _t0, _i, _v, _t1 ) {
          if( _v == undefined ) _v = "";
          if( _t1 == undefined ) _t1 = "";
+         if( _t0 == Editable.TYPE.CHECK )
+            return '<a href="javascript:;" id="' + _i + '" data-pk="' + _p + '" data-type="'+ _t0 +'" data-title="' + _t1 + '" data-value="' + _v + '"></a>';
          return '<a href="javascript:;" id="' + _i + '" data-pk="' + _p + '" data-type="'+ _t0 +'" data-title="' + _t1 + '">' + _v + '</a>';
     };
 	jeesjs.Editable = Editable;

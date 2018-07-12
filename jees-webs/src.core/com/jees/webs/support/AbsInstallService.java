@@ -9,8 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -26,6 +24,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
     @Autowired
     ResourcePatternResolver resourcePatternResolver;
 
+    @SuppressWarnings( "unchecked" )
     public U installUsers( String _db, U _u ){
         U u = ( U ) _u.build();
 
@@ -40,6 +39,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
         return u;
     }
 
+    @SuppressWarnings( "unchecked" )
     public List< M > installMenus( String _db, M _m ){
         List<M> ms = new ArrayList<>();
         templateService.getTemplateAll().forEach( t -> {
@@ -62,6 +62,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
         return ms;
     }
 
+    @SuppressWarnings( "unchecked" )
     public R installRoles( String _db, R _r ){
         R r = ( R ) _r.build();
         r.setName( _r.getName() );
@@ -72,6 +73,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
         return r;
     }
 
+    @SuppressWarnings( "unchecked" )
     public void installDefaultUserAndRole( String _db, U _u, List<M> _ms, R _r ){
         Map roles = new HashMap<>();
         roles.put( _r.getId(), _r );
@@ -109,6 +111,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
         return false;
     }
 
+    @SuppressWarnings( "unchecked" )
     public void doRefresh( String _db, M _m ){
         List<M> ms = new ArrayList<>();
         templateService.getTemplateAll().forEach( t -> {
