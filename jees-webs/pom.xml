@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-webs</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>Java Web Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>

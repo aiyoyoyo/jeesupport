@@ -80,7 +80,13 @@ jees:
 QQ群：8802330  
 论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
-## 最新更新
-* 提供基于文件路径的模版抓取方式，并完全了权限认证细节。
-* 增加Dwr支持
+## 1.1.0-SNAPSHOT 更新
+1. 提供一套初级WEB开发框架，通过较少的约定完成一套多模版多主题的WEB开发结构。
+2. 基于SpringBoot和Thymeleaf搭建的完整模版框架。
+3. 提供一套SpringSecurity数据库权限和栏目配置方案。
+4. 数据服务基于JDBS实现。
 
+## 1.1.1-SNAPSHOT 更新
+1. 提供一套基础的权限及登陆演示模版
+2. 支持动态配置数据库权限管理
+3. 演示代码可以直接使用
