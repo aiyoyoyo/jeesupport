@@ -14,7 +14,7 @@ public class BaseDao extends AbsSupportDao{
     private Map< String, List<Object> > deleteMap = new ConcurrentHashMap<>();
     private Map< String, List<Object> > updateMap = new ConcurrentHashMap<>();
 
-    private synchronized void _push( String _db, Object _obj, Map< String, List<Object> > _map ){
+    private void _push( String _db, Object _obj, Map< String, List<Object> > _map ){
         List<Object> list = _map.getOrDefault( _db, new ArrayList<>() );
 
         boolean real_push = false;
@@ -64,7 +64,7 @@ public class BaseDao extends AbsSupportDao{
     /**
      * 正式提交到数据库，该方法会剔除insert/update数据中已经被声明在delete中的重复对象
      */
-    public synchronized void commit(){
+    public void commit(){
         try {
             deleteMap.keySet().forEach(key -> {
                 List<Object> delList = deleteMap.getOrDefault(key, new ArrayList<>());
@@ -91,13 +91,17 @@ public class BaseDao extends AbsSupportDao{
             });
 
             insertMap.keySet().forEach(key -> {
-                List<?> list = insertMap.getOrDefault(key, null );
-                if( list != null ) insertAll(key, list );
+                List<?> list = insertMap.getOrDefault(key, new ArrayList<>() );
+                Iterator< ? > it = list.iterator();
+                while( it.hasNext() ) if ( it.next() == null ) it.remove();
+                if( list.size() > 0 ) insertAll(key, list );
             });
 
             updateMap.keySet().forEach(key ->{
-                List<?> list = updateMap.getOrDefault(key, null );
-                if( list != null ) updateAll(key, list );
+                List<?> list = updateMap.getOrDefault(key, new ArrayList<>() );
+                Iterator< ? > it = list.iterator();
+                while( it.hasNext() ) if ( it.next() == null ) it.remove();
+                if( list.size() > 0 ) updateAll(key, list );
             });
 
         }finally {
