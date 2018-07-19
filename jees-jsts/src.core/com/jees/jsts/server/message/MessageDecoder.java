@@ -4,6 +4,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.jees.common.CommonConfig;
 import com.jees.tool.utils.DataUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Scope;
@@ -53,7 +54,8 @@ public class MessageDecoder extends AbsNettyDecoder {
 		if ( _buf.readableBytes() < LENGTH_FIELD_LENGTH ) return null;
 
 		_buf.markReaderIndex();
-		int dataLength = DataUtil.warpHL( _buf.readInt() );
+//		int dataLength = DataUtil.warpHL( _buf.readInt() );
+		int dataLength = _buf.readInt();
 
 		// 长度为负数作为特定消息通道
 		if( dataLength < 0 ){
@@ -78,12 +80,12 @@ public class MessageDecoder extends AbsNettyDecoder {
 
 	public static void buff( ByteBuf _buf, Message _msg ) {
 		byte[] byt_data = serializer( _msg );
-		_buf.writeInt( DataUtil.warpHL( byt_data.length ) );
+		_buf.writeInt( byt_data.length );
 		_buf.writeBytes( byt_data );
 	}
 
 	public static void buff( ByteBuf _buf, byte[] _bytes ) {
-		_buf.writeInt( DataUtil.warpHL( _bytes.length ) );
+		_buf.writeInt( _bytes.length );
 		_buf.writeBytes( _bytes );
 	}
 
@@ -178,6 +180,12 @@ public class MessageDecoder extends AbsNettyDecoder {
 	}
 
 	public static void s_debug_message( Message _msg , boolean _rw ) {
+		boolean de_request = CommonConfig.getBoolean("jees.jsts.message.request", false );
+		boolean de_response = CommonConfig.getBoolean("jees.jsts.message.response", false );
+
+		if( _rw && !de_request ) return;
+		if( !_rw && !de_response ) return;
+
 		StringBuffer msg_msg_buff = new StringBuffer();
 
 		try {
@@ -191,7 +199,7 @@ public class MessageDecoder extends AbsNettyDecoder {
 
 		String msg_type =  getLabel( _msg.getId(), _rw );
 		String msg_buff = ""
-				+ "\n[" + msg_type + "] -------------------------------------------------"
+				+ "\n[" + msg_type + "] -----------------------------------------------"
 				+ "\n ID=" + _msg.getId() + " UID=" + _msg.getUserId() + " Boo"
 				+ _msg_data( _msg.getBooData() ) + " Lon" + _msg_data( _msg.getLonData() ) + " Flo"
 				+ _msg_data( _msg.getFloData() ) + " Int" + _msg_data( _msg.getIntData() ) + " Str"
