@@ -29,6 +29,10 @@ jees:
     pinGlobalTxToPhysicalConnection: true
     uniqueResourceName: datasourceA
     xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    poolSize: 1
+    maxPoolSize: 3
+    minPoolSize: 1
+    maxIdleTime: 60
     packagesToScan: com.jees.test.entity
     hibernate:
      dialect: org.hibernate.dialect.MySQL55Dialect
@@ -46,5 +50,9 @@ jees:
     pinGlobalTxToPhysicalConnection: true
     uniqueResourceName: datasourceB
     xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    poolSize: 1
+    maxPoolSize: 3
+    minPoolSize: 1
+    maxIdleTime: 60
     packagesToScan: com.jees.test.entity
 

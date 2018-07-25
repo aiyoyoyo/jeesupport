@@ -35,6 +35,7 @@ public class SessionFactoryRegistry {
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.rootBeanDefinition(AbsXADataSource.class);
 
+        // 这里没有列举AbstractDataSourceBean的所有可用属性
         if( type.equalsIgnoreCase( "mysql" ) ) {
             xaProperties.setProperty("pinGlobalTxToPhysicalConnection",
                     CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
@@ -45,6 +46,15 @@ public class SessionFactoryRegistry {
                     CommonConfig.getString( head + "xaDataSourceClassName" ) );
 
             beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
+
+            beanDefinitionBuilder.addPropertyValue("maxPoolSize",
+                    CommonConfig.getString( head + "maxPoolSize" ));
+            beanDefinitionBuilder.addPropertyValue("minPoolSize",
+                    CommonConfig.getString( head + "minPoolSize" ));
+            beanDefinitionBuilder.addPropertyValue("maxIdleTime",
+                    CommonConfig.getString( head + "maxIdleTime" ));
+
+            beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString( head + "poolSize" ) );
         }
 
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
