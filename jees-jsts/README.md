@@ -1,7 +1,7 @@
 # jees-jsts
 
 ## 内容介绍
-本工具基于Spring和Netty实现Socket服务器，目前支持Socket和WebSocket2中格式。WebSocket还有待完善。
+本工具基于Spring和Netty实现Socket服务器，目前支持Socket和WebSocket这2种格式。WebSocket还有待完善。
 ## 基本用法
 在pom.xml中加入下面2段内容。
 ```

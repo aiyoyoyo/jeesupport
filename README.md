@@ -4,13 +4,15 @@
 jeesupport提供了Java开发中常用的一些技术和框架供使用和参考。
 ## 支持内容
 * jees-boot 
-> 基于Spring-Boot的学习和使用参考  
+> 基于Spring-Boot的学习和使用参考，同时是下面4个的核心依赖项。 
 * jees-jtls
 > 提供了一些可能用到的组件或算法
 * jees-jdbs
 > 基于Atomikos的分布式数据库解决方案
 * jees-jsts
 > 基于Netty的Socket/WebSocket解决方案
+* jees-jwebs
+> 基于Spring-Boot的web开发解决方案
 
 ## 基本用法
 在pom.xml中加入下面2段内容。
