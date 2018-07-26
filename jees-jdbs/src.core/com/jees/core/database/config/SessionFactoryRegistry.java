@@ -48,13 +48,13 @@ public class SessionFactoryRegistry {
             beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
 
             beanDefinitionBuilder.addPropertyValue("maxPoolSize",
-                    CommonConfig.getString( head + "maxPoolSize" ));
+                    CommonConfig.getString( head + "maxPoolSize", "1" ));
             beanDefinitionBuilder.addPropertyValue("minPoolSize",
-                    CommonConfig.getString( head + "minPoolSize" ));
+                    CommonConfig.getString( head + "minPoolSize", "1" ));
             beanDefinitionBuilder.addPropertyValue("maxIdleTime",
-                    CommonConfig.getString( head + "maxIdleTime" ));
+                    CommonConfig.getString( head + "maxIdleTime", "60" ));
 
-            beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString( head + "poolSize" ) );
+            beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString( head + "poolSize", "1" ) );
         }
 
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
