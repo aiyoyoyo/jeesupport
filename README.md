@@ -2,7 +2,7 @@
 
 ## 内容介绍
 jeesupport提供了Java开发中常用的一些技术和框架供使用和参考。
-Idea需要安装Lombok，才能正常访问。
+开发工具需要安装Lombok，才能正常访问。
 ## 支持内容
 * jees-boot 
 > 基于Spring-Boot的学习和使用参考，同时是下面4个的核心依赖项。 
