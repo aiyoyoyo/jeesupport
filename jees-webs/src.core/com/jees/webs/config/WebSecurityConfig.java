@@ -165,7 +165,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             }
         }
         String dwr_url = CommonConfig.getString("jees.webs.dwr.url", "/dwr" );
+        String csrf_url = CommonConfig.getString("jees.webs.csrf.url", "/csrf" );
         _hs.csrf().ignoringAntMatchers( dwr_url + "/**");
+        _hs.csrf().ignoringAntMatchers( csrf_url + "/**" );
+
+        if( CommonConfig.getBoolean("jees.webs.header.frameOptions", false ) )
+            _hs.headers().frameOptions().disable();
 
         _hs.authorizeRequests()
                 .and().formLogin().loginPage( "/" + CommonConfig.getString( "jees.webs.login", "login") )
