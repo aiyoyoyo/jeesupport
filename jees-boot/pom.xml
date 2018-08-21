@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-boot</artifactId>
-    <version>1.1.6-SNAPSHOT</version>
+    <version>1.1.7-SNAPSHOT</version>
     <name>Java Boot Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>
@@ -26,7 +26,7 @@
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
-        <jees.version>1.1.5-SNAPSHOT</jees.version>
+        <jees.version>1.1.7-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
         <jees.jtls.version>1.1.4-SNAPSHOT</jees.jtls.version>
         <jees.jdbs.version>1.1.5-SNAPSHOT</jees.jdbs.version>
@@ -38,7 +38,7 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
-        <spring.boot.version>2.1.0.BUILD-SNAPSHOT</spring.boot.version>
+        <spring.boot.version>2.1.0.M2</spring.boot.version>
         <mysql.version>5.1.44</mysql.version>
         <jodatime.version>2.9.9</jodatime.version>
         <lombok.version>1.16.20</lombok.version>
@@ -78,16 +78,16 @@
         <developerConnection>${jees.scm.url}</developerConnection>
         <url>${jees.scm.url}</url>
     </scm>
-    <!-- Spring Boot 快照版仓库地址 -->
+    <!-- Spring Boot -->
     <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+        <!--<repository>-->
+            <!--<id>spring-snapshots</id>-->
+            <!--<name>Spring Snapshots</name>-->
+            <!--<url>https://repo.spring.io/snapshot</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
@@ -98,14 +98,14 @@
         </repository>
     </repositories>
     <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
+        <!--<pluginRepository>-->
+            <!--<id>spring-snapshots</id>-->
+            <!--<name>Spring Snapshots</name>-->
+            <!--<url>https://repo.spring.io/snapshot</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</pluginRepository>-->
         <pluginRepository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
@@ -115,7 +115,6 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
     <!-- 项目环境 -->
     <build>
         <sourceDirectory>${basedir}\src.core</sourceDirectory>
