@@ -46,7 +46,19 @@ QQ群：8802330
 ## 版本说明
 在版本2.0.0之前，都会是快照版本。在此之前会逐步完善相关内容。
 
-## 更新内容
+## 1.1.7 更新说明 <font color='red'>New</font>
+> [JEES] Jees-Boot Ver.1.1.7-SNAPSHOT
+1. 升级Spring版本到2.1.0.M2
+2. 其他细节更新见各自得更新说明
+
+> [JSTS] Ver 1.1.4-SNAPSHOT
+1. 优化MessageException细节
+2. 增加连接管理容器SessionService
+
+> [JDBS] Ver 1.1.5-SNAPSHOT
+1. 优化配置细节，详情见AbstractDataSorceBean得配置项
+
+## 1.1.5 更新说明
 ### Jees-Boot Ver.1.1.5-SNAPSHOT
 > [JSTS] Ver 1.1.4-SNAPSHOT
 1. 提供了服务器套件，以便于各类项目直接应用。
