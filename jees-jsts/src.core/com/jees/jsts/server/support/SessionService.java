@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class SessionService< ID > {
-    Map< ID , SuperUser<ID> >               Ids2Usr = new HashMap<>();
+    Map< ID , SuperUser<ID> >               Ids2Usr = new ConcurrentHashMap<>();
     // 是否有效用户，以下2个数据为准
-    Map< ID , ChannelHandlerContext >       Ids2Net = new HashMap<>();
-    Map< ChannelHandlerContext , ID >	    Net2Ids = new HashMap<>();
+    Map< ID , ChannelHandlerContext >       Ids2Net = new ConcurrentHashMap<>();
+    Map< ChannelHandlerContext , ID >	    Net2Ids = new ConcurrentHashMap<>();
 
     public < T extends SuperUser<ID> > T find ( ChannelHandlerContext _ctx ) {
         return ( T ) Ids2Usr.getOrDefault( Net2Ids.getOrDefault( _ctx, null ), null );
