@@ -23,7 +23,9 @@ public class SessionService< ID > {
     Map< ChannelHandlerContext , ID >	    Net2Ids = new ConcurrentHashMap<>();
 
     public < T extends SuperUser<ID> > T find ( ChannelHandlerContext _ctx ) {
-        return ( T ) Ids2Usr.getOrDefault( Net2Ids.getOrDefault( _ctx, null ), null );
+        ID id = Net2Ids.getOrDefault( _ctx, null );
+        if( id == null ) return null;
+        return ( T ) Ids2Usr.getOrDefault( id, null );
     }
 
     public < T extends SuperUser<ID> > T  find ( ID _user ) {
