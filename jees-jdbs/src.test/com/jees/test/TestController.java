@@ -25,14 +25,15 @@ public class TestController {
 		TabA a = new TabA();
 		a.setStr( System.currentTimeMillis() + "" );
 
-//		ex.insert( DB_A , a );
+		ex.insert( DB_A , a );
+		ex.commit();
 	}
 
 	@Transactional
 	public void insertATransSucc() {
 		insertA();
-		@SuppressWarnings( "unused" )
-		int n = 1 / 0;
+//		@SuppressWarnings( "unused" )
+//		int n = 1 / 0;
 	}
 
 	public void insertATransFail() {

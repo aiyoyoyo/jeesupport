@@ -30,38 +30,38 @@ public class JunitTest implements Runnable {
 	@Autowired
 	public TestController	ctr;
 
-	@Test
+//	@Test
 	public void SimpleTest(){
 		ctr.simpleTest();
 	}
-	// @Test
+	 @Test
 	public void ExTest() {
 		try {
-			ctr.insertA();
+//			ctr.insertA();
 		} catch ( Exception e ) {}
 		try {
 			ctr.insertATransSucc();
 		} catch ( Exception e ) {}
 		try {
-			ctr.insertATransFail();
+//			ctr.insertATransFail();
 		} catch ( Exception e ) {}
 		try {
-			ctr.updateA();
+//			ctr.updateA();
 		} catch ( Exception e ) {}
 		try {
-			ctr.updateATransSucc();
+//			ctr.updateATransSucc();
 		} catch ( Exception e ) {}
 		try {
-			ctr.updateATransFail();
+//			ctr.updateATransFail();
 		} catch ( Exception e ) {}
 		try {
-			ctr.deleteA();
+//			ctr.deleteA();
 		} catch ( Exception e ) {}
 		try {
-			ctr.deleteATransSucc();
+//			ctr.deleteATransSucc();
 		} catch ( Exception e ) {}
 		try {
-			ctr.deleteATransFail();
+//			ctr.deleteATransFail();
 		} catch ( Exception e ) {}
 	}
 

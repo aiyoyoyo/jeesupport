@@ -20,10 +20,10 @@ public class ApplicationTest {
 		SpringApplication.run( ApplicationTest.class, args);
 
 		TestController ctr = CommonContextHolder.getBean( TestController.class );
-
+		ctr.insertATransSucc();
 //		ctr.simpleTest();
 
-		ctr.absTest();
+//		ctr.absTest();
 
 //		ExTest( ctr );
 

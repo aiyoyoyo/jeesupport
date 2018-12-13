@@ -38,7 +38,7 @@ jees:
      dialect: org.hibernate.dialect.MySQL55Dialect
      showSql: true
      factoryClass: org.hibernate.transaction.JTATransactionFactory
-     hbm2ddl: none
+     hbm2ddl: create
      platform: com.jees.core.database.config.AtomikosJtaPlatform
      coordinatorClass: jta
    testb:
