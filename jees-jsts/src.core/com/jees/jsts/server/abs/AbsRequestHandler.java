@@ -23,7 +23,6 @@ import java.util.*;
 @Log4j2
 public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > implements IRequestHandler< C, M > {
     private boolean						init;
-    private Class                       clazz;
     private Map< Integer , Class< ? > > handlerClases;
     private Map< Integer , Method>		handlerMethod;
 
@@ -60,21 +59,10 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
         } );
     }
 
-    private static Message _msg_cast( Object _obj ){
-        if( _obj == null ) return null;
-        Message msg = null;
-
-        if( _obj instanceof WebSocketFrame){
-            msg = MessageDecoder.deserializer( ( WebSocketFrame ) _obj );
-            msg.setType( Message.TYPE_WEBSOCKET );
-        }else msg = ( Message ) _obj;
-
-        return msg;
-    }
     @SuppressWarnings( "unchecked" )
     @Override
     public void handler( C _ctx , Object _obj ) {
-        Message msg = _msg_cast( _obj );
+        Message msg = MessageDecoder.deserializer( _obj );
 
         if( msg == null ){
             exit( _ctx );
@@ -98,7 +86,10 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
                 } catch ( Exception ex ) {
                     log.error( "错误EX: I=[" + cmd + "] M=[" + m.getName() + "]" , ex );
                 }
-            } else log.warn( "命令没有注册：CMD=[" + cmd + "]" );
+            } else {
+                log.warn( "命令没有注册：CMD=[" + cmd + "]" );
+                unregist( _ctx, (M)msg );
+            }
         }
     }
 

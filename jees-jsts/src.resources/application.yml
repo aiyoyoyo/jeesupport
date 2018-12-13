@@ -12,18 +12,18 @@ spring:
 jees:
  jsts:
   socket:
-   enable: true
+   enable: false
    lostTime: 0
    standTime: 60000
    port: 8000
   websocket:
    enable: true
-   url: /ws
+   url: /
    lostTime: 0
    standTime: 60000
    port: 8001
   connector:
-   enable: true
+   enable: false
    retry:
     max: 3
     rate: 10000

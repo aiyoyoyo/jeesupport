@@ -49,7 +49,8 @@ public class JstsApplication {
 
 			@Override
 			/** 客户端连接 **/
-			public void enter(ChannelHandlerContext _ctx) {}
+			public void enter(ChannelHandlerContext _ctx) {
+			}
 
 			@Override
 			/** 客户端断开 **/
@@ -94,6 +95,22 @@ public class JstsApplication {
 			public void after(ChannelHandlerContext _ctx) {
 			}
 
+			@Autowired
+			ISupportHandler 		handler;
+			@Override
+			public void unregist ( ChannelHandlerContext _ctx, Message _msg ) {
+				Message	msg = new Message();
+				msg.setId(100);
+				msg.setType( Message.TYPE_WEBSOCKET );
+				msg.add( 123 );
+				msg.add( 123L );
+				msg.add( 123.00F );
+				msg.add( 123D );
+				msg.add( "123" );
+				msg.add( false );
+				handler.send( _ctx , msg );
+			}
+
 			@Override
 			public void error(ChannelHandlerContext _ctx, MessageException _msg) {
 			}
@@ -121,9 +138,6 @@ public class JstsApplication {
 			@Override
 			public void channelActive(ChannelHandlerContext _ctx) throws Exception {
 				super.channelActive( _ctx );
-				Message	msg = new Message();
-				msg.setId(100);
-				handler.send( _ctx , msg );
 			}
 		};
 	}
@@ -149,6 +163,10 @@ public class JstsApplication {
 
 			@Override
 			public void after(ChannelHandlerContext _ctx) {
+			}
+
+			@Override
+			public void unregist ( ChannelHandlerContext _ctx, Message _msg ) {
 			}
 
 			@Override

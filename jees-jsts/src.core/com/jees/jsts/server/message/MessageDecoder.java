@@ -4,6 +4,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.gson.Gson;
 import com.jees.common.CommonConfig;
 import com.jees.tool.utils.DataUtil;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,7 @@ public class MessageDecoder extends AbsNettyDecoder {
 
 	public MessageDecoder() {
 		super( ByteOrder.LITTLE_ENDIAN , MAX_FRAME_LENGTH , LENGTH_FIELD_OFFSET , LENGTH_FIELD_LENGTH ,
-						LENGTH_ADJUSTMENT , INITIAL_BYTES_TO_STRIP , true );
+				LENGTH_ADJUSTMENT , INITIAL_BYTES_TO_STRIP , true );
 	}
 
 	/**
@@ -145,8 +146,24 @@ public class MessageDecoder extends AbsNettyDecoder {
 			throw new IllegalStateException( e.getMessage() , e );
 		}
 	}
-
 	// websocket 序列化部分 ========================================================
+	public static String serializerToJson( Message _msg ) {
+		Gson gson = new Gson();
+
+		String json_data = gson.toJson( _msg, Message.class);
+
+		return json_data;
+	}
+
+	public static Message deserializer( Object _obj ) {
+		Message msg = null;
+		if( _obj instanceof WebSocketFrame){
+			msg = deserializer( ( WebSocketFrame ) _obj );
+			msg.setType( Message.TYPE_WEBSOCKET );
+		}else msg = ( Message ) _obj;
+
+		return msg;
+	}
 	/**
 	 * 序列化Message对象，根据自身情况确定使用二进制还是纯文本格式
 	 * 所有字节先尝试转int，失败后转为string
@@ -156,26 +173,21 @@ public class MessageDecoder extends AbsNettyDecoder {
 	public static Message deserializer( WebSocketFrame _frame ) {
 		// 当前只支持文本消息，不支持二进制消息
 		if ( ! ( _frame instanceof TextWebSocketFrame ) ) { throw new UnsupportedOperationException(
-						"当前只支持文本消息，不支持二进制消息" ); }
-		Message msg = new Message();
+				"当前只支持文本消息，不支持二进制消息" ); }
 		// 处理来自客户端的WebSocket请求
 		String request_text = ( ( TextWebSocketFrame ) _frame ).text();
 
-		StringTokenizer st = new StringTokenizer( request_text , Message.DELIM_STR );
+		Gson gson = new Gson();
 
-		while ( st.hasMoreTokens() ) {
-			String str = st.nextToken();
-
-			if ( msg.getId() == 0 ) msg.setId( Integer.parseInt( str ) );
-			else {
-				try {
-					msg.add( Integer.parseInt( str ) );
-					continue;
-				} catch ( Exception e ) {}
-				msg.add( str );
-			}
+		Message msg = null;
+		try{
+			msg = gson.fromJson( request_text, Message.class);
+			return msg;
+		}catch( Exception e ){
+			log.debug( "-- JSON转换Message失败，消息将存入无ID属性的Message对象。" );
+			msg = new Message();
+			msg.addString( request_text );
 		}
-
 		return msg;
 	}
 

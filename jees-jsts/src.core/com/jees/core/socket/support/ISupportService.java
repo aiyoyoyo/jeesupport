@@ -28,6 +28,8 @@ public interface ISupportService<C, M> {
 
 	void after( C _ctx );
 
+	void unregist( C _ctx, M _msg );
+
 	void error( C _ctx, MessageException _ex );
 
 	void exit( C _ctx );

@@ -18,7 +18,7 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > imp
     public void send( C _ctx , M _msg ) {
         Message m = (Message)_msg;
         if( m.getType() == Message.TYPE_WEBSOCKET ){
-            TextWebSocketFrame tws = new TextWebSocketFrame( m.dataString() );
+            TextWebSocketFrame tws = new TextWebSocketFrame( MessageDecoder.serializerToJson( m ) );
             _ctx.writeAndFlush( tws );
         }else if( m.getType() == Message.TYPE_SOCKET ){
             final ByteBuf buf = _ctx.alloc().buffer();

@@ -142,36 +142,4 @@ public class Message {
 		if ( _idx >= this.bytData.size() ) return null;
 		return this.bytData.get( _idx );
 	}
-
-	/**
-	 * 除bytes数据外，会依次将id,userId,int,long,float,double,boolean,string数据通过“;”连接.
-	 * @return
-	 */
-	public String dataString(){
-		StringBuffer str_buff = new StringBuffer();
-
-		str_buff.append( id + DELIM_STR );
-		str_buff.append( userId + DELIM_STR );
-
-		intData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-		lonData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-		floData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-		dblData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-		booData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-		strData.forEach( i -> {
-			str_buff.append( i + DELIM_STR );
-		});
-
-		return str_buff.toString();
-	}
 }

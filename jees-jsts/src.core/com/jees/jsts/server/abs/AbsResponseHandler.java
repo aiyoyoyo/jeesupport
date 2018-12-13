@@ -64,7 +64,7 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
     @SuppressWarnings( "unchecked" )
     @Override
     public void handler( C _ctx , Object _obj ) {
-        Message msg = _msg_cast( _obj );
+        Message msg = MessageDecoder.deserializer( _obj );
 
         if( msg == null ){
             exit( _ctx );
@@ -90,17 +90,5 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
                 }
             } else log.warn( "命令没有注册：CMD=[" + cmd + "]" );
         }
-    }
-
-    private static Message _msg_cast( Object _obj ){
-        if( _obj == null ) return null;
-        Message msg = null;
-
-        if( _obj instanceof WebSocketFrame){
-            msg = MessageDecoder.deserializer( ( WebSocketFrame ) _obj );
-            msg.setType( Message.TYPE_WEBSOCKET );
-        }else msg = ( Message ) _obj;
-
-        return msg;
     }
 }

@@ -36,7 +36,7 @@ public class WebSocketInitializer extends ChannelInitializer< SocketChannel > {
 		pipeline.addLast( new HttpServerCodec() );
 		pipeline.addLast( new ChunkedWriteHandler() );
 		pipeline.addLast( new HttpObjectAggregator( 8192 ) );
-		pipeline.addLast( new WebSocketServerProtocolHandler( CommonConfig.get( ISocketBase.Netty_WebSocket_Url ) ) );
+		pipeline.addLast( new WebSocketServerProtocolHandler( CommonConfig.getString( ISocketBase.Netty_WebSocket_Url, "/" ) ) );
 		pipeline.addLast( CommonContextHolder.getBean( WebSocketHandler.class ) );
 
 	}
