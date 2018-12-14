@@ -88,7 +88,10 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
                 } catch ( Exception ex ) {
                     log.error( "错误EX: I=[" + cmd + "] M=[" + m.getName() + "]" , ex );
                 }
-            } else log.warn( "命令没有注册：CMD=[" + cmd + "]" );
+            } else {
+                log.warn( "命令没有注册：CMD=[" + cmd + "]" );
+                unregist( _ctx, (M)msg );
+            }
         }
     }
 }
