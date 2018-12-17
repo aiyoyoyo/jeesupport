@@ -22,7 +22,7 @@ public class Message {
 
 	private int					id;					// 协议号
 
-	private int					userId;
+	private long				userId;
 
 	private List< Integer >		intData;
 

@@ -81,6 +81,8 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
                     log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
+
+                    me.getMsg().setType( msg.getType() );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误
                 } catch ( RuntimeException re ) {
