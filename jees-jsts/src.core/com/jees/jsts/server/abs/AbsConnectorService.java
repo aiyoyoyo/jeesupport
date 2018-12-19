@@ -6,6 +6,7 @@ import com.jees.core.socket.support.ISocketBase;
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.netty.support.AbsNettyDecoder;
 import com.jees.jsts.server.interf.IConnectorService;
+import com.jees.jsts.server.interf.IConnectroHandler;
 import com.jees.jsts.server.message.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -17,36 +18,31 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * 提供连接器的服务，用于服务器之间的通讯
  */
 @Log4j2
 public abstract class AbsConnectorService implements IConnectorService{
-    protected Map< String, Connector > serverMap;
+    protected Set< Connector >          servers;
 
     @Autowired
     ISupportHandler                     handler;
     @Getter
     @Setter
     public class Connector implements Runnable, ISocketBase {
-        private EventLoopGroup  work;
-        private String			host;
-        private int				port;
-        private int				code;
-        private Channel			channel;
-        private int 			count;
-        private boolean			valid;
-        private boolean 		connect;
+        private EventLoopGroup      work;
+        private String			    host;
+        private int				    port;
+        private Channel			    channel;
+        private int 			    count;
+        private AbsConnectorHandler server;
 
         public Connector( String _host , String _port ) {
             this.host = _host;
             this.port = Integer.parseInt( _port );
             this.count = 0;
-            this.valid = false;
         }
 
         public void run() {
@@ -59,15 +55,19 @@ public abstract class AbsConnectorService implements IConnectorService{
         @Override
         public void unload() {
             if ( work != null ) work.shutdownGracefully();
+            if( channel != null ) this.channel.closeFuture();
+            count = 0;
         }
 
         public void start() {
-            log.debug( "--连接指定服务器中[" + this.count + "]..." );
+            log.info( "连接指定服务器中，尝试第[" + this.count + "]次..." );
             work = new NioEventLoopGroup();
+            server = CommonContextHolder.getBean( AbsConnectorHandler.class );
             try {
                 Bootstrap b = new Bootstrap();
+                server.initialize( host, port );
                 b.group( work ).channel( NioSocketChannel.class )
-                        .handler( clientInitializer() )
+                        .handler( clientInitializer( server ) )
                         .option( ChannelOption.SO_KEEPALIVE , true );
 
                 ChannelFuture future = b.connect( host , port );
@@ -77,6 +77,7 @@ public abstract class AbsConnectorService implements IConnectorService{
                 unload();
             } catch ( Exception e ) {
                 log.error( "指定服务器[" + host + ":" + port + "] 连接时发生错误:" + e.toString() , e );
+                server.setStatus( IConnectroHandler.STATUS_CONNECTING );
                 reload();
             }
         }
@@ -86,6 +87,7 @@ public abstract class AbsConnectorService implements IConnectorService{
         }
         @Override
         public void reload() {
+            log.info( "重新连接指定服务器中，尝试第[" + this.count + "]次..." );
             this.unload();
 
             int retry = CommonConfig.getInteger( "jees.jsts.connector.retry.max" , 3 );
@@ -107,7 +109,7 @@ public abstract class AbsConnectorService implements IConnectorService{
 
     @Override
     public void onload() {
-        serverMap = new HashMap<>();
+        servers = new HashSet<>();
         //连接中心服务器
         StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jsts.connector.hosts" );
 
@@ -119,7 +121,7 @@ public abstract class AbsConnectorService implements IConnectorService{
             String port = connect_info.substring( idx0 + 1 );
 
             Connector sc = new Connector( host , port );
-            serverMap.put( "/" + host + ":" + port , sc );
+            servers.add( sc );
             sc.onload();
         }
     }
@@ -130,16 +132,27 @@ public abstract class AbsConnectorService implements IConnectorService{
 
     @Override
     public void reload() {
+        servers.forEach( s ->{
+            s.reload();
+        } );
     }
 
-    public ChannelInitializer< SocketChannel > clientInitializer() {
+    @Override
+    public void reloadDisconnect(){
+        servers.stream().filter( s-> s.getServer().getStatus() == IConnectroHandler.STATUS_DISCONNECT )
+                .forEach( s ->{
+            s.reload();
+        } );
+    }
+
+    public ChannelInitializer< SocketChannel > clientInitializer ( AbsConnectorHandler _handler ) {
         return new ChannelInitializer< SocketChannel >() {
             @Override
             protected void initChannel( SocketChannel _ch ) throws Exception {
                 ChannelPipeline pipeline = _ch.pipeline();
                 // 自己的逻辑Handler
                 pipeline.addLast( CommonContextHolder.getBean( AbsNettyDecoder.class ) );
-                pipeline.addLast( CommonContextHolder.getBean( AbsConnectorHandler.class ) );
+                pipeline.addLast( _handler );
             }
         };
     }
