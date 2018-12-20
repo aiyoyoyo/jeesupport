@@ -11,6 +11,16 @@ spring:
 
 jees:
  jsts:
+  message:
+   request:
+    enable: true
+    clazz: com.jees.interf.IRequest
+   handler:
+    enable: true
+    clazz: com.jees.interf.IResponse
+   error:
+    enable: true
+    clazz: com.jees.interf.IError
   socket:
    enable: false
    lostTime: 0

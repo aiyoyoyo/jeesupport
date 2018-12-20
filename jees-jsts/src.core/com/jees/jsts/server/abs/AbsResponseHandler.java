@@ -1,6 +1,8 @@
 package com.jees.jsts.server.abs;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.annotation.MessageResponse;
 import com.jees.jsts.server.interf.IResponseHandler;
 import com.jees.jsts.server.message.Message;
@@ -12,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,11 +26,13 @@ import java.util.Map;
  * @param <M>
  */
 @Log4j2
+@Deprecated
 public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > implements IResponseHandler< C, M > {
     private boolean						init;
     private Class                       clazz;
     private Map< Integer , Class< ? > > handlerClases;
     private Map< Integer , Method>		handlerMethod;
+    private Map< Integer, String >      labels = new HashMap<>();
 
     public AbsResponseHandler() {
         if ( init ) return;
@@ -37,6 +42,7 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
         handlerMethod = new HashMap<>();
 
         _command_register();
+        _command_labels();
     }
 
     private void _command_register() {
@@ -61,6 +67,24 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
             }
         } );
     }
+
+    private void _command_labels(){
+        String cls = CommonConfig.getString( "jees.jsts.message.response.class" );
+        try {
+            Object ir = Class.forName( cls ).newInstance();
+            Field[] fields = ir.getClass().getDeclaredFields();
+
+            for ( Field f : fields ) {
+                try {
+                    labels.put( f.getInt( ir ) , f.getAnnotation( MessageLabel.class ).value() );
+                } catch ( Exception e ) {
+                    continue;
+                }
+            }
+        } catch ( Exception e ) {
+            log.error( "包含MessageLabel注解的接口发生错误：" + cls );
+        }
+    }
     @SuppressWarnings( "unchecked" )
     @Override
     public void handler( C _ctx , Object _obj ) {
@@ -69,6 +93,14 @@ public abstract class AbsResponseHandler< C extends ChannelHandlerContext, M > i
         if( msg == null ){
             exit( _ctx );
             return;
+        }
+
+        boolean debug = CommonConfig.getBoolean("jees.jsts.message.response.debug", false );
+
+        if( debug ){
+            String label = labels.getOrDefault( msg.getId(), "未注解命令" );
+            label = "[Request][" + label + "]--------------------------------------";
+            log.debug( label + "\n" + msg.toString() + "\n" + label );
         }
 
         if( before( _ctx, (M)msg ) ) {

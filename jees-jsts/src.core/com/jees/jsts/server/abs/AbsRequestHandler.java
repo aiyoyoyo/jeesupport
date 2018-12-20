@@ -1,18 +1,23 @@
 package com.jees.jsts.server.abs;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.annotation.MessageRequest;
 import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageDecoder;
 import com.jees.jsts.server.message.MessageException;
+import com.jees.jsts.server.support.ProxyInterface;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.*;
 
 /**
@@ -23,19 +28,14 @@ import java.util.*;
 @Log4j2
 public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > implements IRequestHandler< C, M > {
     private boolean						init;
-    private Map< Integer , Class< ? > > handlerClases;
-    private Map< Integer , Method>		handlerMethod;
+    private static Map< Integer , Class< ? > > handlerClases  = new HashMap<>();
+    private static Map< Integer , Method>		handlerMethod = new HashMap<>();
+    private static Map< Integer, String >      labels = new HashMap<>();
 
-    public AbsRequestHandler() {
-        if ( init ) return;
-        init = true;
-
-        handlerClases = new HashMap<>();
-        handlerMethod = new HashMap<>();
-
+    public void register(){
         _command_register();
+        _command_labels();
     }
-
     private void _command_register() {
         log.info( "服务器请求命令配置加载..." );
         Collection< Object > msg_coll = CommonContextHolder.getApplicationContext().getBeansWithAnnotation( MessageRequest.class ).values();
@@ -44,9 +44,9 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
         msg_coll.forEach( b -> {
             Method[] mths = b.getClass().getMethods();
             for ( Method m : mths ) {
-                MessageRequest gr = AnnotationUtils.findAnnotation( m , MessageRequest.class );
-                if( gr != null ){
-                    int cmd = gr.value();
+                MessageRequest mr = AnnotationUtils.findAnnotation( m , MessageRequest.class );
+                if( mr != null ){
+                    int cmd = mr.value();
                     if ( handlerClases.containsKey( cmd ) ) {
                         log.warn( "已存在相同的命令处理对象：CMD[" + cmd + "], MTH=[" + m.getName() + "]" );
                     } else {
@@ -55,8 +55,31 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
                         log.debug( "--配置服务器命令: CMD[" + cmd + "], MTH=[" + m.getName() + "]" );
                     }
                 }
+
             }
         } );
+    }
+
+    private void _command_labels(){
+        if( labels.size() > 0 ) return;
+        boolean request = CommonConfig.getBoolean("jees.jsts.message.request.enable", false );
+        if( !request ) return;
+        String cls = CommonConfig.getString( "jees.jsts.message.request.clazz" );
+        try {
+            Class c = Class.forName( cls );
+
+            Object ir = ProxyInterface.newInstance( new Class[]{c});
+            Field[] fields = c.getDeclaredFields();
+            for ( Field f : fields ) {
+                try {
+                    labels.put( f.getInt( ir ) , f.getAnnotation( MessageLabel.class ).value() );
+                } catch ( Exception e ) {
+                    continue;
+                }
+            }
+        } catch ( Exception e ) {
+            log.error( "包含MessageLabel注解的接口发生错误：" + cls );
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -67,6 +90,14 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
         if( msg == null ){
             exit( _ctx );
             return;
+        }
+
+        boolean debug = CommonConfig.getBoolean("jees.jsts.message.request.enable", false );
+
+        if( debug ){
+            String label = labels.getOrDefault( msg.getId(), "未注解命令" );
+            label = "[Request][" + label + "]--------------------------------------";
+            log.debug( label + "\n" + msg.toString() + "\n" + label );
         }
 
         if( before( _ctx, (M)msg ) ) {

@@ -1,6 +1,7 @@
 package com.jees.jsts.server.message;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.Getter;
@@ -141,5 +142,34 @@ public class Message {
 	public byte[] getBytes( int _idx ) {
 		if ( _idx >= this.bytData.size() ) return null;
 		return this.bytData.get( _idx );
+	}
+
+	public String toString(){
+		StringBuffer msg_msg_buff = new StringBuffer();
+
+		try {
+			bytData.forEach( b -> {
+				Message m = MessageDecoder.deserializer( b , Message.class );
+				msg_msg_buff.append( "\n        {" + " Boo" + _msg_data( m.getBooData() ) + " Lon"
+						+ _msg_data( m.getLonData() ) + " Flo" + _msg_data( m.getFloData() ) + " Int"
+						+ _msg_data( m.getIntData() ) + " Str" + _msg_data( m.getStrData() ) + "}" );
+			} );
+		} catch ( Exception e ) {}
+		String msg_buff = ""
+				+ "ID=" + id + " UID=" + userId + " Boo"
+				+ _msg_data( booData ) + " Lon" + _msg_data( lonData ) + " Flo"
+				+ _msg_data( floData ) + " Int" + _msg_data( intData ) + " Str"
+				+ _msg_data( strData )
+				+ ( msg_msg_buff.length() > 0 ? "\n    Byt[" + msg_msg_buff.toString() + "\n    ]" : " Byt[]" );
+		return msg_buff;
+	}
+
+	private String _msg_data( List< ? > list ) {
+		StringBuffer data = new StringBuffer();
+		if ( list == null ) return "[]";
+
+		data.append( Arrays.toString( list.toArray() ) );
+
+		return data.toString();
 	}
 }

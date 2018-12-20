@@ -16,8 +16,6 @@ import lombok.Getter;
 public class MessageException extends RuntimeException {
 	private static final long	serialVersionUID	= - 7777663065117915542L;
 
-	private static Map< Integer, String > msgIdMaps = new HashMap<>();
-
 	@Getter
 	private Message				msg;
 
@@ -25,7 +23,7 @@ public class MessageException extends RuntimeException {
 		super( _tip );
 	}
 
-	private static Message _s_set_message( int _uid, int _id, Object... _params ) {
+	private static Message _s_set_message( long _uid, int _id, Object... _params ) {
 		Message msg = new Message();
 		msg.setId( _id );
 		msg.setUserId( _uid );
@@ -55,8 +53,8 @@ public class MessageException extends RuntimeException {
 	 * @param _params
 	 * @throws MessageException
 	 */
-	public static void thrs( int _uid, int _id, Object... _params ) throws MessageException {
-		String tip = "写回异常消息（中断模式）: UID[" + _uid + "] ID[" + getLabel( _id ) + "]->PARAM=" + Arrays.toString( _params );
+	public static void thrs( long _uid, int _id, Object... _params ) throws MessageException {
+		String tip = "写回异常消息（中断模式）: UID[" + _uid + "]";
 
 		MessageException me = new MessageException( tip );
 
@@ -71,8 +69,8 @@ public class MessageException extends RuntimeException {
 	 * @param _params
 	 * @return
 	 */
-	public static Message mesg( int _uid, int _id, Object... _params ) {
-		String tip = "写回异常消息: UID[" + _uid + "]  ID[" + getLabel( _id ) + "]->PARAM=" + Arrays.toString( _params );
+	public static Message mesg( long _uid, int _id, Object... _params ) {
+		String tip = "写回异常消息: UID[" + _uid + "]";
 
 		MessageException me = new MessageException( tip );
 		me.msg = _s_set_message( _uid, _id, _params );
@@ -87,17 +85,11 @@ public class MessageException extends RuntimeException {
 	 * @param _err
 	 * @param _params
 	 */
-	public static void fail( int _uid, int _id, int _err , Object... _params ) throws MessageException {
-		String tip = "发生异常:UID[" + _uid + "] ID[" + getLabel( _id ) + "]->PARAM=" + Arrays.toString( _params );
-		
+	public static void fail( long _uid, int _id, int _err , Object... _params ) throws MessageException {
+		String tip = "发生异常:UID[" + _uid + "]";
+
 		MessageException me = new MessageException( tip );
 		me.msg = _s_set_message( _uid, _id, _err , _params );
 		throw me;
-	}
-
-	public static void addLabel( int _id, String _label ){ msgIdMaps.put( _id, _label ); }
-
-	public static String getLabel( int _id ){
-		return msgIdMaps.getOrDefault( _id , "" + _id );
 	}
 }
