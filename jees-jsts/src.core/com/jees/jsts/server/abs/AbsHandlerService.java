@@ -39,7 +39,7 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > imp
                 label = "[Handler Error][" + label + "]--------------------------------------";
             }else label = "[Handler][" + label + "]--------------------------------------";
 
-            log.debug( label + "\n" + m.toString() + "\n" + label );
+            log.debug( "\n" + label + "\n" + m.toString() + "\n" + label );
         }
 
         if( m.getType() == Message.TYPE_WEBSOCKET ){
