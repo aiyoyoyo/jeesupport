@@ -36,10 +36,10 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > imp
 
             if( label.equals( "" ) && error ){
                 label = errors.getOrDefault( m.getId(), "未注解命令" );
-                label = "[Handler Error][" + label + "]--------------------------------------";
-            }else label = "[Handler][" + label + "]--------------------------------------";
+                label = "\n  [Handler Error][" + label + "]->";
+            }else label = "\n  [Handler][" + label + "]->";
 
-            log.debug( "\n" + label + "\n" + m.toString() + "\n" + label );
+            log.debug( label + m.toString() );
         }
 
         if( m.getType() == Message.TYPE_WEBSOCKET ){

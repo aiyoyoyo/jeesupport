@@ -96,8 +96,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
 
         if( debug ){
             String label = labels.getOrDefault( msg.getId(), "未注解命令" );
-            label = "[Request][" + label + "]--------------------------------------";
-            log.debug( "\n" + label + "\n" + msg.toString() + "\n" + label );
+            log.debug( "\n  [Request][" + label + "]->" + msg.toString() );
         }
 
         if( before( _ctx, (M)msg ) ) {

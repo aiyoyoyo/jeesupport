@@ -4,9 +4,8 @@ import java.nio.ByteOrder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.gson.Gson;
-import com.jees.common.CommonConfig;
-import com.jees.tool.utils.DataUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -148,10 +147,9 @@ public class MessageDecoder extends AbsNettyDecoder {
 	}
 	// websocket 序列化部分 ========================================================
 	public static String serializerToJson( Message _msg ) {
-		Gson gson = new Gson();
+		JSONObject json =new JSONObject();
 
-		String json_data = gson.toJson( _msg, Message.class);
-
+		String json_data = JSON.toJSONString( _msg );
 		return json_data;
 	}
 
@@ -177,11 +175,9 @@ public class MessageDecoder extends AbsNettyDecoder {
 		// 处理来自客户端的WebSocket请求
 		String request_text = ( ( TextWebSocketFrame ) _frame ).text();
 
-		Gson gson = new Gson();
-
 		Message msg = null;
 		try{
-			msg = gson.fromJson( request_text, Message.class);
+			msg = JSON.parseObject( request_text, Message.class);
 			return msg;
 		}catch( Exception e ){
 			log.debug( "-- JSON转换Message失败，消息将存入无ID属性的Message对象。" );
