@@ -5,10 +5,10 @@
 	<!--  Maven Central  -->
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jdbs</artifactId>
-	<version>1.1.5-SNAPSHOT</version>
+	<version>1.1.6-SNAPSHOT</version>
 	<name>Java Database Support</name>
 
-	<description>Spring Atomikos database supprot</description>
+	<description>Spring Atomikos database support</description>
 	<url>${jees.url}</url>
 
 	<!-- Project Information -->
@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.1.7-SNAPSHOT</version>
+		<version>1.1.8-SNAPSHOT</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
@@ -39,6 +39,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
 		<!-- Test -->

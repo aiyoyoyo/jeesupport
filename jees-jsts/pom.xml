@@ -52,12 +52,6 @@
 			<artifactId>protostuff-runtime</artifactId>
 			<version>1.6.0</version>
 		</dependency>
-		<!-- Fastjson -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.54</version>
-		</dependency>
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

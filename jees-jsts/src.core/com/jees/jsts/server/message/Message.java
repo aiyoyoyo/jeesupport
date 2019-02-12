@@ -156,7 +156,7 @@ public class Message {
 			} );
 		} catch ( Exception e ) {}
 		String msg_buff = ""
-				+ "ID=" + id + " UID=" + userId + " Boo"
+				+ "                                                                                                                  ID=" + id + " UID=" + userId + " Boo"
 				+ _msg_data( booData ) + " Lon" + _msg_data( lonData ) + " Flo"
 				+ _msg_data( floData ) + " Int" + _msg_data( intData ) + " Str"
 				+ _msg_data( strData )

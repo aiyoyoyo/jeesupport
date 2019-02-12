@@ -1,5 +1,10 @@
 package com.jees.test;
 
+import com.jees.common.CommonContextHolder;
+import com.jees.core.database.dao.RedisDao;
+import com.jees.core.database.repository.SuperEntity;
+import com.jees.test.entity.RedisUser;
+import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +35,26 @@ public class JunitTest implements Runnable {
 	@Autowired
 	public TestController	ctr;
 
+	@Autowired
+	RedisDao redisDao;
+
+	@Test
+	public void RedisTest(){
+		CommonContextHolder.getBean( RedisDao.class ).onload();
+
+		RedisUser a = new RedisUser();
+		a.setId( 1 );
+		try {
+			redisDao.insert( a );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
 //	@Test
 	public void SimpleTest(){
 		ctr.simpleTest();
 	}
-	 @Test
+//	 @Test
 	public void ExTest() {
 		try {
 //			ctr.insertA();

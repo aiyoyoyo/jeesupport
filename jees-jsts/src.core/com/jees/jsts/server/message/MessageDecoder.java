@@ -146,9 +146,7 @@ public class MessageDecoder extends AbsNettyDecoder {
 		}
 	}
 	// websocket 序列化部分 ========================================================
-	public static String serializerToJson( Message _msg ) {
-		JSONObject json =new JSONObject();
-
+	public static String serializerToJson( Message _msg ) {;
 		String json_data = JSON.toJSONString( _msg );
 		return json_data;
 	}

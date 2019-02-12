@@ -46,6 +46,15 @@ QQ群：8802330
 ## 版本说明
 在版本2.0.0之前，都会是快照版本。在此之前会逐步完善相关内容。
 ## 1.1.8 更新说明 <font color='red'>New</font>
+### Jees-Boot Ver.1.1.8-SNAPSHOT
+> [JTLS] Ver 1.1.5-SNAPSHOT
+1. 引入FastJson
+> [JDBS] Ver 1.1.6-SNAPSHOT
+1. 加入Redis数据操作相关函数
+> [JSTS] Ver 1.1.5-SNAPSHOT
+1. 细节优化
+
+## 1.1.8 更新说明 
 > [JSTS] Ver 1.1.5-SNAPSHOT
 1. 使用Json代替原有WebSocket下的消息解析形式
 2. 优化了部分相关内容。
