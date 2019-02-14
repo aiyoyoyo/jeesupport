@@ -32,6 +32,7 @@ spring:
 
 jees:
  jdbs:
+  enable: false
   defaultDB: testa
   dbNames: testa, testb
   trans:
@@ -39,7 +40,7 @@ jees:
    allowCustomIsolationLevels: true
   config:
    testa:
-    dbtype: mysql
+    dbtype: mysql2
     orm: hibernate
     user: root
     password: root

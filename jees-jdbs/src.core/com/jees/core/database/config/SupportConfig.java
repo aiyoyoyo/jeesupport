@@ -73,6 +73,7 @@ public class SupportConfig {
     @Bean
     public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
         log.debug( "--Spring Bean[atomikosJP]初始化." );
+
         return new AtomikosJtaPlatform( _jtm );
     }
 
@@ -83,7 +84,10 @@ public class SupportConfig {
     @Bean
     @DependsOn( "atomikosJP" )
     public SessionFactory sessionFactory(){
+        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
+
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
+
 
         StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jdbs.dbNames");
 

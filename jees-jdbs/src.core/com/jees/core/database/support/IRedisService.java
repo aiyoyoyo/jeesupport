@@ -11,7 +11,9 @@ public interface IRedisService {
 
     void insert ( Object _obj ) throws Exception;
 
-    void update ( Object _obj );
+    void update ( Object _obj ) throws NullPointerException;
+
+    void delete ( Object _obj ) throws Exception;
 
     < T > List< T > findByEquals ( String _property, Object _value, Class< T > _cls );
 

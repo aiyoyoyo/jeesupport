@@ -110,6 +110,7 @@ public class RedisDao implements IRedisService {
         tpl.opsForHash().put( _obj.getClass().getSimpleName(), hk, _obj );
     }
 
+    @Override
     public void delete( Object _obj ) throws Exception{
         String hk = _get_hk( _obj );
         String sn = _obj.getClass().getSimpleName();
