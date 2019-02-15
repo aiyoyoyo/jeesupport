@@ -65,6 +65,13 @@ public class RedisDao implements IRedisService {
     }
 
     @Override
+    public < T > List< T > findAll( Class< T > _cls ) {
+        List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
+
+        return list;
+    }
+
+    @Override
     public < T > List< T > findByEquals ( String _property, Object _value, Class< T > _cls ) {
         List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
 
