@@ -14,5 +14,5 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Component
 public @interface MessageResponse {
-	public int value() default 0;
+	int value() default 0;
 }

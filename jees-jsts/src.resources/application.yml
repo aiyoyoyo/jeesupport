@@ -14,7 +14,7 @@ jees:
   message:
    request:
     enable: true
-    clazz: com.jees.interf.IRequest
+    clazz: com.jees.interf.IRequest,com.jees.interf.IResponse
    handler:
     enable: true
     clazz: com.jees.interf.IResponse

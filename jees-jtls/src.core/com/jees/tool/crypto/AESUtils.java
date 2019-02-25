@@ -17,7 +17,7 @@ public class AESUtils {
 	/**
 	 * 密钥算法
 	 */
-	private static final String	ALGORITHM	= "AES";
+	public static final String	ALGORITHM	= "AES";
 	/**
 	 * 密钥长度
 	 */

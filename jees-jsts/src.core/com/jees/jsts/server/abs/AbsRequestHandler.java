@@ -64,21 +64,25 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
         if( labels.size() > 0 ) return;
         boolean request = CommonConfig.getBoolean("jees.jsts.message.request.enable", false );
         if( !request ) return;
-        String cls = CommonConfig.getString( "jees.jsts.message.request.clazz" );
-        try {
-            Class c = Class.forName( cls );
+        String clazz_str = CommonConfig.getString( "jees.jsts.message.request.clazz" );
 
-            Object ir = ProxyInterface.newInstance( new Class[]{c});
-            Field[] fields = c.getDeclaredFields();
-            for ( Field f : fields ) {
-                try {
-                    labels.put( f.getInt( ir ) , f.getAnnotation( MessageLabel.class ).value() );
-                } catch ( Exception e ) {
-                    continue;
+        String[] clses = clazz_str.split( "," );
+        for( String cls : clses ) {
+            try {
+                Class c = Class.forName( cls.trim() );
+
+                Object ir = ProxyInterface.newInstance( new Class[]{ c } );
+                Field[] fields = c.getDeclaredFields();
+                for ( Field f : fields ) {
+                    try {
+                        labels.put( f.getInt( ir ), f.getAnnotation( MessageLabel.class ).value() );
+                    } catch ( Exception e ) {
+                        continue;
+                    }
                 }
+            } catch ( Exception e ) {
+                log.error( cls + "包含MessageLabel注解的接口发生错误：", e  );
             }
-        } catch ( Exception e ) {
-            log.error( "包含MessageLabel注解的接口发生错误：" + cls );
         }
     }
 
