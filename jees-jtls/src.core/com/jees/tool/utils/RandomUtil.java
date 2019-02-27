@@ -1,5 +1,10 @@
 package com.jees.tool.utils;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RandomUtil {
@@ -58,27 +63,22 @@ public class RandomUtil {
         return s_random_probability( (int)( _percentage * 100 ), 10000 );
     }
 
+    public static String[] s_random_str = new String[]{
+            "0","1","2","3","4","5","6","7","8","9",
+            "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+    };
+
+    public static final String RandomString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
     /**
      * 生成对应长度的随机字符串，字符范围[A-Z][a~z][0-9]
+     * 每千万次，8位在千万分之1
      * @param _length
      * @return
      */
     public static String  s_random_string( int _length ){
-        int num_char_min = 48, num_char_max = 57; //0~9
-        int ltl_char_min = 65, ltl_char_max = 90; //A~Z
-        int ltu_char_min = 97, ltu_char_max = 122;//a~z
-
-        String str = "";
-        while( str.length() < _length ){
-            int r = RandomUtil.s_random_integer( 48, 122 );
-
-            // 跳过特殊字符
-            if( ( r > num_char_max && r < ltl_char_min ) || ( r > ltl_char_max && r < ltu_char_min ) ) continue;
-
-            str += ( char ) r;
-        }
-
-        return str;
+        return RandomStringUtils.random( _length, RandomString );
     }
 
     /**

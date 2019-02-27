@@ -20,7 +20,6 @@ public class JstsApplication {
 	@SuppressWarnings( "resource" )
 	public static void main( String[] args ) {
 		SpringApplication.run(JstsApplication.class, args);
-
 		CommonContextHolder.getBean( IServerService.class ).onload();
 	}
 	// 以下为自定义实现 ======
