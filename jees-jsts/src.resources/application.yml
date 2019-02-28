@@ -27,17 +27,17 @@ jees:
    standTime: 60000
    port: 8000
   websocket:
-   ssl:
-    enable: true
-    file: C:/Tomcat 9.0/cert/1683812_www.jeesupport.com.pfx
-    keyfile: C:/Tomcat 9.0/cert/1683812_www.jeesupport.com.txt
-    type: PKCS12
-    pass: T2eyqsj2
    enable: true
    url: /
    lostTime: 0
    standTime: 60000
    port: 8001
+   ssl:
+    enable: true
+    file: config/cert/jees.pfx
+    keyfile: config/cert/jees.key
+    type: PKCS12
+    pass: PASSWORD
   connector:
    enable: false
    retry:

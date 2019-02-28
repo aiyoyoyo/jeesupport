@@ -3,15 +3,12 @@ package com.jees.jsts.server.support;
 import com.jees.common.CommonConfig;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.util.internal.SystemPropertyUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -47,6 +44,6 @@ public class WSSSLConfig {
 
             return sslContext;
         }
-        return null;
+        return SSLContext.getInstance( "SSL" );
     }
 }
