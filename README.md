@@ -110,18 +110,20 @@ QQ群：8802330
 ### IDEA-COMMUNITY 2018.3
 1. 版本基本上没太大影响，我把功能环境基本独立出来，除了依赖Lombok，其他的没有影响。
 2. 其实建立基础项目，对应下载目录jeesupport，然后通过jees-boot的pom.xml导入maven信息即可，不会太复杂。
-> 工程环境说明，以D盘距离：<br/>
-> d:/jeesupport                 -- 项目目录<br/>
->   .idea                       -- IDEA项目配置目录<br/>
->   jees-boot                   -- JBOOT根模块位置<br/>
->       src.core                -- 源文件夹<br/>
->       resources               -- 资源文件夹<br/>
->           config              -- 项目配置文件夹<br/>
->       src.test                -- 测试源文件夹<br/>
->   jees-jdbs                   -- JDBS 子模块位置<br/>
->   jees-jsts                   -- JSTS 子模块位置<br/>
->   jees-jtls                   -- JTLS 子模块位置<br/>
->   jees-webs                   -- JWEBS子模块位置<br/>
+> 工程环境说明，以D盘举例：<br/>
+```
+d:/jeesupport                  -- 项目目录<br/>
+   .idea                       -- IDEA项目配置目录<br/>
+   jees-boot                   -- JBOOT根模块位置<br/>
+       src.core                -- 源文件夹<br/>
+       resources               -- 资源文件夹<br/>
+           config              -- 项目配置文件夹<br/>
+       src.test                -- 测试源文件夹<br/>
+   jees-jdbs                   -- JDBS 子模块位置<br/>
+   jees-jsts                   -- JSTS 子模块位置<br/>
+   jees-jtls                   -- JTLS 子模块位置<br/>
+   jees-webs                   -- JWEBS子模块位置
+```
 3. 其实引用的JEES的项目也可以参考JBOOT来写，可以把JEES当作父模块，也可以作为参考把SpringBoot当作父模块。
 
 ### JDK-1.8
