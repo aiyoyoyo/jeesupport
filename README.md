@@ -112,16 +112,16 @@ QQ群：8802330
 2. 其实建立基础项目，对应下载目录jeesupport，然后通过jees-boot的pom.xml导入maven信息即可，不会太复杂。
 > 工程环境说明，以D盘举例：<br/>
 ```
-d:/jeesupport                  -- 项目目录<br/>
-   .idea                       -- IDEA项目配置目录<br/>
-   jees-boot                   -- JBOOT根模块位置<br/>
-       src.core                -- 源文件夹<br/>
-       resources               -- 资源文件夹<br/>
-           config              -- 项目配置文件夹<br/>
-       src.test                -- 测试源文件夹<br/>
-   jees-jdbs                   -- JDBS 子模块位置<br/>
-   jees-jsts                   -- JSTS 子模块位置<br/>
-   jees-jtls                   -- JTLS 子模块位置<br/>
+d:/jeesupport                  -- 项目目录
+   .idea                       -- IDEA项目配置目录
+   jees-boot                   -- JBOOT根模块位置
+       src.core                -- 源文件夹
+       resources               -- 资源文件夹
+           config              -- 项目配置文件夹
+       src.test                -- 测试源文件夹
+   jees-jdbs                   -- JDBS 子模块位置
+   jees-jsts                   -- JSTS 子模块位置
+   jees-jtls                   -- JTLS 子模块位置
    jees-webs                   -- JWEBS子模块位置
 ```
 3. 其实引用的JEES的项目也可以参考JBOOT来写，可以把JEES当作父模块，也可以作为参考把SpringBoot当作父模块。
