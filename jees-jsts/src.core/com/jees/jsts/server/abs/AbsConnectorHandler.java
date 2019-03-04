@@ -17,6 +17,9 @@ public abstract class AbsConnectorHandler extends ChannelInboundHandlerAdapter i
     @Getter
     int status = 0;
 
+    @Getter
+    ChannelHandlerContext net;
+
     public void initialize( String _host, int _port ){
         this.url = _host + ":" + _port;
         this.status = STATUS_DISCONNECT;
@@ -25,6 +28,7 @@ public abstract class AbsConnectorHandler extends ChannelInboundHandlerAdapter i
     @Override
     public void channelRegistered( ChannelHandlerContext _ctx ) throws Exception {
         super.channelRegistered( _ctx );
+        this.net = _ctx;
         this.status = STATUS_SUCCESS;
     }
 
@@ -32,5 +36,6 @@ public abstract class AbsConnectorHandler extends ChannelInboundHandlerAdapter i
     public void channelUnregistered(ChannelHandlerContext _ctx) throws Exception {
         super.channelUnregistered( _ctx );
         this.status = STATUS_DISCONNECT;
+        this.net = null;
     }
 }

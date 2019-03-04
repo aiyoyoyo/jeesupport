@@ -1,5 +1,7 @@
 package com.jees.jsts.server.interf;
 
+import io.netty.channel.ChannelHandlerContext;
+
 public interface IConnectroHandler {
     int STATUS_DISCONNECT = 100;
     int STATUS_CONNECTING = 101;
@@ -12,4 +14,6 @@ public interface IConnectroHandler {
     int getStatus();
 
     void setStatus( int _status );
+
+    ChannelHandlerContext getNet();
 }
