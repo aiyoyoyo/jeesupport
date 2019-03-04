@@ -37,13 +37,10 @@ public class WebSocketInitializer extends ChannelInitializer< SocketChannel > {
 
 	@Override
 	protected void initChannel( SocketChannel _channel ) throws Exception {
-		log.info( "WebSocket Server初始化: " + _channel.isActive() );
-
 		ChannelPipeline pipeline = _channel.pipeline();
+
 		// 是否使用客户端模式
 		if( CommonConfig.getBoolean( "jees.jsts.websocket.ssl.enable", false ) ){
-//			pipeline.addFirst( sslContext2.newHandler( _channel.alloc() ) );
-
 			SSLEngine engine = sslContext1.createSSLEngine();
 //			 是否需要验证客户端
 			engine.setUseClientMode(false);

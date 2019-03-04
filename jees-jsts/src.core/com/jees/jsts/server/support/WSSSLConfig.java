@@ -3,6 +3,7 @@ package com.jees.jsts.server.support;
 import com.jees.common.CommonConfig;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,7 @@ import java.io.FileInputStream;
 import java.security.KeyStore;
 
 @Configuration
+@Log4j2
 public class WSSSLConfig {
 
 //    @Bean
@@ -30,7 +32,10 @@ public class WSSSLConfig {
 
     @Bean
     public SSLContext SSLContext() throws Exception {
-        if( CommonConfig.getBoolean( "jees.jsts.websocket.ssl.enable", false ) ){
+        boolean enable = CommonConfig.getBoolean( "jees.jsts.websocket.ssl.enable", false );
+
+        log.info( "SSL：状态[" + enable + "]"  );
+        if( enable ){
             String keyStorePath = CommonConfig.getString( "jees.jsts.websocket.ssl.file" );
             String keyPassword = CommonConfig.getString( "jees.jsts.websocket.ssl.pass" );
 
@@ -44,6 +49,7 @@ public class WSSSLConfig {
 
             return sslContext;
         }
-        return SSLContext.getInstance( "SSL" );
+
+        return SSLContext.getDefault();
     }
 }
