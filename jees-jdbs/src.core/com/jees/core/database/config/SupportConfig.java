@@ -7,8 +7,9 @@ import com.jees.common.CommonContextHolder;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.jta.atomikos.AtomikosProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
@@ -16,17 +17,27 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 import javax.transaction.SystemException;
 import java.util.StringTokenizer;
 
-@Configuration
+@SpringBootConfiguration
 @EnableTransactionManagement( proxyTargetClass = true )
 @DependsOn( { "commonContextHolder" } )
 @Log4j2
 public class SupportConfig {
+
+    @Bean
+    public AtomikosProperties getAtomikosProperties(){
+        AtomikosProperties ap = new AtomikosProperties();
+
+        return ap;
+    }
+
     /**
      * atomikos事务管理器，一般情况无需修改
      * @return
      */
     @Bean( initMethod = "init", destroyMethod = "close" )
     public UserTransactionManager atomikosTM(){
+        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
+
         UserTransactionManager utm = new UserTransactionManager();
 
         utm.setForceShutdown( false );
@@ -42,6 +53,8 @@ public class SupportConfig {
     @Bean
     public UserTransactionImp atomikosUT() throws SystemException {
         UserTransactionImp uti = new UserTransactionImp();
+
+        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return uti;
 
         uti.setTransactionTimeout( CommonConfig.getInteger("jees.jdbs.trans.timeout", 300 ) );
 
@@ -72,8 +85,8 @@ public class SupportConfig {
 
     @Bean
     public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
+        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
         log.debug( "--Spring Bean[atomikosJP]初始化." );
-
         return new AtomikosJtaPlatform( _jtm );
     }
 
@@ -87,7 +100,6 @@ public class SupportConfig {
         if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
 
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
-
 
         StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jdbs.dbNames");
 

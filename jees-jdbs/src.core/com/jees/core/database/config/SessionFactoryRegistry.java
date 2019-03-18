@@ -64,6 +64,9 @@ public class SessionFactoryRegistry {
 
         AbsXADataSource xaDataSource = CommonContextHolder.getBean( bean );
         log.debug("--创建AbsXADataSource[" + bean + "]。");
+
+
+
         return xaDataSource;
     }
 
