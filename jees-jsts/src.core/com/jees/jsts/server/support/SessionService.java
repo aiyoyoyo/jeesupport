@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class SessionService< ID > {
     Map< ID , SuperUser<ID> >               Ids2Usr = new ConcurrentHashMap<>();
+    Map< ChannelHandlerContext, Boolean >   NetIsWs = new ConcurrentHashMap<>();
     // 是否有效用户，以下2个数据为准
     Map< ID , ChannelHandlerContext >       Ids2Net = new ConcurrentHashMap<>();
     Map< ChannelHandlerContext , ID >	    Net2Ids = new ConcurrentHashMap<>();
@@ -53,6 +54,14 @@ public class SessionService< ID > {
         return false;
     }
 
+    public boolean isWebSocket( ChannelHandlerContext _ctx ){
+        return NetIsWs.getOrDefault( _ctx, false );
+    }
+
+    public void connect( ChannelHandlerContext _ctx, boolean _ws ){
+        NetIsWs.put( _ctx, _ws );
+    }
+
     public < T extends SuperUser<ID> > void enter ( ChannelHandlerContext _net, T _user ) {
         if( !isOnline( _net ) ){
             Ids2Usr.put( _user.getId(), _user );
@@ -68,7 +77,7 @@ public class SessionService< ID > {
             T user = find( _net );
             Ids2Usr.remove( user.getId() );
             Net2Ids.remove( Ids2Net.remove( user.getId() ) );
-
+            NetIsWs.remove( _net );
             user.leave();
         }
     }
@@ -78,6 +87,7 @@ public class SessionService< ID > {
 
         if( user != null ) {
             Net2Ids.remove( Ids2Net.remove( user.getId() ) );
+            NetIsWs.remove( _net );
 
             user.switchover( _net );
         }
@@ -96,5 +106,21 @@ public class SessionService< ID > {
 
     public < T extends SuperUser<ID> > List< T > onlineUsers(){
         return ( List< T > ) Ids2Usr.values().stream().collect( Collectors.toList() );
+    }
+
+    public < T extends SuperUser<ID> > void standby ( ChannelHandlerContext _net ) {
+        T user = find( _net );
+
+        if( user != null ) {
+            user.standby();
+        }
+    }
+
+    public < T extends SuperUser<ID> > void recovery ( ChannelHandlerContext _net ) {
+        T user = find( _net );
+
+        if( user != null ) {
+            user.recovery();
+        }
     }
 }

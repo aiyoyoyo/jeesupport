@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,13 +16,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Message {
+public class Message{
 	public static final String	DELIM_STR		= ";";
-	public static final int		TYPE_SOCKET 	= 0;
-	public static final int		TYPE_WEBSOCKET	= 1;
-	public static final int		TYPE_BYTES		= 2;
 
-	private int					id;					// 协议号
+	private int id;
 
 	private long				userId;
 
@@ -39,9 +37,9 @@ public class Message {
 
 	private List< byte[] >		bytData;
 
-	private int					type;
-
 	public Message() {
+		super();
+
 		intData = new ArrayList<>();
 		strData = new ArrayList<>();
 		booData = new ArrayList<>();
@@ -49,8 +47,6 @@ public class Message {
 		dblData = new ArrayList<>();
 		lonData = new ArrayList<>();
 		bytData = new ArrayList<>();
-
-		type = TYPE_SOCKET;
 	}
 
 	public void add( Integer _obj ) {
@@ -144,31 +140,8 @@ public class Message {
 		return this.bytData.get( _idx );
 	}
 
+	@Override
 	public String toString(){
-		StringBuffer msg_msg_buff = new StringBuffer();
-
-		try {
-			bytData.forEach( b -> {
-				Message m = MessageDecoder.deserializer( b , Message.class );
-				msg_msg_buff.append( "\n        {" + " Boo" + _msg_data( m.getBooData() ) + " Lon"
-						+ _msg_data( m.getLonData() ) + " Flo" + _msg_data( m.getFloData() ) + " Int"
-						+ _msg_data( m.getIntData() ) + " Str" + _msg_data( m.getStrData() ) + "}" );
-			} );
-		} catch ( Exception e ) {}
-		String msg_buff = "ID=" + id + " UID=" + userId + " Boo"
-				+ _msg_data( booData ) + " Lon" + _msg_data( lonData ) + " Flo"
-				+ _msg_data( floData ) + " Int" + _msg_data( intData ) + " Str"
-				+ _msg_data( strData )
-				+ ( msg_msg_buff.length() > 0 ? "\n    Byt[" + msg_msg_buff.toString() + "\n    ]" : " Byt[]" );
-		return msg_buff;
-	}
-
-	private String _msg_data( List< ? > list ) {
-		StringBuffer data = new StringBuffer();
-		if ( list == null ) return "[]";
-
-		data.append( Arrays.toString( list.toArray() ) );
-
-		return data.toString();
+		return JSON.toJSONString(this );
 	}
 }

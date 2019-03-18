@@ -37,35 +37,12 @@ public class JstsApplication {
 	 * @return
 	 */
 	@Bean
-	public ISupportHandler<ChannelHandlerContext, Object > supportHandler(){
-		return new AbsHandlerService<ChannelHandlerContext, Object>() {
-			@SuppressWarnings( "unchecked" )
+	public ISupportHandler<ChannelHandlerContext > supportHandler(){
+		return new AbsHandlerService<ChannelHandlerContext>() {
 			@Override
-			/** 收到客户端消息 **/
-			public void receive(ChannelHandlerContext _ctx, Object _obj) {
-				CommonContextHolder.getBean( IRequestHandler.class ).request( _ctx, _obj );
+			public void error ( ChannelHandlerContext _ctx, Throwable _thr ) {
+				System.out.println( "ERROR->" + _thr.getMessage() );
 			}
-
-			@Override
-			/** 客户端连接 **/
-			public void enter(ChannelHandlerContext _ctx) {
-			}
-
-			@Override
-			/** 客户端断开 **/
-			public void leave(ChannelHandlerContext _ctx) {}
-
-			@Override
-			/** 客户端中断 **/
-			public void standby(ChannelHandlerContext _ctx) {}
-
-			@Override
-			/** 客户端恢复连接 **/
-			public void recovery(ChannelHandlerContext _ctx) {}
-
-			@Override
-			/** 客户端连接异常 **/
-			public void error(ChannelHandlerContext _ctx, Throwable _thr) {}
 		};
 	}
 
@@ -74,19 +51,10 @@ public class JstsApplication {
 	 * @return
 	 */
 	@Bean
-	public IRequestHandler<ChannelHandlerContext, Message > requestHandler(){
-		return new AbsRequestHandler<ChannelHandlerContext, Message>() {
+	public IRequestHandler<ChannelHandlerContext> requestHandler(){
+		return new AbsRequestHandler<ChannelHandlerContext>() {
 			@Override
-			public void request(ChannelHandlerContext _ctx, Object _msg) {
-				this.handler( _ctx, _msg );
-			}
-
-			@Override
-			public void response(ChannelHandlerContext _ctx, Object _msg) {
-			}
-
-			@Override
-			public boolean before( ChannelHandlerContext _ctx, Message _msg) {
+			public boolean before ( ChannelHandlerContext _ctx, int _cmd ) {
 				return true;
 			}
 
@@ -94,28 +62,13 @@ public class JstsApplication {
 			public void after(ChannelHandlerContext _ctx) {
 			}
 
-			@Autowired
-			ISupportHandler 		handler;
 			@Override
-			public void unregist ( ChannelHandlerContext _ctx, Message _msg ) {
-				Message	msg = new Message();
-				msg.setId(100);
-				msg.setType( Message.TYPE_WEBSOCKET );
-				msg.add( 123 );
-				msg.add( 123L );
-				msg.add( 123.00F );
-				msg.add( 123D );
-				msg.add( "123" );
-				msg.add( false );
-				handler.send( _ctx , msg );
+			public void unregist ( ChannelHandlerContext _ctx, Object _msg ) {
 			}
 
 			@Override
 			public void error(ChannelHandlerContext _ctx, MessageException _msg) {
-			}
-
-			@Override
-			public void exit(ChannelHandlerContext _ctx) {
+				System.out.println( "ERROR->" + _msg.getMessage() );
 			}
 		};
 	}
@@ -123,58 +76,6 @@ public class JstsApplication {
 	@Bean
 	@Scope( value = INettyHandler.SCOPE_CREATOR )
 	public AbsConnectorHandler connectroHandler() {
-		return new AbsConnectorHandler() {
-			@Autowired
-			ISupportHandler 		handler;
-
-			@SuppressWarnings( "unchecked" )
-			@Override
-			public void channelRead(ChannelHandlerContext _ctx , Object _obj ) {
-				CommonContextHolder.getBean( IResponseHandler.class ).response( _ctx, _obj );
-			}
-
-			@SuppressWarnings( "unchecked" )
-			@Override
-			public void channelActive(ChannelHandlerContext _ctx) throws Exception {
-				super.channelActive( _ctx );
-			}
-		};
-	}
-	/**
-	 * 服务器返回执行器
-	 */
-	@Bean
-	public IResponseHandler<ChannelHandlerContext, Message > responseHandler(){
-		return new AbsResponseHandler<ChannelHandlerContext, Message>() {
-			@Override
-			public void request(ChannelHandlerContext _ctx, Object _msg) {
-			}
-
-			@Override
-			public void response(ChannelHandlerContext _ctx, Object _msg) {
-				this.handler(_ctx, _msg);
-			}
-
-			@Override
-			public boolean before( ChannelHandlerContext _ctx, Message _msg) {
-				return true;
-			}
-
-			@Override
-			public void after(ChannelHandlerContext _ctx) {
-			}
-
-			@Override
-			public void unregist ( ChannelHandlerContext _ctx, Message _msg ) {
-			}
-
-			@Override
-			public void error(ChannelHandlerContext _ctx, MessageException _msg) {
-			}
-
-			@Override
-			public void exit(ChannelHandlerContext _ctx) {
-			}
-		};
+		return new AbsConnectorHandler() {};
 	}
 }

@@ -1,40 +1,43 @@
 package com.jees.jsts.server.abs;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.annotation.MessageRequest;
+import com.jees.jsts.server.annotation.MessageProxy;
 import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
-import com.jees.jsts.server.message.MessageDecoder;
+import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.message.MessageException;
 import com.jees.jsts.server.support.ProxyInterface;
+import com.jees.jsts.server.support.SessionService;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.*;
 
 /**
  * 客户端的消息处理器
  * @param <C>
- * @param <M>
  */
 @Log4j2
-public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > implements IRequestHandler< C, M > {
+public abstract class AbsRequestHandler< C extends ChannelHandlerContext > implements IRequestHandler< C > {
     private boolean						init;
     private static Map< Integer , Class< ? > > handlerClases  = new HashMap<>();
-    private static Map< Integer , Method>		handlerMethod = new HashMap<>();
-    private static Map< Integer, String >      labels = new HashMap<>();
-
+    private static Map< Integer , Method>	handlerMethod = new HashMap<>();
+    private static Map< Integer, String >   labels = new HashMap<>();
     public void register(){
         _command_register();
         _command_labels();
+
+        MessageCrypto.registProxy();
     }
     private void _command_register() {
         log.info( "服务器请求命令配置加载..." );
@@ -55,7 +58,6 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
                         log.debug( "--配置服务器命令: CMD[" + cmd + "], MTH=[" + m.getName() + "]" );
                     }
                 }
-
             }
         } );
     }
@@ -86,25 +88,51 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
         }
     }
 
+    @Autowired
+    SessionService session;
+
+    @Override
+    public void request( C _ctx , Object _obj, boolean _ws ){
+        long time = System.currentTimeMillis();
+        if( _obj != null ){
+            this.handler( _ctx , _obj );
+        }else{
+            session.leave( _ctx );
+        }
+        if( CommonConfig.getBoolean( "jees.jsts.message.monitor", false ) ){
+            time = System.currentTimeMillis() - time;
+            log.info( "--命令用时: TIME=[" + time + "]"  );
+        }
+    }
+
     @SuppressWarnings( "unchecked" )
     @Override
     public void handler( C _ctx , Object _obj ) {
-        Message msg = MessageDecoder.deserializer( _obj );
+        Object msg = MessageCrypto.deserializer( _obj, session.isWebSocket( _ctx ) );
 
-        if( msg == null ){
-            exit( _ctx );
-            return;
+        boolean debug = CommonConfig.getBoolean( "jees.jsts.message.request.enable", false );
+        boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
+
+        Integer cmd = null;
+        if( msg instanceof Message ){
+            cmd = ( ( Message ) msg ).getId();
+        }else if( msg instanceof JSONObject ){
+            cmd = ( (JSONObject)msg ).getInteger( "id" );
+        }else{
+            // 代理类
+            cmd = JSON.parseObject( msg.toString() ).getInteger( "id" );
         }
 
-        boolean debug = CommonConfig.getBoolean("jees.jsts.message.request.enable", false );
-
-        if( debug ){
-            String label = labels.getOrDefault( msg.getId(), "未注解命令" );
-            log.debug( "\n  [Request][" + label + "]->" + msg.toString() );
+        if ( debug ) {
+            if ( proxy ) {
+                String label = labels.getOrDefault( cmd, "未注解命令" );
+                log.debug( "\n  [Request][" + label + "]->" + msg.toString() );
+            } else {
+                log.debug( "\n  [Request]->" + msg.toString() );
+            }
         }
 
-        if( before( _ctx, (M)msg ) ) {
-            int cmd = msg.getId();
+        if( before( _ctx, cmd ) ) {
             if ( handlerClases.containsKey( cmd ) ) {
                 Method m = handlerMethod.get( cmd );
                 try{
@@ -113,8 +141,6 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
                     log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
-
-                    me.getMsg().setType( msg.getType() );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误
                 } catch ( RuntimeException re ) {
@@ -124,12 +150,8 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext, M > im
                 }
             } else {
                 log.warn( "命令没有注册：CMD=[" + cmd + "]" );
-                unregist( _ctx, (M)msg );
+                unregist( _ctx, msg );
             }
         }
-    }
-
-    public boolean validateId( int _id ){
-        return handlerClases.containsKey( _id );
     }
 }

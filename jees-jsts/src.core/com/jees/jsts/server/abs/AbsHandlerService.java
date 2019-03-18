@@ -1,15 +1,20 @@
 package com.jees.jsts.server.abs;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.server.annotation.MessageLabel;
+import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
-import com.jees.jsts.server.message.MessageDecoder;
+import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.support.ProxyInterface;
+import com.jees.jsts.server.support.SessionService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -19,44 +24,39 @@ import java.util.Map;
  * 客户端连接的请求处理器，可以用作通用的消息发送器。
  */
 @Log4j2
-public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > implements ISupportHandler< C, M >{
+public abstract class AbsHandlerService<C extends ChannelHandlerContext > implements ISupportHandler< C >{
 
     private static Map< Integer, String > labels = new HashMap<>();
     private static Map< Integer, String > errors = new HashMap<>();
     // Handler 部分
     @Override
-    public void send( C _ctx , M _msg ) {
-        Message m = (Message)_msg;
+    public void send( Object _obj, C _ctx ) {
+        boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
 
         boolean handler = CommonConfig.getBoolean("jees.jsts.message.handler.enable", false );
         boolean error = CommonConfig.getBoolean("jees.jsts.message.error.enable", false );
 
         if( handler ){
-            String label = labels.getOrDefault( m.getId(), "未注解命令" );
+            if( proxy ){
+                JSONObject obj = JSON.parseObject(  _obj.toString() );
+                int cmd = obj.getInteger( "id" );
 
-            if( label.equals( "" ) && error ){
-                label = errors.getOrDefault( m.getId(), "未注解命令" );
-                label = "\n  [Handler Error][" + label + "]->";
-            }else label = "\n  [Handler][" + label + "]->";
+                String label = labels.getOrDefault( cmd, "未注解命令" );
 
-            log.debug( label + m.toString() );
+                if( label.equals( "" ) && error ){
+                    label = errors.getOrDefault( cmd, "未注解命令" );
+                    label = "\n  [Handler Error][" + label + "]->";
+                }else label = "\n  [Handler][" + label + "]->";
+
+                log.debug( label + _obj.toString() );
+            }else{
+                log.debug( "\n  [Handler]->" + _obj.toString() );
+            }
         }
 
-        if( m.getType() == Message.TYPE_WEBSOCKET ){
-            TextWebSocketFrame tws = new TextWebSocketFrame( MessageDecoder.serializerToJson( m ) );
-            _ctx.writeAndFlush( tws );
-        }else if( m.getType() == Message.TYPE_SOCKET ){
-            final ByteBuf buf = _ctx.alloc().buffer();
-            MessageDecoder.buff( buf , m );
-            _ctx.writeAndFlush( buf );
-        }else if( m.getType() == Message.TYPE_BYTES ){
-            final ByteBuf buf = _ctx.alloc().buffer();
-
-            buf.writeInt( m.getId() );
-            buf.writeBytes( m.getBytes( 0 ) );
-
-            _ctx.writeAndFlush( buf );
-        }
+        final ByteBuf buf = _ctx.alloc().buffer();
+        Object msg = MessageCrypto.serializer( buf, _obj, session.isWebSocket( _ctx ) );
+        _ctx.writeAndFlush( msg );
     }
 
     public void register(){
@@ -109,5 +109,36 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext, M > imp
         } catch ( Exception e ) {
             log.error( "包含MessageLabel注解的接口发生错误：" + cls );
         }
+    }
+
+    @Autowired
+    IRequestHandler request;
+    @Autowired
+    SessionService session;
+
+    @Override
+    public void receive( ChannelHandlerContext _ctx , Object _obj ) {
+        request.request( _ctx , _obj, session.isWebSocket( _ctx ) );
+    }
+
+    @Override
+    public void enter( ChannelHandlerContext _ctx, boolean _ws ) {
+        session.connect( _ctx, _ws );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void leave( ChannelHandlerContext _ctx ) {
+        session.leave( _ctx );
+    }
+
+    @Override
+    public void standby( ChannelHandlerContext _ctx ) {
+        session.standby( _ctx );
+    }
+
+    @Override
+    public void recovery( ChannelHandlerContext _ctx ) {
+        session.recovery( _ctx );
     }
 }

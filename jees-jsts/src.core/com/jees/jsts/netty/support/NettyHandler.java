@@ -28,7 +28,7 @@ public class NettyHandler extends ChannelInboundHandlerAdapter implements INetty
 	private long												lastTime = 0L;
 	private boolean												stand = false;
 	@Autowired
-	private ISupportHandler< ChannelHandlerContext , Object >	handler = null;
+	private ISupportHandler< ChannelHandlerContext >	handler = null;
 
 	private String _handler_info( ChannelHandlerContext _ctx , String _event ) {
 		return "--[Socket客户端连接信息] 事件：" + _event + "---------------------------------"
@@ -44,7 +44,7 @@ public class NettyHandler extends ChannelInboundHandlerAdapter implements INetty
 	@Override
 	public void handlerAdded( ChannelHandlerContext _ctx ){
 		log.debug( _handler_info( _ctx , "handlerAdded" ) );
-		handler.enter( _ctx );
+		handler.enter( _ctx, false );
 	}
 	// == 接收方法序 == //
 	@Override

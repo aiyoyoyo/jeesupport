@@ -27,11 +27,11 @@ import java.util.*;
 @Log4j2
 public abstract class AbsConnectorService implements IConnectorService{
     @Getter
-    Set< Connector >          servers;
+    List< Connector >          connectors;
 
     @Override
     public void onload() {
-        servers = new HashSet<>();
+        connectors = new ArrayList<>();
         //连接中心服务器
         StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jsts.connector.hosts" );
 
@@ -44,7 +44,7 @@ public abstract class AbsConnectorService implements IConnectorService{
 
             Connector sc = CommonContextHolder.getBean( Connector.class );
             sc.initialize( host , port );
-            servers.add( sc );
+            connectors.add( sc );
             sc.onload();
         }
     }
@@ -55,16 +55,12 @@ public abstract class AbsConnectorService implements IConnectorService{
 
     @Override
     public void reload() {
-        servers.forEach( s ->{
-            s.reload();
-        } );
+        connectors.forEach( Connector::reload );
     }
 
     @Override
-    public void reloadDisconnect(){
-        servers.stream().filter( s-> s.getServer().getStatus() == IConnectroHandler.STATUS_DISCONNECT )
-                .forEach( s ->{
-            s.reload();
-        } );
+    public Connector getConnector ( int _index ) {
+        if( _index < connectors.size() ) return connectors.get( _index );
+        return null;
     }
 }

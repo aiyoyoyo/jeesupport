@@ -21,7 +21,7 @@ import io.netty.handler.timeout.IdleStateHandler ;
 @Log4j2
 public class NettyInitializer extends ChannelInitializer< SocketChannel > {
 	@Override
-	protected void initChannel( SocketChannel _channel ) throws Exception {
+	protected void initChannel( SocketChannel _channel ) {
 		log.info( "Socket Server初始化: " + _channel.isActive() ) ;
 
 		ChannelPipeline pipeline = _channel.pipeline() ;

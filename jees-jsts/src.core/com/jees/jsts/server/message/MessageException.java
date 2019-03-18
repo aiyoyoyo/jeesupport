@@ -23,10 +23,9 @@ public class MessageException extends RuntimeException {
 		super( _tip );
 	}
 
-	private static Message _s_set_message( long _uid, int _id, Object... _params ) {
+	private static Message _s_set_message( int _id, Object... _params ) {
 		Message msg = new Message();
 		msg.setId( _id );
-		msg.setUserId( _uid );
 
 		for ( Object o : _params ) {
 			if ( o instanceof Integer ) msg.add( ( Integer ) o );
@@ -48,48 +47,45 @@ public class MessageException extends RuntimeException {
 	
 	/**
 	 * 中断后续操作，通知客户端
-	 * @param _uid
 	 * @param _id
 	 * @param _params
 	 * @throws MessageException
 	 */
-	public static void thrs( long _uid, int _id, Object... _params ) throws MessageException {
-		String tip = "写回异常消息（中断模式）: UID[" + _uid + "]";
+	public static void thrs( int _id, Object... _params ) throws MessageException {
+		String tip = "写回异常消息（中断模式）:";
 
 		MessageException me = new MessageException( tip );
 
-		me.msg = _s_set_message( _uid, _id, _params );
+		me.msg = _s_set_message( _id, _params );
 		throw me;
 	}
 
 	/**
 	 * 不中断后续操作，通知客户端
-	 * @param _uid
 	 * @param _id
 	 * @param _params
 	 * @return
 	 */
-	public static Message mesg( long _uid, int _id, Object... _params ) {
-		String tip = "写回异常消息: UID[" + _uid + "]";
+	public static Message mesg( int _id, Object... _params ) {
+		String tip = "写回异常消息:";
 
 		MessageException me = new MessageException( tip );
-		me.msg = _s_set_message( _uid, _id, _params );
+		me.msg = _s_set_message( _id, _params );
 
 		return me.msg;
 	}
 
 	/**
 	 * 中断后续操作，不通知客户端
-	 * @param _uid
 	 * @param _id
 	 * @param _err
 	 * @param _params
 	 */
-	public static void fail( long _uid, int _id, int _err , Object... _params ) throws MessageException {
-		String tip = "发生异常:UID[" + _uid + "]";
+	public static void fail( int _id, int _err , Object... _params ) throws MessageException {
+		String tip = "发生异常:";
 
 		MessageException me = new MessageException( tip );
-		me.msg = _s_set_message( _uid, _id, _err , _params );
+		me.msg = _s_set_message( _id, _err , _params );
 		throw me;
 	}
 }

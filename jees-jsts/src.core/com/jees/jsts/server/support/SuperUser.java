@@ -22,4 +22,8 @@ public abstract class SuperUser < ID > implements Serializable {
 	public abstract void leave ();
 
 	public abstract void switchover ( ChannelHandlerContext _net );
+
+    public abstract void standby ();
+
+	public abstract void recovery ();
 }

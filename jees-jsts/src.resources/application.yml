@@ -13,19 +13,23 @@ jees:
  jsts:
   message:
    request:
-    enable: true
+    enable: false
     clazz: com.jees.interf.IRequest,com.jees.interf.IResponse
    handler:
-    enable: true
+    enable: false
     clazz: com.jees.interf.IResponse
    error:
-    enable: true
+    enable: false
     clazz: com.jees.interf.IError
+   proxy: false
+   type: json
+   monitor: true
   socket:
-   enable: false
+   enable: true
    lostTime: 0
    standTime: 60000
    port: 8000
+   bom: false
   websocket:
    enable: true
    url: /
@@ -33,7 +37,7 @@ jees:
    standTime: 60000
    port: 8001
    ssl:
-    enable: true
+    enable: false
     file: config/cert/jees.pfx
     keyfile: config/cert/jees.key
     type: PKCS12

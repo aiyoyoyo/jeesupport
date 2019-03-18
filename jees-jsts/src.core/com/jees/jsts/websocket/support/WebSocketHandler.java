@@ -30,7 +30,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler< WebSocketFram
 	private long												lastTime = 0L;
 	private boolean												stand = false;
 	@Autowired
-	private ISupportHandler< ChannelHandlerContext , Object >	handler = null;
+	private ISupportHandler< ChannelHandlerContext >	handler = null;
 
 	private String _handler_info( ChannelHandlerContext _ctx , String _event ) {
 		return "--[WebSocket客户端连接信息] " + _event + "---------------------------------"
@@ -46,13 +46,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler< WebSocketFram
 	@Override
 	protected void channelRead0( ChannelHandlerContext _ctx , WebSocketFrame _msg ){
 		log.debug( _handler_info( _ctx , "channelRead" ) );
-		if ( _msg != null ) handler.receive( _ctx , _msg );
+		handler.receive( _ctx , _msg );
 	}
 
 	@Override
 	public void handlerAdded( ChannelHandlerContext _ctx ){
 		log.debug( _handler_info( _ctx , "handlerAdded" ) );
-		handler.enter( _ctx );
+		handler.enter( _ctx, true );
 	}
 
 	@Override
