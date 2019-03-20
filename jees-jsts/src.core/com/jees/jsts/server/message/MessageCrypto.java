@@ -158,7 +158,11 @@ public class MessageCrypto extends AbsNettyDecoder {
 		}
 
 		if( data != null ){
-			_buf.writeInt( data.length );
+			int dataLength = data.length;
+			if( CommonConfig.getBoolean( "jees.jsts.socket.bom", false ) ){
+				dataLength = DataUtil.warpHL( dataLength );
+			}
+			_buf.writeInt( dataLength );
 			_buf.writeBytes( data );
 		}
 
