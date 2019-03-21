@@ -40,26 +40,30 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         MessageCrypto.registProxy();
     }
     private void _command_register() {
-        log.info( "服务器请求命令配置加载..." );
+        log.debug( "@MessageRequest命令注册..." );
         Collection< Object > msg_coll = CommonContextHolder.getApplicationContext().getBeansWithAnnotation( MessageRequest.class ).values();
         if( msg_coll.size() == 0 )
-            log.debug( "--未找到任何命令配置。" );
+            log.debug( "--未找到任何包含@MessageRequest类。" );
         msg_coll.forEach( b -> {
             Method[] mths = b.getClass().getMethods();
+            String cls_name = b.getClass().getName();
             for ( Method m : mths ) {
                 MessageRequest mr = AnnotationUtils.findAnnotation( m , MessageRequest.class );
                 if( mr != null ){
                     int cmd = mr.value();
                     if ( handlerClases.containsKey( cmd ) ) {
-                        log.warn( "已存在相同的命令处理对象：CMD[" + cmd + "], MTH=[" + m.getName() + "]" );
+                        String use_mth = handlerClases.get( cmd ).getName()  + "." + handlerMethod.get( cmd ).getName();
+
+                        log.warn( "命令重复：CMD[" + cmd + "], 当前[" + cls_name + "." + m.getName() + "], 已使用[" + use_mth + "]" );
                     } else {
                         handlerClases.put( cmd , b.getClass() );
                         handlerMethod.put( cmd , m );
-                        log.debug( "--配置服务器命令: CMD[" + cmd + "], MTH=[" + m.getName() + "]" );
+                        log.debug( "--注册@MessageRequest命令: CMD[" + cmd + "], MTH=[" + m.getName() + "], CLS=[" + cls_name + "]" );
                     }
                 }
             }
         } );
+        log.debug( "@MessageRequest命令注册成功：SIZE[" + handlerMethod.size() + "]" );
     }
 
     private void _command_labels(){

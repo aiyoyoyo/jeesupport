@@ -103,7 +103,7 @@ public class MessageCrypto extends AbsNettyDecoder {
 		boolean trust = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
 		if( trust ) return;
 
-		log.info( "服务器查找自定义消息代理..." );
+		log.debug( "@MessageProxy消息代理注册..." );
 
 		Collection< Object > msg_coll = CommonContextHolder.getApplicationContext().getBeansWithAnnotation( MessageProxy.class ).values();
 		if( msg_coll.size() == 0 )
@@ -115,7 +115,9 @@ public class MessageCrypto extends AbsNettyDecoder {
 				int[] cmd = mr.value();
 				for( int c : cmd ){
 					if ( proxyClases.containsKey( c ) ) {
-						log.warn( "已存在相同的命令处理对象：CMD[" + c + "], PROXY=[" + cls.getName() + "]" );
+						String use_cls = proxyClases.get( cmd ).getName();
+
+						log.warn( "命令重复：CMD[" + cmd + "], 当前[" + cls.getName() + "], 已使用[" + use_cls + "]" );
 					} else {
 						proxyClases.put( c , b.getClass() );
 						_get_schema( b.getClass() );
@@ -124,6 +126,8 @@ public class MessageCrypto extends AbsNettyDecoder {
 				}
 			}
 		} );
+
+		log.debug( "@MessageProxy消息代理注册成功：SIZE[" + proxyClases.size() + "]" );
 	}
 
 	// message decode
