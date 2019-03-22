@@ -6,6 +6,7 @@ import com.jees.core.database.repository.SuperEntity;
 import com.jees.test.entity.RedisUser;
 import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 /**
  * 测试方法,执行日志默认在工程目录/logs下
@@ -36,7 +38,7 @@ public class JunitTest implements Runnable {
 	public TestController	ctr;
 
 	@Autowired
-	RedisDao redisDao;
+	RedisDao<Long, RedisUser> redisDao;
 
 	@Test
 	public void RedisTest(){
@@ -44,11 +46,20 @@ public class JunitTest implements Runnable {
 
 		RedisUser a = new RedisUser();
 		a.setId( 1 );
+		a.setDate( new Date( DateTime.now().getMillis() ) );
 		try {
 			redisDao.insert( a );
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
+		try{
+			RedisUser u = redisDao.findById( 1L, RedisUser.class );
+
+			System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
+		}catch ( Exception e ){
+			e.printStackTrace();
+		}
+
 	}
 //	@Test
 	public void SimpleTest(){

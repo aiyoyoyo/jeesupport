@@ -107,6 +107,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
             time = System.currentTimeMillis() - time;
             log.info( "--命令用时: TIME=[" + time + "]"  );
         }
+        _ctx.flush();
     }
 
     @SuppressWarnings( "unchecked" )

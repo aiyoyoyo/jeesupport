@@ -2,24 +2,20 @@ package com.jees.core.database.support;
 
 import java.util.List;
 
-public interface IRedisService<ID> {
+public interface IRedisService<ID, T> {
     void onload ();
 
-    void unload ();
+    void insert ( T _obj ) throws Exception;
 
-    void reload ();
+    void update ( T _obj ) throws NullPointerException;
 
-    void insert ( Object _obj ) throws Exception;
+    void delete ( T _obj ) throws Exception;
 
-    void update ( Object _obj ) throws NullPointerException;
+    List< T > findAll( Class< T > _cls );
 
-    void delete ( Object _obj ) throws Exception;
+    List< T > findByEquals ( String _property, Object _value, Class< T > _cls );
 
-    < T > List< T > findAll( Class< T > _cls );
+    List< T > findBetweens ( String _property, Object _begin, Object _end, Class< T > _cls );
 
-    < T > List< T > findByEquals ( String _property, Object _value, Class< T > _cls );
-
-    < T > List< T > findBetweens ( String _property, Object _begin, Object _end, Class< T > _cls );
-
-    < T > T findById ( ID _value, Class< T > _cls );
+    T findById ( ID _value, Class< T > _cls );
 }

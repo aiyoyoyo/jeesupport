@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RedisDao<ID> implements IRedisService< ID > {
+public class RedisDao<ID, T> implements IRedisService< ID, T > {
     @Autowired
-    RedisTemplate<String, Object> tpl;
+    RedisTemplate<String, T> tpl;
 
-    private String _get_hk( Object _obj ){
+    private String _get_hk( T _obj ){
         String hk = null;
 
         Class cls = _obj.getClass();
@@ -57,22 +57,14 @@ public class RedisDao<ID> implements IRedisService< ID > {
     }
 
     @Override
-    public void unload () {
-    }
-
-    @Override
-    public void reload () {
-    }
-
-    @Override
-    public < T > List< T > findAll( Class< T > _cls ) {
+    public List< T > findAll( Class< T > _cls ) {
         List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
 
         return list;
     }
 
     @Override
-    public < T > List< T > findByEquals ( String _property, Object _value, Class< T > _cls ) {
+    public List< T > findByEquals ( String _property, Object _value, Class< T > _cls ) {
         List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
 
         return list.stream().filter( t -> {
@@ -106,7 +98,7 @@ public class RedisDao<ID> implements IRedisService< ID > {
     }
 
     @Override
-    public < T > List< T > findBetweens ( String _property, Object _begin, Object _end, Class< T > _cls ) {
+    public List< T > findBetweens ( String _property, Object _begin, Object _end, Class< T > _cls ) {
         List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
 
         return list.stream().filter( t -> {
@@ -139,12 +131,12 @@ public class RedisDao<ID> implements IRedisService< ID > {
     }
 
     @Override
-    public < T > T findById ( ID _value, Class< T > _cls ) {
+    public T findById ( ID _value, Class< T > _cls ) {
         Object obj = tpl.opsForHash().get( _cls.getSimpleName(), String.valueOf( _value ) );
         return ( T ) obj;
     }
     @Override
-    public void insert ( Object _obj ) throws Exception {
+    public void insert ( T _obj ) throws Exception {
         String hk = _get_hk( _obj );
         String sn = _obj.getClass().getSimpleName();
 
@@ -155,14 +147,14 @@ public class RedisDao<ID> implements IRedisService< ID > {
         tpl.opsForHash().put( _obj.getClass().getSimpleName(), hk, _obj );
     }
     @Override
-    public void update ( Object _obj ) throws NullPointerException{
+    public void update ( T _obj ) throws NullPointerException{
         String hk = _get_hk( _obj );
 
         tpl.opsForHash().put( _obj.getClass().getSimpleName(), hk, _obj );
     }
 
     @Override
-    public void delete( Object _obj ) throws Exception{
+    public void delete( T _obj ) throws Exception{
         String hk = _get_hk( _obj );
         String sn = _obj.getClass().getSimpleName();
         if( this.tpl.opsForHash().hasKey( sn, hk ) ){

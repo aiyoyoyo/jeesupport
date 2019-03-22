@@ -1,10 +1,12 @@
 package com.jees.test.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Id;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -12,4 +14,7 @@ import javax.persistence.Id;
 public class RedisUser {
     @Id
     int id;
+
+    @JSONField(format="yyyy-MM-dd HH:mm:ss:SSS")
+    Date    date;
 }
