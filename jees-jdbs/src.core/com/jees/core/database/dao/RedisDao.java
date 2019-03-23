@@ -56,6 +56,10 @@ public class RedisDao<ID, T> implements IRedisService< ID, T > {
         ParserConfig.getGlobalInstance().addAccept( CommonConfig.getString( "spring.redis.package" ) );
     }
 
+    public void heartbeat(){
+        tpl.opsForValue().get( "heartbeat" );
+    }
+
     @Override
     public List< T > findAll( Class< T > _cls ) {
         List< T > list = ( List< T > ) tpl.opsForHash().values( _cls.getSimpleName() );
@@ -132,7 +136,9 @@ public class RedisDao<ID, T> implements IRedisService< ID, T > {
 
     @Override
     public T findById ( ID _value, Class< T > _cls ) {
-        Object obj = tpl.opsForHash().get( _cls.getSimpleName(), String.valueOf( _value ) );
+        String id = _value.toString();
+
+        Object obj = tpl.opsForHash().get( _cls.getSimpleName(), id );
         return ( T ) obj;
     }
     @Override
@@ -141,7 +147,7 @@ public class RedisDao<ID, T> implements IRedisService< ID, T > {
         String sn = _obj.getClass().getSimpleName();
 
         if( tpl.opsForHash().hasKey( sn, hk ) ){
-            throw new Exception( "插入失败，包含主键[" + hk + "]的对象已存在！" );
+            throw new Exception( "插入失败，包含主键[" + hk + "]的对象[" + sn + "]已存在！" );
         }
 
         tpl.opsForHash().put( _obj.getClass().getSimpleName(), hk, _obj );
@@ -160,6 +166,16 @@ public class RedisDao<ID, T> implements IRedisService< ID, T > {
         if( this.tpl.opsForHash().hasKey( sn, hk ) ){
             this.tpl.opsForHash().delete( sn, hk );
         }else
-            throw new Exception( "删除失败，包含主键[" + hk + "]的对象不存在！" );
+            throw new Exception( "删除失败，包含主键[" + hk + "]的对象[" + sn + "]不存在！" );
+    }
+
+    @Override
+    public void deleteById( ID _id, Class< T > _cls ) throws Exception {
+        String hk = _id.toString();
+        String sn = _cls.getSimpleName();
+        if( this.tpl.opsForHash().hasKey( sn, hk ) ){
+            this.tpl.opsForHash().delete( sn, hk );
+        }else
+            throw new Exception( "删除失败，包含主键[" + hk + "]的对象[" + sn + "]不存在！" );
     }
 }

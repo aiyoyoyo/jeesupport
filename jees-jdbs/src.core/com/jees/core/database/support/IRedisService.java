@@ -11,6 +11,8 @@ public interface IRedisService<ID, T> {
 
     void delete ( T _obj ) throws Exception;
 
+    void deleteById ( ID _id, Class< T > _cls ) throws Exception;
+
     List< T > findAll( Class< T > _cls );
 
     List< T > findByEquals ( String _property, Object _value, Class< T > _cls );
