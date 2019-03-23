@@ -6,7 +6,6 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.annotation.MessageRequest;
-import com.jees.jsts.server.annotation.MessageProxy;
 import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;

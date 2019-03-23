@@ -86,8 +86,10 @@ public class SessionService< ID > {
         T user = find( _id );
 
         if( user != null ) {
-            Net2Ids.remove( Ids2Net.remove( user.getId() ) );
-            NetIsWs.remove( _net );
+            ChannelHandlerContext old = Ids2Net.remove( user.getId() );
+            Net2Ids.remove( old );
+            NetIsWs.remove( old );
+            old.flush().close();
 
             user.switchover( _net );
         }
