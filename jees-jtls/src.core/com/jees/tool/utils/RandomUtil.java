@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class RandomUtil {
     protected static Random random = new Random( System.currentTimeMillis() );
@@ -111,5 +112,22 @@ public class RandomUtil {
             if( result < odds[i] ) return i;
 
         return max_idx;
+    }
+
+    /**
+     * 从set中随机取得一个元素
+     * @param _sets
+     * @return
+     */
+    public static <E> E s_random_element( Set<E> _sets ){
+        int r = s_random_integer( _sets.size() );
+        int i = 0;
+        for ( E e : _sets ) {
+            if( i == r ){
+                return e;
+            }
+            i++;
+        }
+        return null;
     }
 }

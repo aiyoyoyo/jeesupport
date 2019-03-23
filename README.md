@@ -49,12 +49,15 @@ QQ群：8802330
 ### Jees-Boot Ver.1.1.8-SNAPSHOT
 > [JTLS] Ver 1.1.5-SNAPSHOT
 1. 引入FastJson
+2. RandomUtil增加Set随机方法
 > [JDBS] Ver 1.1.6-SNAPSHOT
 1. 加入Redis数据操作相关函数
+2. 优化相关内容
 > [JSTS] Ver 1.1.5-SNAPSHOT
 1. 细节优化
 > [JSTS] Ver 1.1.6-SNAPSHOT
 1. 优化消息协议，为1.1.7做铺垫
+2. 修正SessionService网络切换的问题
 > [JSTS] Ver 1.1.7-SNAPSHOT <font color='red'>New</font>
 1. 完善协议细节支持，提供了非Message代理的模式（JSON/PROTO）
 2. MessageDecoder变更为MessageCrypto
