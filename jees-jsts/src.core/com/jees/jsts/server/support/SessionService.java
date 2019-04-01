@@ -76,8 +76,9 @@ public class SessionService< ID > {
         if( isOnline( _net ) ){
             T user = find( _net );
             Ids2Usr.remove( user.getId() );
-            Net2Ids.remove( Ids2Net.remove( user.getId() ) );
-            NetIsWs.remove( _net );
+            ChannelHandlerContext net = Ids2Net.remove( user.getId() );
+            Net2Ids.remove( net );
+            NetIsWs.remove( net );
             user.leave();
         }
     }

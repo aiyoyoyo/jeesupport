@@ -37,8 +37,8 @@ public class RedisConfig {
         template.setConnectionFactory( redisConnectionFactory );
 
         // 开启事务
-        template.setEnableTransactionSupport( true );
-
+        // template.setEnableTransactionSupport( true );
+        template.afterPropertiesSet();
         return template;
     }
 

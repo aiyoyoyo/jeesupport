@@ -141,7 +141,6 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                 Method m = handlerMethod.get( cmd );
                 try{
                     ReflectionUtils.invokeMethod( m , CommonContextHolder.getBean( handlerClases.get( cmd ) ), _ctx , msg );
-                    after( _ctx );
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
                     log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
@@ -151,6 +150,8 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                     log.error( "错误RE: I=[" + cmd + "] M=[" + m.getName() + "]" , re );
                 } catch ( Exception ex ) {
                     log.error( "错误EX: I=[" + cmd + "] M=[" + m.getName() + "]" , ex );
+                } finally {
+                    after( _ctx );
                 }
             } else {
                 log.warn( "命令没有注册：CMD=[" + cmd + "]" );

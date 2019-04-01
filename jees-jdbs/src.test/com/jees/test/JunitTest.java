@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 
@@ -47,18 +48,10 @@ public class JunitTest implements Runnable {
 		RedisUser a = new RedisUser();
 		a.setId( 1 );
 		a.setDate( new Date( DateTime.now().getMillis() ) );
-		try {
-			redisDao.insert( a );
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		try{
-			RedisUser u = redisDao.findById( 1L, RedisUser.class );
+		redisDao.insert( a );
 
-			System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
-		}catch ( Exception e ){
-			e.printStackTrace();
-		}
+		RedisUser u = redisDao.findById( 1L, RedisUser.class );
+		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
 
 	}
 //	@Test

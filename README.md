@@ -50,6 +50,10 @@ QQ群：8802330
 > [JTLS] Ver 1.1.5-SNAPSHOT
 1. 引入FastJson
 2. RandomUtil增加Set随机方法
+> [JTLS] Ver 1.1.6-SNAPSHOT
+1. 新增FileUitl，读写文件类，比较常见的写法。
+2. 新增SensitiveWordUtil，用于敏感词过滤，DFA算法。
+3. 新增TplUtil，用于将自定义的tpl文件生成指定文件。
 > [JDBS] Ver 1.1.6-SNAPSHOT
 1. 加入Redis数据操作相关函数
 2. 优化相关内容
@@ -64,6 +68,7 @@ QQ群：8802330
 3. 移除了AbsResponse，统一由AbsRequestHanler处理消息内容
 4. 相关Protobuf类，需要在类上加上@MessageProxy标识
 5. Connector连接器优化
+6. 优化Session管理器
 
 ## 1.1.8 更新说明 
 > [JSTS] Ver 1.1.5-SNAPSHOT

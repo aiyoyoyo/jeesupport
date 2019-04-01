@@ -1,17 +1,24 @@
 package com.jees.core.database.support;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IRedisService<ID, T> {
     void onload ();
 
-    void insert ( T _obj ) throws Exception;
+    void insert ( T _obj );
 
-    void update ( T _obj ) throws NullPointerException;
+    void insertMap( Map<String, T> _map, Class< T > _cls );
 
-    void delete ( T _obj ) throws Exception;
+    void update ( T _obj );
 
-    void deleteById ( ID _id, Class< T > _cls ) throws Exception;
+    void updateMap( Map<String, T> _map, Class< T > _cls );
+
+    void delete ( T _obj );
+
+    void deleteList( List< T > _list, Class< T > _cls );
+
+    void deleteById ( ID _id, Class< T > _cls );
 
     List< T > findAll( Class< T > _cls );
 
