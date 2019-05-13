@@ -3,6 +3,7 @@ package com.jees.tool.utils;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class SensitiveWordUtil {
 
     static Map<String, HashMap> wordMap = new HashMap<>();
 
-    private void _hash_words(){
+    private static void _hash_words(){
         Set<String> sets = wordMap.keySet().stream().collect( Collectors.toSet() );
 
         for( String key : sets ){
@@ -50,18 +51,19 @@ public class SensitiveWordUtil {
         log.info( "生成词典：WORDS[" + wordMap.size() + "]" );
     }
 
-    private void _load_txt_file( String _path ){
-        File file = new File( _path ); //读取文件
+    private static void _load_txt_file( String _path ) throws FileNotFoundException {
+        File file = FileUtil.loadFile( _path );
 
         if( file.isDirectory() ){
             String[] file_list = file.list();
             for( String p : file_list ){
-                File txt = new File( _path + "/" + p );
+                File txt = FileUtil.loadFile( _path + "/" + p );
 
                 if( txt.isFile() ){
                     FileUtil.ReadFile( txt.getAbsolutePath(), s->{
-                        if( !s.isEmpty() ){
-                            wordMap.put( s, new HashMap<>() );
+                        String tmp = s.trim();
+                        if( !tmp.trim().isEmpty() ){
+                            wordMap.put( tmp, new HashMap<>() );
                         }
                     });
                 }
@@ -77,15 +79,17 @@ public class SensitiveWordUtil {
         log.info( "已加载基础词典数量：WORDS[" + wordMap.size() + "]" );
     }
 
-    public void initialize( String _path ){
+    public static void initialize( String _path ){
         // 读取目录下的txt文件作为词典
-        _load_txt_file( _path );
-
-        _hash_words();
+        try {
+            _load_txt_file( _path );
+            _hash_words();
+        } catch ( FileNotFoundException e ) {
+            log.error( "加载词典文件失败，无法找到对应目录：PATH=[" + _path + "]"  );
+        }
     }
 
-    protected int check( String _text, int _idx, int _match, boolean _min ) {
-        boolean flag = false;
+    private static int _check_( String _text, int _idx, boolean _min ) {
         int match = 0;
         char c;
         Map curr_map = wordMap;
@@ -96,7 +100,6 @@ public class SensitiveWordUtil {
                 match++;
                 if ( curr_map.size() == 0 ){
                     //结束标志位为true
-                    flag = true;
                     if ( _min ) {
                         break;
                     }
@@ -106,29 +109,29 @@ public class SensitiveWordUtil {
                 break;
             }
         }
-        if ( match < _match || !flag ) {  //长度必须大于等于1，为词
-            match = 0;
-        }
+
         return match;
     }
 
     /**
      * 检查是否包含敏感词，_min为false时，会进行词典的全匹配
      * @param _text 内容
-     * @param _match 最小匹配长度
      * @param _min 是否最小匹配
      * @return
      */
-    public Set< String > check( String _text, int _match, boolean _min ){
+    public static Set< String > check( String _text, boolean _min ){
         Set<String> sets = new HashSet<>();
-
+        int match = 0;
         for(int i = 0 ; i < _text.length() ; i++){
-            int length = check( _text, i, _match, _min );    //判断是否包含敏感字符
+            int length = _check_( _text, i, _min );    //判断是否包含敏感字符
             if( length > 0 ){    //存在,加入list中
                 sets.add( _text.substring(i, i+length));
                 i = i + length - 1;    //减1的原因，是因为for会自增
+                match ++;
             }
         }
+
+        log.debug( "--匹配敏感词数量：MATCH=[" + match + "]" );
 
         return sets;
     }
@@ -137,14 +140,13 @@ public class SensitiveWordUtil {
      * 替换包含敏感词的内容
      * @param _text
      * @param _replace
-     * @param _match
      * @param _min
      * @return
      */
-    public String replace( String _text, String _replace, int _match, boolean _min ){
+    public static String replace( String _text, String _replace, boolean _min ){
         String str = _text;
 
-        Set<String> sets = check( _text, _match, _min );
+        Set<String> sets = check( _text, _min );
 
         for( String sw : sets ){
             str = str.replaceAll( sw, _replace );
