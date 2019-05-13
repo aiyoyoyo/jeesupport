@@ -1,8 +1,10 @@
 package com.jees.test;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.dao.RedisDao;
 import com.jees.core.database.repository.SuperEntity;
+import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
 import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
@@ -28,6 +31,7 @@ import java.util.Date;
 @SpringBootTest
 @ComponentScan("com.jees")
 @Log4j2
+@PropertySource(value={"classpath:server.cfg"})
 public class JunitTest implements Runnable {
 	public long				id;
 	public int				right;
@@ -39,20 +43,19 @@ public class JunitTest implements Runnable {
 	public TestController	ctr;
 
 	@Autowired
-	RedisDao<Long, RedisUser> redisDao;
+	IRedisDao<Long, RedisUser> dao;
 
 	@Test
 	public void RedisTest(){
-		CommonContextHolder.getBean( RedisDao.class ).onload();
+		CommonContextHolder.getBean( RedisDao.class ).initialize();
 
 		RedisUser a = new RedisUser();
 		a.setId( 1 );
 		a.setDate( new Date( DateTime.now().getMillis() ) );
-		redisDao.insert( a );
+		dao.insert( 1, a );
 
-		RedisUser u = redisDao.findById( 1L, RedisUser.class );
+		RedisUser u = dao.findById( 1, 1L, RedisUser.class );
 		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
-
 	}
 //	@Test
 	public void SimpleTest(){
