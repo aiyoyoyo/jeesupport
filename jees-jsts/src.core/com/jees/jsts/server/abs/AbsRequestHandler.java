@@ -104,7 +104,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         }
         if( CommonConfig.getBoolean( "jees.jsts.message.monitor", false ) ){
             time = System.currentTimeMillis() - time;
-            log.info( "--命令用时: TIME=[" + time + "]"  );
+            log.debug( "--命令用时: TIME=[" + time + "]"  );
         }
         _ctx.flush();
     }
@@ -130,9 +130,9 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         if ( debug ) {
             if ( proxy ) {
                 String label = labels.getOrDefault( cmd, "未注解命令" );
-                log.debug( "\n  [Request][" + label + "]->" + msg.toString() );
+                log.info( "\n  [Request][" + label + "]->" + msg.toString() );
             } else {
-                log.debug( "\n  [Request]->" + msg.toString() );
+                log.info( "\n  [Request]->" + msg.toString() );
             }
         }
 
@@ -144,6 +144,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
                     log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
+                    me.getMsg().setRequest( cmd );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误
                 } catch ( RuntimeException re ) {

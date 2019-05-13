@@ -1,12 +1,11 @@
 package com.jees.jsts.server.message;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 消息协议格式，注意属性的顺序会影响消息内容
@@ -22,6 +21,8 @@ public class Message{
 	private int id;
 
 	private long				userId;
+
+	private int 				request;
 
 	private List< Integer >		intData;
 

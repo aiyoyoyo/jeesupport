@@ -1,22 +1,13 @@
 package com.jees.jsts.server.message;
 
-import java.nio.ByteOrder;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.jsts.netty.support.AbsNettyDecoder;
+import com.jees.jsts.netty.support.INettyHandler;
 import com.jees.jsts.server.annotation.MessageProxy;
 import com.jees.tool.utils.DataUtil;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
-
-import com.jees.jsts.netty.support.*;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -24,6 +15,16 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
+
+import java.nio.ByteOrder;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 消息解码器，这里会对字节做高低位转换，以便于和其他部分语言进行通讯。
@@ -115,9 +116,12 @@ public class MessageCrypto extends AbsNettyDecoder {
 				int[] cmd = mr.value();
 				for( int c : cmd ){
 					if ( proxyClases.containsKey( c ) ) {
-						String use_cls = proxyClases.get( cmd ).getName();
-
-						log.warn( "命令重复：CMD[" + cmd + "], 当前[" + cls.getName() + "], 已使用[" + use_cls + "]" );
+						try{
+							String use_cls = proxyClases.get( cmd ).getName();
+							log.warn( "命令重复：CMD[" + cmd + "], 当前[" + cls.getName() + "], 已使用[" + use_cls + "]" );
+						}catch( Exception e ){
+							log.warn( "命令重复：CMD[" + cmd + "]。" );
+						}
 					} else {
 						proxyClases.put( c , b.getClass() );
 						_get_schema( b.getClass() );
@@ -205,59 +209,75 @@ public class MessageCrypto extends AbsNettyDecoder {
 		boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
 		String type = CommonConfig.getString( "jees.jsts.message.type", MSG_TYPE_PROTO );
 
-		if( type.equalsIgnoreCase( MSG_TYPE_JSON ) ){
-			String json = null;
-			if( _ws ) {
-				json = ( ( TextWebSocketFrame ) _obj ).text();
-			}else{
-				json = new String( ( byte[] ) _obj );
-			}
-			if( proxy ){
-				return JSON.parseObject( json, Message.class );
-			}else{
-				JSONObject obj = JSON.parseObject(  json );
-				Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
-
-				if( cls != null ){
-					return JSON.parseObject( json, cls );
+		String log_str = "--解析命令: TYPE=[" + type + "], WEBSOCEKT=[" + _ws + "], PROXY=[" + proxy +"], ";
+		try{
+			if( type.equalsIgnoreCase( MSG_TYPE_JSON ) ){
+				String json = null;
+				if( _ws ) {
+					json = ( ( TextWebSocketFrame ) _obj ).text();
 				}else{
-					return obj;
+					json = new String( ( byte[] ) _obj );
 				}
-			}
-		}else{
-			Object proto = null;
-
-			if( _ws ) {
-				String txt = ( ( TextWebSocketFrame ) _obj ).text();
-
-				if( proxy ) {
-					proto = JSON.parseObject( txt, Message.class );
+				if( proxy ){
+					log_str += "JSON[" + json + "]转Message对象";
+					return JSON.parseObject( json, Message.class );
 				}else{
-					JSONObject obj = JSON.parseObject( txt );
+					JSONObject obj = JSON.parseObject(  json );
 					Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
 
 					if( cls != null ){
-						proto = JSON.parseObject( txt, cls );
+						log_str += "JSON[" + json + "]转Class[" + cls.getName() + "]代理对象";
+						return JSON.parseObject( json, cls );
 					}else{
+						log_str += "JSON[" + json + "]原始对象";
 						return obj;
 					}
 				}
 			}else{
-				if( proxy ) {
-					proto = deserializer( ( byte[] ) _obj, Message.class );
-				}else{
-					JSONObject obj = JSON.parseObject( new String( ( byte[] ) _obj ) );
-					Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
+				Object proto = null;
 
-					if( cls != null ){
-						proto = deserializer( ( byte[] ) _obj, cls );
+				if( _ws ) {
+					String json = ( ( TextWebSocketFrame ) _obj ).text();
+
+					if( proxy ) {
+						proto = JSON.parseObject( json, Message.class );
 					}else{
-						proto = obj.toJavaObject( cls );
+						JSONObject obj = JSON.parseObject( json );
+						Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
+
+						if( cls != null ){
+							log_str += "JSON[" + json + "]转Class[" + cls.getName() + "]代理对象";
+							proto = JSON.parseObject( json, cls );
+						}else{
+							log_str += "JSON[" + json + "]原始对象";
+							return obj;
+						}
+					}
+				}else{
+					if( proxy ) {
+						proto = deserializer( ( byte[] ) _obj, Message.class );
+						log_str += "字节转Message对象";
+					}else{
+						JSONObject obj = JSON.parseObject( new String( ( byte[] ) _obj ) );
+						Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
+
+						if( cls != null ){
+							proto = deserializer( ( byte[] ) _obj, cls );
+							log_str += "字节转Class[" + cls.getName() + "]代理对象";
+						}else{
+							proto = obj.toJavaObject( cls );
+							log_str += "字节转Java[" + cls.getName() + "]代理对象";
+						}
 					}
 				}
-			}
 
-			return proto;
+				return proto;
+			}
+		}catch( Exception e ){
+			log.error( "接收的命令无法解析，返回默认命令号。" );
+			return new Message();
+		}finally{
+			log.debug( log_str );
 		}
 	}
 

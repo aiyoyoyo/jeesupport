@@ -6,13 +6,11 @@ import com.jees.common.CommonConfig;
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.interf.IRequestHandler;
-import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.support.ProxyInterface;
 import com.jees.jsts.server.support.SessionService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,12 +43,12 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
 
                 if( label.equals( "" ) && error ){
                     label = errors.getOrDefault( cmd, "未注解命令" );
-                    label = "\n  [Handler Error][" + label + "]->";
-                }else label = "\n  [Handler][" + label + "]->";
+                    label = "\n  [Response Error][" + label + "]->";
+                }else label = "\n  [Response][" + label + "]->";
 
-                log.debug( label + _obj.toString() );
+                log.info( label + _obj.toString() );
             }else{
-                log.debug( "\n  [Handler]->" + _obj.toString() );
+                log.info( "\n  [Response]->" + _obj.toString() );
             }
         }
 

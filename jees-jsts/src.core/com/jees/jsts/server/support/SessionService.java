@@ -4,10 +4,10 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -16,20 +16,21 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-public class SessionService< ID > {
-    Map< ID , SuperUser<ID> >               Ids2Usr = new ConcurrentHashMap<>();
-    Map< ChannelHandlerContext, Boolean >   NetIsWs = new ConcurrentHashMap<>();
+public class SessionService< ID >{
+    Map< ID, SuperUser< ID > >            Ids2Usr = new ConcurrentHashMap<>();
+    Map< ChannelHandlerContext, Boolean > NetIsWs = new ConcurrentHashMap<>();
     // 是否有效用户，以下2个数据为准
-    Map< ID , ChannelHandlerContext >       Ids2Net = new ConcurrentHashMap<>();
-    Map< ChannelHandlerContext , ID >	    Net2Ids = new ConcurrentHashMap<>();
 
-    public < T extends SuperUser<ID> > T find ( ChannelHandlerContext _ctx ) {
+    Map< ID, ChannelHandlerContext > Ids2Net = new ConcurrentHashMap<>();
+    Map< ChannelHandlerContext, ID > Net2Ids = new ConcurrentHashMap<>();
+
+    public < T extends SuperUser< ID > > T find( ChannelHandlerContext _ctx ){
         ID id = Net2Ids.getOrDefault( _ctx, null );
         if( id == null ) return null;
         return ( T ) Ids2Usr.getOrDefault( id, null );
     }
 
-    public < T extends SuperUser<ID> > T  find ( ID _user ) {
+    public < T extends SuperUser< ID > > T find( ID _user ){
         return ( T ) Ids2Usr.getOrDefault( _user, null );
     }
 
@@ -45,7 +46,7 @@ public class SessionService< ID > {
         return Net2Ids.containsKey( _ctx );
     }
 
-    public < T extends SuperUser<ID> > boolean isOnline( T _user ){
+    public < T extends SuperUser< ID > > boolean isOnline( T _user ){
         if( _user.getId() != null )
             return isOnline( _user.getId() );
         else if( _user.getNet() != null )
@@ -62,7 +63,7 @@ public class SessionService< ID > {
         NetIsWs.put( _ctx, _ws );
     }
 
-    public < T extends SuperUser<ID> > void enter ( ChannelHandlerContext _net, T _user ) {
+    public < T extends SuperUser< ID > > void enter( ChannelHandlerContext _net, T _user ){
         if( !isOnline( _net ) ){
             Ids2Usr.put( _user.getId(), _user );
             Ids2Net.put( _user.getId(), _net );
@@ -72,7 +73,7 @@ public class SessionService< ID > {
         }
     }
 
-    public < T extends SuperUser<ID> > void leave ( ChannelHandlerContext _net ) {
+    public < T extends SuperUser< ID > > void leave( ChannelHandlerContext _net ){
         if( isOnline( _net ) ){
             T user = find( _net );
             Ids2Usr.remove( user.getId() );
@@ -83,10 +84,10 @@ public class SessionService< ID > {
         }
     }
 
-    public < T extends SuperUser<ID> > void switchover ( ChannelHandlerContext _net, ID _id ) {
+    public < T extends SuperUser< ID > > void switchover( ChannelHandlerContext _net, ID _id ){
         T user = find( _id );
 
-        if( user != null ) {
+        if( user != null ){
             ChannelHandlerContext old = Ids2Net.remove( user.getId() );
             Net2Ids.remove( old );
             NetIsWs.remove( old );
@@ -103,26 +104,30 @@ public class SessionService< ID > {
         return Ids2Usr.size();
     }
 
-    public List< ID > onlineIds() {
+    public List< ID > onlineIds(){
         return Ids2Usr.keySet().stream().collect( Collectors.toList() );
     }
 
-    public < T extends SuperUser<ID> > List< T > onlineUsers(){
+    public < T extends SuperUser< ID > > List< T > onlineUsers(){
         return ( List< T > ) Ids2Usr.values().stream().collect( Collectors.toList() );
     }
 
-    public < T extends SuperUser<ID> > void standby ( ChannelHandlerContext _net ) {
+    public void foreach( Consumer< ? super SuperUser< ID > > _action ){
+        Ids2Usr.values().forEach( _action );
+    }
+
+    public < T extends SuperUser< ID > > void standby( ChannelHandlerContext _net ){
         T user = find( _net );
 
-        if( user != null ) {
+        if( user != null ){
             user.standby();
         }
     }
 
-    public < T extends SuperUser<ID> > void recovery ( ChannelHandlerContext _net ) {
+    public < T extends SuperUser< ID > > void recovery( ChannelHandlerContext _net ){
         T user = find( _net );
 
-        if( user != null ) {
+        if( user != null ){
             user.recovery();
         }
     }
