@@ -6,6 +6,7 @@ import com.jees.common.CommonConfig;
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.interf.IRequestHandler;
+import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.support.ProxyInterface;
 import com.jees.jsts.server.support.SessionService;
@@ -31,25 +32,29 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
     public void send( Object _obj, C _ctx ) {
         boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
 
-        boolean handler = CommonConfig.getBoolean("jees.jsts.message.handler.enable", false );
+        boolean debug = CommonConfig.getBoolean("jees.jsts.message.handler.enable", false );
         boolean error = CommonConfig.getBoolean("jees.jsts.message.error.enable", false );
 
-        if( handler ){
-            if( proxy ){
-                JSONObject obj = JSON.parseObject(  _obj.toString() );
-                int cmd = obj.getInteger( "id" );
+        int cmd = 0;
+        if( proxy ){
+            Message msg = JSON.parseObject( _obj.toString(), Message.class );
+            cmd = msg.getId();
+        }else{
+            JSONObject obj = JSON.parseObject( _obj.toString() );
 
-                String label = labels.getOrDefault( cmd, "未注解命令" );
-
-                if( label.equals( "" ) && error ){
-                    label = errors.getOrDefault( cmd, "未注解命令" );
-                    label = "\n  [Response Error][" + label + "]->";
-                }else label = "\n  [Response][" + label + "]->";
-
-                log.info( label + _obj.toString() );
-            }else{
-                log.info( "\n  [Response]->" + _obj.toString() );
+            try{
+                cmd = obj.getInteger( "id" );
+            }catch( Exception e ){
+                cmd = 0;
             }
+        }
+        if( debug ){
+            String label = labels.getOrDefault( cmd, "未注解命令" );
+            if( label.equals( "" ) && error ){
+                label = errors.getOrDefault( cmd, "未注解命令" );
+                label = "\n  [S][ERR][" + cmd + "][" + label + "]:";
+            }else label = "\n  [S][" + cmd + "][" + label + "]:";
+            log.info( label + _obj.toString() );
         }
 
         final ByteBuf buf = _ctx.alloc().buffer();

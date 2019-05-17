@@ -128,12 +128,8 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         }
 
         if ( debug ) {
-            if ( proxy ) {
-                String label = labels.getOrDefault( cmd, "未注解命令" );
-                log.info( "\n  [Request][" + label + "]->" + msg.toString() );
-            } else {
-                log.info( "\n  [Request]->" + msg.toString() );
-            }
+            String label = labels.getOrDefault( cmd, "未注解命令" );
+            log.info( "\n  [C][" + cmd + "][" + label + "]:" + msg.toString() );
         }
 
         if( before( _ctx, cmd ) ) {
