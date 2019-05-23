@@ -117,10 +117,10 @@ public class MessageCrypto extends AbsNettyDecoder {
 				for( int c : cmd ){
 					if ( proxyClases.containsKey( c ) ) {
 						try{
-							String use_cls = proxyClases.get( cmd ).getName();
-							log.warn( "命令重复：CMD[" + cmd + "], 当前[" + cls.getName() + "], 已使用[" + use_cls + "]" );
+							String use_cls = proxyClases.get(c).getName();
+							log.warn( "命令重复：CMD[" + c + "], 当前[" + cls.getName() + "], 已使用[" + use_cls + "]" );
 						}catch( Exception e ){
-							log.warn( "命令重复：CMD[" + cmd + "]。" );
+							log.warn( "命令重复：CMD[" + c + "]。" );
 						}
 					} else {
 						proxyClases.put( c , b.getClass() );

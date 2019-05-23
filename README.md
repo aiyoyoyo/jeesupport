@@ -53,6 +53,9 @@ QQ群：8802330
 > [JTLS] Ver 1.1.6-SNAPSHOT
 1. 新增FileUitl，读写文件类，比较常见的写法。
 2. 新增SensitiveWordUtil，用于敏感词过滤，DFA算法。
+> [JTLS] Ver 1.1.7-SNAPSHOT
+1. 新增CustomSystemUtil，读写文件类，比较常见的写法。
+2. 优化新增SensitiveWordUtil功能内容。
 3. 新增TplUtil，用于将自定义的tpl文件生成指定文件。
 > [JDBS] Ver 1.1.6-SNAPSHOT
 1. 加入Redis数据操作相关函数

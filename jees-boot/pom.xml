@@ -28,9 +28,9 @@
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
         <jees.version>1.1.8-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
-        <jees.jtls.version>1.1.6-SNAPSHOT</jees.jtls.version>
+        <jees.jtls.version>1.1.7-SNAPSHOT</jees.jtls.version>
         <jees.jdbs.version>1.1.6-SNAPSHOT</jees.jdbs.version>
-        <jees.jsts.version>1.1.6-SNAPSHOT</jees.jsts.version>
+        <jees.jsts.version>1.1.7-SNAPSHOT</jees.jsts.version>
         <jees.webs.version>1.1.1-SNAPSHOT</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -43,6 +43,7 @@
         <jodatime.version>2.9.9</jodatime.version>
         <lombok.version>1.16.20</lombok.version>
         <netty.version>4.1.16.Final</netty.version>
+        <commons.pool2.version>2.6.1</commons.pool2.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
