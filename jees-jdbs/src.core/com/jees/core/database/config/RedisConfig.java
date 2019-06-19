@@ -1,23 +1,21 @@
 package com.jees.core.database.config;
 
 import com.jees.common.CommonConfig;
-import com.jees.core.database.support.AbsRedisDao;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.connection.*;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.*;
 
@@ -25,11 +23,8 @@ import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.*;
 @EnableConfigurationProperties( RedisProperties.class)
 public class RedisConfig{
 
-    @Autowired
-    AbsRedisDao dao;
-
     @Bean( destroyMethod = "shutdown" )
-    ClientResources clientResources(){
+    public ClientResources clientResources(){
         return DefaultClientResources.create();
     }
 
@@ -49,7 +44,7 @@ public class RedisConfig{
     }
 
     @Bean
-    LettucePoolingClientConfiguration lettucePoolConfig( ClientOptions _co, ClientResources _cr ){
+    public LettucePoolingClientConfiguration lettucePoolConfig( ClientOptions _co, ClientResources _cr ){
         GenericObjectPoolConfig gopc = new GenericObjectPoolConfig();
 
         gopc.setMaxIdle( CommonConfig.getInteger( "spring.redis.pool.max-idle", DEFAULT_MAX_IDLE ) );
@@ -89,11 +84,10 @@ public class RedisConfig{
         template.setValueSerializer( fastJsonRedisSerializer );
         template.setHashValueSerializer( fastJsonRedisSerializer );
         // key的序列化采用StringRedisSerializer
-        template.setKeySerializer( new StringRedisSerializer() );
-        template.setHashKeySerializer( new StringRedisSerializer() );
+        template.setKeySerializer( new ObjectStringRedisSerializer() );
+        template.setHashKeySerializer( new ObjectStringRedisSerializer() );
 
         template.setConnectionFactory( _rcf );
-
         // 开启事务
         template.setEnableTransactionSupport( true );
         template.afterPropertiesSet();

@@ -18,22 +18,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 本类的默认操作方式均为Hash方式
+ * @author aiyoyoyo
+ * @param <ID>
+ * @param <T>
+ */
 @Log4j2
-public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
-
-    List< RedisTemplate > tpls = new ArrayList<>();
-
+public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     int index;
-
     @Autowired
     RedisTemplate<String, T> tpl;
 
     private String _get_hk( T _obj ){
         String hk = null;
-
         Class cls = _obj.getClass();
 
-        final List< Field > allFields = new ArrayList<Field>();
         while ( cls != null ) {
             final Field[] declaredFields = cls.getDeclaredFields();
             for (final Field f : declaredFields) {
@@ -77,12 +77,12 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
     }
 
     @Override
-    public void insert ( T _obj ) {
+    public void insert ( T _obj ) throws Exception{
         this.insert( index, _obj );
     }
 
     @Override
-    public void insertMap ( Map< String, T > _map, Class< T > _cls ) {
+    public void insertMap ( Map< ID, T > _map, Class< T > _cls ) {
         this.insertMap( index, _map, _cls );
     }
 
@@ -97,7 +97,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
     }
 
     @Override
-    public void delete ( T _obj ) {
+    public void delete ( T _obj ) throws Exception{
         this.delete( index, _obj );
     }
 
@@ -159,9 +159,15 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
         index = _idx;
 
         LettuceConnectionFactory cf = ( LettuceConnectionFactory ) tpl.getConnectionFactory();
-
         cf.setDatabase( index );
         tpl.setConnectionFactory( cf );
+    }
+
+    public void changeDatabase( LettuceConnectionFactory _lcf ){
+        RedisConnectionUtils.unbindConnection( tpl.getConnectionFactory() );
+        tpl.setConnectionFactory( _lcf );
+        index = _lcf.getDatabase();
+        heartbeat();
     }
 
     @Override
@@ -264,17 +270,16 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
     public T findById ( int _idx, ID _value, Class< T > _cls ) {
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
-            String id = _value.toString();
-            Object obj = hash.get( _cls.getSimpleName(), id );
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            Object obj = hash.get( _cls.getSimpleName(), _value );
             return ( T ) obj;
         }catch ( Exception e ) {
             log.error( "findById 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
-        return null;
     }
     @Override
-    public void insert ( int _idx, T _obj ){
+    public void insert ( int _idx, T _obj ) throws Exception{
         try{
             database( _idx );
             HashOperations< String, String, T > hash = tpl.opsForHash();
@@ -287,18 +292,20 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
             hash.put( _obj.getClass().getSimpleName(), hk, _obj );
         }catch ( Exception e ){
             log.error( "insert 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
     }
 
     @Override
-    public void insertMap ( int _idx, Map< String, T > _map, Class< T > _cls ) {
+    public void insertMap ( int _idx, Map< ID, T > _map, Class< T > _cls ) {
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
-            String sn = _cls.getClass().getSimpleName();
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            String sn = _cls.getSimpleName();
             hash.putAll( sn, _map );
         }catch ( Exception e ){
             log.error( "insertMap 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
     }
 
@@ -311,6 +318,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
             hash.put( _obj.getClass().getSimpleName(), hk, _obj );
         }catch ( Exception e ){
             log.error( "update 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
     }
 
@@ -323,11 +331,12 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
             hash.putAll( sn, _map );
         }catch ( Exception e ){
             log.error( "update 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
     }
 
     @Override
-    public void delete( int _idx, T _obj ){
+    public void delete( int _idx, T _obj ) throws Exception{
         try{
             database( _idx );
             HashOperations< String, String, T > hash = tpl.opsForHash();
@@ -339,6 +348,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T> {
                 throw new Exception( "删除失败，包含主键[" + hk + "]的对象[" + sn + "]不存在！" );
         }catch ( Exception e ){
             log.error( "update 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+            throw e;
         }
     }
 

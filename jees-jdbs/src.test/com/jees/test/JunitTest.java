@@ -1,12 +1,9 @@
 package com.jees.test;
 
-import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.dao.RedisDao;
-import com.jees.core.database.repository.SuperEntity;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
-import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -17,8 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.Date;
 
 /**
@@ -46,7 +41,7 @@ public class JunitTest implements Runnable {
 	IRedisDao<Long, RedisUser> dao;
 
 	@Test
-	public void RedisTest(){
+	public void RedisTest() throws Exception{
 		CommonContextHolder.getBean( RedisDao.class ).initialize();
 
 		RedisUser a = new RedisUser();
