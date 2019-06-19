@@ -51,16 +51,16 @@ public class SensitiveWordUtil {
         log.info( "生成词典：WORDS[" + wordMap.size() + "]" );
     }
 
-    private static void _load_txt_file( String _path ) throws FileNotFoundException {
-        File file = FileUtil.loadFile( _path );
+    private static void _load_txt_file( String _path ) throws FileNotFoundException{
+        File file = FileUtil.load( _path, true );
 
         if( file.isDirectory() ){
             String[] file_list = file.list();
             for( String p : file_list ){
-                File txt = FileUtil.loadFile( _path + "/" + p );
+                File txt = FileUtil.load( _path + "/" + p, true );
 
                 if( txt.isFile() ){
-                    FileUtil.ReadFile( txt.getAbsolutePath(), s->{
+                    FileUtil.read( txt.getAbsolutePath(), s->{
                         String tmp = s.trim();
                         if( !tmp.trim().isEmpty() ){
                             wordMap.put( tmp, new HashMap<>() );
@@ -69,7 +69,7 @@ public class SensitiveWordUtil {
                 }
             }
         }else{
-            FileUtil.ReadFile( _path, s->{
+            FileUtil.read( _path, s->{
                 if( !s.isEmpty() ){
                     wordMap.put( s, new HashMap<>() );
                 }
@@ -79,14 +79,10 @@ public class SensitiveWordUtil {
         log.info( "已加载基础词典数量：WORDS[" + wordMap.size() + "]" );
     }
 
-    public static void initialize( String _path ){
+    public static void initialize( String _path ) throws FileNotFoundException{
         // 读取目录下的txt文件作为词典
-        try {
-            _load_txt_file( _path );
-            _hash_words();
-        } catch ( FileNotFoundException e ) {
-            log.error( "加载词典文件失败，无法找到对应目录：PATH=[" + _path + "]"  );
-        }
+        _load_txt_file( _path );
+        _hash_words();
     }
 
     private static int _check_( String _text, int _idx, boolean _min ) {
@@ -124,7 +120,7 @@ public class SensitiveWordUtil {
         int match = 0;
         for(int i = 0 ; i < _text.length() ; i++){
             int length = _check_( _text, i, _min );    //判断是否包含敏感字符
-            if( length > 0 ){    //存在,加入list中
+            if( length > 1 ){    //存在,加入list中
                 sets.add( _text.substring(i, i+length));
                 i = i + length - 1;    //减1的原因，是因为for会自增
                 match ++;
@@ -132,7 +128,6 @@ public class SensitiveWordUtil {
         }
 
         log.debug( "--匹配敏感词数量：MATCH=[" + match + "]" );
-
         return sets;
     }
 

@@ -2,6 +2,7 @@ package com.jees.tool.utils;
 
 import lombok.Cleanup;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
@@ -17,29 +18,48 @@ import java.util.function.Consumer;
 public class FileUtil {
     public static final String FILE_ENCODING = "UTF-8";
 
+    public static File load( String _path, boolean _thr ) throws FileNotFoundException{
+        File file = _try_clspath_loader( _path );
+        if( file == null ){
+            file = _try_absolute_loader( _path );
+        }
+        if( file == null ){
+            file = _try_canonical_loader( _path );
+        }
+        if( file == null ){
+            String msg = "文件没有找到：FILE=[" + _path + "]";
+            log.warn( msg );
+            if( _thr ){
+                throw new FileNotFoundException( msg );
+            }
+        }
+
+        return file;
+    }
+
     /**
      * 读取文件内容转为字符串
      *
-     * @param _file
+     * @param _filepath
      * @return
      */
-    public static String ReadFile ( String _file ){
-        File   file   = loadFile( _file );
-        Long   length = file.length();
+    public static String read ( String _filepath, boolean _thr ) throws IOException{
+        File   file   = load( _filepath, _thr );
+        return read( file );
+    }
+
+    public static String read( @Nullable File _file ) throws IOException{
+        Long   length = _file.length();
         byte[] bytes  = new byte[length.intValue()];
 
         try{
-            @Cleanup FileInputStream fis = new FileInputStream( file );
+            @Cleanup FileInputStream fis = new FileInputStream( _file );
             fis.read( bytes );
 
             return new String( bytes, FILE_ENCODING );
-        }catch( FileNotFoundException e ){
-            log.error( "文件没有找到：FILE=[" + _file + "]" );
-        }catch( IOException e ){
-            log.error( "文件读写错误：FILE=[" + _file + "]" );
+        }catch( Exception e ){
+            throw e;
         }
-
-        return null;
     }
 
     /**
@@ -48,20 +68,22 @@ public class FileUtil {
      * @param _conent
      * @param _file
      */
-    public static void WriteFile ( String _conent, String _file ){
-        File file = loadFile( _file );
+    public static void write ( String _conent, String _file, boolean _thr ) throws FileNotFoundException{
+        File file = load( _file, _thr );
 
-        if ( !file.exists() ) {
-            file.getParentFile().mkdirs();
+        write( _conent, file );
+    }
+
+    public static void write( String _conent, @Nullable File _file ){
+        if ( !_file.exists() ) {
+            _file.getParentFile().mkdirs();
         }
 
         try{
-            @Cleanup FileOutputStream fos = new FileOutputStream( file );
+            @Cleanup FileOutputStream fos = new FileOutputStream( _file );
             fos.write( _conent.getBytes( FILE_ENCODING ) );
-        } catch ( FileNotFoundException e ) {
-            log.error( "文件没有找到：FILE=[" + _file + "]" );
-        } catch ( IOException e ) {
-            log.error( "文件读写错误：FILE=[" + _file + "]" );
+        } catch ( Exception e ) {
+            e.printStackTrace();
         }
     }
 
@@ -71,7 +93,7 @@ public class FileUtil {
      * @param _file
      * @param _consumer
      */
-    public static void ReadFile ( String _file, Consumer< ? super String > _consumer ) {
+    public static void read ( String _file, Consumer< ? super String > _consumer ) {
         int read_count = 0;
         String read_line;
 
@@ -117,18 +139,6 @@ public class FileUtil {
         }
 
         File file = new File( _path );
-        return file;
-    }
-
-    public static File loadFile ( String _path ) {
-        File file = _try_clspath_loader( _path );
-        if( file == null ){
-            file = _try_absolute_loader( _path );
-        }
-        if( file == null ){
-            file = _try_canonical_loader( _path );
-        }
-
         return file;
     }
 }
