@@ -10,6 +10,7 @@ import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.support.ProxyInterface;
 import com.jees.jsts.server.support.SessionService;
+import com.jees.jsts.server.support.SuperUser;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
@@ -27,15 +28,26 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
 
     private static Map< Integer, String > labels = new HashMap<>();
     private static Map< Integer, String > errors = new HashMap<>();
-    // Handler 部分
+
+    @Autowired
+    SessionService  session;
+    @Autowired
+    IRequestHandler request;
+
+    /**
+     * 服务器写回给客户端
+     *
+     * @param _obj 数据内容
+     * @param _ctx 客户端对象
+     */
     @Override
-    public void send( Object _obj, C _ctx ) {
+    public void send( Object _obj, C _ctx ){
         boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
 
-        boolean debug = CommonConfig.getBoolean("jees.jsts.message.handler.enable", false );
-        boolean error = CommonConfig.getBoolean("jees.jsts.message.error.enable", false );
+        boolean debug = CommonConfig.getBoolean( "jees.jsts.message.handler.enable", false );
+        boolean error = CommonConfig.getBoolean( "jees.jsts.message.error.enable", false );
 
-        int cmd = 0;
+        int cmd;
         if( proxy ){
             Message msg = JSON.parseObject( _obj.toString(), Message.class );
             cmd = msg.getId();
@@ -49,16 +61,21 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
             }
         }
         if( debug ){
+            Object    user  = null;
+            SuperUser gamer = session.find( _ctx );
+            if( gamer != null ){
+                user = gamer.getId();
+            }
             String label = labels.getOrDefault( cmd, "未注解命令" );
             if( label.equals( "" ) && error ){
                 label = errors.getOrDefault( cmd, "未注解命令" );
-                label = "\n  [S][ERR][" + cmd + "][" + label + "]:";
-            }else label = "\n  [S][" + cmd + "][" + label + "]:";
+                label = "\n  [S][ERR][" + cmd + "][" + label + "][" + user + "]:";
+            }else label = "\n  [S][" + cmd + "][" + label + "][" + user + "]:";
             log.info( label + _obj.toString() );
         }
 
         final ByteBuf buf = _ctx.alloc().buffer();
-        Object msg = MessageCrypto.serializer( buf, _obj, session.isWebSocket( _ctx ) );
+        Object        msg = MessageCrypto.serializer( buf, _obj, session.isWebSocket( _ctx ) );
         _ctx.writeAndFlush( msg );
     }
 
@@ -66,82 +83,79 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
         _command_labels();
         _command_errors();
     }
+
     private void _command_labels(){
         if( labels.size() > 0 ) return;
-        boolean handler = CommonConfig.getBoolean("jees.jsts.message.handler.enable", false );
+        boolean handler = CommonConfig.getBoolean( "jees.jsts.message.handler.enable", false );
         if( !handler ) return;
         String clazz_str = CommonConfig.getString( "jees.jsts.message.handler.clazz" );
 
         String[] clses = clazz_str.split( "," );
-        for( String cls : clses ) {
-            try {
+        for( String cls : clses ){
+            try{
                 Class c = Class.forName( cls.trim() );
 
-                Object ir = ProxyInterface.newInstance( new Class[]{ c } );
+                Object  ir     = ProxyInterface.newInstance( new Class[]{c} );
                 Field[] fields = c.getDeclaredFields();
-                for ( Field f : fields ) {
-                    try {
+                for( Field f : fields ){
+                    try{
                         labels.put( f.getInt( ir ), f.getAnnotation( MessageLabel.class ).value() );
-                    } catch ( Exception e ) {
+                    }catch( Exception e ){
                         continue;
                     }
                 }
-            } catch ( Exception e ) {
-                log.error( cls + "包含MessageLabel注解的接口发生错误：", e  );
+            }catch( Exception e ){
+                log.error( cls + "包含MessageLabel注解的接口发生错误：", e );
             }
         }
     }
+
     private void _command_errors(){
         if( errors.size() > 0 ) return;
-        boolean error = CommonConfig.getBoolean("jees.jsts.message.error.enable", false );
+        boolean error = CommonConfig.getBoolean( "jees.jsts.message.error.enable", false );
         if( !error ) return;
         String cls = CommonConfig.getString( "jees.jsts.message.error.clazz" );
-        try {
+        try{
             Class c = Class.forName( cls );
 
-            Object ir = ProxyInterface.newInstance( new Class[]{c});
+            Object  ir     = ProxyInterface.newInstance( new Class[]{c} );
             Field[] fields = c.getDeclaredFields();
 
-            for ( Field f : fields ) {
-                try {
-                    errors.put( f.getInt( ir ) , f.getAnnotation( MessageLabel.class ).value() );
-                } catch ( Exception e ) {
+            for( Field f : fields ){
+                try{
+                    errors.put( f.getInt( ir ), f.getAnnotation( MessageLabel.class ).value() );
+                }catch( Exception e ){
                     continue;
                 }
             }
-        } catch ( Exception e ) {
+        }catch( Exception e ){
             log.error( "包含MessageLabel注解的接口发生错误：" + cls );
         }
     }
 
-    @Autowired
-    IRequestHandler request;
-    @Autowired
-    SessionService session;
-
     @Override
-    public void receive( ChannelHandlerContext _ctx , Object _obj ) {
-        request.request( _ctx , _obj, session.isWebSocket( _ctx ) );
+    public void receive( ChannelHandlerContext _ctx, Object _obj ){
+        request.request( _ctx, _obj, session.isWebSocket( _ctx ) );
     }
 
     @Override
-    public void enter( ChannelHandlerContext _ctx, boolean _ws ) {
+    public void enter( ChannelHandlerContext _ctx, boolean _ws ){
         session.connect( _ctx, _ws );
     }
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public void leave( ChannelHandlerContext _ctx ) {
+    public void leave( ChannelHandlerContext _ctx ){
         session.leave( _ctx );
     }
 
     @Override
-    public void standby( ChannelHandlerContext _ctx ) {
+    public void standby( ChannelHandlerContext _ctx ){
         session.standby( _ctx );
     }
 
     @Override
-    public void recovery( ChannelHandlerContext _ctx ) {
+    public void recovery( ChannelHandlerContext _ctx ){
         session.recovery( _ctx );
     }
 }

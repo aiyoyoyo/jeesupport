@@ -139,7 +139,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                     ReflectionUtils.invokeMethod( m , CommonContextHolder.getBean( handlerClases.get( cmd ) ), _ctx , msg );
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
-                    log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
+                    log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage(), me );
                     me.getMsg().setRequest( cmd );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误

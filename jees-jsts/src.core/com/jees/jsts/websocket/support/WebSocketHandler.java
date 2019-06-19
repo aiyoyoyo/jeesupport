@@ -2,19 +2,17 @@ package com.jees.jsts.websocket.support;
 
 import com.jees.common.CommonConfig;
 import com.jees.core.socket.support.ISocketBase;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.netty.support.INettyHandler;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * NettySocket 事件接收器，这里不处理实际数据，由ISupprotService的实现类代为处理。
@@ -26,11 +24,11 @@ import io.netty.handler.timeout.IdleStateEvent;
 @Component
 @Scope( value = INettyHandler.SCOPE_CREATOR )
 public class WebSocketHandler extends SimpleChannelInboundHandler< WebSocketFrame > {
-	private static Long											maxLost = null;
-	private long												lastTime = 0L;
-	private boolean												stand = false;
+	private static Long                                            maxLost  = null;
+	private long                                                   lastTime = 0L;
+	private boolean                                                stand    = false;
 	@Autowired
-	private ISupportHandler< ChannelHandlerContext >	handler = null;
+	private ISupportHandler< ChannelHandlerContext > handler  = null;
 
 	private String _handler_info( ChannelHandlerContext _ctx , String _event ) {
 		return "--[WebSocket客户端连接信息] " + _event + "---------------------------------"

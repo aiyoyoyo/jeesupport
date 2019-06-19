@@ -1,12 +1,14 @@
 package com.jees.core.socket.support;
 
+import io.netty.channel.ChannelHandlerContext;
+
 /**
  * Socket服务的内容接口
  * @author aiyoyoyo
  *
  * @param <T> 客户端对象模版
  */
-public interface ISupportHandler<T> {
+public interface ISupportHandler<T extends ChannelHandlerContext > {
 	
 	/**
 	 * 接收数据

@@ -6,8 +6,6 @@ import com.jees.core.socket.support.ISocketBase;
 import com.jees.core.socket.support.ISupportHandler;
 import com.jees.jsts.netty.support.AbsNettyDecoder;
 import com.jees.jsts.server.abs.AbsConnectorHandler;
-import com.jees.jsts.server.interf.IConnectroHandler;
-import com.jees.jsts.server.message.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -29,45 +27,44 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 @Scope( value = "prototype" )
-public class Connector implements Runnable, ISocketBase {
+public class Connector implements Runnable, ISocketBase{
     @Autowired
     ISupportHandler handler;
-
-    private EventLoopGroup work;
-    private String host;
-    private int port;
-    private Channel channel;
+    private EventLoopGroup        work;
+    private String                host;
+    private int                   port;
+    private Channel               channel;
     private ChannelHandlerContext ctx;
-    private int count;
+    private int                   count;
 
-    public void initialize ( String _host, String _port ) {
+    public void initialize( String _host, String _port ){
         this.host = _host;
         this.port = Integer.parseInt( _port );
         this.count = 0;
     }
 
-    public void run () {
+    public void run(){
         this.start();
     }
 
     @Override
-    public void onload () {
+    public void onload(){
         new Thread( this ).start();
     }
 
     @Override
-    public void unload () {
-        if ( work != null ) work.shutdownGracefully();
-        if ( channel != null ) this.channel.closeFuture();
+    public void unload(){
+        if( work != null ) work.shutdownGracefully();
+        if( channel != null ) this.channel.closeFuture();
         count = 0;
     }
 
-    public void start () {
+    public void start(){
         log.info( "连接指定服务器中，尝试第[" + this.count + "]次..." );
         work = new NioEventLoopGroup();
         AbsConnectorHandler server = CommonContextHolder.getBean( AbsConnectorHandler.class );
         server.register( this );
-        try {
+        try{
             Bootstrap b = new Bootstrap();
             b.group( work ).channel( NioSocketChannel.class )
                     .handler( clientInitializer( server ) )
@@ -78,42 +75,42 @@ public class Connector implements Runnable, ISocketBase {
 
             future.sync().channel().closeFuture().sync();
             unload();
-        } catch ( Exception e ) {
+        }catch( Exception e ){
             log.error( "指定服务器[" + host + ":" + port + "] 连接时发生错误:" + e.toString(), e );
             reload();
         }
     }
 
     @SuppressWarnings( "unchecked" )
-    public void request ( Object _msg ) {
+    public void request( Object _msg ){
         handler.send( _msg, ctx );
     }
 
     @Override
-    public void reload () {
+    public void reload(){
         log.info( "重新连接指定服务器中，尝试第[" + this.count + "]次..." );
         this.unload();
 
         int retry = CommonConfig.getInteger( "jees.jsts.connector.retry.max", 3 );
-        if ( retry == 0 || this.count++ < retry ) {
-            try {
+        if( retry == 0 || this.count++ < retry ){
+            try{
                 Thread.sleep( CommonConfig.getInteger( "jees.jsts.connector.retry.rate", 10000 ) );
                 this.onload();
-            } catch ( InterruptedException e ) {
+            }catch( InterruptedException e ){
             }
-        } else {
-            try {
+        }else{
+            try{
                 Thread.sleep( CommonConfig.getInteger( "jees.jsts.connector.retry.delay", 300000 ) );
                 this.onload();
-            } catch ( InterruptedException e ) {
+            }catch( InterruptedException e ){
             }
         }
     }
 
-    public ChannelInitializer< SocketChannel > clientInitializer ( AbsConnectorHandler _handler ) {
-        return new ChannelInitializer< SocketChannel >() {
+    public ChannelInitializer< SocketChannel > clientInitializer( AbsConnectorHandler _handler ){
+        return new ChannelInitializer< SocketChannel >(){
             @Override
-            protected void initChannel ( SocketChannel _ch ) throws Exception {
+            protected void initChannel( SocketChannel _ch ) throws Exception{
                 ChannelPipeline pipeline = _ch.pipeline();
                 // 自己的逻辑Handler
                 pipeline.addLast( CommonContextHolder.getBean( AbsNettyDecoder.class ) );
@@ -122,11 +119,11 @@ public class Connector implements Runnable, ISocketBase {
         };
     }
 
-    public void onConnect ( ChannelHandlerContext _ctx ) {
+    public void onConnect( ChannelHandlerContext _ctx ){
         this.ctx = _ctx;
     }
 
-    public void onDisconnect () {
+    public void onDisconnect(){
         this.reload();
     }
 }
