@@ -28,10 +28,11 @@ import java.util.*;
  */
 @Log4j2
 public abstract class AbsRequestHandler< C extends ChannelHandlerContext > implements IRequestHandler< C > {
-    private boolean						init;
+
     private static Map< Integer , Class< ? > > handlerClases  = new HashMap<>();
     private static Map< Integer , Method>	handlerMethod = new HashMap<>();
     private static Map< Integer, String >   labels = new HashMap<>();
+
     public void register(){
         _command_register();
         _command_labels();
@@ -115,7 +116,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         Object msg = MessageCrypto.deserializer( _obj, session.isWebSocket( _ctx ) );
 
         boolean debug = CommonConfig.getBoolean( "jees.jsts.message.request.enable", false );
-        boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
+        boolean exception = CommonConfig.getBoolean( "jees.jsts.message.request.exception", false );
 
         Integer cmd = null;
         if( msg instanceof Message ){
@@ -139,7 +140,12 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                     ReflectionUtils.invokeMethod( m , CommonContextHolder.getBean( handlerClases.get( cmd ) ), _ctx , msg );
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
-                    log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage(), me );
+                    if( exception ){
+                        log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage(), me );
+                    }else{
+                        log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
+                    }
+
                     me.getMsg().setRequest( cmd );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误
