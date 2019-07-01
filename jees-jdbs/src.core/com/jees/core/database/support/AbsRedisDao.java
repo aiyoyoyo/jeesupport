@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,10 +29,10 @@ import java.util.stream.Collectors;
 public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     int index;
     @Autowired
-    RedisTemplate<String, T> tpl;
+    RedisTemplate<String,T> tpl;
 
-    private String _get_hk( T _obj ){
-        String hk = null;
+    private ID _get_hk( T _obj ){
+        ID hk = null;
         Class cls = _obj.getClass();
 
         while ( cls != null ) {
@@ -44,7 +45,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
                     for ( Method m : mths ) {
                         if ( m.getName().equalsIgnoreCase( "get" + f.getName() ) ) {
                             try {
-                                hk = String.valueOf( m.invoke( _obj ) );
+                                hk = ( ID ) m.invoke( _obj );
                                 break;
                             } catch ( IllegalAccessException e ) {
                             } catch ( InvocationTargetException e ) {
@@ -117,6 +118,23 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     }
 
     @Override
+    public Map< ID, T > findHashAll( Class< T > _cls ){
+        return this.findHashAll( index, _cls );
+    }
+
+    @Override
+    public Map< ID, T > findHashAll( int _idx, Class< T > _cls ){
+        try{
+            database( _idx );
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            return hash.entries( _cls.getSimpleName() );
+        }catch ( Exception e ){
+            log.error( "findHashAll 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
+        }
+        return new HashMap<>();
+    }
+
+    @Override
     public List< T > findByEquals ( String _property, Object _value, Class< T > _cls ) {
         return this.findByEquals( index, _property, _value, _cls );
     }
@@ -174,7 +192,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public List< T > findAll( int _idx, Class< T > _cls ) {
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
             List< T > list = hash.values( _cls.getSimpleName() );
             return list;
         }catch ( Exception e ){
@@ -282,8 +300,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public void insert ( int _idx, T _obj ) throws Exception{
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
-            String hk = _get_hk( _obj );
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            ID hk = _get_hk( _obj );
             String sn = _obj.getClass().getSimpleName();
             if( hash.hasKey( sn, hk ) ){
                 throw new Exception( "插入失败，包含主键[" + hk + "]的对象[" + sn + "]已存在！" );
@@ -313,8 +331,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public void update ( int _idx, T _obj ){
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
-            String hk = _get_hk( _obj );
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            ID hk = _get_hk( _obj );
             hash.put( _obj.getClass().getSimpleName(), hk, _obj );
         }catch ( Exception e ){
             log.error( "update 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
@@ -339,8 +357,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public void delete( int _idx, T _obj ) throws Exception{
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
-            String hk = _get_hk( _obj );
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
+            ID hk = _get_hk( _obj );
             String sn = _obj.getClass().getSimpleName();
             if( hash.hasKey( sn, hk ) ){
                 hash.delete( sn, hk );
@@ -356,7 +374,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public void deleteList ( int _idx, List< T > _list, Class< T > _cls ) {
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
             String sn = _cls.getClass().getSimpleName();
             hash.delete( sn, _list.toArray() );
         }catch ( Exception e ){
@@ -368,7 +386,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
     public void deleteById( int _idx, ID _id, Class< T > _cls ){
         try{
             database( _idx );
-            HashOperations< String, String, T > hash = tpl.opsForHash();
+            HashOperations< String, ID, T > hash = tpl.opsForHash();
             String hk = _id.toString();
             String sn = _cls.getSimpleName();
             if( hash.hasKey( sn, hk ) ){

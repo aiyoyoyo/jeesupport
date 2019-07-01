@@ -52,6 +52,10 @@ public interface IRedisDao<ID, T> {
 
     List< T > findAll ( int _idx, Class< T > _cls );
 
+    Map< ID, T > findHashAll( Class< T > _cls );
+
+    Map< ID, T > findHashAll( int _idx, Class< T > _cls );
+
     List< T > findByEquals ( String _property, Object _value, Class< T > _cls );
 
     List< T > findByEquals ( int _idx, String _property, Object _value, Class< T > _cls );

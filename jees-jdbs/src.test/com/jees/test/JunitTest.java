@@ -1,7 +1,7 @@
 package com.jees.test;
 
 import com.jees.common.CommonContextHolder;
-import com.jees.core.database.dao.RedisDao;
+import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +26,7 @@ import java.util.Date;
 @SpringBootTest
 @ComponentScan("com.jees")
 @Log4j2
-@PropertySource(value={"classpath:server.cfg"})
+@PropertySource(value={"classpath: config/test.cfg"})
 public class JunitTest implements Runnable {
 	public long				id;
 	public int				right;
@@ -38,19 +38,21 @@ public class JunitTest implements Runnable {
 	public TestController	ctr;
 
 	@Autowired
-	IRedisDao<Long, RedisUser> dao;
+	AbsRedisDao dao;
 
 	@Test
 	public void RedisTest() throws Exception{
-		CommonContextHolder.getBean( RedisDao.class ).initialize();
+		CommonContextHolder.getBean( IRedisDao.class ).initialize();
 
-		RedisUser a = new RedisUser();
-		a.setId( 1 );
-		a.setDate( new Date( DateTime.now().getMillis() ) );
-		dao.insert( 1, a );
+		for( int i = 0; i < 3000; i ++ ){
+			RedisUser a = new RedisUser();
+			a.setId( i );
+			a.setDate( new Date( DateTime.now().getMillis() ) );
+			dao.insert( a );
+		}
 
-		RedisUser u = dao.findById( 1, 1L, RedisUser.class );
-		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
+//		RedisUser u = dao.findById( 1, 1L, RedisUser.class );
+//		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
 	}
 //	@Test
 	public void SimpleTest(){

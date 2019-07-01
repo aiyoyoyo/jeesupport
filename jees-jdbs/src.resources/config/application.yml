@@ -1,6 +1,6 @@
 #日志配置，此处使用默认日志
 logging:
- config: classpath:logback.xml
+ config: classpath:config/logback.xml
 
 spring:
  application:
@@ -8,8 +8,13 @@ spring:
 # Redis数据库索引（默认为0）
  autoconfigure:
   exclude:org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+ config:
+  location: /
+ devtools:
+  restart:
+   enabled: false
  redis:
-  database: 9
+  database: 1
   host: 127.0.0.1
   port: 6379
   password:

@@ -79,13 +79,12 @@ public class RedisConfig{
         RedisTemplate< String, T > template = new RedisTemplate<>();
 
         //使用fastjson序列化
-        FastJsonRedisSerializer< T > fastJsonRedisSerializer = new FastJsonRedisSerializer();
         // value值的序列化采用fastJsonRedisSerializer
-        template.setValueSerializer( fastJsonRedisSerializer );
-        template.setHashValueSerializer( fastJsonRedisSerializer );
+        template.setValueSerializer( new FastJsonRedisSerializer<T>() );
+        template.setHashValueSerializer( new FastJsonRedisSerializer<T>() );
         // key的序列化采用StringRedisSerializer
-        template.setKeySerializer( new ObjectStringRedisSerializer() );
-        template.setHashKeySerializer( new ObjectStringRedisSerializer() );
+        template.setKeySerializer( new FastJsonRedisSerializer<T>() );
+        template.setHashKeySerializer( new FastJsonRedisSerializer<T>() );
 
         template.setConnectionFactory( _rcf );
         // 开启事务
