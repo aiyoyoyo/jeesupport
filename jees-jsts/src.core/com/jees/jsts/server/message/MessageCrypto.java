@@ -58,19 +58,22 @@ public class MessageCrypto extends AbsNettyDecoder {
 	 * https://www.cnblogs.com/hupengcool/p/3931721.html
 	 */
 	@Override
-	public byte[] decode( ChannelHandlerContext _ctx , ByteBuf _buf ) throws Exception {
-		if ( _buf.readableBytes() < LENGTH_FIELD_LENGTH ) return null;
+	public byte[] decode( ChannelHandlerContext _ctx , ByteBuf _buf ){
+		if ( _buf.readableBytes() < LENGTH_FIELD_LENGTH ){
+			log.debug( "--消息长度不足: READ-LEN=[" + _buf.readableBytes() + "]"  );
+			return null;
+		}
 
 		_buf.markReaderIndex();
 
-		int dataLength = 0;
+		int dataLength;
 		if( CommonConfig.getBoolean( "jees.jsts.socket.bom", false ) ){
 			dataLength = DataUtil.warpHL( _buf.readInt() );
 		}else{
 			dataLength = _buf.readInt();
 		}
-
 		if ( _buf.readableBytes() < dataLength ) {
+			log.debug( "--消息长度小于可读长度: LEN=[" + dataLength + "], READ-LEN=[" + _buf.readableBytes() + "]"  );
 			_buf.resetReaderIndex();
 			return null;
 		}
@@ -218,6 +221,7 @@ public class MessageCrypto extends AbsNettyDecoder {
 				}else{
 					json = new String( ( byte[] ) _obj );
 				}
+
 				if( proxy ){
 					log_str += "JSON[" + json + "]转Message对象";
 					return JSON.parseObject( json, Message.class );

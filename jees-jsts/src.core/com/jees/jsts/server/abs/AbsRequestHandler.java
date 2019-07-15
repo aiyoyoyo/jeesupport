@@ -10,6 +10,7 @@ import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;
 import com.jees.jsts.server.message.MessageException;
+import com.jees.jsts.server.message.MessageFile;
 import com.jees.jsts.server.support.ProxyInterface;
 import com.jees.jsts.server.support.SessionService;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,7 +21,9 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 客户端的消息处理器
@@ -119,18 +122,25 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         boolean exception = CommonConfig.getBoolean( "jees.jsts.message.request.exception", false );
 
         Integer cmd = null;
+        Long usr = ( Long ) session.findID( _ctx );
         if( msg instanceof Message ){
-            cmd = ( ( Message ) msg ).getId();
+            Message m = ( Message ) msg;
+            cmd = ( m ).getId();
+            MessageFile.write( cmd, usr,  m, false );
         }else if( msg instanceof JSONObject ){
-            cmd = ( (JSONObject)msg ).getInteger( "id" );
+            JSONObject job = ( JSONObject ) msg;
+            cmd = ( job ).getInteger( "id" );
+            MessageFile.write( cmd, usr,  job, false );
         }else{
             // 代理类
-            cmd = JSON.parseObject( msg.toString() ).getInteger( "id" );
+            String json = msg.toString();
+            cmd = JSON.parseObject( json ).getInteger( "id" );
+            MessageFile.write( cmd, usr,  json, false );
         }
 
         if ( debug ) {
             String label = labels.getOrDefault( cmd, "未注解命令" );
-            log.info( "\n  [C][" + cmd + "][" + label + "]:" + msg.toString() );
+            log.info( "\n  [C][" + usr + "][" + cmd + "][" + label + "]:" + msg.toString() );
         }
 
         if( before( _ctx, cmd ) ) {
@@ -141,23 +151,23 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
                 } catch ( MessageException me ) {
                     //程序异常，可以通知给客户端
                     if( exception ){
-                        log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage(), me );
+                        log.error( "错误ME: U=[" + usr + "] I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage(), me );
                     }else{
-                        log.error( "错误ME: I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
+                        log.error( "错误ME: U=[" + usr + "] I=[" + cmd + "] M=[" + m.getName() + "]:" + me.getMessage() );
                     }
 
                     me.getMsg().setRequest( cmd );
                     error( _ctx, me );
                     // 后续两种错误不应该发生。RE为数据库操作错误,EX为程序错误
                 } catch ( RuntimeException re ) {
-                    log.error( "错误RE: I=[" + cmd + "] M=[" + m.getName() + "]" , re );
+                    log.error( "错误RE: U=[" + usr + "] I=[" + cmd + "] M=[" + m.getName() + "]" , re );
                 } catch ( Exception ex ) {
-                    log.error( "错误EX: I=[" + cmd + "] M=[" + m.getName() + "]" , ex );
+                    log.error( "错误EX: U=[" + usr + "] I=[" + cmd + "] M=[" + m.getName() + "]" , ex );
                 } finally {
                     after( _ctx );
                 }
             } else {
-                log.warn( "命令没有注册：CMD=[" + cmd + "]" );
+                log.warn( "命令没有注册：U=[" + usr + "] CMD=[" + cmd + "]" );
                 unregist( _ctx, msg );
             }
         }

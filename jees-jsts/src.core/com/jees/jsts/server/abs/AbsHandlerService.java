@@ -8,9 +8,9 @@ import com.jees.jsts.server.annotation.MessageLabel;
 import com.jees.jsts.server.interf.IRequestHandler;
 import com.jees.jsts.server.message.Message;
 import com.jees.jsts.server.message.MessageCrypto;
+import com.jees.jsts.server.message.MessageFile;
 import com.jees.jsts.server.support.ProxyInterface;
 import com.jees.jsts.server.support.SessionService;
-import com.jees.jsts.server.support.SuperUser;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
@@ -48,9 +48,11 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
         boolean error = CommonConfig.getBoolean( "jees.jsts.message.error.enable", false );
 
         int cmd;
+        Long usr = ( Long ) session.findID( _ctx );
         if( proxy ){
             Message msg = JSON.parseObject( _obj.toString(), Message.class );
             cmd = msg.getId();
+            MessageFile.write( cmd, usr, msg, true );
         }else{
             JSONObject obj = JSON.parseObject( _obj.toString() );
 
@@ -59,18 +61,14 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
             }catch( Exception e ){
                 cmd = 0;
             }
+            MessageFile.write( cmd, usr, obj, true );
         }
         if( debug ){
-            Object    user  = null;
-            SuperUser gamer = session.find( _ctx );
-            if( gamer != null ){
-                user = gamer.getId();
-            }
             String label = labels.getOrDefault( cmd, "未注解命令" );
             if( label.equals( "" ) && error ){
                 label = errors.getOrDefault( cmd, "未注解命令" );
-                label = "\n  [S][ERR][" + cmd + "][" + label + "][" + user + "]:";
-            }else label = "\n  [S][" + cmd + "][" + label + "][" + user + "]:";
+                label = "\n  [S][ERR][" + cmd + "][" + label + "][" + usr + "]:";
+            }else label = "\n  [S][" + cmd + "][" + label + "][" + usr + "]:";
             log.info( label + _obj.toString() );
         }
 

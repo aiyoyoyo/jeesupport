@@ -24,7 +24,11 @@ jees:
     clazz: com.jees.interf.IError
    proxy: false
    type: json
-   monitor: true
+   jsonFile: false
+   jsonFormat: yyyy-MM-dd_HH-mm-ss-SSS
+   jsonPath: C:/jsons/
+   jsonLogs: true
+   monitor: false
   socket:
    enable: true
    lostTime: 0

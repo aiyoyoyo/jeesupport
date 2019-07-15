@@ -76,11 +76,16 @@ public class SessionService< ID >{
     public < T extends SuperUser< ID > > void leave( ChannelHandlerContext _net ){
         if( isOnline( _net ) ){
             T user = find( _net );
-            Ids2Usr.remove( user.getId() );
-            ChannelHandlerContext net = Ids2Net.remove( user.getId() );
-            Net2Ids.remove( net );
-            NetIsWs.remove( net );
-            user.leave();
+            if( user != null ){
+                Ids2Usr.remove( user.getId() );
+                ChannelHandlerContext net = Ids2Net.remove( user.getId() );
+                Net2Ids.remove( net );
+                NetIsWs.remove( net );
+                user.leave();
+            }else{
+                Net2Ids.remove( _net );
+                NetIsWs.remove( _net );
+            }
         }
     }
 
