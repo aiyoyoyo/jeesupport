@@ -1,59 +1,48 @@
 package com.jees.webs.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.jees.tool.utils.JsonUtil;
+import lombok.*;
+import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.annotations.RemoteProperty;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-@MappedSuperclass
-public class SuperRole <ID extends Serializable, M extends SuperMenu, U extends SuperUser >{
-    @Id
-    @GeneratedValue( strategy = IDENTITY )
-    @GenericGenerator( name = "generator" , strategy = "identity" )
-    @Column( name = "id" , unique = true , nullable = false )
-    @RemoteProperty
-    protected ID id;
-    @Column( name = "`name`" , nullable = false )
-    @RemoteProperty
-    protected String name;
-    @ManyToMany(cascade=CascadeType.REMOVE,fetch=FetchType.LAZY)
-    @JoinTable( name="menu_role",joinColumns = {@JoinColumn(name="role_id")},
-            inverseJoinColumns =@JoinColumn(name = "menu_id"))
-    @MapKey( name = "id" )
-    @RemoteProperty
-    protected Map<Serializable, M> menus = new HashMap<>();
-    @ManyToMany(cascade=CascadeType.REMOVE,fetch=FetchType.LAZY)
-    @JoinTable( name="user_role",joinColumns = {@JoinColumn(name="role_id")},
-            inverseJoinColumns =@JoinColumn(name = "user_id"))
-    @MapKey( name = "id" )
-    private Map<Serializable, U> users = new HashMap<>();
-
-    public SuperRole build(){
-        return new SuperRole();
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@DataTransferObject
+public class SuperRole < M extends SuperMenu, U extends SuperUser >{
+    public enum Authority{
+        None,
+        Read,
+        Write,
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof SuperRole) return true;
-        return false;
+    @Getter
+    @Setter
+    public static class R2M{
+        int       menuId;
+        Authority access;
     }
 
+    @Id @RemoteProperty
+    int id;
+    @RemoteProperty
+    String name;
+    @RemoteProperty
+    List< Integer > menus = new ArrayList<>();
+
     @Override
-    public int hashCode() {
-        int result = 20;
-        result = result * 31 + id.hashCode();
-        result = result * 31 + name.hashCode();
-        return result;
+    public String toString(){
+        return JsonUtil.toString( this );
+    }
+
+    public void addMenu( M _menu ){
+        menus.add( _menu.getId() );
+        _menu.addRole( this );
     }
 }

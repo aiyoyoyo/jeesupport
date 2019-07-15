@@ -3,7 +3,7 @@
 <!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | 404', 'default' )" />
+<head th:replace="|${TPL}/_inc/_utils|::head( 'Jees Webs | 404', '','' )" />
 <body class="pace-top">
     <!-- begin #page-loader -->
     <div id="page-loader" class="fade show"><span class="spinner"></span></div>
@@ -37,7 +37,7 @@
     </div>
     <!-- end page container -->
 
-    <c th:include="|${TPL}/_inc/_base|::js( '' )" />
+    <c th:include="|${TPL}/_inc/_utils|::js( '' )" />
     <script>
 		$(document).ready(function() {
 			App.init();

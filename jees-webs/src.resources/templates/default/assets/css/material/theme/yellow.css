@@ -1,0 +1,88 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
+*/
+
+.navbar-logo,
+.coming-soon .brand .logo,
+.login .login-header .brand .logo {
+	border-color: #FFF176 #FFEB3B #FBC02D;
+}
+.sidebar .nav > li.active > a, 
+.sidebar .nav > li.active > a:focus, 
+.sidebar .nav > li.active > a:hover,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+	color: #000;
+	background: #FFEB3B;
+}
+.navbar.navbar-inverse .navbar-brand {
+	color: #fff !important;
+}
+.text-theme,
+.sidebar .sub-menu > li.active > a:before {
+	color: #FFEB3B;
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .navbar.navbar-inverse .navbar-brand,
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top,
+.gradient-enabled .top-menu .nav > li.active > a, 
+.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a:hover {
+	color: #000;
+	background: rgb(255,241,118);
+	background: -moz-linear-gradient(top, rgba(255,241,118,1) 0%, rgba(251,192,45,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(255,241,118,1) 0%,rgba(251,192,45,1) 100%);
+	background: linear-gradient(to bottom, rgba(255,241,118,1) 0%,rgba(251,192,45,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff176', endColorstr='#fbc02d',GradientType=0 );
+}
+.sidebar .nav > li.active > a i {
+	color: #000;
+}
+.pace-progress {
+	background: #FFEB3B;
+}
+.pace .pace-activity {
+	border-top-color: #FFEB3B;
+	border-left-color: #FFEB3B;
+}
+
+
+/* Added in v1.7 */
+
+.page-with-light-sidebar .sidebar .nav > li.active > a > i {
+	color: #fff;
+}
+.page-with-light-sidebar .sidebar .nav > li > a .badge,
+.page-with-light-sidebar .sidebar .nav > li > a .label.label-theme,
+.page-with-light-sidebar .sidebar .nav > li.active > a .badge,
+.page-with-light-sidebar .sidebar .nav > li.active > a .label.label-theme {
+	background: #E91E63;
+}
+.page-with-light-sidebar .sidebar .text-theme {
+	color: #E91E63;
+}
+
+
+/* Added in v1.9 */
+
+.top-menu .nav > li.active > a, 
+.top-menu .nav > li.active > a:focus, 
+.top-menu .nav > li.active > a:hover {
+	background: #FFEB3B;
+}

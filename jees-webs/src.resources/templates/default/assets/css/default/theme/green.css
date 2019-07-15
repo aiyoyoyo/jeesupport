@@ -1,23 +1,24 @@
 /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
-Version: 4.1.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v4.1/admin/
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
 */
 
 .header .navbar-logo,
 .login .login-header .brand .logo,
+.header .navbar-nav > li .dropdown-toggle .label, 
 .header .navbar-nav > li > a .label,
 .label.label-theme,
 .btn.btn-scroll-to-top {
-    background: #32a932;
+	background: #32a932;
 }
 .header.navbar-inverse .navbar-brand {
-    color: #fff !important;
+	color: #fff !important;
 }
 .text-theme,
 .sidebar .nav > li.active > a i {
-    color: #32a932;
+	color: #32a932;
 }
 .sidebar .sub-menu > li.active:after {
 	border-color: #32a932;
@@ -41,7 +42,7 @@ Website: http://www.seantheme.com/color-admin-v4.1/admin/
 	background: -moz-linear-gradient(top, rgba(91,186,91,1) 0%, rgba(50,169,50,1) 100%);
 	background: -webkit-linear-gradient(top, rgba(91,186,91,1) 0%,rgba(50,169,50,1) 100%);
 	background: linear-gradient(to bottom, rgba(91,186,91,1) 0%,rgba(50,169,50,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5bba5b', endColorstr='#32a932',GradientType=0 );    
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5bba5b', endColorstr='#32a932',GradientType=0 );	
 }
 .gradient-enabled .sidebar .nav > li.active > a {
 	z-index: 10;
@@ -51,22 +52,22 @@ Website: http://www.seantheme.com/color-admin-v4.1/admin/
 	color: rgba(0,0,0,0.5);
 }
 .pace-progress {
-    background: #32a932;
+	background: #32a932;
 }
 .pace .pace-activity {
-    border-top-color: #32a932;
-    border-left-color: #32a932;
+	border-top-color: #32a932;
+	border-left-color: #32a932;
 }
 
 
 /* Added in v1.7 */
 
 .page-with-light-sidebar .sidebar .nav > li.active > a > i {
-    color: #32a932;
+	color: #32a932;
 }
 .page-with-light-sidebar .sidebar .nav > li.active > a .badge,
 .page-with-light-sidebar .sidebar .nav > li.active > a .label.label-theme {
-    background: #32a932;
+	background: #32a932;
 }
 
 
@@ -75,5 +76,5 @@ Website: http://www.seantheme.com/color-admin-v4.1/admin/
 .top-menu .nav > li.active > a i, 
 .top-menu .nav > li.active > a:focus i, 
 .top-menu .nav > li.active > a:hover i {
-    color: #32a932;
+	color: #32a932;
 }

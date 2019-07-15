@@ -22,9 +22,9 @@ public class Template {
     public void addPage( Page _page ){
         if( !pages.containsKey( _page.getUrl() ) ){
             pages.put( _page.getUrl(), _page );
-            log.debug( "--配置访问路径：URL=[" + _page.getUrl() + "], PATH=[" + _page.getPath() + "]" );
+            log.debug( "--配置访问路径：URL=[" + _page.getUrl() + "], PATH=[" + _page.getFile() + "]" );
         }else{
-            log.warn( "存在重复的访问路径：URL=[" + _page.getUrl() + "], PATH=[" + _page.getPath() + "]" );
+            log.warn( "存在重复的访问路径：URL=[" + _page.getUrl() + "], PATH=[" + _page.getFile() + "]" );
         }
     }
 }

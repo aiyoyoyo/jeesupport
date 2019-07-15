@@ -3,7 +3,7 @@
 <!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | 首页', '' )" />
+<head th:replace="|${TPL}/_inc/_utils|::head( 'Jees Webs | ' + ${MENU eq null ? PAGE : MENU.name},'','' )" />
 <body>
 	<!-- begin page-cover -->
 	<div class="page-cover"></div>
@@ -30,7 +30,7 @@
 			<ol th:replace="|${TPL}/_inc/_breadcrumb|::html" />
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">版本说明<small>更多请关注QQ群号<t class="text-success">8802330</t></small></h1>
+			<h1 class="page-header">版本说明<small>ver.1.0.0</small></h1>
 			<!-- end page-header -->
 			<!-- begin row -->
 			<div class="row">
@@ -40,19 +40,19 @@
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item">
 								网页模版为
-								<a href="https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK" target="_blank">Color Admin</a>。
+								<a href="https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK" target="_blank">Color Admin 4.3.0</a>。
 							</li>
 							<li class="list-group-item">
-								初始安装时需要使用超级账号<t class="text-warning">superman</t>登陆进行安装并创建初始账号。
-							</li>
-							<li class="list-group-item">
-								超级密码为系统生成，获取方式通过打开调试日志获得。
+								超级账号：<t class="text-warning">superman</t>，密码为系统生成，通过DEBUG级别的日志信息获得。
 							</li>
 							<li class="list-group-item">
 								请自行维护初始账及后台栏目、权限等。
 							</li>
 							<li class="list-group-item">
-								<h4 class="text-red">本系统除模版外，均采用第三方开源框架，请勿将此系统或此系统使用的框架或模版用作商业用途。</h4>
+								本系统技术框架为jeesupport，使用了SpringFramework+Thymeleaf+Redis结构。
+							</li>
+							<li class="list-group-item">
+								更多请关注QQ群号<t class="text-success">8802330</t>
 							</li>
 						</ul>
 					</div>
@@ -72,7 +72,7 @@
 	</div>
 	<!-- end page container -->
 
-	<c th:include="|${TPL}/_inc/_base|::js( '' )" />
+	<c th:include="|${TPL}/_inc/_utils|::js( '' )" />
 	<script>
 		$(document).ready(function() {
 			App.init();

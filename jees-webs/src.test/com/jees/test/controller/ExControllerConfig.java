@@ -1,6 +1,6 @@
 package com.jees.test.controller;
 
-import com.jees.webs.config.AbsController;
+import com.jees.webs.abs.AbsController;
 import org.springframework.stereotype.Controller;
 
 @Controller

@@ -2,6 +2,7 @@ package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
 import com.jees.webs.entity.Page;
+import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.support.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,35 +19,41 @@ import java.util.List;
 public abstract class AbsWebConfig implements WebMvcConfigurer {
     public static String               defPage;
     @Autowired
-    ITemplateService            templateService;
+    ITemplateService< SuperMenu > templateService;
     @Autowired
-    ResourcePatternResolver     resourcePatternResolver;
+    ResourcePatternResolver       resourcePatternResolver;
     @Autowired
-    HandlerInterceptor          handlerInterceptor;
+    HandlerInterceptor            handlerInterceptor;
+    @Autowired
+    InstallConfig                 installConfig;
 
-    private List<Page> _load_template_2_page(){
+    static String rootTpl = "classpath:/templates/";
+
+    private String _try_tpl_path(){
+        String tmp_path = "";
+        try {
+            tmp_path = resourcePatternResolver.getResource( rootTpl ).getURL().getPath();
+            if( tmp_path.startsWith( "/" ) )tmp_path = tmp_path.replaceFirst( "/", "" );
+        } catch (IOException e) {
+            log.error( "模版路径错误：PATH=[" + rootTpl + "]" );
+        }
+
+        return tmp_path;
+    }
+
+    private List<Page> _load_template_pages(){
         List<Page> view_pages = new ArrayList<>();
         if( defPage == null ) defPage = CommonConfig.getString( "jees.webs.defPage", "index" );
 
-        String root_tpl = "classpath:/templates/";
-
-        String tmp_path = "";
-        try {
-            tmp_path = resourcePatternResolver.getResource( root_tpl ).getURL().getPath();
-        } catch (IOException e) {
-            log.error( "模版路径错误：PATH=[" + root_tpl + "]" );
-        }
-
-        String root_path = tmp_path;
+        String root_path = _try_tpl_path();
         templateService.getTemplateAll().forEach( t -> {
-            String tpl_path = root_tpl + t.getName();
+            String tpl_path = rootTpl + t.getName();
             String res_path = tpl_path + "/**/*.html";
 
             try {
                 Resource[] rfs = resourcePatternResolver.getResources( res_path );
                 for( Resource r : rfs ){
                     String r_path = r.getURI().getPath();
-
                     if( r_path.indexOf( "/" + t.getAssets() + "/" ) != -1 ) continue;
                     if( r_path.startsWith("_") ) continue;
                     if( r_path.indexOf("/_") != -1 ) continue;
@@ -65,9 +72,9 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                     }else{
                         url = tpl + url + file.replace(".html", "" );
                     }
-
-                    if( templateService.isDefault( tpl ) ) url = url.replace( tpl, "" );
-                    t.addPage( new Page( url, path, tpl ) );
+                    if( templateService.isDefault( tpl ) ) url = url.replace( "/" + templateService.getDefaultTemplate().getName(), "" );
+                    Page p = new Page( url, path, tpl );
+                    t.addPage( p );
                 }
             } catch (IOException e) {
                 log.warn( "模版加载失败：" + tpl_path );
@@ -75,6 +82,31 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
             view_pages.addAll( t.getPages().values() );
         } );
+        return view_pages;
+    }
+
+    private List<Page> _load_install_pages(){
+        List<Page> view_pages = new ArrayList<>();
+        String root_path = CommonConfig.getString( "spring.thymeleaf.prefix" );
+        String install_path = CommonConfig.getString( "jees.webs.install.tpl", "install" );
+        String res_path = root_path + install_path + "/**/*.html";
+        try {
+            Resource[] rfs = resourcePatternResolver.getResources( res_path );
+            for( int i = 0; i < rfs.length; i ++ ){
+                Resource r = rfs[i];
+
+                String r_path = r.getURI().getPath();
+                int idx = r_path.lastIndexOf( "/" );
+                String file = r_path.substring( idx + 1 );
+                String url = install_path + "/" + file.replace( ".html", "" );
+                String path = url;
+
+                Page page = new Page( url, path, install_path );
+                view_pages.add( page );
+            }
+        } catch (IOException e) {
+            log.warn( "安装系统模版加载失败：" + res_path );
+        }
         return view_pages;
     }
 
@@ -118,10 +150,20 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers( ViewControllerRegistry _registry ) {
-        List<Page> list = _load_template_2_page();
+        List<Page> list = _load_template_pages();
+        list.forEach( p -> _registry.addViewController( p.getUrl() ).setViewName( p.getFile() ) );
 
-        list.forEach( p -> {
-            _registry.addViewController( p.getUrl() ).setViewName( p.getPath() );
-        } );
+        if( !installConfig.isInstalled() ){
+            list = _load_install_pages();
+            list.forEach( p -> _registry.addViewController( p.getUrl() ).setViewName( p.getFile() ) );
+
+            if( list.size() > 0 ){
+                Page p = list.get( 0 );
+                _registry.addViewController( "" )
+                        .setViewName( p.getFile() );
+                _registry.addViewController( "/" + CommonConfig.getString( "jees.webs.install.tpl", "install" ) )
+                        .setViewName( p.getFile() );
+            }
+        }
     }
 }

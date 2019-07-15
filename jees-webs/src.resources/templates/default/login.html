@@ -3,148 +3,84 @@
 <!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:replace="|${TPL}/_inc/_base|::head( 'Jees Webs | Login Page', '' )" />
-<body class="pace-top">
-	
+<head th:replace="|${TPL}/_inc/_utils|::head( 'Jees Webs | 用户登录','','' )" />
+<body class="pace-top bg-white">
+
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show"><span class="spinner"></span></div>
 	<!-- end #page-loader -->
-	
+
 	<!-- begin #page-container -->
 	<div id="page-container" class="fade">
-	    <!-- begin login -->
-        <div class="login bg-white-transparent-1 animated fadeInDown">
-            <!-- begin brand -->
-            <div class="login-header">
-                <div class="brand">
-                    <span class="logo"></span> <b>Jees</b> Webs
-                    <small>这里使用了Color Admin模版</small>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-lock"></i>
+        <!-- begin login -->
+        <div class="login login-with-news-feed">
+            <!-- begin news-feed -->
+            <div class="news-feed">
+                <div class="news-image" style="background-image: url(../assets/img/login-bg/login-bg-11.jpg)"></div>
+                <div class="news-caption">
+                    <h4 class="caption-title"><b>Jees Webs</b> Admin</h4>
+                    <p>
+                        欢迎使用Jees Webs Admin管理系统
+                    </p>
                 </div>
             </div>
-            <!-- end brand -->
-            <!-- begin login-content -->
-            <div class="login-content">
-                <form th:action="@{/login}" method="POST" class="margin-bottom-0">
-                    <div class="form-group m-b-20">
-                        <input value="administrator" id="username" name="username" type="text" class="form-control form-control-lg inverse-mode" placeholder="输入管理账号" required />
+            <!-- end news-feed -->
+            <!-- begin right-content -->
+            <div class="right-content">
+                <!-- begin login-header -->
+                <div class="login-header">
+                    <div class="brand">
+                        <span class="logo"></span> <b>Jees</b> Webs
+                        <small>这里使用了Color Admin模版</small>
                     </div>
-                    <div class="form-group m-b-20">
-                        <input value="123456" id="password" name="password" type="password" class="form-control form-control-lg inverse-mode" placeholder="输入密码" required />
+                    <div class="icon">
+                        <i class="fa fa-sign-in"></i>
                     </div>
-                    <div class="checkbox checkbox-css m-b-20">
-                        <input type="checkbox" id="remember_checkbox" /> 
-                        <label for="remember_checkbox">
-                        	记住账号
-                        </label>
-                    </div>
-                    <div class="login-buttons">
-                        <button type="submit" class="btn btn-success btn-block btn-lg">登陆</button>
-                    </div>
-                </form>
+                </div>
+                <!-- end login-header -->
+                <!-- begin login-content -->
+                <div class="login-content">
+                    <form th:action="@{/login}" method="POST" class="margin-bottom-0">
+                        <div class="form-group m-b-15">
+                            <input value="administrator" id="username" name="username" type="text" class="form-control form-control-lg" placeholder="输入管理账号" required />
+                        </div>
+                        <div class="form-group m-b-15">
+                            <input value="123456" id="password" name="password" type="password" class="form-control form-control-lg" placeholder="输入密码" required />
+                        </div>
+                        <div class="checkbox checkbox-css m-b-30">
+                            <input type="checkbox" id="remember_checkbox" />
+                            <label for="remember_checkbox">
+                                记住账号
+                            </label>
+                        </div>
+                        <div class="login-buttons">
+                            <button type="submit" class="btn btn-success btn-block btn-lg">登陆</button>
+                        </div>
+                        <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                            <t class="text-danger">未开放注册功能</t>
+                            <!--
+                            Not a member yet? Click <a href="register_v3.html" class="text-success">here</a> to register.
+                            -->
+                        </div>
+                        <hr />
+                        <p class="text-center text-grey-darker">
+                            &copy; Color Admin All Right Reserved 2019
+                        </p>
+                    </form>
+                </div>
+                <!-- end login-content -->
             </div>
-            <!-- end login-content -->
+            <!-- end right-container -->
         </div>
         <!-- end login -->
-        
+
         <!-- begin theme-panel -->
-        <div class="theme-panel theme-panel-lg">
-            <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
-            <div class="theme-panel-content">
-                <h5 class="m-t-0">Color Theme</h5>
-                <ul class="theme-list clearfix">
-                    <li><a href="javascript:;" class="bg-red" data-theme="red" data-theme-file="../assets/css/transparent/theme/red.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Red">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-pink" data-theme="pink" data-theme-file="../assets/css/transparent/theme/pink.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Pink">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-orange" data-theme="orange" data-theme-file="../assets/css/transparent/theme/orange.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Orange">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-yellow" data-theme="yellow" data-theme-file="../assets/css/transparent/theme/yellow.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Yellow">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-lime" data-theme="lime" data-theme-file="../assets/css/transparent/theme/lime.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Lime">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-green" data-theme="green" data-theme-file="../assets/css/transparent/theme/green.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Green">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-teal" data-theme="teal" data-theme-file="../assets/css/transparent/theme/teal.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Teal">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-aqua" data-theme="aqua" data-theme-file="../assets/css/transparent/theme/aqua.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Aqua">&nbsp;</a></li>
-                    <li class="active"><a href="javascript:;" class="bg-blue" data-theme="default" data-theme-file="../assets/css/transparent/theme/default.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Default">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-purple" data-theme="purple" data-theme-file="../assets/css/transparent/theme/purple.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Purple">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-indigo" data-theme="indigo" data-theme-file="../assets/css/transparent/theme/indigo.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Indigo">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-black" data-theme="black" data-theme-file="../assets/css/transparent/theme/black.css" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Black">&nbsp;</a></li>
-                </ul>
-                <div class="divider"></div>
-                <div class="row m-t-10">
-                    <div class="col-md-6 control-label text-inverse f-w-600">Header</div>
-                    <div class="col-md-6">
-                        <select name="header-fixed" class="form-control form-control-sm">
-                            <option value="1">fixed</option>
-                            <option value="2">default</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-6 control-label text-inverse f-w-600">Sidebar Styling</div>
-                    <div class="col-md-6">
-                        <select name="sidebar-styling" class="form-control form-control-sm">
-                            <option value="1">default</option>
-                            <option value="2">grid</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-6 control-label text-inverse f-w-600">Sidebar</div>
-                    <div class="col-md-6">
-                        <select name="sidebar-fixed" class="form-control form-control-sm">
-                            <option value="1">fixed</option>
-                            <option value="2">default</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-6 control-label text-inverse f-w-600">Sidebar Gradient</div>
-                    <div class="col-md-6">
-                        <select name="content-gradient" class="form-control form-control-sm">
-                            <option value="1">disabled</option>
-                            <option value="2">enabled</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-6 control-label text-inverse f-w-600">Direction</div>
-                    <div class="col-md-6">
-                        <select name="direction" class="form-control form-control-sm">
-                            <option value="1">LTR</option>
-                            <option value="2">RTL</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="divider"></div>
-                <h5>THEME VERSION</h5>
-                <div class="theme-version">
-                	<a href="../template_html/index_v2.html">
-                		<span style="background-image: url(../assets/img/theme/default.jpg);"></span>
-                	</a>
-                	<a href="../template_transparent/index_v2.html" class="active">
-                		<span style="background-image: url(../assets/img/theme/transparent.jpg);"></span>
-                	</a>
-                </div>
-                <div class="theme-version">
-                	<a href="../template_apple/index_v2.html">
-                		<span style="background-image: url(../assets/img/theme/apple.jpg);"></span>
-                	</a>
-                	<a href="../template_material/index_v2.html">
-                		<span style="background-image: url(../assets/img/theme/material.jpg);"></span>
-                	</a>
-                </div>
-                <div class="divider"></div>
-                <div class="row m-t-10">
-                    <div class="col-md-12">
-                        <a href="javascript:;" class="btn btn-inverse btn-block btn-rounded" data-click="reset-local-storage"><b>Reset Local Storage</b></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div th:replace="|${TPL}/_inc/_theme|::html" />
         <!-- end theme-panel -->
 	</div>
 	<!-- end page container -->
 
-    <c th:include="|${TPL}/_inc/_base|::js( '' )" />
+    <c th:include="|${TPL}/_inc/_utils|::js( '' )" />
 	
 	<script>
 		$(document).ready(function() {

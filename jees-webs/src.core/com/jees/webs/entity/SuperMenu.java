@@ -1,87 +1,66 @@
 package com.jees.webs.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.jees.tool.utils.JsonUtil;
 import lombok.*;
+import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.annotations.RemoteProperty;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-@MappedSuperclass
-public class SuperMenu <ID extends Serializable, R extends SuperRole> {
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@DataTransferObject
+public class SuperMenu <R extends SuperRole> {
     @Id
-    @GeneratedValue( strategy = IDENTITY )
-    @GenericGenerator( name = "generator" , strategy = "identity" )
-    @Column( name = "id" , unique = true , nullable = false )
     @RemoteProperty
-    private ID id;
-    @Column( name = "tpl" , nullable = false )
+    int id;
     @RemoteProperty
-    private String tpl;
-    @Column( name = "`name`" , nullable = false )
+    String name;
     @RemoteProperty
-    private String name;
-    @Column( name = "url" , nullable = false )
+    String tpl;
     @RemoteProperty
-    private String url;
-    @Column( name = "visible" , nullable = false )
+    String url;
     @RemoteProperty
-    private int visible;
-    @Column( name = "parent_id", columnDefinition = "INT default 0")
+    int visible;
     @RemoteProperty
-    private int parentId;
-    @Column( name = "`index`" , nullable = false )
+    int parentId;
     @RemoteProperty
-    private int index;
-    @ManyToMany( cascade = CascadeType.REMOVE , fetch = FetchType.LAZY)
-    @JoinTable( name="menu_role",joinColumns = {@JoinColumn(name="menu_id")},
-            inverseJoinColumns = @JoinColumn(name = "role_id")  )
-    @MapKey( name = "id" )
-    private Map< Serializable, R > roles = new HashMap<>();
-    @Transient
-    private Set<SuperMenu> menus = new HashSet<>();
-    public boolean isPermit(){ return roles.size() == 0; }
+    int index;
+    @RemoteProperty @JSONField(serialize = false)
+    List<String> roles = new ArrayList<>();
+    @RemoteProperty @JSONField(serialize = false)
+    List<SuperMenu> menus = new ArrayList<>();
+
+    @Override
+    public String toString(){
+        return JsonUtil.toString( this );
+    }
+
     public boolean isRoot(){
-        return parentId == 0;
+        return parentId == id;
     }
-    public boolean hasParent(){
-        return parentId != 0;
+
+    public boolean isPermit(){
+        return roles.isEmpty();
     }
+
     public boolean hasMenus(){
-        return menus.size() != 0;
-    }
-    public void addMenu( SuperMenu _m ){
-        menus.add( _m );
-    }
-    public List<String> getRoleNames(){ return roles.values().stream().map( r -> r.getName() ).collect( Collectors.toList() ); }
-
-    public SuperMenu build(){
-        return new SuperMenu();
+        return menus.size() > 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof SuperMenu) return true;
-        return false;
+    public void addRole( R _role ){
+        if( this.roles.contains( _role ) ) return;
+        roles.add( _role.getName() );
     }
 
-    @Override
-    public int hashCode() {
-        int result = 20;
-        result = result * 31 + id.hashCode();
-        result = result * 31 + tpl.hashCode();
-        result = result * 31 + name.hashCode();
-        result = result * 31 + url.hashCode();
-        result = result * 31 + visible;
-        result = result * 31 + parentId;
-        result = result * 31 + index;
-        return result;
+    public void addMenu( SuperMenu _menu ){
+        if( this.menus.contains( _menu ) ) return;
+        this.menus.add( _menu );
     }
 }

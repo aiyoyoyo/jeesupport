@@ -1,0 +1,60 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
+*/
+
+.header .navbar-logo,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+	background: #0078ff;
+}
+.text-theme,
+.float-sub-menu li > a:hover, 
+.float-sub-menu li > a:focus, 
+.float-sub-menu li.active > a, 
+.float-sub-menu li.active > a:hover, 
+.float-sub-menu li.active > a:focus,
+.sidebar .sub-menu > li > a:hover, 
+.sidebar .sub-menu > li > a:focus, 
+.sidebar .sub-menu > li.active > a, 
+.sidebar .sub-menu > li.active > a:hover, 
+.sidebar .sub-menu > li.active > a:focus,
+.header.navbar-default .navbar-brand i {
+	color: #0078ff;
+}
+.float-sub-menu li.active:after {
+	border-color: #0078ff;
+}
+.header.navbar-inverse .navbar-brand {
+	color: #fff !important;
+}
+.sidebar .label.label-theme,
+.top-menu .label.label-theme {
+	background: #ff107e;
+}
+.sidebar .text-theme,
+.top-menu .text-theme {
+	color: #ff107e;
+}
+.header .navbar-nav > li > a .label {
+	background: #f9172c !important;
+}
+.header.navbar-inverse,
+.sidebar .nav > li.active > a, 
+.sidebar .nav > li.active > a:hover, 
+.sidebar .nav > li.active > a:focus {
+	background: rgb(36,97,197);
+	background: -moz-linear-gradient(left, rgba(36,97,197,1) 0%, rgba(55,119,224,1) 50%, rgba(38,100,199,1) 100%);
+	background: -webkit-linear-gradient(left, rgba(36,97,197,1) 0%,rgba(55,119,224,1) 50%,rgba(38,100,199,1) 100%);
+	background: linear-gradient(to right, rgba(36,97,197,1) 0%,rgba(55,119,224,1) 50%,rgba(38,100,199,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2461c5', endColorstr='#2664c7',GradientType=1 );
+}
+.pace-progress {
+	background: #000;
+}
+.pace .pace-activity {
+	border-top-color: #000;
+	border-left-color: #000;
+}

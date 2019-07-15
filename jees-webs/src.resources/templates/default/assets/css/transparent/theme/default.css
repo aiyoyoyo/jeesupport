@@ -1,24 +1,25 @@
 /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
-Version: 4.1.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v4.1/admin/
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
 */
 
+.header .navbar-nav > li .dropdown-toggle .label, 
 .header .navbar-nav > li > a .label,
 .label.label-theme,
 .btn.btn-scroll-to-top {
-    background: #006cff;
+	background: #006cff;
 }
 .header.navbar-inverse .navbar-brand {
-    color: #fff !important;
+	color: #fff !important;
 }
 .text-theme {
-    color: #fff;
+	color: #fff;
 }
 a,
 .breadcrumb > li a {
-    color: #69bdfb;
+	color: #69bdfb;
 }
 a:hover,
 a:focus,

@@ -1,104 +1,68 @@
 package com.jees.webs.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.jees.tool.utils.JsonUtil;
+import lombok.*;
+import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.annotations.RemoteProperty;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.persistence.Id;
+import java.util.HashSet;
+import java.util.Set;
 
-import static javax.persistence.GenerationType.IDENTITY;
 
-@Getter
-@Setter
-@MappedSuperclass
-public class SuperUser<ID extends Serializable, R extends SuperRole, M extends  SuperMenu> implements UserDetails {
+@Setter @Getter @EqualsAndHashCode @NoArgsConstructor @AllArgsConstructor @DataTransferObject
+public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements UserDetails{
     @Id
-    @GeneratedValue( strategy = IDENTITY )
-    @GenericGenerator( name = "generator" , strategy = "identity" )
-    @Column( name = "id" , unique = true , nullable = false )
     @RemoteProperty
-    private ID id;
-    @Column( name = "username" , nullable = false )
+    long                          id;
     @RemoteProperty
-    private String username;
-    @Column( name = "password" , nullable = false )
+    String                        username;
     @RemoteProperty
-    private String password;
-    @Column( name = "enabled" , nullable = false )
+    String                        password;
     @RemoteProperty
-    private boolean enabled;
-    @Column( name = "locked" , nullable = false )
+    boolean                       enabled;
     @RemoteProperty
-    private boolean locked;
-    @ManyToMany(cascade=CascadeType.REMOVE,fetch=FetchType.LAZY)
-    @JoinTable( name="user_role",joinColumns = {@JoinColumn(name="user_id")},
-            inverseJoinColumns =@JoinColumn(name = "role_id"))
-    @MapKey( name = "id" )
+    boolean                       locked;
     @RemoteProperty
-    private Map<Serializable, R> roles = new HashMap<>();
-    @Transient
-    private Set<M> menus = new HashSet<>();
+    Set< Integer >                roles       = new HashSet<>();
+    @RemoteProperty
+    @JSONField( serialize = false )
+    Set< SimpleGrantedAuthority > authorities = new HashSet<>();
+    @RemoteProperty
+    @JSONField( serialize = false )
+    Set< M >                      menus       = new HashSet<>();
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.values().stream().map( r -> new SimpleGrantedAuthority( r.getName() ) ).collect( Collectors.toList() );
-    }
-    @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired(){
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked(){
         return !locked;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired(){
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(){
         return enabled;
     }
 
+    @Override
+    public String toString(){
+        return JsonUtil.toString( this );
+    }
+
     public void addRole( R _role ){
-        roles.put( _role.getId(), _role );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public Set<M> getMenus(){
-        if( menus.size() == 0 ){
-            roles.values().forEach( r ->{
-                menus.addAll( r.getMenus().values() );
-            } );
+        if( !roles.contains( _role.getId() ) ){
+            roles.add( _role.getId() );
         }
-        return menus;
-    }
-
-    public SuperUser build(){
-        return new SuperUser();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof SuperRole) return true;
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 20;
-        result = result * 31 + id.hashCode();
-        result = result * 31 + username.hashCode();
-        return result;
     }
 }

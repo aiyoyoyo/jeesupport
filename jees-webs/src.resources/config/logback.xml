@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 转载：http://blog.csdn.net/appleyk/article/details/78717388 -->
+<configuration>
+	<property name="LOG_HOME" value="logs" />
+	<property name="FILE_NAME" value="jees.jwebs.support" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%p]%d{yyyy-MM-dd HH:mm:ss }[%C:%L] - %m%n</pattern>
+			<!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<springProfile name="jees">
+		<appender name="SYSLOG"
+				  class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<File>${LOG_HOME}/${FILE_NAME}.log</File>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${LOG_HOME}/${FILE_NAME}.%d.%i.log</fileNamePattern>
+				<maxHistory>30</maxHistory>
+				<timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+					<maxFileSize>1MB</maxFileSize>
+				</timeBasedFileNamingAndTriggeringPolicy>
+			</rollingPolicy>
+			<encoder>
+				<pattern>
+					[%p]%d{yyyy-MM-dd HH:mm:ss }[%C:%L] - %m%n
+				</pattern>
+				<!-- 记录日志的编码 -->
+				<charset>UTF-8</charset> <!-- 此处设置字符集 -->
+			</encoder>
+			<filter class="ch.qos.logback.classic.filter.LevelFilter">
+				<level>DEBUG</level>
+				<onMatch>ACCEPT</onMatch>
+				<onMismatch>DENY</onMismatch>
+			</filter>
+		</appender>
+		<appender name="SYSERR"
+				  class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<File>${LOG_HOME}/${FILE_NAME}.err</File>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${LOG_HOME}/${FILE_NAME}.%d.%i.err</fileNamePattern>
+				<maxHistory>30</maxHistory>
+				<timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+					<maxFileSize>1MB</maxFileSize>
+				</timeBasedFileNamingAndTriggeringPolicy>
+			</rollingPolicy>
+			<encoder>
+				<pattern>
+					[%p]%d{yyyy-MM-dd HH:mm:ss }[%C:%L] - %m%n
+				</pattern>
+				<charset>UTF-8</charset> <!-- 此处设置字符集 -->
+			</encoder>
+			<filter class="ch.qos.logback.classic.filter.LevelFilter">
+				<level>ERROR</level>
+				<onMatch>ACCEPT</onMatch>
+				<onMismatch>DENY</onMismatch>
+			</filter>
+		</appender>
+	</springProfile>
+
+	<!-- 控制台输出日志级别 -->
+	<springProfile name="jees">
+		<logger name="com.jees" level="INFO">
+			<appender-ref ref="SYSLOG" />
+		</logger>
+		<logger name="com.jees.webs" level="DEBUG">
+			<appender-ref ref="SYSLOG" />
+		</logger>
+		<root level="ERROR">
+			<appender-ref ref="SYSERR" />
+		</root>
+	</springProfile>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

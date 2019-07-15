@@ -11,6 +11,7 @@
 	<!-- end sidebar scrollbar -->
 </div>
 <ul th:each="m:${session.MENUS}" class="nav" th:fragment="usermenu">
+	<t th:html="${ACTIVES.contains(m.value.url)}"></t>
 	<li th:class="|has-sub ${ACTIVES.contains( m.value.url ) ? 'active' : ''}|">
 		<a href="javascript:;">
 			<b class="caret"></b>
@@ -24,8 +25,13 @@
 		<a th:href="${menu.url}" th:text="${menu.name}"></a>
 	</li>
 	<li th:if="${menu.hasMenus()}" th:each="m:${menu.menus}" th:class="${(!(parent eq m.url) and m.hasMenus() ) ? 'has-sub ' : ''} + ${ACTIVES.contains( m.url ) ? 'active' : ''}">
-		<a th:href="${m.url}" th:text="${m.name}"></a>
-		<ul th:if="${m.menus.size() gt 0}" class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m}, ${m.url} )" />
+		<a th:if="${m.hasMenus()}" href="javascript:;">
+			<b class="caret"></b>
+			<i class="fa fa-align-left"></i> <span th:text="${m.name}"></span>
+		</a>
+		<a th:unless="${m.hasMenus()}" th:href="${m.url}" th:text="${m.name}"></a>
+		<ul th:if="${m.hasMenus()}" class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m}, ${m.url} )" />
+
 	</li>
 </ul>
 <ul class="nav" th:fragment="supermenu">

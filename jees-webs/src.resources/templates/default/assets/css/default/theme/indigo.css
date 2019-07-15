@@ -1,23 +1,24 @@
 /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3 & 4
-Version: 4.1.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v4.1/admin/
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
 */
 
 .header .navbar-logo,
 .login .login-header .brand .logo,
+.header .navbar-nav > li .dropdown-toggle .label, 
 .header .navbar-nav > li > a .label,
 .label.label-theme,
 .btn.btn-scroll-to-top {
-    background: #8753de;
+	background: #8753de;
 }
 .header.navbar-inverse .navbar-brand {
-    color: #fff !important;
+	color: #fff !important;
 }
 .text-theme,
 .sidebar .nav > li.active > a i {
-    color: #8753de;
+	color: #8753de;
 }
 .sidebar .sub-menu > li.active:after {
 	border-color: #8753de;
@@ -51,22 +52,22 @@ Website: http://www.seantheme.com/color-admin-v4.1/admin/
 	color: rgba(0,0,0,0.5);
 }
 .pace-progress {
-    background: #8753de;
+	background: #8753de;
 }
 .pace .pace-activity {
-    border-top-color: #8753de;
-    border-left-color: #8753de;
+	border-top-color: #8753de;
+	border-left-color: #8753de;
 }
 
 
 /* Added in v1.7 */
 
 .page-with-light-sidebar .sidebar .nav > li.active > a > i {
-    color: #8753de;
+	color: #8753de;
 }
 .page-with-light-sidebar .sidebar .nav > li.active > a .badge,
 .page-with-light-sidebar .sidebar .nav > li.active > a .label.label-theme {
-    background: #8753de;
+	background: #8753de;
 }
 
 
@@ -75,5 +76,5 @@ Website: http://www.seantheme.com/color-admin-v4.1/admin/
 .top-menu .nav > li.active > a i, 
 .top-menu .nav > li.active > a:focus i, 
 .top-menu .nav > li.active > a:hover i {
-    color: #8753de;
+	color: #8753de;
 }
