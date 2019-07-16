@@ -55,7 +55,7 @@ public class SensitiveWordUtil {
             }
         }
 
-        log.info( "词典优化：WORDS[" + wordMap + "]" );
+        log.info( "词典优化：WORDS[" + wordMap.size() + "]" );
     }
 
     private static void _load_txt_file( String _path ) throws FileNotFoundException{
