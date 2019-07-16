@@ -45,8 +45,13 @@ QQ群：8802330
 
 ## 版本说明
 在版本2.0.0之前，都会是快照版本。在此之前会逐步完善相关内容。
-## 1.1.8 更新说明 <font color='red'>New</font>
+## 1.1.8 更新说明 
 ### Jees-Boot Ver.1.1.8-SNAPSHOT
+> [JWEBS] Ver 1.2.0-SNAPSHOT <font color='red'>New</font>
+1. 旧的MySQL支持暂时不再更新，保留MySQL用法的版本为1.1.1-SNAPSHOT
+2. 新得版本使用Redis代替数据库使用，请参考JDBS中的示例
+3. 优化实现细节，由于DWR泛型的问题，放弃了SuperUser类的id类型使用自定义泛型的方式，改为long类型。
+4. 新增了系统部署安装模版，开发完成后可以通过基础安装来完成初始应用的设定。
 > [JTLS] Ver 1.1.5-SNAPSHOT
 1. 引入FastJson
 2. RandomUtil增加Set随机方法
@@ -65,7 +70,7 @@ QQ群：8802330
 > [JSTS] Ver 1.1.6-SNAPSHOT
 1. 优化消息协议，为1.1.7做铺垫
 2. 修正SessionService网络切换的问题
-> [JSTS] Ver 1.1.7-SNAPSHOT <font color='red'>New</font>
+> [JSTS] Ver 1.1.7-SNAPSHOT
 1. 完善协议细节支持，提供了非Message代理的模式（JSON/PROTO）
 2. MessageDecoder变更为MessageCrypto
 3. 移除了AbsResponse，统一由AbsRequestHanler处理消息内容
