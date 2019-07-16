@@ -29,11 +29,8 @@ public class FileUtil {
         if( file == null ){
             String msg = "文件没有找到：FILE=[" + _path + "]";
             log.warn( msg );
-            if( _thr ){
-                throw new FileNotFoundException( msg );
-            }
+            throw new FileNotFoundException( msg );
         }
-
         return file;
     }
 

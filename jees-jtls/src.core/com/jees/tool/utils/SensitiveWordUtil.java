@@ -4,11 +4,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * 敏感词过滤类，使用方法
@@ -24,31 +20,42 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 public class SensitiveWordUtil {
-
-    public static final String FILE_ENCODING = "UTF-8";
-
     static Map<String, HashMap> wordMap = new HashMap<>();
-
     private static void _hash_words(){
-        Set<String> sets = wordMap.keySet().stream().collect( Collectors.toSet() );
-
-        for( String key : sets ){
-            char[] chars = key.toCharArray();
-
-            Map curr_map = wordMap;
-            for( char c : chars ){
-                HashMap tmp = ( HashMap ) curr_map.get( c );
-                if( tmp == null ){
-                    tmp = new HashMap<>();
-                    curr_map.put( c, tmp );
-                    curr_map = tmp;
+        Set<String> key_set = new HashSet<>( wordMap.keySet()  );
+        wordMap.clear();
+        Iterator< String > key_it = key_set.iterator();
+        String key;
+        Map curr_map;
+        Map new_map;
+        while (key_it.hasNext()){
+            //关键字
+            key = key_it.next();
+            curr_map = wordMap;
+            for( int i = 0; i < key.length(); i++ ){
+                //转换成char型
+                char c = key.charAt( i );
+                //库中获取关键字
+                Object word_map = curr_map.get( c );
+                //如果存在该key，直接赋值，用于下一个循环获取
+                if( word_map != null ){
+                    curr_map = ( Map ) word_map;
                 }else{
-                    curr_map = tmp;
+                    //不存在则，则构建一个map，同时将isEnd设置为0，因为他不是最后一个
+                    new_map = new HashMap<>();
+                    //不是最后一个
+                    new_map.put( "isEnd", "0" );
+                    curr_map.put( c, new_map );
+                    curr_map = new_map;
+                }
+                if( i == key.length() - 1 ){
+                    //最后一个
+                    curr_map.put( "isEnd", "1" );
                 }
             }
         }
 
-        log.info( "生成词典：WORDS[" + wordMap.size() + "]" );
+        log.info( "词典优化：WORDS[" + wordMap + "]" );
     }
 
     private static void _load_txt_file( String _path ) throws FileNotFoundException{
@@ -85,27 +92,29 @@ public class SensitiveWordUtil {
         _hash_words();
     }
 
-    private static int _check_( String _text, int _idx, boolean _min ) {
-        int match = 0;
-        char c;
-        Map curr_map = wordMap;
-        for ( int i = _idx; i < _text.length(); i++ ) {
-            c = _text.charAt( i );
-            curr_map = ( Map ) curr_map.get( c );
-            if ( curr_map != null ) {
+    private static int check( String _text, int _idx, boolean _min ){
+        int     match    = 0; //匹配标识数默认为0
+        char    word;
+        Map     curr_map = wordMap;
+        for( int i = _idx; i < _text.length(); i++ ){
+            word = _text.charAt( i );
+            //获取指定key
+            curr_map = ( Map ) curr_map.get( word );
+            if( curr_map != null ){
+                //存在，则判断是否为最后一个
+                //找到相应key，匹配标识+1
                 match++;
-                if ( curr_map.size() == 0 ){
-                    //结束标志位为true
-                    if ( _min ) {
+                //如果为最后一个匹配规则,结束循环，返回匹配标识数
+                if( "1".equals( curr_map.get( "isEnd" ) ) ){
+                    //最小规则，直接返回,最大规则还需继续查找
+                    if( _min ){
                         break;
                     }
                 }
-            } else {
-                //不存在，直接返回
+            }else{
                 break;
             }
         }
-
         return match;
     }
 
@@ -116,18 +125,18 @@ public class SensitiveWordUtil {
      * @return
      */
     public static Set< String > check( String _text, boolean _min ){
-        Set<String> sets = new HashSet<>();
-        int match = 0;
-        for(int i = 0 ; i < _text.length() ; i++){
-            int length = _check_( _text, i, _min );    //判断是否包含敏感字符
-            if( length > 1 ){    //存在,加入list中
-                sets.add( _text.substring(i, i+length));
+        Set< String > sets  = new HashSet<>();
+        int           match = 0;
+        for( int i = 0; i < _text.length(); i++ ){
+            int length = check( _text, i, _min );    //判断是否包含敏感字符
+            if( length > 0 ){    //存在,加入list中
+                sets.add( _text.substring( i, i + length ) );
                 i = i + length - 1;    //减1的原因，是因为for会自增
-                match ++;
+                match++;
             }
         }
 
-        log.debug( "--匹配敏感词数量：MATCH=[" + match + "]" );
+        log.debug( "--匹配敏感词数量：MATCH=[" + match + "], MIN=[" + _min + "]" );
         return sets;
     }
 
@@ -142,7 +151,6 @@ public class SensitiveWordUtil {
         String str = _text;
 
         Set<String> sets = check( _text, _min );
-
         for( String sw : sets ){
             str = str.replaceAll( sw, _replace );
         }
