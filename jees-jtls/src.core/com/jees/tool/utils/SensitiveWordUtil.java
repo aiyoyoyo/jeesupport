@@ -94,16 +94,19 @@ public class SensitiveWordUtil {
 
     private static int check( String _text, int _idx, boolean _min ){
         int     match    = 0; //匹配标识数默认为0
+        int     find     = 0; //查找的层级标识
         char    word;
         Map     curr_map = wordMap;
         for( int i = _idx; i < _text.length(); i++ ){
             word = _text.charAt( i );
             //获取指定key
             curr_map = ( Map ) curr_map.get( word );
+            find ++;
             if( curr_map != null ){
                 //存在，则判断是否为最后一个
                 //找到相应key，匹配标识+1
-                match++;
+                log.debug( match + "--Find:" + word );
+                match ++;
                 //如果为最后一个匹配规则,结束循环，返回匹配标识数
                 if( "1".equals( curr_map.get( "isEnd" ) ) ){
                     //最小规则，直接返回,最大规则还需继续查找
@@ -115,6 +118,11 @@ public class SensitiveWordUtil {
                 break;
             }
         }
+        log.debug( match + "--END:" + find );
+        if( match != find ){
+            match = 0;
+        }
+
         return match;
     }
 
@@ -130,7 +138,9 @@ public class SensitiveWordUtil {
         for( int i = 0; i < _text.length(); i++ ){
             int length = check( _text, i, _min );    //判断是否包含敏感字符
             if( length > 0 ){    //存在,加入list中
-                sets.add( _text.substring( i, i + length ) );
+                String find = _text.substring( i, i + length );
+                log.debug( "--FIND->" + find );
+                sets.add( find );
                 i = i + length - 1;    //减1的原因，是因为for会自增
                 match++;
             }
@@ -152,7 +162,9 @@ public class SensitiveWordUtil {
 
         Set<String> sets = check( _text, _min );
         for( String sw : sets ){
-            str = str.replaceAll( sw, _replace );
+            String rep_char = "";
+            for( int i = 0; i < sw.length(); i ++ ) rep_char += _replace;
+            str = str.replaceAll( sw, rep_char );
         }
 
         return str;
