@@ -202,6 +202,28 @@ public class MessageCrypto extends AbsNettyDecoder {
 	}
 
 	// message encode
+
+	private static Object _deserializer_json( String _json ){
+		boolean proxy = CommonConfig.getBoolean( "jees.jsts.message.proxy", true );
+		Object ret_obj = null;
+		try{
+			if( proxy ){
+				ret_obj = JSON.parseObject( _json, Message.class );
+			}else{
+				JSONObject obj = JSON.parseObject( _json );
+				Class      cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
+				if( cls != null ){
+					ret_obj = JSON.parseObject( _json, cls );
+				}else{
+					ret_obj = obj;
+				}
+			}
+		}catch( Exception e ){
+			log.error( "解析消息内容失败：JSON=" + _json  );
+		}
+		return ret_obj;
+	}
+
 	/**
 	 * C2S
 	 * @param _obj
@@ -213,76 +235,39 @@ public class MessageCrypto extends AbsNettyDecoder {
 		String type = CommonConfig.getString( "jees.jsts.message.type", MSG_TYPE_PROTO );
 
 		String log_str = "--解析命令: TYPE=[" + type + "], WEBSOCEKT=[" + _ws + "], PROXY=[" + proxy +"], ";
-		try{
-			if( type.equalsIgnoreCase( MSG_TYPE_JSON ) ){
-				String json = null;
-				if( _ws ) {
-					json = ( ( TextWebSocketFrame ) _obj ).text();
-				}else{
-					json = new String( ( byte[] ) _obj );
-				}
-
-				if( proxy ){
-					log_str += "JSON[" + json + "]转Message对象";
-					return JSON.parseObject( json, Message.class );
-				}else{
-					JSONObject obj = JSON.parseObject(  json );
-					Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
-
-					if( cls != null ){
-						log_str += "JSON[" + json + "]转Class[" + cls.getName() + "]代理对象";
-						return JSON.parseObject( json, cls );
-					}else{
-						log_str += "JSON[" + json + "]原始对象";
-						return obj;
-					}
-				}
+		if( type.equalsIgnoreCase( MSG_TYPE_JSON ) ){
+			String json;
+			if( _ws ) {
+				json = ( ( TextWebSocketFrame ) _obj ).text();
 			}else{
-				Object proto = null;
+				json = new String( ( byte[] ) _obj );
+			}
 
-				if( _ws ) {
-					String json = ( ( TextWebSocketFrame ) _obj ).text();
-
-					if( proxy ) {
-						proto = JSON.parseObject( json, Message.class );
-					}else{
-						JSONObject obj = JSON.parseObject( json );
-						Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
-
-						if( cls != null ){
-							log_str += "JSON[" + json + "]转Class[" + cls.getName() + "]代理对象";
-							proto = JSON.parseObject( json, cls );
-						}else{
-							log_str += "JSON[" + json + "]原始对象";
-							return obj;
-						}
-					}
+			return _deserializer_json( json );
+		}else{
+			if( _ws ) {
+				String json = ( ( TextWebSocketFrame ) _obj ).text();
+				return _deserializer_json( json );
+			}else{
+				if( proxy ) {
+					return deserializer( ( byte[] ) _obj, Message.class );
 				}else{
-					if( proxy ) {
-						proto = deserializer( ( byte[] ) _obj, Message.class );
-						log_str += "字节转Message对象";
-					}else{
+					try{
 						JSONObject obj = JSON.parseObject( new String( ( byte[] ) _obj ) );
 						Class cls = proxyClases.getOrDefault( obj.getInteger( "id" ), null );
-
 						if( cls != null ){
-							proto = deserializer( ( byte[] ) _obj, cls );
-							log_str += "字节转Class[" + cls.getName() + "]代理对象";
+							return deserializer( ( byte[] ) _obj, cls );
 						}else{
-							proto = obj.toJavaObject( cls );
-							log_str += "字节转Java[" + cls.getName() + "]代理对象";
+							return obj.toJavaObject( cls );
 						}
+					}catch( Exception e ){
+						log.error( "解析消息内容失败：", e );
 					}
 				}
-
-				return proto;
 			}
-		}catch( Exception e ){
-			log.error( "接收的命令无法解析，返回默认命令号。" );
-			return new Message();
-		}finally{
-			log.debug( log_str );
 		}
+
+		return new Message();
 	}
 
 	/**
