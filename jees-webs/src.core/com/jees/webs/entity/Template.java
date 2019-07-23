@@ -3,6 +3,7 @@ package com.jees.webs.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.directwebremoting.annotations.DataTransferObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Log4j2
+@DataTransferObject
 public class Template {
     private String                  name;
     private String                  assets;

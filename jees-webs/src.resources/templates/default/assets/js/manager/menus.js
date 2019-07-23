@@ -10,7 +10,7 @@ this.MGR = this.MGR || {};
 	"use strict";
 	// constructor: ===========================================================
 	/**
-	 * @class Roles
+	 * @class Menus
 	 * @static
 	 */
 	function Menus() { throw "Menus cannot be instantiated."; };
@@ -52,7 +52,7 @@ this.MGR = this.MGR || {};
 
             var row_name = jeesjs.Editable.generateText( o.id, e_name_id, o.name, "标题" );
             var row_parent = jeesjs.Editable.generateSelect( o.id, e_parent_id, e_parent_txt );
-            var row = "<tr id='DATA-" + o.id + "'>"
+            var row = "<tr id='E-" + o.id + "'>"
                     + "<td>" + o.id + "</td>"
                     + "<td>" + o.url + "</td>"
                     + "<td>" + row_name + "</td>"
@@ -67,6 +67,16 @@ this.MGR = this.MGR || {};
             jeesjs.Editable.text( $( "#" + e_name_id ) );
             jeesjs.Editable.select( $( "#" + e_parent_id ), e_parent_txt, parent_group );
         }
+    };
+    /**
+     * 绘制菜单表格
+     * @method _handle_add
+     * @param {M extend SuperMenu} _data
+     * @static
+     * @private
+     */
+    Menus._handle_remove = function( _id ){
+        $("#E-" + _id).remove();
     };
 	// public static methods: =================================================
     /**
@@ -88,9 +98,8 @@ this.MGR = this.MGR || {};
      */
     Menus.onClick_Remove = function( _id ){
         var o = this._datas[_id];
-        jeesjs.SweetAlert.confirm( "删除确认", "确定删除栏目[" + o.name + "]吗？", "warning", ()=>{
-            console.warn( "没有开放删除功能，如果需要请修改此处源码。" );
-//            MgrMenuRemote.remove( o , ()=>{});
+        jeesjs.SweetAlert.confirm( "删除确认", "确定删除栏目[" + o.id + "][" + o.name + "]吗？", "warning", ()=>{
+            MgrMenuRemote.remove( o , ()=>{this._handle_remove( _id );});
         });
     };
     /**

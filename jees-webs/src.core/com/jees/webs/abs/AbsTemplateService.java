@@ -20,9 +20,8 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 public abstract class AbsTemplateService<M extends SuperMenu> implements ITemplateService, ISupportEL{
-    Map<String, Template> templates = new HashMap<>();
-    Template defTemplate;
-
+    Map< String, Template > templates = new HashMap<>();
+    Template                defTemplate;
     @Autowired
     IRedisDao sDB;
 
@@ -30,13 +29,13 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
         // 加载配置中的模版和主题
         StringTokenizer tpl_st = CommonConfig.getStringTokenizer( "jees.webs.templates" );
         while( tpl_st.hasMoreTokens() ){
-            String tpl = tpl_st.nextToken().trim().toLowerCase();
+            String   tpl    = tpl_st.nextToken().trim().toLowerCase();
             Template tplCfg = _get_template_config( tpl );
             templates.put( tpl, tplCfg );
         }
 
         if( templates.size() == 0 ){
-            String tpl = "default";
+            String   tpl    = "default";
             Template tplCfg = _get_template_config( tpl );
             templates.put( tpl, tplCfg );
             log.warn( "未找到有效模版，将使用默认模版路径：" + tpl );
@@ -47,10 +46,11 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
 
     /**
      * 加载模版配置
+     *
      * @param _tpl
      * @return
      */
-    private Template _get_template_config(String _tpl ){
+    private Template _get_template_config( String _tpl ){
         String tpl = _tpl;
 
         Template tplCfg = new Template();
@@ -63,6 +63,7 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
 
     /**
      * 通过模版，设置用户Session信息，用于页面显示
+     *
      * @param _request
      * @return
      */
@@ -70,9 +71,9 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
     public void loadTemplate( String _tpl, HttpServletRequest _request ){
         HttpSession session = _request.getSession();
 
-        Template template = (Template) session.getAttribute( Template_Object_EL );
+        Template template = ( Template ) session.getAttribute( Template_Object_EL );
         if( template == null ){
-            templates.values().forEach( t -> {
+            templates.values().forEach( t->{
                 session.setAttribute( Template_EL + t.getName(), t );
                 session.setAttribute( Template_Assets_EL + t.getName(), t.getName() + "/" + t.getAssets() );
             } );
@@ -88,36 +89,41 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
     }
 
     @Override
-    public Template getTemplate(String _tpl ){
+    public Template getTemplate( String _tpl ){
         return templates.getOrDefault( _tpl, defTemplate );
     }
+
     @Override
-    public List<String>  getTemplateNames() {
-        return templates.keySet().stream().collect(Collectors.toList());
+    public List< String > getTemplateNames(){
+        return templates.keySet().stream().collect( Collectors.toList() );
     }
+
     @Override
     public Template getDefaultTemplate(){
         return defTemplate;
     }
+
     @Override
-    public List<Template> getTemplateAll(){
+    public List< Template > getTemplateAll(){
         return templates.values().stream().collect( Collectors.toList() );
     }
+
     @Override
     public boolean isTemplate( String _tpl ){
-        if( _tpl.isEmpty() || _tpl.equals("/") ) return true;
+        if( _tpl.isEmpty() || _tpl.equals( "/" ) ) return true;
         return templates.containsKey( _tpl );
     }
+
     @Override
-    public boolean isDefault( String _tpl ) {
-        if( _tpl.isEmpty() || _tpl.equals("/") ) return true;
+    public boolean isDefault( String _tpl ){
+        if( _tpl.isEmpty() || _tpl.equals( "/" ) ) return true;
         return defTemplate.getName().equalsIgnoreCase( _tpl );
     }
 
     @Override
     public String getTemplatePath( String _path, HttpServletRequest _request ){
-        HttpSession session = _request.getSession();
-        Template template = (Template) session.getAttribute( Template_Object_EL );
+        HttpSession session  = _request.getSession();
+        Template    template = ( Template ) session.getAttribute( Template_Object_EL );
 
         if( _path.endsWith( "/" ) ) _path += "index";
         return template.getName() + "/" + _path;

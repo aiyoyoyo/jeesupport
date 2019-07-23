@@ -39,11 +39,11 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
         if( len > 20 ) len = 20;
         if( supermanPassword == null ){
             supermanPassword = RandomUtil.s_random_string( len );
+            log.debug( "--超级密码：" + supermanPassword );
             if( CommonConfig.getBoolean( "jees.webs.encodePwd", true ) ){
                 supermanPassword = MD5Utils.s_encode( supermanPassword );
             }
         }
-        log.debug( "--超级密码：" + supermanPassword );
     }
 
     /**

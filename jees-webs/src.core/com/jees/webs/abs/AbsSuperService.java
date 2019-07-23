@@ -241,6 +241,7 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
 
     public void remove( M _menu ) throws Exception{
         M m = menus.get( _menu.getId() );
+        menus.remove( _menu.getId() );
         sDB.delete( m );
     }
 
