@@ -49,8 +49,15 @@ public class JdbsApplication{
 
 		dao.insertMap( maps, RedisUser.class );
 
-		Map map = dao.findHashAll( RedisUser.class );
-		System.out.println(map.size());
+//		Map<Integer, RedisUser> map = dao.findHashAll( RedisUser.class );
+//		System.out.println(map.size());
+		maps.forEach( (k,v)->{
+			try{
+				dao.delete( v );
+//				dao.deleteById( v.getId(), RedisUser.class );
+			}catch( Exception e ){
+			}
+		} );
 	}
 
 	public static void ExTest( TestController ctr ) {

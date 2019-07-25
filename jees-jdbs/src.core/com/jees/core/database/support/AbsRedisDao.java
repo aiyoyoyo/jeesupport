@@ -361,7 +361,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
             ID hk = _get_hk( _obj );
             String sn = _obj.getClass().getSimpleName();
             if( hash.hasKey( sn, hk ) ){
-                hash.delete( sn, hk );
+                long num = hash.delete( sn, hk );
+                log.debug( "--已删除纪录：" + num + "条" );
             }else
                 throw new Exception( "删除失败，包含主键[" + hk + "]的对象[" + sn + "]不存在！" );
         }catch ( Exception e ){
@@ -376,7 +377,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
             database( _idx );
             HashOperations< String, ID, T > hash = tpl.opsForHash();
             String sn = _cls.getClass().getSimpleName();
-            hash.delete( sn, _list.toArray() );
+            long num = hash.delete( sn, _list.toArray() );
+            log.debug( "--已删除纪录：" + num + "条" );
         }catch ( Exception e ){
             log.error( "update 发生错误：IDX=[" + _idx + "]" + e.toString(), e );
         }
@@ -387,7 +389,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
         try{
             database( _idx );
             HashOperations< String, ID, T > hash = tpl.opsForHash();
-            String hk = _id.toString();
+            ID hk = _id;
             String sn = _cls.getSimpleName();
             if( hash.hasKey( sn, hk ) ){
                 hash.delete( sn, hk );
