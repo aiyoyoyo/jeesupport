@@ -14,10 +14,10 @@ public class SensitiveWordTest {
         SensitiveWordUtil.initialize( "classpath:dict/" );
 
         String        text = "xAxBxCxABxBCxABCxDxDCxCDxDCDx";
-        Set< String > sets = SensitiveWordUtil.check( text, true );
+        Set< String > sets = SensitiveWordUtil.check( text, false );
         log.debug(  "找到敏感词：" + sets );
 
-        text = SensitiveWordUtil.replace( text, "*", true );
+        text = SensitiveWordUtil.replace( text, "*", false );
         log.debug(  "替换敏感词：" + text );
     }
 }

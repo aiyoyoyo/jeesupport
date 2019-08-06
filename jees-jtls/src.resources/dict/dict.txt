@@ -1,5 +1,5 @@
-A
+
 AB
 ABC
-D
-DCD
+BC
+BCD
