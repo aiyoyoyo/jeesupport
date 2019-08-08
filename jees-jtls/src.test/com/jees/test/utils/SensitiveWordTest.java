@@ -13,10 +13,9 @@ public class SensitiveWordTest {
     public void test() throws FileNotFoundException{
         SensitiveWordUtil.initialize( "classpath:dict/" );
 
-        String        text = "xAxBxCxABxBCxABCxDxDCxCDxDCDx";
+        String        text = "xAxBxCxABxBCxABCxDxDCxCDxDCDxA";
         Set< String > sets = SensitiveWordUtil.check( text, false );
         log.debug(  "找到敏感词：" + sets );
-
         text = SensitiveWordUtil.replace( text, "*", false );
         log.debug(  "替换敏感词：" + text );
     }

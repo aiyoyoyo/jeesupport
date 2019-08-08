@@ -1,5 +1,9 @@
-
 AB
 ABC
 BC
 BCD
+BA
+BBA
+CA
+AA
+CCCCA

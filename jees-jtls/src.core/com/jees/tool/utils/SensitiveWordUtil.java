@@ -115,6 +115,7 @@ public class SensitiveWordUtil {
                 if( curr_map.size() <= 2 ) match = 0;
             }
         }
+        if( match == 1 ) match = 0;
         return match;
     }
 
