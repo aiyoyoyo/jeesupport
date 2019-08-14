@@ -30,7 +30,7 @@ public class SensitiveWordUtil {
         Map new_map;
         while (key_it.hasNext()){
             //关键字
-            key = key_it.next();
+            key = key_it.next().toLowerCase();
             curr_map = wordMap;
             for( int i = 0; i < key.length(); i++ ){
                 //转换成char型
@@ -95,23 +95,26 @@ public class SensitiveWordUtil {
     private static int check(String _text, int _idx, boolean _min){
         int match    = 0;
         Map curr_map = wordMap;
-
+        _text = _text.toLowerCase();
         for( int i = _idx; i < _text.length(); ++i ){
             char word = _text.charAt( i );
             curr_map = ( Map ) curr_map.get( word );
             if( curr_map == null ){
+                log.debug( "-->find null:" + match + ", " + word );
                 match = 0;
                 break;
             }
             match ++;
             if( "1".equals( curr_map.get( "isEnd" ) ) ){
                 if( _min ){
+                    log.debug( "-->find min:" + match + ", " + word + ", " + curr_map.size() );
                     break;
                 }else{
-                    log.debug( "-->find end:" + match + ", " + curr_map.size() );
+                    log.debug( "-->find end:" + match + ", " + word +", " + curr_map.size() );
                     if( curr_map.size() <= 2 ) break;
                 }
             }else if( i == _text.length() - 1 ){
+                log.debug( "-->find len end:" + match + ", " + word + ", " + curr_map.size() );
                 if( curr_map.size() <= 2 ) match = 0;
             }
         }
