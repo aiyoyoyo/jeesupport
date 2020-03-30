@@ -126,6 +126,7 @@ public abstract class AbsRequestHandler< C extends ChannelHandlerContext > imple
         if( msg instanceof Message ){
             Message m = ( Message ) msg;
             cmd = ( m ).getId();
+            m.setUserId( usr );
             MessageFile.write( cmd, usr,  m, false );
         }else if( msg instanceof JSONObject ){
             JSONObject job = ( JSONObject ) msg;
