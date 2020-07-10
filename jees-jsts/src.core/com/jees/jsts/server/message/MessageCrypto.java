@@ -11,6 +11,7 @@ import com.jees.tool.utils.DataUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.ReferenceCountUtil;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
@@ -63,25 +64,31 @@ public class MessageCrypto extends AbsNettyDecoder {
 			log.debug( "--消息长度不足: READ-LEN=[" + _buf.readableBytes() + "]"  );
 			return null;
 		}
+		try{
+			_buf.markReaderIndex();
 
-		_buf.markReaderIndex();
+			int dataLength;
+			if( CommonConfig.getBoolean( "jees.jsts.socket.bom", false ) ){
+				dataLength = DataUtil.warpHL( _buf.readInt() );
+			}else{
+				dataLength = _buf.readInt();
+			}
+			if( _buf.readableBytes() < dataLength ){
+				log.debug( "--消息长度小于可读长度: LEN=[" + dataLength + "], READ-LEN=[" + _buf.readableBytes() + "]" );
+				_buf.resetReaderIndex();
+				return null;
+			}
 
-		int dataLength;
-		if( CommonConfig.getBoolean( "jees.jsts.socket.bom", false ) ){
-			dataLength = DataUtil.warpHL( _buf.readInt() );
-		}else{
-			dataLength = _buf.readInt();
+			byte[] body = new byte[dataLength];
+			_buf.readBytes( body );
+
+			return body;
+		}finally{
+			if ( _buf.readableBytes() <= 0 ){
+				log.debug( "--内存释放:" + System.identityHashCode( _buf ) );
+				ReferenceCountUtil.release( _buf );
+			}
 		}
-		if ( _buf.readableBytes() < dataLength ) {
-			log.debug( "--消息长度小于可读长度: LEN=[" + dataLength + "], READ-LEN=[" + _buf.readableBytes() + "]"  );
-			_buf.resetReaderIndex();
-			return null;
-		}
-
-		byte[] body = new byte [ dataLength ];
-		_buf.readBytes( body );
-
-		return body;
 	}
 	// socket序列化部分 ============================================================
 	private static Map< Class< ? > , Schema< ? > > cachedSchema = new ConcurrentHashMap< Class< ? > , Schema< ? > >();

@@ -75,6 +75,10 @@ public abstract class AbsHandlerService<C extends ChannelHandlerContext > implem
         final ByteBuf buf = _ctx.alloc().buffer();
         Object        msg = MessageCrypto.serializer( buf, _obj, session.isWebSocket( _ctx ) );
         _ctx.writeAndFlush( msg );
+        if( buf.refCnt() == 1){
+            log.debug( "--内存检测，判定再次释放：" + System.identityHashCode( buf ) );
+            buf.release();
+        }
     }
 
     public void register(){
