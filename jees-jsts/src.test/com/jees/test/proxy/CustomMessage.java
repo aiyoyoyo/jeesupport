@@ -1,7 +1,7 @@
 package com.jees.test.proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.jees.jsts.server.annotation.MessageProxy;
+import com.jees.server.annotation.MessageProxy;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -4,6 +4,7 @@ logging:
  level:
   org.springframework: WARN
   com.jees: DEBUG
+  com.jees.common: ERROR
 
 spring:
  application:
@@ -31,14 +32,16 @@ jees:
    monitor: false
   socket:
    enable: true
-   lostTime: 0
+   trigger: true
+   standMax: 1
    standTime: 60000
    port: 8000
    bom: false
   websocket:
    enable: true
    url: /
-   lostTime: 0
+   trigger: true
+   standMax: 1
    standTime: 60000
    port: 8001
    ssl:
@@ -48,7 +51,7 @@ jees:
     type: PKCS12
     pass: PASSWORD
   connector:
-   enable: false
+   enable: true
    retry:
     max: 3
     rate: 10000

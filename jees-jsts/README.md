@@ -1,14 +1,14 @@
 # jees-jsts
 
 ## 内容介绍
-本工具基于Spring和Netty实现Socket服务器，目前支持Socket和WebSocket这2种格式。WebSocket还有待完善。
+本工具基于Spring和Netty实现Socket服务器，目前支持Socket和WebSocket这2种格式。
 ## 基本用法
 在pom.xml中加入下面2段内容。
 ```
 <parent>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-boot</artifactId>
-	<version>1.1.4-SNAPSHOT</version>
+	<version>1.1.8-SNAPSHOT</version>
 </parent>
 ```
 ```
@@ -22,15 +22,65 @@
 * 核心配置
 > application.yml
 ```
+#日志配置，此处使用默认日志
+logging:
+ config: classpath:log4j2.xml
+ level:
+  org.springframework: WARN
+  com.jees: DEBUG
+  com.jees.common: ERROR
+
+spring:
+ application:
+  name: jees-jsts
+
 jees:
  jsts:
+  message: #消息代理机制
+   request:
+    enable: false #日志开启
+    exception: false
+    clazz: com.jees.interf.IRequest,com.jees.interf.IResponse #请求命令注册类
+   handler:
+    enable: false #日志开启
+    clazz: com.jees.interf.IResponse #应答命令注册类
+   error:
+    enable: false #日志开启
+    clazz: com.jees.interf.IError #错误命令注册类
+   proxy: false #启用Message消息类代理
+   type: json #消息内容为json/proto
+   jsonFile: false #启用消息写入文件
+   jsonFormat: yyyy-MM-dd_HH-mm-ss-SSS
+   jsonPath: C:/jsons/
+   jsonLogs: true #消息日志
+   monitor: false #输出消息处理时长
   socket:
-   standTime: 60000
-   port: 8000
+   enable: true #启用socket服务
+   trigger: true #使用心跳
+   standMax: 1 #挂起多少次后断开
+   standTime: 60000 #挂起时长，毫秒
+   port: 8000 #端口
+   bom: false #是否使用消息小端字节序
   websocket:
-   url: /ws
+   enable: true #启用websocket服务
+   url: / #WebSocket地址头， 默认 ws:// 
+   trigger: true
+   standMax: 1
    standTime: 60000
    port: 8001
+   ssl: 
+    enable: false #启用ssl，访问由ws://变更为wss://
+    file: config/cert/jees.pfx #加密相关文件位置
+    keyfile: config/cert/jees.key #加密相关文件位置
+    type: PKCS12 #加密类型
+    pass: PASSWORD #密钥
+  connector: #连接器，可以与指定服务器连接
+   enable: true 
+   retry:
+    max: 3
+    rate: 10000
+    delay: 300000
+   hosts: 127.0.0.1:8000 #要连接的服务器，多个服务器用“,”分割
 ```
 * 日志配置
 > log4j2.xml
@@ -38,9 +88,8 @@ jees:
 ```
 // 启动服务
 public static void main( String[] args ) {  
-    new ClassPathXmlApplicationContext( ICommonConfig.CFG_DEFAULT ) ;
-    CommonContextHolder.getBean( ISupportSocket.class ).onload();
-    CommonContextHolder.getBean( ISupportWebSocket.class ).onload();
+    SpringApplication.run( JstsApplication.class, args );
+    CommonContextHolder.getBean( IServerService.class ).onload();
 }
 ```
 ## 其他
@@ -48,3 +97,23 @@ public static void main( String[] args ) {
 QQ群：8802330  
 论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
+## 版本说明
+>1.2.0-SNAPSHOT
+1. 重写了服务器结构，去掉了一些多余的类。
+2. 消息代理机制可以参考演示程序中CustomMessage
+3. 在socket服务器可以使用proto形式，解码过程可以参考MessageCrypto类
+```
+// 消息处理代码，见JstsModel类
+@MessageRequest( CMD_PROXY )
+public void CMD_PROXY( ChannelHandlerContext _ctx, Message _msg ){
+    System.out.println( "CMD_PROXY-->" + _msg.toString() );
+    handler.response( _msg, _ctx );
+}
+
+@MessageRequest( CMD_PROTO )
+public void CMD_PROTO( ChannelHandlerContext _ctx, CustomMessage _msg ){
+    System.out.println( "CMD_PROTO-->" + _msg.toString() );
+    handler.response( _msg, _ctx );
+}
+```
+4. 版本不稳定，需要更多测试，欢迎各位反馈。

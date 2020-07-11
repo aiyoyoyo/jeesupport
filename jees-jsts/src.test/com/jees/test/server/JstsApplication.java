@@ -1,13 +1,8 @@
 package com.jees.test.server;
 
 import com.jees.common.CommonContextHolder;
-import com.jees.core.socket.support.ISupportHandler;
-import com.jees.jsts.netty.support.INettyHandler;
-import com.jees.jsts.server.abs.*;
-import com.jees.jsts.server.interf.IConnectorService;
-import com.jees.jsts.server.interf.IRequestHandler;
-import com.jees.jsts.server.interf.IServerService;
-import com.jees.jsts.server.message.MessageException;
+import com.jees.server.abs.*;
+import com.jees.server.interf.*;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
@@ -36,52 +31,49 @@ public class JstsApplication{
 		return new AbsConnectorService(){};
 	}
 
-	/**
-	 * 客户端事件处理器
-	 *
-	 * @return
-	 */
+
+
 	@Bean
-	public ISupportHandler< ChannelHandlerContext > supportHandler(){
-		return new AbsHandlerService< ChannelHandlerContext >(){
+	@Scope( value = ISocketServer.SCOPE_CREATOR )
+	public AbsConnectorHandler connectroHandler(){
+		return new AbsConnectorHandler(){};
+	}
+
+	@Bean
+	@Scope( value = ISocketServer.SCOPE_CREATOR )
+	public ISuperUser superuser(){
+		return new AbsSuperUser< Long, ChannelHandlerContext >(){
 			@Override
-			public void error( ChannelHandlerContext _ctx, Throwable _thr ){
-				log.error( "ERROR->" + _thr.getMessage() );
+			public void switchover( ChannelHandlerContext _net ){
+
 			}
 		};
 	}
 
 	/**
-	 * 客户端请求执行器
+	 * 客户端时间执行器，需要自己实现相应的关联方法
 	 *
 	 * @return
 	 */
 	@Bean
-	public IRequestHandler< ChannelHandlerContext > requestHandler(){
-		return new AbsRequestHandler< ChannelHandlerContext >(){
+	public IChannelHandler< ChannelHandlerContext > requestHandler(){
+		return new AbsChannelHandler(){
 			@Override
-			public boolean before( ChannelHandlerContext _ctx, int _cmd ){
+			public void error( ChannelHandlerContext _net, Throwable _thr ){
+			}
+
+			@Override
+			public boolean before( ChannelHandlerContext _net, int _cmd ){
 				return true;
 			}
 
 			@Override
-			public void after( ChannelHandlerContext _ctx ){
+			public void after( ChannelHandlerContext _net ){
 			}
 
 			@Override
-			public void unregist( ChannelHandlerContext _ctx, Object _msg ){
-			}
-
-			@Override
-			public void error( ChannelHandlerContext _ctx, MessageException _msg ){
-				log.error( "ERROR->" + _msg.getMessage() );
+			public void unregist( ChannelHandlerContext _net, Object _msg ){
 			}
 		};
-	}
-
-	@Bean
-	@Scope( value = INettyHandler.SCOPE_CREATOR )
-	public AbsConnectorHandler connectroHandler(){
-		return new AbsConnectorHandler(){};
 	}
 }
