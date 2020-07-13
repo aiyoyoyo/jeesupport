@@ -45,9 +45,18 @@ QQ群：8802330
 
 ## 版本说明
 在版本2.0.0之前，都会是快照版本。在此之前会逐步完善相关内容。
+## Jees-JSTS Ver.1.2.0-SNAPSHOT <font color='red'>New</font>
+### 更新内容
+1. 简化Socket和WebSocket实现类结构，现在统一通过SocketServer类的onload方法来区分。
+2. Message消息分为2种代理方式，一种是Message类，一种是AbsMessage类。
+3. AbsMessage适用于Protobuff类型定义，可以参考CustomMessage方式定义。
+4. 优化了通讯消息、错误命令注解方式，提供了更详细的打印，包括收发消息的文件输出日志。
+### 后续更新
+1. 提供状态同步和帧同步的演示程序。
+2. 提供现有支持的多种协议方式的演示程序，将包括protobuff和json的2种方式的Message代理模式和非代理模式。
 ## 1.1.8 更新说明 
 ### Jees-Boot Ver.1.1.8-SNAPSHOT
-> [JWEBS] Ver 1.2.0-SNAPSHOT <font color='red'>New</font>
+> [JWEBS] Ver 1.2.0-SNAPSHOT 
 1. 旧的MySQL支持暂时不再更新，保留MySQL用法的版本为1.1.1-SNAPSHOT
 2. 新得版本使用Redis代替数据库使用，请参考JDBS中的示例
 3. 优化实现细节，由于DWR泛型的问题，放弃了SuperUser类的id类型使用自定义泛型的方式，改为long类型。
