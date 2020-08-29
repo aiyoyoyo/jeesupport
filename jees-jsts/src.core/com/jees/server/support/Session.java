@@ -52,7 +52,7 @@ public class Session< ID, NET >{
         if( net2usr.containsKey( net ) ){
             net2usr.remove( net );
         }
-        if( id2net.containsKey( id ) ){
+        if( id != null && id2net.containsKey( id ) ){
             id2net.remove( id );
         }
     }
