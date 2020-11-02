@@ -1,0 +1,13 @@
+/logs/
+/target/
+/jees-jdbs/target/
+/jees-jsts/target/
+/jees-jtls/target/
+/jees-webs/target/
+/.idea/
+/.install
+/jees-boot/jees-boot.iml
+/jees-jdbs/jees-jdbs.iml
+/jees-jsts/jees-jsts.iml
+/jees-jtls/jees-jtls.iml
+/jees-webs/jees-webs.iml
