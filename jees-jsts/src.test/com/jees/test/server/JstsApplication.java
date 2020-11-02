@@ -31,8 +31,6 @@ public class JstsApplication{
 		return new AbsConnectorService(){};
 	}
 
-
-
 	@Bean
 	@Scope( value = ISocketServer.SCOPE_CREATOR )
 	public AbsConnectorHandler connectroHandler(){
