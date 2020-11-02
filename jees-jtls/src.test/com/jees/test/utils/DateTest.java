@@ -1,29 +1,34 @@
 package com.jees.test.utils;
 
+import com.jees.tool.utils.DataUtil;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.*;
 import org.junit.Test;
 
 import com.jees.tool.joda.DateUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @Log4j2
 public class DateTest {
 	@Test
 	public void test() {
-		DateTime dt = new DateTime( 2018 , 7 , 1 , 23 , 59 , 59 , 333 );// 2010年2月13日10点30分50秒333毫秒
-		int[] d = DateUtils.dateBeforeNow( dt );
-
-		log.debug( "原时间：" + dt.toString() );
-		log.debug( "相差 ：[" + d[ 2 ] + "]周[" + d[ 0 ] + "]年[" + d[ 1 ] + "]月[" + d[ 3 ] + "]日[" + d[ 4 ] + "]时[" + d[ 5 ] + "]分[" + d[ 6 ] + "]秒" );
-
-		String string_u = dt.toString( "w" );
-
-		log.debug( "第几周：" + string_u );
-
-		int day = DateUtils.dateDiffDay( dt );
-		log.debug( "相差天数：" + day );
+//		DateTime dt = new DateTime( 2018 , 7 , 1 , 23 , 59 , 59 , 333 );// 2010年2月13日10点30分50秒333毫秒
+//		int[] d = DateUtils.dateBeforeNow( dt );
+//
+//		log.debug( "原时间：" + dt.toString() );
+//		log.debug( "相差 ：[" + d[ 2 ] + "]周[" + d[ 0 ] + "]年[" + d[ 1 ] + "]月[" + d[ 3 ] + "]日[" + d[ 4 ] + "]时[" + d[ 5 ] + "]分[" + d[ 6 ] + "]秒" );
+//
+//		String string_u = dt.toString( "w" );
+//
+//		log.debug( "第几周：" + string_u );
+//
+//		int day = DateUtils.dateDiffDay( dt );
+//		log.debug( "相差天数：" + day );
+		String str = DataUtil.str2hex16( "A123B" );
+		log.debug( str );
+		log.debug( DataUtil.hex162str( str ) );
 	}
 
 	/*

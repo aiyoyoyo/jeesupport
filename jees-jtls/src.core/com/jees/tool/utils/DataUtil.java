@@ -1,5 +1,7 @@
 package com.jees.tool.utils;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -11,6 +13,7 @@ import java.util.Locale;
  * @author aiyoyoyo
  *
  */
+@Log4j2
 public class DataUtil {
 
 	public static final String Charset_UTF8 = "UTF-8";
@@ -127,52 +130,40 @@ public class DataUtil {
 	}
 
 	/**
-	 * 16进制字符串转byte[]
-	 *
-	 * @param _val
-	 * @return byte[]
-	 */
-	public static byte[] hex2bytes(String _val) {
-		// 奇数位补0
-		if (_val.length() % 2 != 0) {
-			_val = "0" + _val;
-		}
-
-		int length = _val.length();
-		ByteBuffer buffer = ByteBuffer.allocate(length / 2);
-		for (int i = 0; i < length; i++) {
-			String hex_str = _val.charAt(i) + "";
-			i++;
-			hex_str += _val.charAt(i);
-			byte b = (byte) Integer.parseInt(hex_str, 16);
-			buffer.put(b);
-		}
-		return buffer.array();
-	}
-
-	/**
-	 * byte[]转16进制字符串
+	 * 将字符串转换为16进制字符串
 	 *
 	 * @param _val
 	 * @return
 	 */
-	public static String bytes2hex(byte[] _val) {
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < _val.length; i++) {
-			buffer.append(byte2hex(_val[i]));
+	public static String str2hex16(String _val) {
+		char[] chars = "0123456789ABCDEF".toCharArray();
+		StringBuilder sb = new StringBuilder("");
+		byte[] bs = _val.getBytes();
+		int bit;
+		for (int i = 0; i < bs.length; i++) {
+			bit = (bs[i] & 0x0f0) >> 4;
+			sb.append(chars[bit]);
+			bit = bs[i] & 0x0f;
+			sb.append(chars[bit]);
 		}
-		return buffer.toString();
+		return sb.toString();
 	}
 
 	/**
-	 * byte转16进制字符
-	 *
+	 * 将16进制字符串转换为字符串
 	 * @param _val
 	 * @return
 	 */
-	public static String byte2hex(byte _val) {
-		String hex = Integer.toHexString(_val & 0xFF);
-		if (hex.length() == 1) hex = '0' + hex;
-		return hex.toUpperCase(Locale.getDefault());
+	public static String hex162str(String _val) {
+		String str = "0123456789ABCDEF";
+		char[] hexs = _val.toCharArray();
+		byte[] bytes = new byte[_val.length() / 2];
+		int n;
+		for (int i = 0; i < bytes.length; i++) {
+			n = str.indexOf(hexs[2 * i]) * 16;
+			n += str.indexOf(hexs[2 * i + 1]);
+			bytes[i] = (byte) (n & 0xff);
+		}
+		return new String(bytes);
 	}
 }
