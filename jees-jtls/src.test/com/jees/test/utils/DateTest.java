@@ -26,9 +26,13 @@ public class DateTest {
 //
 //		int day = DateUtils.dateDiffDay( dt );
 //		log.debug( "相差天数：" + day );
-		String str = DataUtil.str2hex16( "A123B" );
-		log.debug( str );
-		log.debug( DataUtil.hex162str( str ) );
+//		String str = DataUtil.str2hex16( "A123B" );
+//		log.debug( str );
+//		byte[] byt = DataUtil.hex162bytes( str );
+//		log.debug( Arrays.toString( byt ) );
+//		str = DataUtil.bytes2hex16( byt );
+//		log.debug( str );
+//		log.debug( DataUtil.hex162str( str ) );
 	}
 
 	/*

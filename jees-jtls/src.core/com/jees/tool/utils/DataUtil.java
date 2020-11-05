@@ -151,6 +151,7 @@ public class DataUtil {
 
 	/**
 	 * 将16进制字符串转换为字符串
+	 *
 	 * @param _val
 	 * @return
 	 */
@@ -165,5 +166,33 @@ public class DataUtil {
 			bytes[i] = (byte) (n & 0xff);
 		}
 		return new String(bytes);
+	}
+
+	public static byte[] hex162bytes(String _val) {
+		int len = (_val.length() / 2);
+		byte[] result = new byte[len];
+		char[] achar = _val.toCharArray();
+		for (int i = 0; i < len; i++) {
+			int pos = i * 2;
+			result[i] = (byte) (ch2byte(achar[pos]) << 4 | ch2byte(achar[pos + 1]));
+		}
+		return result;
+	}
+
+	private static byte ch2byte(char _val) {
+		byte b = (byte) "0123456789ABCDEF".indexOf(_val);
+		return b;
+	}
+
+	public static final String bytes2hex16(byte[] _val) {
+		StringBuffer sb = new StringBuffer(_val.length);
+		String sTemp;
+		for (int i = 0; i < _val.length; i++) {
+			sTemp = Integer.toHexString(0xFF & _val[i]);
+			if (sTemp.length() < 2)
+				sb.append(0);
+			sb.append(sTemp.toUpperCase());
+		}
+		return sb.toString();
 	}
 }
