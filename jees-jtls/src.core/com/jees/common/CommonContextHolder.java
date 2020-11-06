@@ -53,6 +53,11 @@ public class CommonContextHolder implements ApplicationContextAware {
 		return beans.iterator().next() ;
 	}
 
+	public static < T > Collection<T> getBeans(Class< T > _cls ){
+		_check_application_context() ;
+		Collection< T > beans = applicationContext.getBeansOfType( _cls ).values();
+		return beans;
+	}
 	/**
 	 * 清除applicationContext静态变量.
 	 */
