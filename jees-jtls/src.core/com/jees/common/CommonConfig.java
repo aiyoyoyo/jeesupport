@@ -98,4 +98,26 @@ public class CommonConfig {
 		String val = getString( _key );
 		return new StringTokenizer( val, "," );
 	}
+
+	public static <T> T get( String _key, T _t ){
+		return _cast_value( _key, _t );
+	}
+
+	private static <T> T _cast_value(Object _obj, T _def ){
+		String val;
+		if( _obj != null ){
+			val = _obj.toString();
+		}else return _def;
+		try{
+			Object tpl;
+			if( _def instanceof Integer ) tpl = Integer.parseInt( val );
+			else if( _def instanceof Float ) tpl = Float.parseFloat( val );
+			else if( _def instanceof Boolean ) tpl = Boolean.valueOf( val );
+			else if( _def instanceof Long ) tpl = Long.valueOf( val );
+			else tpl = val;
+			return (T) tpl;
+		}catch ( Exception e ){
+			return _def;
+		}
+	}
 }
