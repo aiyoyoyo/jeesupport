@@ -85,6 +85,10 @@ public class DataUtil {
 		return ByteBuffer.wrap(long2bytes(_val)).order(ByteOrder.LITTLE_ENDIAN).getLong();
 	}
 
+	public static int warpLH(int _val){
+		return ByteBuffer.wrap(int2bytes(_val)).order(ByteOrder.BIG_ENDIAN).getInt();
+	}
+
 	/**
 	 * 截取bytes
 	 *
@@ -165,6 +169,17 @@ public class DataUtil {
 		}
 		return sb.toString();
 	}
+
+
+	public static String fixbit( String _val, int _size ){
+		StringBuffer sb = new StringBuffer("");
+		for (int i = 0; i < _size - _val.length(); i++) {
+			sb.append( "0" );
+		}
+		sb.append( _val );
+		return sb.toString();
+	}
+
 	public static String hex_2_str(String _val) {
 		String str = "0123456789ABCDEF";
 		char[] hexs = _val.toCharArray();

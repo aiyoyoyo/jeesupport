@@ -21,6 +21,8 @@ public class DataTest {
 //        log.debug( "sub bytes 2 bytes:" + Arrays.toString( DataUtil.subBytes( new byte[]{ 0, 0, 0, 1 }, 2, 4 ) ) );  //0,0,0,1->0,1
 //        log.debug( "long 2 bytes:" + Arrays.toString( DataUtil.long2bytes( 1L ) ) );  //1->00000001
 //        log.debug( "bytes 2 long:" + DataUtil.bytes2long( new byte[]{ 0,0,0,0, 0, 0, 0, 1 } ) );  //00000001->1
+
+        log.debug( DataUtil.bytes_2_hex( new byte[]{48}));
     }
 
     @Test
