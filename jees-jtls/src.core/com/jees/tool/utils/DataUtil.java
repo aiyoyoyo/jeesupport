@@ -1,11 +1,13 @@
 package com.jees.tool.utils;
 
 import lombok.extern.log4j.Log4j2;
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Locale;
+import java.util.Stack;
 
 /**
  * 提供基础数据类型的相关操作
@@ -129,33 +131,37 @@ public class DataUtil {
 		return num;
 	}
 
-	/**
-	 * 将字符串转换为16进制字符串
-	 *
-	 * @param _val
-	 * @return
-	 */
-	public static String str2hex16(String _val) {
-		char[] chars = "0123456789ABCDEF".toCharArray();
-		StringBuilder sb = new StringBuilder("");
-		byte[] bs = _val.getBytes();
-		int bit;
-		for (int i = 0; i < bs.length; i++) {
-			bit = (bs[i] & 0x0f0) >> 4;
-			sb.append(chars[bit]);
-			bit = bs[i] & 0x0f;
-			sb.append(chars[bit]);
+	public static String num10_2_2( int _val ){
+		return Integer.toBinaryString( _val );
+	}
+	public static String num10_2_8( int _val ){
+		return Integer.toOctalString( _val );
+	}
+	public static String num10_2_16( int _val ){
+		return Integer.toHexString( _val );
+	}
+	public static String num2_2_10( String _val ){
+		return "" + Integer.parseInt( _val, 2 );
+	}
+	public static String num8_2_10( String _val ){
+		return "" + Integer.parseInt( _val, 8 );
+	}
+	public static String num16_2_10( String _val ){
+		return "" + Integer.parseInt( _val, 16 );
+	}
+
+	public static String bytes_2_hex(byte[] _val) {
+		StringBuffer sb = new StringBuffer(_val.length);
+		String sTemp;
+		for (int i = 0; i < _val.length; i++) {
+			sTemp = Integer.toHexString(0xFF & _val[i]);
+			if (sTemp.length() < 2)
+				sb.append(0);
+			sb.append(sTemp.toUpperCase());
 		}
 		return sb.toString();
 	}
-
-	/**
-	 * 将16进制字符串转换为字符串
-	 *
-	 * @param _val
-	 * @return
-	 */
-	public static String hex162str(String _val) {
+	public static String hex_2_str(String _val) {
 		String str = "0123456789ABCDEF";
 		char[] hexs = _val.toCharArray();
 		byte[] bytes = new byte[_val.length() / 2];
@@ -166,33 +172,5 @@ public class DataUtil {
 			bytes[i] = (byte) (n & 0xff);
 		}
 		return new String(bytes);
-	}
-
-	public static byte[] hex162bytes(String _val) {
-		int len = (_val.length() / 2);
-		byte[] result = new byte[len];
-		char[] achar = _val.toCharArray();
-		for (int i = 0; i < len; i++) {
-			int pos = i * 2;
-			result[i] = (byte) (ch2byte(achar[pos]) << 4 | ch2byte(achar[pos + 1]));
-		}
-		return result;
-	}
-
-	private static byte ch2byte(char _val) {
-		byte b = (byte) "0123456789ABCDEF".indexOf(_val);
-		return b;
-	}
-
-	public static final String bytes2hex16(byte[] _val) {
-		StringBuffer sb = new StringBuffer(_val.length);
-		String sTemp;
-		for (int i = 0; i < _val.length; i++) {
-			sTemp = Integer.toHexString(0xFF & _val[i]);
-			if (sTemp.length() < 2)
-				sb.append(0);
-			sb.append(sTemp.toUpperCase());
-		}
-		return sb.toString();
 	}
 }

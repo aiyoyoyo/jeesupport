@@ -7,13 +7,14 @@ import org.junit.Test;
 
 import com.jees.tool.joda.DateUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 
 @Log4j2
 public class DateTest {
 	@Test
-	public void test() {
+	public void test() throws UnsupportedEncodingException {
 //		DateTime dt = new DateTime( 2018 , 7 , 1 , 23 , 59 , 59 , 333 );// 2010年2月13日10点30分50秒333毫秒
 //		int[] d = DateUtils.dateBeforeNow( dt );
 //
@@ -23,16 +24,6 @@ public class DateTest {
 //		String string_u = dt.toString( "w" );
 //
 //		log.debug( "第几周：" + string_u );
-//
-//		int day = DateUtils.dateDiffDay( dt );
-//		log.debug( "相差天数：" + day );
-//		String str = DataUtil.str2hex16( "A123B" );
-//		log.debug( str );
-//		byte[] byt = DataUtil.hex162bytes( str );
-//		log.debug( Arrays.toString( byt ) );
-//		str = DataUtil.bytes2hex16( byt );
-//		log.debug( str );
-//		log.debug( DataUtil.hex162str( str ) );
 	}
 
 	/*
