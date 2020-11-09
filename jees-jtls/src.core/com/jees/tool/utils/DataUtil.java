@@ -150,6 +150,10 @@ public class DataUtil {
 		return "" + Integer.parseInt( _val, 16 );
 	}
 
+	public static String num16_2_2( String _val ){
+		return num10_2_2( Integer.parseInt( num16_2_10( _val ) ) );
+	}
+
 	public static String bytes_2_hex(byte[] _val) {
 		StringBuffer sb = new StringBuffer(_val.length);
 		String sTemp;
