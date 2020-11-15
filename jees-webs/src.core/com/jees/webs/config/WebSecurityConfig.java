@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * 登陆成功后的处理
      *
-     * @return
+     * @return 登陆账号后验证结果
      */
     @Bean
     public AuthenticationSuccessHandler successHandler(){
@@ -87,7 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * 登陆失败后的处理，提示可以通过URL参数或者Session参数获取
      *
-     * @return
+     * @return 验证函数
      */
     @Bean
     public AuthenticationFailureHandler failureHandler(){
@@ -194,8 +194,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * 通过栏目包含的权限，来决定所需要的权限
      *
-     * @param _hs
-     * @throws Exception
+     * @param _hs 权限管理器
+     * @throws Exception 错误
      */
     @Override
     protected void configure( HttpSecurity _hs ) throws Exception{
@@ -221,6 +221,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     /**
      * 通过userDetailsService来读取用户账号，密码，权限
+     * @param _auth 权限
      */
     @Override
     protected void configure( AuthenticationManagerBuilder _auth ) throws Exception{

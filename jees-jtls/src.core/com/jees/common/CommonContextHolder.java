@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
- * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候中取出ApplicaitonContext.
- * 
+ * 以静态变量保存Spring ApplicationContext,可在任何代码任何地方任何时候中取出ApplicaitonContext.
  * @author aiyoyoyo
  */
 @Log4j2
@@ -28,6 +27,7 @@ public class CommonContextHolder implements ApplicationContextAware {
 
 	/**
 	 * 取得存储在静态变量中的ApplicationContext.
+	 * @return ApplicationContext对象
 	 */
 	public static ApplicationContext getApplicationContext() {
 		_check_application_context() ;
@@ -36,6 +36,9 @@ public class CommonContextHolder implements ApplicationContextAware {
 
 	/**
 	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+	 * @param _name 名称
+	 * @param <T> 对象类型
+	 * @return 对象
 	 */
 	@SuppressWarnings( "unchecked" )
 	public static < T > T getBean( String _name ) {
@@ -45,6 +48,9 @@ public class CommonContextHolder implements ApplicationContextAware {
 
 	/**
 	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+	 * @param _cls 类
+	 * @param <T> 类型
+	 * @return 对象
 	 */
 	public static < T > T getBean( Class< T > _cls ) {
 		_check_application_context() ;
@@ -53,6 +59,12 @@ public class CommonContextHolder implements ApplicationContextAware {
 		return beans.iterator().next() ;
 	}
 
+	/**
+	 * 获取通类的所有实例
+	 * @param _cls 类
+	 * @param <T> 类型
+	 * @return 实例集合
+	 */
 	public static < T > Collection<T> getBeans(Class< T > _cls ){
 		_check_application_context() ;
 		Collection< T > beans = applicationContext.getBeansOfType( _cls ).values();

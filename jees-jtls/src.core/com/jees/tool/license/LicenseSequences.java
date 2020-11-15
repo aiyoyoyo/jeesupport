@@ -50,7 +50,7 @@ public class LicenseSequences {
     
     /**
      * 获取本机的机器码后，进行格式化及转大写
-     * @return
+     * @return 机器码
      */
     public static String s_sequence() {          
         String code = MachineSerial.s_code();

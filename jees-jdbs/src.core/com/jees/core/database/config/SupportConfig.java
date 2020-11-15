@@ -32,7 +32,7 @@ public class SupportConfig {
 
     /**
      * atomikos事务管理器，一般情况无需修改
-     * @return
+     * @return 用户事务
      */
     @Bean( initMethod = "init", destroyMethod = "close" )
     public UserTransactionManager atomikosTM(){
@@ -48,7 +48,8 @@ public class SupportConfig {
 
     /**
      * atomikos事务实现，一般情况无需修改
-     * @return
+     * @return 用户事物实现类
+     * @throws SystemException 系统异常
      */
     @Bean
     public UserTransactionImp atomikosUT() throws SystemException {
@@ -64,9 +65,9 @@ public class SupportConfig {
 
     /**
      * spring jta 事务管理器，一般情况无需修改
-     * @param _utm
-     * @param _uti
-     * @return
+     * @param _utm 用户事务管理器
+     * @param _uti 用户事务实现
+     * @return jta事务管理器
      */
     @Bean
     public JtaTransactionManager transactionManager(@Qualifier( "atomikosTM" ) UserTransactionManager _utm,
@@ -92,7 +93,7 @@ public class SupportConfig {
 
     /**
      * 找到声明的数据库配置清单依次注入，并返回默认数据库
-     * @return
+     * @return SessionFactory
      */
     @Bean
     @DependsOn( "atomikosJP" )

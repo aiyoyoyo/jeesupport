@@ -46,8 +46,8 @@ public class RSAUtils {
 	 * 
 	 * @param _key 私钥
 	 * @param _data 待解密数据
-	 * @return
-	 * @throws Exception
+	 * @return 解密后二进制
+	 * @throws Exception 错误
 	 */
 	public static byte[] s_decrypt_private( byte[] _key, byte[] _data ) throws Exception {
 		// 取得私钥
@@ -81,8 +81,8 @@ public class RSAUtils {
 	 * 
 	 * @param _key 公钥
 	 * @param _data 待解密数据
-	 * @return
-	 * @throws Exception
+	 * @return 公钥字节
+	 * @throws Exception 错误
 	 */
 	public static byte[] s_decrypt_public( byte[] _key , byte[] _data ) throws Exception {
 
@@ -107,8 +107,8 @@ public class RSAUtils {
 	 * 
 	 * @param _key 公钥
 	 * @param _data 待加密数据
-	 * @return 
-	 * @throws Exception
+	 * @return 加密公钥二进制数据
+	 * @throws Exception 错误
 	 */
 	public static byte[] s_encrypt_public( byte[] _key , byte[] _data ) throws Exception {
 
@@ -146,8 +146,8 @@ public class RSAUtils {
 	 * 
 	 * @param _key 私钥
 	 * @param _data 待加密数据
-	 * @return
-	 * @throws Exception
+	 * @return 私钥字节
+	 * @throws Exception 错误
 	 */
 	public static byte[] s_encrypt_private( byte[] _key , byte[] _data ) throws Exception {
 
@@ -185,8 +185,7 @@ public class RSAUtils {
 	 * 取得私钥
 	 * 
 	 * @param _keymap 密钥Map
-	 * @return 
-	 * @throws Exception
+	 * @return 私钥
 	 */
 	public static Key s_private_key( Map< String , Key > _keymap ){
 		return _keymap.get( RSA_PRIVATE_KEY );
@@ -196,8 +195,7 @@ public class RSAUtils {
 	 * 取得私钥
 	 * 
 	 * @param _keymap 密钥Map
-	 * @return
-	 * @throws Exception
+	 * @return 私钥字节数组
 	 */
 	public static byte[] s_private_key_byte( Map< String , Key > _keymap ){
 		return _keymap.get( RSA_PRIVATE_KEY ).getEncoded();
@@ -207,7 +205,7 @@ public class RSAUtils {
 	 * 取得公钥
 	 * 
 	 * @param _keymap 密钥Map
-	 * @return
+	 * @return 公钥
 	 */
 	public static Key s_public_key( Map< String , Key > _keymap ) {
 		return _keymap.get( RSA_PUBLIC_KEY );
@@ -217,7 +215,7 @@ public class RSAUtils {
 	 * 取得公钥
 	 * 
 	 * @param _keymap 密钥Map
-	 * @return 
+	 * @return 公钥字节
 	 */
 	public static byte[] s_public_key_byte( Map< String , Key > _keymap ) {
 		return _keymap.get( RSA_PUBLIC_KEY ).getEncoded();
@@ -227,8 +225,8 @@ public class RSAUtils {
 	 * 初始化密钥
 	 * 
 	 * @param _arg 种子
-	 * @return
-	 * @throws Exception
+	 * @return 密钥字节
+	 * @throws Exception 错误
 	 */
 	public static Map< String , Key > s_genkeys_map( byte[] _arg ) throws Exception {
 		// 实例化密钥对生成器
@@ -259,8 +257,8 @@ public class RSAUtils {
 	 * 初始化密钥
 	 * 
 	 * @param _arg 种子
-	 * @return
-	 * @throws Exception
+	 * @return 密钥
+	 * @throws Exception 错误
 	 */
 	public static Map< String , Key > s_genkeys_map( String _arg ) throws Exception {
 		return s_genkeys_map( _arg.getBytes() );
@@ -270,7 +268,7 @@ public class RSAUtils {
 	 * 初始化密钥
 	 * 
 	 * @return Map 密钥Map
-	 * @throws Exception
+	 * @throws Exception 错误
 	 */
 	public static Map< String , Key > s_genkeys_map() throws Exception {
 		return s_genkeys_map( UUID.randomUUID().toString().getBytes() );

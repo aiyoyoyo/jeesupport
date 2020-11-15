@@ -126,7 +126,7 @@ public class SensitiveWordUtil {
      * 检查是否包含敏感词，_min为false时，会进行词典的全匹配
      * @param _text 内容
      * @param _min 是否最小匹配
-     * @return
+     * @return 集合
      */
     public static Set<String> check(String _text, boolean _min){
         Set< String > sets = new HashSet();
@@ -147,10 +147,10 @@ public class SensitiveWordUtil {
 
     /**
      * 替换包含敏感词的内容
-     * @param _text
-     * @param _replace
-     * @param _min
-     * @return
+     * @param _text 敏感词
+     * @param _replace 替换字符
+     * @param _min 最小检查
+     * @return 结果
      */
     public static String replace( String _text, String _replace, boolean _min ){
         String str = _text;

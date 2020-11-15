@@ -10,10 +10,10 @@ import java.io.FileNotFoundException;
 public class UrlUtil{
     /**
      * 将访问路径截取成根路径
-     * eg: /xxx/yyy/zzz->"xxx"
-     * eg: /->""
-     * @param _uri
-     * @return
+     * eg: /xxx/yyy/zzz 转为 "xxx"
+     * eg: / 转为 ""
+     * @param _uri 地址
+     * @return 结果
      */
     public static String uri2root( String _uri ){
         if( !_uri.equals("/") && _uri.startsWith( "/" ) ) _uri = _uri.substring( 1 );
@@ -24,10 +24,10 @@ public class UrlUtil{
 
     /**
      * 获取文件路径，转换url相对路径
-     * eg: classpath:static/ -> static
-     * @param _path
-     * @param _make
-     * @return
+     * eg: classpath:static/ 转为 static
+     * @param _path 路径
+     * @param _make 是否创建文件夹
+     * @return 路径
      */
     public static String path2url( String _path, boolean _make ){
         try {
@@ -46,9 +46,9 @@ public class UrlUtil{
 
     /**
      * 根据url相对路径，转换成文件路径
-     * @param _url
-     * @param _make
-     * @return
+     * @param _url 地址
+     * @param _make 是否创建文件夹
+     * @return 路径
      */
     public static String url2path( String _url, boolean _make ){
         String path = null;

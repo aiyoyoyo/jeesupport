@@ -114,7 +114,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
     /**
      * 拦截器
-     * @param _registry
+     * @param _registry 拦截器
      */
     @Override
     public void addInterceptors( InterceptorRegistry _registry) {
@@ -137,7 +137,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
     /**
      * 这里根据模版设置，注册静态资源
-     * @param _registry
+     * @param _registry 拦截器
      */
     @Override
     public void addResourceHandlers( ResourceHandlerRegistry _registry ) {
@@ -166,7 +166,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
     /**
      * 根据模版文件夹内的文件，加载页面及对应URL映射
-     * @param _registry
+     * @param _registry 拦截器
      */
     @Override
     public void addViewControllers( ViewControllerRegistry _registry ) {

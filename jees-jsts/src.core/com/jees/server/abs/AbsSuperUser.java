@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 /**
  * 当前服务器的连接对象
- * @param <ID>
+ * @param <ID> 用户ID
  * @author aiyoyoyo
  */
 @Getter

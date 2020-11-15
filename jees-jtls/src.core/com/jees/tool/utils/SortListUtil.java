@@ -20,13 +20,10 @@ public class SortListUtil {
 
 	/**
 	 * 对list中的元素按升序排列.
-	 * @param <T>
-	 * 
-	 * @param list
-	 *            排序集合
-	 * @param field
-	 *            排序字段
-	 * @return
+	 * @param <T> 集合类型
+	 * @param list 排序集合
+	 * @param field 排序字段
+	 * @return 结果
 	 */
 	public static <T> List< T > sort( List< T > list , final String field ) {
 		return sort( list , field , null );
@@ -34,15 +31,11 @@ public class SortListUtil {
 
 	/**
 	 * 对list中的元素进行排序.
-	 * @param <T>
-	 * 
-	 * @param list
-	 *            排序集合
-	 * @param field
-	 *            排序字段
-	 * @param sort
-	 *            排序方式: SortListUtil.DESC(降序) SortListUtil.ASC(升序).
-	 * @return
+	 * @param <T> 集合类型
+	 * @param list 排序集合
+	 * @param field 排序字段
+	 * @param sort 排序方式: SortListUtil.DESC(降序) SortListUtil.ASC(升序).
+	 * @return 结果
 	 */
 	@SuppressWarnings ( { "unchecked" , "rawtypes" } )
 	public static <T> List< T > sort( List< T > list , final String field , final String sort ) {
@@ -88,10 +81,10 @@ public class SortListUtil {
 	 * 对list中的元素按fields和sorts进行排序,
 	 * fields[i]指定排序字段,sorts[i]指定排序方式.如果sorts[i]为空则默认按升序排列.
 	 * 
-	 * @param list
-	 * @param fields
-	 * @param sorts
-	 * @return
+	 * @param list 集合
+	 * @param fields 字段
+	 * @param sorts 排序方式
+	 * @return 结果
 	 */
 	@SuppressWarnings ( { "unchecked" , "rawtypes" } )
 	public static List< ? > sort( List< ? > list , String[] fields , String[] sorts ) {
@@ -151,9 +144,9 @@ public class SortListUtil {
 	/**
 	 * 默认按正序排列
 	 * 
-	 * @param list
-	 * @param method
-	 * @return
+	 * @param list 集合
+	 * @param method 方法
+	 * @return 结果
 	 */
 	public static List< ? > sortByMethod( List< ? > list , final String method ) {
 		return sortByMethod( list , method , null );
@@ -264,9 +257,9 @@ public class SortListUtil {
 	/**
 	 * 判断对象实现的所有接口中是否包含szInterface
 	 * 
-	 * @param clazz
-	 * @param szInterface
-	 * @return
+	 * @param clazz 是否继承该类
+	 * @param szInterface 被继承类
+	 * @return 结果
 	 */
 	public static boolean isImplementsOf( Class< ? > clazz , Class< ? > szInterface ) {
 		boolean flag = false;

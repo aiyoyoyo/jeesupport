@@ -7,8 +7,7 @@ import java.util.Date;
 public class DateUtils {
 	/**
 	 * 返回时间距离当前时间多久, 正数为未来几天，负数为过去几天
-	 * 
-	 * @param _dt
+	 * @param _dt 时间
 	 * @return [yy, MM, ww, d, h, m, s]
 	 */
 	public static int[] dateBeforeNow( DateTime _dt ) {
@@ -25,8 +24,8 @@ public class DateUtils {
 
 	/**
 	 * 和当前时间相差多少天, 正数为未来几天，负数为过去几天
-	 * @param _dt
-	 * @return
+	 * @param _dt 时间
+	 * @return 相差天数
 	 */
 	public static int dateDiffDay( DateTime _dt ){
 		DateTime now = new DateTime( System.currentTimeMillis() );

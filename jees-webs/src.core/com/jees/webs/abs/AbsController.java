@@ -46,7 +46,7 @@ public abstract class AbsController implements ISupportEL{
     /**
      * 拦截器，只有AbsControllerConfig被继承，且被扫描到后生效。
      *
-     * @return
+     * @return 拦截器
      */
     @Bean
     public HandlerInterceptor handlerInterceptor(){

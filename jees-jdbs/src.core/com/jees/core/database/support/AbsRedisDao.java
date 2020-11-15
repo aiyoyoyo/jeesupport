@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 /**
  * 本类的默认操作方式均为Hash方式
  * @author aiyoyoyo
- * @param <ID>
- * @param <T>
+ * @param <ID> 主键类型
+ * @param <T> 实体类类型
  */
 @Log4j2
 public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{

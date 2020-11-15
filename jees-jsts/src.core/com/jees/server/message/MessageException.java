@@ -21,9 +21,9 @@ public class MessageException extends RuntimeException{
 	/**
 	 * 中断后续操作，通知客户端
 	 *
-	 * @param _id
-	 * @param _params
-	 * @throws MessageException
+	 * @param _id 事件id
+	 * @param _params 参数
+	 * @throws MessageException 异常消息
 	 */
 	public static void thrs( int _id, Object... _params ) throws MessageException{
 		String tip = "写回异常消息（中断模式）:";
@@ -37,9 +37,9 @@ public class MessageException extends RuntimeException{
 	/**
 	 * 不中断后续操作，通知客户端
 	 *
-	 * @param _id
-	 * @param _params
-	 * @return
+	 * @param _id 事件id
+	 * @param _params 参数
+	 * @return 消息对象
 	 */
 	public static Message mesg( int _id, Object... _params ){
 		String tip = "写回异常消息:";
@@ -53,9 +53,9 @@ public class MessageException extends RuntimeException{
 	/**
 	 * 中断后续操作，不通知客户端
 	 *
-	 * @param _id
-	 * @param _err
-	 * @param _params
+	 * @param _id 事件id
+	 * @param _err 错误码
+	 * @param _params 参数
 	 */
 	public static void fail( int _id, int _err, Object... _params ) throws MessageException{
 		String tip = "发生异常:";

@@ -22,11 +22,9 @@ public class MD5Utils {
 	/**
 	 * 带私钥MD5加密
 	 * 
-	 * @param _txt
-	 *            待加密内容
-	 * @param _key
-	 *            加密私钥
-	 * @return
+	 * @param _txt 待加密内容
+	 * @param _key 加密私钥
+	 * @return 加密后字符串
 	 */
 	public static String s_encode( String _txt , String _key ) {
 		return DigestUtils.md5DigestAsHex( _key.concat( _txt ).getBytes() );

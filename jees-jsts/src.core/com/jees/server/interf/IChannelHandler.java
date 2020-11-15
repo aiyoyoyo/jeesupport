@@ -45,8 +45,8 @@ public interface IChannelHandler<NET extends ChannelHandlerContext >{
     void recovery( NET _net );
     /**
      * 事件触发器
-     * @param _net
-     * @param _obj
+     * @param _net 网络对象
+     * @param _obj 事件
      */
     void trigger( NET _net, Object _obj );
     /**
@@ -57,20 +57,20 @@ public interface IChannelHandler<NET extends ChannelHandlerContext >{
     void error( NET _net, Throwable _thr ) ;
     /**
      * 命令解析前置验证
-     * @param _net
-     * @param _cmd
-     * @return
+     * @param _net 网络对象
+     * @param _cmd 命令
+     * @return 结果
      */
     boolean before( NET _net, int _cmd );
     /**
      * 命令处理结束后置处理
-     * @param _net
+     * @param _net 网络对象
      */
     void after( NET _net );
     /**
      * 接受未注册命令通知
-     * @param _net
-     * @param _msg
+     * @param _net 网络对象
+     * @param _msg 消息
      */
     void unregist( NET _net, Object _msg );
 }

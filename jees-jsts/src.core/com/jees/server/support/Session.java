@@ -9,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 客户端连接管理器
- * @param <ID>
+ * @param <ID> 用户ID
+ * @param <NET> 网络对象
  * @author aiyoyoyo
  */
 @Service

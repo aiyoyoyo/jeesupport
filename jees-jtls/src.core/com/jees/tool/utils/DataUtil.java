@@ -20,8 +20,8 @@ public class DataUtil {
 	/**
 	 * int转byte[]
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 数字
+	 * @return 字节数组
 	 */
 	public static byte[] int2bytes(int _val) {
 		return new byte[]{(byte) ((_val >> 24) & 0xFF), (byte) ((_val >> 16) & 0xFF),
@@ -31,8 +31,8 @@ public class DataUtil {
 	/**
 	 * byte[]转int
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 字节
+	 * @return int数字
 	 */
 	public static int bytes2int(byte[] _val) {
 		return _val[3] & 0xFF | (_val[2] & 0xFF) << 8 | (_val[1] & 0xFF) << 16 | (_val[0] & 0xFF) << 24;
@@ -41,10 +41,10 @@ public class DataUtil {
 	/**
 	 * String转byte[]
 	 *
-	 * @param _val
+	 * @param _val 字符串
 	 * @param _chs 字符解码类型，建议UTF-8，参考：DataUtil.Charset_UTF8
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 * @return 字节数组
+	 * @throws UnsupportedEncodingException 不支持编码异常
 	 */
 	public static byte[] str2bytes(String _val, String _chs) throws UnsupportedEncodingException {
 		return _val.getBytes(_chs);
@@ -53,10 +53,10 @@ public class DataUtil {
 	/**
 	 * bytes转String
 	 *
-	 * @param _val
+	 * @param _val 字节数组
 	 * @param _chs 字符解码类型，建议UTF-8，参考：DataUtil.Charset_UTF8
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 * @return 字符串
+	 * @throws UnsupportedEncodingException 不支持编码异常
 	 */
 	public static String bytes2str(byte[] _val, String _chs) throws UnsupportedEncodingException {
 		return new String(_val, _chs);
@@ -65,8 +65,8 @@ public class DataUtil {
 	/**
 	 * 将int类型的数字进行高低位互转
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 数字
+	 * @return 低位数字
 	 */
 	public static int warpHL(int _val) {
 		return ByteBuffer.wrap(int2bytes(_val)).order(ByteOrder.LITTLE_ENDIAN).getInt();
@@ -75,13 +75,18 @@ public class DataUtil {
 	/**
 	 * 将long类型的数字进行高低位互转
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 数字
+	 * @return 低位数字
 	 */
 	public static long warpHL(long _val) {
 		return ByteBuffer.wrap(long2bytes(_val)).order(ByteOrder.LITTLE_ENDIAN).getLong();
 	}
 
+	/**
+	 * 将int类型的数字进行高低位互转
+	 * @param _val 数字
+	 * @return 高位数字
+	 */
 	public static int warpLH(int _val){
 		return ByteBuffer.wrap(int2bytes(_val)).order(ByteOrder.BIG_ENDIAN).getInt();
 	}
@@ -89,10 +94,10 @@ public class DataUtil {
 	/**
 	 * 截取bytes
 	 *
-	 * @param _data
-	 * @param _start
-	 * @param _end
-	 * @return
+	 * @param _data 字节数组
+	 * @param _start 起始位
+	 * @param _end 结束位
+	 * @return 截取的字节数组
 	 */
 	public static byte[] subBytes(byte[] _data, int _start, int _end) {
 		byte[] ret = new byte[_end - _start];
@@ -105,8 +110,8 @@ public class DataUtil {
 	/**
 	 * long转bytes
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 数字
+	 * @return 字节数组
 	 */
 	public static byte[] long2bytes(long _val) {
 		byte[] ret = new byte[8];
@@ -120,8 +125,8 @@ public class DataUtil {
 	/**
 	 * bytes转long
 	 *
-	 * @param _val
-	 * @return
+	 * @param _val 字节数组
+	 * @return 数字
 	 */
 	public static long bytes2long(byte[] _val) {
 		long num = 0;

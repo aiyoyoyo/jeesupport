@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.StringTokenizer;
 
 /**
- * 调用参数配置，大多数内容由.properties内容获取。
- * 
+ * 调用参数配置,大多数内容由application.properties内容获取.
  * @author aiyoyoyo
  * @version 1.0
  */
@@ -27,11 +26,11 @@ public class CommonConfig {
 
 	public static String get( String _key ) {
 		if( environment == null ) {
-			log.warn( "获取上下文失败。");
+			log.warn( "environment is null.");
 			return "";
 		}
 		String val = environment.getProperty( _key );
-		log.debug( "--获取上下文：KEY=[" + _key + "], VAL=[" + val + "]");
+		log.debug( "K=[" + _key + "], V=[" + val + "]");
 		return val;
 	}
 

@@ -24,7 +24,7 @@ public abstract class AbsDwrConfig {
 
     /**
      * 去掉@Bean注释，如果包含懒加载的部分，则不需要在代码中显示调用。即让懒加载生效。
-     * @return
+     * @return 过滤器
      */
 //    @Bean
     @SuppressWarnings( "unchecked" )

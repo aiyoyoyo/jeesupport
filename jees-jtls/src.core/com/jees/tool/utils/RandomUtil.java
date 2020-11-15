@@ -14,8 +14,8 @@ public class RandomUtil {
     /**
      * 返回指定范围的随机数
      * e.g: _range = 100, return 0~99
-     * @param _range
-     * @return
+     * @param _range 取值范围
+     * @return 结果
      */
     public static int s_random_integer( int _range ){
         return (int )(random.nextDouble() * _range);
@@ -24,9 +24,9 @@ public class RandomUtil {
     /**
      * 返回指定范围的随机数
      * e.g: _min = 1, _max = 100, return 1~100
-     * @param _min
-     * @param _max
-     * @return
+     * @param _min 最小值
+     * @param _max 最大值
+     * @return 结果
      */
     public static int s_random_integer( int _min , int _max ) {
         if( _max < _min ){
@@ -39,12 +39,12 @@ public class RandomUtil {
     }
 
     /**
-     * 根据概率和范围，给出随机结果是否匹配<br/>
+     * 根据概率和范围，给出随机结果是否匹配
      * eg: _pro = 10, _range = 100, return true/false
      *
-     * @param _pro
-     * @param _range
-     * @return
+     * @param _pro 概率值
+     * @param _range 概率范围
+     * @return 结果
      */
     public static boolean s_random_probability( int _pro , int _range ) {
         if(_pro == _range) return true;
@@ -55,10 +55,10 @@ public class RandomUtil {
     }
 
     /**
-     * 根据概率，给出结果随机是否匹配<br/>
+     * 根据概率，给出结果随机是否匹配
      * eg: _percentage = 15.36 return true/false
      * @param _percentage 百分比
-     * @return
+     * @return 结果
      */
     public static boolean s_random_probability( float _percentage ){
         return s_random_probability( (int)( _percentage * 100 ), 10000 );
@@ -75,8 +75,8 @@ public class RandomUtil {
     /**
      * 生成对应长度的随机字符串，字符范围[A-Z][a~z][0-9]
      * 每千万次，8位在千万分之1
-     * @param _length
-     * @return
+     * @param _length 长度
+     * @return 字符串
      */
     public static String  s_random_string( int _length ){
         return RandomStringUtils.random( _length, RandomString );
@@ -84,8 +84,8 @@ public class RandomUtil {
 
     /**
      * 根据权重数组，随机一个返回索引
-     * @param _widgets
-     * @return
+     * @param _widgets 权重数组
+     * @return 权重索引
      */
     public static int   s_random_widget( int[] _widgets ){
         int odds[] = new int[ _widgets.length];
@@ -115,9 +115,11 @@ public class RandomUtil {
     }
 
     /**
+     *
      * 从set中随机取得一个元素
-     * @param _sets
-     * @return
+     * @param _sets 集合
+     * @param <E> 类型
+     * @return 结果
      */
     public static <E> E s_random_element( Set<E> _sets ){
         int r = s_random_integer( _sets.size() );

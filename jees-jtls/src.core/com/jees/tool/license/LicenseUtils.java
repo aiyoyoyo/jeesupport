@@ -108,8 +108,8 @@ public class LicenseUtils {
 	
 	/**
 	 * 解码密文内容
-	 * @param _data
-	 * @return
+	 * @param _data 字符串二进制数组
+	 * @return 密文字符串数组
 	 */
 	public static String[] s_decode_string( byte[] _data ){
 		StringTokenizer st = new StringTokenizer( new String( _data ) , ":" );
@@ -124,9 +124,9 @@ public class LicenseUtils {
 	}
 	/**
 	 * 生成License，并写入文件
-	 * @param _seed
-	 * @param _time
-	 * @throws Exception
+	 * @param _seed 种子
+	 * @param _time 可用时长
+	 * @throws Exception 错误
 	 */
 	public static void s_generate( String _seed, String _time ) throws Exception{
 		System.out.println( "基础种子:" + _seed );
@@ -150,7 +150,6 @@ public class LicenseUtils {
 	
 	/**
 	 * 测试License内容有效性
-	 * @throws Exception
 	 */
 	public static void s_test() {
 		File file = new File( "" , "application.license" );
@@ -171,13 +170,12 @@ public class LicenseUtils {
 	}
 	
 	/**
-	 * 创建单机模式License<br/>
-	 * 通过机器码生成MD5加密内容<br/>
-	 * 私钥由供应商分配，由客户保管<br/>
+	 * 创建单机模式License
+	 * 通过机器码生成MD5加密内容
+	 * 私钥由供应商分配，由客户保管
 	 * 
-	 * @param _seed
-	 *            私钥种子
-	 * @throws Exception
+	 * @param _seed 私钥种子
+	 * @throws Exception 错误
 	 */
 	public static void s_generate_single( String _seed ) throws Exception {
 		System.out.println( "当前选择单机License方式。" );
@@ -185,14 +183,13 @@ public class LicenseUtils {
 	}
 	
 	/**
-	 * 创建单机模式License<br/>
-	 * 通过机器码生成MD5加密内容<br/>
-	 * 私钥由供应商分配，由客户保管<br/>
+	 * 创建单机模式License
+	 * 通过机器码生成MD5加密内容
+	 * 私钥由供应商分配，由客户保管
 	 * 
-	 * @param _seed
-	 *            私钥种子
+	 * @param _seed 私钥种子
 	 * @param _time 时长 秒
-	 * @throws Exception
+	 * @throws Exception 错误
 	 */
 	public static void s_generate_intime( String _seed, String _time ) throws Exception {
 		System.out.println( "当前选择时长License方式。" );
@@ -203,10 +200,8 @@ public class LicenseUtils {
 	 * 
 	 * 将信息写入文件
 	 * 
-	 * @param _keys
-	 *            用户公钥
-	 * @param _data
-	 *            加密内容
+	 * @param _keys 用户公钥
+	 * @param _data 加密内容
 	 */
 	public static void s_write_license( String _keys , String _data ) {
 		try {
@@ -232,8 +227,7 @@ public class LicenseUtils {
 	/**
 	 * 读取License文件信息
 	 * 
-	 * @param _file
-	 *            License文件
+	 * @param _file License文件
 	 * @return [2]-0:Key 1:Txt
 	 */
 	public static String[] s_read_license( File _file ) {

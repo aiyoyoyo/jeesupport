@@ -46,7 +46,7 @@ public class AESUtils{
 	 * @param _key 加密私钥
 	 * @param _txt 待加密内容
 	 * @return 加密结果
-	 * @throws Exception
+	 * @throws Exception 加密异常
 	 */
 	public static String s_encrypt( String _key, String _txt ) throws Exception{
 		SecretKey     secret_key      = new SecretKeySpec( B64Utils.s_decode( _key ), ALGORITHM );
@@ -61,8 +61,8 @@ public class AESUtils{
 	 * 创建私钥
 	 *
 	 * @param _arg 生成私钥的种子
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @return 返回私钥
+	 * @throws NoSuchAlgorithmException 生成异常
 	 */
 	public static String s_genkeys( String _arg ) throws NoSuchAlgorithmException{
 		KeyGenerator key_generator = KeyGenerator.getInstance( ALGORITHM );

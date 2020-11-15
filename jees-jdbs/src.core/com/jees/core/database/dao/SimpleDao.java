@@ -11,15 +11,17 @@ public class SimpleDao extends AbsSupportDao {
 	// 一些常用的SQL查询
 
 	/**
-	 * 根据某个属性，查询某张表的最新分组数据，使用标准的SQL写法，表名、字段名与数据库一致：TableName->table_name,
-	 * timeProp->time_prop
+	 * 根据某个属性，查询某张表的最新分组数据，使用标准的SQL写法，表名、字段名与数据库一致：TableName改为table_name,
+	 * timeProp改为time_prop
 	 * 
-	 * @param _db
-	 * @param _cls
+	 * @param _db 数据库名
+	 * @param _cls 实体类
+	 * @param _table 表名
 	 * @param _time 时间字段名
 	 * @param _group 分组字段名
-	 * @param _limit
-	 * @return
+	 * @param _limit 长度
+	 * @param <T> 实体类型
+	 * @return 结果
 	 */
 	public < T > List< T > selectBy_News( String _db , Class< T > _cls , String _table , String _time ,
 			String _group , int _limit ) {
@@ -30,11 +32,12 @@ public class SimpleDao extends AbsSupportDao {
 
 	/**
 	 * 根据某个字段集合查询某张表
-	 * 
-	 * @param _db
-	 * @param _cls
-	 * @param _column
-	 * @param _param
+	 *
+	 * @param _db 数据库名
+	 * @param _cls 实体类
+	 * @param _column 字段
+	 * @param _param 参数列表
+	 * @param <T> 实体类型
 	 * @return java.util.List
 	 */
 	@SuppressWarnings( "unchecked" )

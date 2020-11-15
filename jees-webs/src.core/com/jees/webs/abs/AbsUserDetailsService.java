@@ -48,6 +48,8 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
 
     /**
      * 这里仅验证超级账号和密码
+     * @param _username  用户名
+     * @return 用户信息
      */
     @SuppressWarnings( "unchecked" )
     protected UserDetails checkSuperman( String _username ){

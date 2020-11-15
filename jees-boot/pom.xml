@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-boot</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>Java Boot Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>
@@ -29,12 +29,12 @@
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
-        <jees.version>1.2.0</jees.version>
+        <jees.version>1.2.0-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
-        <jees.jtls.version>1.2.0</jees.jtls.version>
-        <jees.jdbs.version>1.2.0</jees.jdbs.version>
-        <jees.jsts.version>1.2.0</jees.jsts.version>
-        <jees.webs.version>1.2.0</jees.webs.version>
+        <jees.jtls.version>1.2.0-SNAPSHOT</jees.jtls.version>
+        <jees.jdbs.version>1.2.0-SNAPSHOT</jees.jdbs.version>
+        <jees.jsts.version>1.2.0-SNAPSHOT</jees.jsts.version>
+        <jees.webs.version>1.2.0-SNAPSHOT</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -96,6 +96,70 @@
                 <directory>${basedir}\src.resources</directory>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>jees</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <!-- plugins 中配置maven-javadoc-plugin的additionalparam参数 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-source-plugin</artifactId>
+                  <version>3.2.0</version>
+                  <configuration>
+                    <attach>true</attach>
+                  </configuration>
+                    <executions>
+                      <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                          <goal>jar-no-fork</goal>
+                        </goals>
+                      </execution>
+                    </executions>
+                 </plugin>
+             <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-javadoc-plugin</artifactId>
+               <version>3.2.0</version>
+                 <configuration>
+                     <failOnError>false</failOnError>
+                     <doclint>none</doclint>
+                 </configuration>
+               <executions>
+                 <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                      <goal>jar</goal>
+                    </goals>
+                  </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <dependencies>
         <dependency>

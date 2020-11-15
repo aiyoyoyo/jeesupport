@@ -7,10 +7,10 @@ import com.jees.tool.crypto.RSAUtils;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * 简易的License检查方案，提供4种模型：<br/>
- * 0、单机模式：仅验证license的有效性<br/>
- * 1、时限模式：验证license的有效性，并验证运行时长<br/>
- * 2、联网模式：通过验证服务器验证本地的License是否有效<br/>
+ * 简易的License检查方案，提供4种模型：
+ * 0、单机模式：仅验证license的有效性
+ * 1、时限模式：验证license的有效性，并验证运行时长
+ * 2、联网模式：通过验证服务器验证本地的License是否有效
  * @author aiyoyoyo
  * @version 1.0
  *       

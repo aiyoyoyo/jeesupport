@@ -31,14 +31,22 @@ public class FileUtil {
     /**
      * 读取文件内容转为字符串
      *
-     * @param _filepath
-     * @return
+     * @param _filepath 文件路径
+     * @param _thr 是否抛出异常
+     * @return 文件内容
+     * @throws IOException 读写异常
      */
     public static String read ( String _filepath, boolean _thr ) throws IOException{
         File   file   = load( _filepath, _thr );
         return read( file );
     }
 
+    /**
+     *
+     * @param _file 文件对象
+     * @return 文件内容
+     * @throws IOException 读写异常
+     */
     public static String read( @Nullable File _file ) throws IOException{
         Long   length = _file.length();
         byte[] bytes  = new byte[length.intValue()];
@@ -56,14 +64,21 @@ public class FileUtil {
     /**
      * 往文件里写入字符串
      *
-     * @param _conent
-     * @param _file
+     * @param _conent 写入内容
+     * @param _file 待写入对象
+     * @param _thr 是否抛出异常
+     * @throws IOException 读写异常
      */
     public static void write ( String _conent, String _file, boolean _thr ) throws IOException {
         File file = load( _file, _thr );
         write( _conent, file );
     }
 
+    /**
+     * @param _conent 待写入内容
+     * @param _file 待写入文件
+     * @throws IOException 读写异常
+     */
     public static void write( String _conent, @Nullable File _file ) throws IOException {
         if ( !_file.exists() ) {
             _file.getParentFile().mkdirs();
@@ -80,8 +95,8 @@ public class FileUtil {
     /**
      * 读取文件内容，并进行自定义处理
      *
-     * @param _file
-     * @param _consumer
+     * @param _file 待读取文件
+     * @param _consumer 每行处理方法
      */
     public static void read ( String _file, Consumer< ? super String > _consumer ) {
         int read_count = 0;

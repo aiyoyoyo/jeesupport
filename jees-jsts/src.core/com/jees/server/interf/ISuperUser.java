@@ -2,8 +2,8 @@ package com.jees.server.interf;
 
 /**
  * 需要由应用自定义SuperUser的继承类,注意Scope需要声明为prototype
- * @param <ID>
- * @param <NET>
+ * @param <ID> 唯一ID
+ * @param <NET> 网络对象
  */
 public interface ISuperUser<ID, NET>{
     // 属性 ///////////////////
@@ -25,7 +25,7 @@ public interface ISuperUser<ID, NET>{
     void leave ();
     /**
      * 网络切换
-     * @param _net
+     * @param _net 网络对象
      */
     void switchover ( NET _net );
     /**
@@ -38,6 +38,7 @@ public interface ISuperUser<ID, NET>{
     void recovery ();
     /**
      * 事件触发
+     * @param _obj 触发事件
      */
     void trigger( Object _obj );
 

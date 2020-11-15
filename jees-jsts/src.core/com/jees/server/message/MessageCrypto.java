@@ -149,7 +149,10 @@ public class MessageCrypto extends AbsNettyDecoder{
 	 * S2C
 	 * 将对象序列化为byte[]
 	 *
+	 * @param _buf 数据字节数组
 	 * @param _obj 序列化对象
+	 * @param <T>  消息泛型
+	 * @param _ws  是否websocket
 	 * @return 序列化后的byte[]值
 	 */
 	public static < T > Object serializer( ByteBuf _buf, T _obj, boolean _ws ){
@@ -192,6 +195,7 @@ public class MessageCrypto extends AbsNettyDecoder{
 	 * 将对象序列化为byte[]
 	 *
 	 * @param _obj 序列化对象
+	 * @param <T> 带序列化内容
 	 * @return 序列化后的byte[]值
 	 */
 	public static < T > byte[] serializer ( T _obj ) {
@@ -233,8 +237,9 @@ public class MessageCrypto extends AbsNettyDecoder{
 
 	/**
 	 * C2S
-	 * @param _obj
-	 * @return
+	 * @param _obj 消息内容
+	 * @param _ws 是否websocket
+	 * @return 序列化结果
 	 */
 	public static Object deserializer( Object _obj, boolean _ws ){
 		// 这里根据类型解析
@@ -283,6 +288,7 @@ public class MessageCrypto extends AbsNettyDecoder{
 	 *
 	 * @param _byts 序列化后的byte[]值
 	 * @param _cls 反序列化后的对象
+	 * @param <T> 接收类型
 	 * @return 返回的对象
 	 */
 	public static < T > T deserializer( byte[] _byts , Class< T > _cls ) {

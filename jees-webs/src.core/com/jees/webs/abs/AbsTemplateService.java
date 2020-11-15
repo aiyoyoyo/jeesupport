@@ -63,9 +63,8 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
 
     /**
      * 通过模版，设置用户Session信息，用于页面显示
-     *
-     * @param _request
-     * @return
+     * @param _tpl 模版名
+     * @param _request HttpServletRequest
      */
     @Override
     public void loadTemplate( String _tpl, HttpServletRequest _request ){

@@ -56,12 +56,10 @@ public class DESUtils {
 	/**
 	 * 解密
 	 * 
-	 * @param _key
-	 *            密钥
-	 * @param _dat
-	 *            待解密数据
-	 * @return
-	 * @throws Exception
+	 * @param _key 密钥
+	 * @param _dat 待解密数据
+	 * @return 返回解密后字节
+	 * @throws Exception 解密时发生错误
 	 */
 	public static byte[] s_decrypt( byte[] _key , byte[] _dat ) throws Exception {
 
@@ -81,12 +79,10 @@ public class DESUtils {
 	/**
 	 * 加密
 	 * 
-	 * @param _key
-	 *            密钥
-	 * @param _dat
-	 *            待加密数据
-	 * @return
-	 * @throws Exception
+	 * @param _key 密钥
+	 * @param _dat 待加密数据
+	 * @return 加密后的字节
+	 * @throws Exception 加密时产生错误
 	 */
 	public static byte[] s_encrypt( byte[] _key , byte[] _dat ) throws Exception {
 
@@ -108,8 +104,8 @@ public class DESUtils {
 	 * Java 6 只支持56bit密钥 <br>
 	 * Bouncy Castle 支持64bit密钥 <br>
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return 二进制密钥
+	 * @throws Exception 生成密钥出错
 	 */
 	public static byte[] s_genkeys() throws Exception {
 		/*
@@ -135,10 +131,9 @@ public class DESUtils {
 	/**
 	 * 通过种子生成二进制密钥
 	 * 
-	 * @param _arg
-	 *            生成私钥的种子
-	 * @return
-	 * @throws Exception
+	 * @param _arg 生成私钥的种子
+	 * @return 二进制密钥字节
+	 * @throws Exception 生成错误
 	 */
 	public static byte[] s_genkeys( String _arg ) throws Exception {
 		KeyGenerator key_generator = KeyGenerator.getInstance( ALGORITHM );

@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class MachineSerial {
 	/**
 	 * 获取CPU序列号
-	 * @return
+	 * @return 序列号
 	 */
 	public static String s_serial_CPU() {
 		try {
@@ -35,9 +35,8 @@ public class MachineSerial {
 
 	/**
 	 * 获取磁盘卷标
-	 * @param _drive
-	 *            硬盘驱动器分区 如C,D
-	 * @return
+	 * @param _drive 硬盘驱动器分区 如C,D
+	 * @return 硬盘标识符
 	 */
 	public static String s_serial_HD( String _drive ) {
 		StringBuilder result = new StringBuilder();
@@ -69,8 +68,8 @@ public class MachineSerial {
 
 	/**
 	 * 获取MAC地址
-	 * @param _ia
-	 * @throws SocketException
+	 * @param _ia 网络地址
+	 * @throws SocketException 解析异常
 	 */
 	public static void _s_serial_MAC( InetAddress _ia ) throws SocketException {
 		byte[] mac = NetworkInterface.getByInetAddress( _ia ).getHardwareAddress();
@@ -108,7 +107,7 @@ public class MachineSerial {
 	
 	/**
 	 * 获取当前计算机的机器码
-	 * @return
+	 * @return 机器码
 	 */
 	public static String s_code() {
 		return _s_os_windows_code();
