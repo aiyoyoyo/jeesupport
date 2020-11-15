@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-boot</artifactId>
-    <version>1.1.8-SNAPSHOT</version>
+    <version>1.2.0</version>
     <name>Java Boot Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>
@@ -21,29 +21,35 @@
 
     <!-- 自定义配置 -->
     <properties>
+        <!-- 跳过测试 -->
+        <skipTests>true</skipTests>
+        <main.basedir>${basedir}/..</main.basedir>
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
-        <jees.version>1.1.8-SNAPSHOT</jees.version>
+        <jees.version>1.2.0</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
-        <jees.jtls.version>1.1.7-SNAPSHOT</jees.jtls.version>
-        <jees.jdbs.version>1.1.6-SNAPSHOT</jees.jdbs.version>
-        <jees.jsts.version>1.1.7-SNAPSHOT</jees.jsts.version>
-        <jees.webs.version>1.1.1-SNAPSHOT</jees.webs.version>
+        <jees.jtls.version>1.2.0</jees.jtls.version>
+        <jees.jdbs.version>1.2.0</jees.jdbs.version>
+        <jees.jsts.version>1.2.0</jees.jsts.version>
+        <jees.webs.version>1.2.0</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
-        <spring.boot.version>2.1.3.RELEASE</spring.boot.version>
+        <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
         <mysql.version>5.1.44</mysql.version>
-        <jodatime.version>2.9.9</jodatime.version>
+        <jodatime.version>2.10.8</jodatime.version>
         <lombok.version>1.16.20</lombok.version>
         <netty.version>4.1.50.Final</netty.version>
         <commons.pool2.version>2.6.1</commons.pool2.version>
+        <commons.lang3.version>3.11</commons.lang3.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <protostuff.version>1.7.2</protostuff.version>
+        <dwr.version>3.0.2-RELEASE</dwr.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -79,43 +85,6 @@
         <developerConnection>${jees.scm.url}</developerConnection>
         <url>${jees.scm.url}</url>
     </scm>
-    <!-- Spring Boot -->
-    <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
     <!-- 项目环境 -->
     <build>
         <sourceDirectory>${basedir}\src.core</sourceDirectory>
@@ -127,24 +96,6 @@
                 <directory>${basedir}\src.resources</directory>
             </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-                <configuration>
-                    <includes>
-                        <include>
-                            <groupId>${jees.groupId}</groupId>
-                            <artifactId>${jees.artifactId}</artifactId>
-                        </include>
-                    </includes>
-                    <fork>true</fork>
-                    <classifier>exec</classifier>
-                    <executable>true</executable>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
     <dependencies>
         <dependency>

@@ -7,7 +7,7 @@
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>[%p]%d{yyyy-MM-dd HH:mm:ss }[%C:%L] - %m%n</pattern>
-			<!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+			<!-- Tomcat下运行，如果乱码请修改为GBK -->
 			<charset>UTF-8</charset>
 		</encoder>
 	</appender>
@@ -62,7 +62,7 @@
 
 	<!-- 控制台输出日志级别 -->
 	<springProfile name="jees">
-		<logger name="com.jees" level="INFO">
+		<logger name="com.jees" level="ERROR">
 			<appender-ref ref="SYSLOG" />
 		</logger>
 		<logger name="com.jees.webs" level="DEBUG">

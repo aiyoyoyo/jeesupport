@@ -110,11 +110,11 @@ public class CommonConfig {
 		}else return _def;
 		try{
 			Object tpl;
-			if( _def instanceof Integer ) tpl = Integer.parseInt( val );
-			else if( _def instanceof Float ) tpl = Float.parseFloat( val );
-			else if( _def instanceof Boolean ) tpl = Boolean.valueOf( val );
-			else if( _def instanceof Long ) tpl = Long.valueOf( val );
-			else tpl = val;
+			if( _def instanceof Integer ) tpl = getInteger( val );
+			else if( _def instanceof Float ) tpl = getFloat( val );
+			else if( _def instanceof Boolean ) tpl = getBoolean( val );
+			else if( _def instanceof Long ) tpl = getLong( val );
+			else tpl = getString( val );
 			return (T) tpl;
 		}catch ( Exception e ){
 			return _def;

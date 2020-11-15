@@ -2,15 +2,9 @@
 
 ## 内容介绍
 本工具基于Spring和Netty实现Socket服务器，目前支持Socket和WebSocket这2种格式。
+
 ## 基本用法
-在pom.xml中加入下面2段内容。
-```
-<parent>
-	<groupId>com.github.aiyoyoyo</groupId>
-	<artifactId>jees-boot</artifactId>
-	<version>1.1.8-SNAPSHOT</version>
-</parent>
-```
+> pom.xml
 ```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
@@ -18,18 +12,10 @@
 	<version>${jees.jsts.version}</version>
 </dependency>
 ```
+
 ## 配置文件说明
-* 核心配置
 > application.yml
 ```
-#日志配置，此处使用默认日志
-logging:
- config: classpath:log4j2.xml
- level:
-  org.springframework: WARN
-  com.jees: DEBUG
-  com.jees.common: ERROR
-
 spring:
  application:
   name: jees-jsts
@@ -82,23 +68,9 @@ jees:
     delay: 300000
    hosts: 127.0.0.1:8000 #要连接的服务器，多个服务器用“,”分割
 ```
-* 日志配置
-> log4j2.xml
-## 程序实现Demo
-```
-// 启动服务
-public static void main( String[] args ) {  
-    SpringApplication.run( JstsApplication.class, args );
-    CommonContextHolder.getBean( IServerService.class ).onload();
-}
-```
-## 其他
-后续内容请关注JEES讨论群或者论坛（未开放）  
-QQ群：8802330  
-论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
 ## 版本说明
->1.2.0-SNAPSHOT
+### 1.2.0 <font color='red'>New</font>
 1. 重写了服务器结构，去掉了一些多余的类。
 2. 消息代理机制可以参考演示程序中CustomMessage
 3. 在socket服务器可以使用proto形式，解码过程可以参考MessageCrypto类
@@ -117,3 +89,31 @@ public void CMD_PROTO( ChannelHandlerContext _ctx, CustomMessage _msg ){
 }
 ```
 4. 版本不稳定，需要更多测试，欢迎各位反馈。
+5. 提供现有支持的多种协议方式的演示程序，将包括protobuff和json的2种方式的Message代理模式和非代理模式。
+## 1.2.0-SNAPSHOT
+1. 简化Socket和WebSocket实现类结构，现在统一通过SocketServer类的onload方法来区分。
+2. Message消息分为2种代理方式，一种是Message类，一种是AbsMessage类。
+3. AbsMessage适用于Protobuff类型定义，可以参考CustomMessage方式定义。
+4. 优化了通讯消息、错误命令注解方式，提供了更详细的打印，包括收发消息的文件输出日志。
+### 1.1.7-SNAPSHOT
+1. 完善协议细节支持，提供了非Message代理的模式（JSON/PROTO）
+2. MessageDecoder变更为MessageCrypto
+3. 移除了AbsResponse，统一由AbsRequestHanler处理消息内容
+4. 相关Protobuf类，需要在类上加上@MessageProxy标识
+5. Connector连接器优化
+6. 优化Session管理器
+### 1.1.6-SNAPSHOT
+1. 优化消息协议，为1.1.7做铺垫
+2. 修正SessionService网络切换的问题
+### 1.1.5-SNAPSHOT
+1. 使用Json代替原有WebSocket下的消息解析形式
+2. 优化了部分相关内容。
+3. 细节优化
+### 1.1.4-SNAPSHOT
+1. 优化MessageException细节
+2. 增加连接管理容器SessionService
+3. 提供了服务器套件，以便于各类项目直接应用。
+4. 提供了服务器之间通讯方案，详细使用方法，请参考Demo。
+### 1.1.3-SNAPSHOT
+1. 偷偷修改了配置参数命名，统一结构。
+2. 暂时不会增加更多内容，但可能会做细节优化。

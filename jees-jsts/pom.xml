@@ -5,25 +5,33 @@
 	<!--  Maven Central  -->
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jsts</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<name>Java Netty Support</name>
 
 	<description>Netty socket server supprot</description>
 	<url>${jees.url}</url>
 
-	<!-- Project Information -->
-	<properties>
-		<main.basedir>${basedir}/..</main.basedir>
-		<jees.artifactId>jees-jsts</jees.artifactId>
-	</properties>
-
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.1.8-SNAPSHOT</version>
+		<version>1.2.0</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring.boot.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- jees -->
 		<dependency>
 			<groupId>com.github.aiyoyoyo</groupId>
@@ -40,24 +48,17 @@
 		<dependency>
 			<groupId>io.protostuff</groupId>
 			<artifactId>protostuff-core</artifactId>
-			<version>1.6.0</version>
+			<version>${protostuff.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.protostuff</groupId>
 			<artifactId>protostuff-api</artifactId>
-			<version>1.6.0</version>
+			<version>${protostuff.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.protostuff</groupId>
 			<artifactId>protostuff-runtime</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<!-- Lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
+			<version>${protostuff.version}</version>
 		</dependency>
 	</dependencies>
 </project>

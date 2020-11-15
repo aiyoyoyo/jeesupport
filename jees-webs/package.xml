@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>release package</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <!-- 打zip包时，包含一层打包目录 -->
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <!-- 包含程序运行自身所需的目录 -->
+    <fileSets>
+        <fileSet>
+            <directory>src.resources</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+    <!-- 把编译好的jar文件包含到发布的目录中去并设置脚本文件的权限-->
+    <files>
+        <file>
+            <source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
+            <destName>${artifactId}-${version}.jar</destName>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <!-- 设置start.sh文件的换行符为unix换行符\n
+        <file>
+            <source>scr/start.sh</source>
+            <lineEnding>unix</lineEnding>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0740</fileMode>
+        </file>
+        -->
+        <!-- 设置start.bat文件的换行符为dos换行符\r\n -->
+        <file>
+            <source>scr/start.bat</source>
+            <lineEnding>dos</lineEnding>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <file>
+            <source>scr/start-debug.bat</source>
+            <lineEnding>dos</lineEnding>
+            <outputDirectory>/</outputDirectory>
+        </file>
+    </files>
+    <!-- 复制所有的依赖jar到发布的目录的lib目录下 -->
+    <dependencySets>
+        <dependencySet>
+            <scope>runtime</scope>
+            <outputDirectory>lib</outputDirectory>
+            <!--不要把主程序本身包含进lib目录，如果不加这个主程序的jar包也会包含到lib目录下-->
+            <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
+    </dependencySets>
+</assembly>

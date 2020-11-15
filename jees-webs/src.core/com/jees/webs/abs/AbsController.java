@@ -54,7 +54,7 @@ public abstract class AbsController implements ISupportEL{
         return new HandlerInterceptor(){
             @Override
             public boolean preHandle( HttpServletRequest _request, HttpServletResponse _response, Object _handler ) throws IOException{
-                String uri = UrlUtil.uri2mapping( _request.getRequestURI() );
+                String uri = UrlUtil.uri2root( _request.getRequestURI() );
 
                 templateService.loadTemplate( uri, _request );
                 superService.loadUserMenus( _request );

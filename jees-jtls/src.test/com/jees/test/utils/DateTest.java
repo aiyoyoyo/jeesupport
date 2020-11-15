@@ -15,15 +15,15 @@ import java.util.Date;
 public class DateTest {
 	@Test
 	public void test() throws UnsupportedEncodingException {
-//		DateTime dt = new DateTime( 2018 , 7 , 1 , 23 , 59 , 59 , 333 );// 2010年2月13日10点30分50秒333毫秒
-//		int[] d = DateUtils.dateBeforeNow( dt );
-//
-//		log.debug( "原时间：" + dt.toString() );
-//		log.debug( "相差 ：[" + d[ 2 ] + "]周[" + d[ 0 ] + "]年[" + d[ 1 ] + "]月[" + d[ 3 ] + "]日[" + d[ 4 ] + "]时[" + d[ 5 ] + "]分[" + d[ 6 ] + "]秒" );
-//
-//		String string_u = dt.toString( "w" );
-//
-//		log.debug( "第几周：" + string_u );
+		DateTime dt = new DateTime( 2018 , 7 , 1 , 23 , 59 , 59 , 333 );// 2010年2月13日10点30分50秒333毫秒
+		int[] d = DateUtils.dateBeforeNow( dt );
+
+		log.debug( "原时间：" + dt.toString() );
+		log.debug( "相差 ：[" + d[ 2 ] + "]周[" + d[ 0 ] + "]年[" + d[ 1 ] + "]月[" + d[ 3 ] + "]日[" + d[ 4 ] + "]时[" + d[ 5 ] + "]分[" + d[ 6 ] + "]秒" );
+
+		String string_u = dt.toString( "w" );
+
+		log.debug( "第几周：" + string_u );
 	}
 
 	/*

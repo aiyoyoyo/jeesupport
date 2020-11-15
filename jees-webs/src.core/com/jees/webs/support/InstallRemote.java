@@ -18,6 +18,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Id;
+import java.io.IOException;
 
 @Log4j2
 @Service
@@ -78,13 +79,21 @@ public class InstallRemote{
     }
 
     @RemoteMethod
-    public void admin( String _account, String _password, String _group ){
-        installConfig.installAdmin( _account, _password, _group );
+    public void admin( String _account, String _password, String _group ) throws Exception {
+        try {
+            installConfig.installAdmin( _account, _password, _group );
+        } catch (IOException e) {
+            throw new Exception( "初始化管理员账号失败!" );
+        }
     }
 
     @RemoteMethod
-    public void other( int _port, String _path ){
-        installConfig.installServer( _port, _path );
+    public void other( int _port, String _path ) throws Exception {
+        try {
+            installConfig.installServer( _port, _path );
+        } catch (IOException e) {
+            throw new Exception( "初始化服务器配置失败！" );
+        }
     }
 
     @RemoteMethod

@@ -36,28 +36,28 @@ public class JdbsApplication{
 
 //		ExMoreDBTest( ctr );
 
-		IRedisDao dao = CommonContextHolder.getBean( IRedisDao.class );
-		dao.initialize();
-		Map<Integer, RedisUser> maps = new HashMap<>();
-		for( int i = 0; i < 1; i ++ ){
-			RedisUser a = new RedisUser();
-			a.setId( i );
-			a.setDate( new Date( DateTime.now().getMillis() ) );
-//			dao.insert( a );
-			maps.put( a.getId(), a );
-		}
-
-		dao.insertMap( maps, RedisUser.class );
-
-//		Map<Integer, RedisUser> map = dao.findHashAll( RedisUser.class );
-//		System.out.println(map.size());
-		maps.forEach( (k,v)->{
-			try{
-				dao.delete( v );
-//				dao.deleteById( v.getId(), RedisUser.class );
-			}catch( Exception e ){
-			}
-		} );
+//		IRedisDao dao = CommonContextHolder.getBean( IRedisDao.class );
+//		dao.initialize();
+//		Map<Integer, RedisUser> maps = new HashMap<>();
+//		for( int i = 0; i < 1; i ++ ){
+//			RedisUser a = new RedisUser();
+//			a.setId( i );
+//			a.setDate( new Date( DateTime.now().getMillis() ) );
+////			dao.insert( a );
+//			maps.put( a.getId(), a );
+//		}
+//
+//		dao.insertMap( maps, RedisUser.class );
+//
+////		Map<Integer, RedisUser> map = dao.findHashAll( RedisUser.class );
+////		System.out.println(map.size());
+//		maps.forEach( (k,v)->{
+//			try{
+//				dao.delete( v );
+////				dao.deleteById( v.getId(), RedisUser.class );
+//			}catch( Exception e ){
+//			}
+//		} );
 	}
 
 	public static void ExTest( TestController ctr ) {

@@ -5,28 +5,13 @@
 ## 基本用法
 在pom.xml中加入下面2段内容。
 ```
-<repository>
-    <id>oss</id>
-    <url>https://oss.sonatype.org/content/groups/public/</url>
-    <releases>
-        <enabled>true</enabled>
-    </releases>
-    <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-    </snapshots>
-</repository>
-```
-```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-webs</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>${jees.webs.version}</version>
 </dependency>
 ```
 ## 配置文件说明
-* 核心配置
 > application.yml
 ```
 jees:
@@ -56,10 +41,6 @@ jees:
    access: true
 #数据库部分参考jees-jdbs
 ```
-* 日志配置
-> log4j2.xml
-## 程序实现Demo
-见src.test
 ## 一个引用问题：
 ```
 <dependencyManagement>
@@ -75,24 +56,66 @@ jees:
 热更支持需要在项目中以该形式定义，否则会抛出一个异常导致应用停止。
 暂时只知道为什么，未明白原因。
 ```
-## 其他
-后续内容请关注JEES讨论群或者论坛（未开放）  
-QQ群：8802330  
-论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
+## 部署问题
+> 我尝试了4种方式运行项目，总结了一些问题如下
+### IDEA社区版 内置Tomcat方式运行
+1. 项目正常启动
+2. 控制台乱码修改logback中编码为UTF-8
+3. classpath路径相对项目路径
+### 内置Tomcat打包运行
+1. 打包前需要拷贝src.test目录的类至src.core中
+2. 项目通过start.bat指定JwebsApplication运行，正常启动
+3. 路径结构为templates和config在jar外部
+4. classpath路径相对项目路径
+```
+打包命名参考
+clean package -f pom.xml
+```
+### IDEA社区版 SmartTomcat运行
+1. 需要修改pom-war.xml中的maven-war-plugin属性，指定对应的目录
+2. 项目通过Application类，正常启动，模版无法加载
+3. classpath路径存在问题，原因是设置导致根路径位置不统一
+```
+<webappDirectory>src.resources</webappDirectory>
+<workDirectory>src.resources/WEB-INF/classes</workDirectory>
+```
+### 外部Tomcat打包运行
+1. 通过Tomcat下startup.bat启动, 控制台乱码修改logback中编码为GBK
+2. 项目正常启动，模版无法加载
+3. 原因同第二种方式, classpath指向了tomcat/lib目录，导致根路径不统一
+4. 为了不影响正常文件结构，我修改了打包路径
+```
+<webappDirectory>target/webapp</webappDirectory>
+<workDirectory>target/classes</workDirectory>
+```
+```
+打包命名参考
+clean package -pom-war.xml
+```
+### 对于3、4的处理方式
+1. 可以考虑固定路径的方式来重写template等静态模版的加载
+2. 动态获取相对路径寻找更好的写法
 
-## 1.1.0-SNAPSHOT 更新
-1. 提供一套初级WEB开发框架，通过较少的约定完成一套多模版多主题的WEB开发结构。
-2. 基于SpringBoot和Thymeleaf搭建的完整模版框架。
-3. 提供一套SpringSecurity数据库权限和栏目配置方案。
-4. 数据服务基于JDBS实现。
-
-## 1.1.1-SNAPSHOT 更新
-1. 提供一套基础的权限及登陆演示模版
-2. 支持动态配置数据库权限管理
-3. 演示代码可以直接使用
-
-## 1.2.0-SNAPSHOT 版本更新
+## 更新历史
+### 1.2.0
+1. 新增了打包配置package.xml，通过maven的package功能分离配置文件形式打包。
+2. 静态文件夹配置spring.resources.static-locations不可用assets指定。
+### 1.2.0-SNAPSHOT
 1. 旧的MySQL支持暂时不再更新，保留MySQL用法的版本为1.1.1-SNAPSHOT
 2. 新得版本使用Redis代替数据库使用，请参考JDBS中的示例
 3. 优化实现细节，由于DWR泛型的问题，放弃了SuperUser类的id类型使用自定义泛型的方式，改为long类型。
 4. 新增了系统部署安装模版，开发完成后可以通过基础安装来完成初始应用的设定。
+### 1.2.0-SNAPSHOT 
+1. 旧的MySQL支持暂时不再更新，保留MySQL用法的版本为1.1.1-SNAPSHOT
+2. 新得版本使用Redis代替数据库使用，请参考JDBS中的示例
+3. 优化实现细节，由于DWR泛型的问题，放弃了SuperUser类的id类型使用自定义泛型的方式，改为long类型。
+4. 新增了系统部署安装模版，开发完成后可以通过基础安装来完成初始应用的设定。
+### 1.1.1-SNAPSHOT
+1. 提供一套基础的权限及登陆演示模版
+2. 支持动态配置数据库权限管理
+3. 演示代码可以直接使用
+### 1.1.0-SNAPSHOT
+1. 提供一套初级WEB开发框架，通过较少的约定完成一套多模版多主题的WEB开发结构。
+2. 基于SpringBoot和Thymeleaf搭建的完整模版框架。
+3. 提供一套SpringSecurity数据库权限和栏目配置方案。
+4. 数据服务基于JDBS实现。

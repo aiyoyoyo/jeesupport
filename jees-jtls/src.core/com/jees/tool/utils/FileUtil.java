@@ -6,6 +6,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.util.function.Consumer;
 
 /**
@@ -20,17 +21,10 @@ public class FileUtil {
 
     public static File load( String _path, boolean _thr ) throws FileNotFoundException{
         File file = _try_clspath_loader( _path );
-        if( file == null ){
-            file = _try_absolute_loader( _path );
-        }
-        if( file == null ){
-            file = _try_canonical_loader( _path );
-        }
-        if( file == null ){
-            String msg = "文件没有找到：FILE=[" + _path + "]";
-            log.warn( msg );
-            throw new FileNotFoundException( msg );
-        }
+        if( file == null ) file = _try_absolute_loader( _path );
+        if( file == null ) file = _try_canonical_loader( _path );
+        if( file == null && _thr ) throw new FileNotFoundException( "文件[" + _path + "]没有找到。" );
+
         return file;
     }
 
@@ -65,13 +59,12 @@ public class FileUtil {
      * @param _conent
      * @param _file
      */
-    public static void write ( String _conent, String _file, boolean _thr ) throws FileNotFoundException{
+    public static void write ( String _conent, String _file, boolean _thr ) throws IOException {
         File file = load( _file, _thr );
-
         write( _conent, file );
     }
 
-    public static void write( String _conent, @Nullable File _file ){
+    public static void write( String _conent, @Nullable File _file ) throws IOException {
         if ( !_file.exists() ) {
             _file.getParentFile().mkdirs();
         }
@@ -80,7 +73,7 @@ public class FileUtil {
             @Cleanup FileOutputStream fos = new FileOutputStream( _file );
             fos.write( _conent.getBytes( FILE_ENCODING ) );
         } catch ( Exception e ) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -95,7 +88,8 @@ public class FileUtil {
         String read_line;
 
         try {
-            @Cleanup BufferedReader buff_read = new BufferedReader( new FileReader( _file ) );
+            File   file   = load( _file, false );
+            @Cleanup BufferedReader buff_read = new BufferedReader( new FileReader( file ) );
             while ( ( read_line = buff_read.readLine() ) != null ) {
                 if ( _consumer != null ) {
                     _consumer.accept( read_line );
@@ -111,31 +105,57 @@ public class FileUtil {
 
     private static File _try_clspath_loader( String _path ){
         File file = null;
-        if ( _path.startsWith( "classpath:" ) ){
+        if ( _path.startsWith( "classpath:" ) || _path.startsWith( "classpath*:") ){
             try{
                 file = ResourceUtils.getFile( _path );
             }catch( FileNotFoundException e ){
+                log.error( "环境路径文件[" + _path + "]没有找到!");
+                file = null;
             }
         }
-
         return file;
     }
 
     private static File _try_absolute_loader( String _path ){
         if( _path.startsWith("classpath:") ){
             _path = _path.replaceFirst( "classpath:", "" );
+        }else if( _path.startsWith("classpath*:") ){
+            _path = _path.replaceFirst( "classpath*:", "" );
         }
-
-        File file = new File( _path );
+        File file = null;
+        try{
+            file = ResourceUtils.getFile( _path );
+            File chk_file = new File( file.toURI() );
+            if( !chk_file.exists() ){
+                log.error( "相对路径文件[" + _path + "]没有找到!");
+                file = null;
+            }
+        }catch( FileNotFoundException e ){
+            log.error( "相对路径文件[" + _path + "]没有找到!");
+            file = null;
+        }
         return file;
     }
 
     private static File _try_canonical_loader( String _path ){
         if( _path.startsWith("classpath:") ){
             _path = _path.replaceFirst( "classpath:", "" );
+        }else if( _path.startsWith("classpath*:") ){
+            _path = _path.replaceFirst( "classpath*:", "" );
         }
-
         File file = new File( _path );
+        if( !file.exists() ){
+            log.error( "绝对路径文件[" + _path + "]没有找到!");
+        }
         return file;
+    }
+
+    public static String path( String _path ){
+        try {
+            return ResourceUtils.getFile( _path ).getCanonicalPath();
+        } catch (IOException e) {
+            log.error( "文件[" + _path + "]没有找到:", e );
+        }
+        return null;
     }
 }

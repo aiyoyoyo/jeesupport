@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,7 @@ import java.util.List;
  * Spring security核心配置项
  * @author aiyoyoyo
  */
-@Configuration
+@Component
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 @Log4j2
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{

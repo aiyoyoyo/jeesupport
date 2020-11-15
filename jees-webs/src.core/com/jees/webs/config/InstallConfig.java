@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 
 @Log4j2
 @Component
@@ -78,7 +79,7 @@ public class InstallConfig{
     @Autowired
     AbsInstallService absInstallService;
 
-    public void installFailure( int _step ){
+    public void installFailure( int _step ) throws IOException {
         if( ( installStep.step & _step ) == _step ){
             installStep.step -= _step;
         }
@@ -113,7 +114,7 @@ public class InstallConfig{
         return false;
     }
 
-    public void installRedis( String _host, int _port, String _password, int _db ){
+    public void installRedis( String _host, int _port, String _password, int _db ) throws IOException {
         installStep.RedisHost = _host;
         installStep.RedisPort = _port;
         installStep.RedisPassword = _password;
@@ -126,7 +127,7 @@ public class InstallConfig{
         FileUtil.write( installStep.toString(), installFile );
     }
 
-    public void installAdmin( String _account, String _password, String _group ){
+    public void installAdmin( String _account, String _password, String _group ) throws IOException {
         installStep.AdminAccount = _account;
         installStep.AdminPassword = _password;
         installStep.AdminGroup = _group;
@@ -136,7 +137,7 @@ public class InstallConfig{
         FileUtil.write( installStep.toString(), installFile );
     }
 
-    public void installServer( int _port, String _path ){
+    public void installServer( int _port, String _path ) throws IOException {
         installStep.ServerPort = _port;
         installStep.InstallPath = _path;
         if( (installStep.step & InstallServerSucc) != InstallServerSucc ){

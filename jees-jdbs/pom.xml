@@ -5,25 +5,33 @@
 	<!--  Maven Central  -->
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jdbs</artifactId>
-	<version>1.1.6-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<name>Java Database Support</name>
 
 	<description>Spring Atomikos database support</description>
 	<url>${jees.url}</url>
 
-	<!-- Project Information -->
-	<properties>
-		<main.basedir>${basedir}/..</main.basedir>
-		<jees.artifactId>jees-jdbs</jees.artifactId>
-	</properties>
-
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.1.8-SNAPSHOT</version>
+		<version>1.2.0</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring.boot.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- Jees -->
 		<dependency>
 			<groupId>com.github.aiyoyoyo</groupId>
@@ -46,12 +54,6 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
-		<!-- Test -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
 		<!-- MySQL -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -63,14 +65,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
 			<version>${commons.pool2.version}</version>
-		</dependency>
-
-		<!-- Lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

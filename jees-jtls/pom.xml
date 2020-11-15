@@ -6,43 +6,18 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jtls</artifactId>
-    <version>1.1.7-SNAPSHOT</version>
+    <version>1.2.0</version>
     <name>Java Tool Support</name>
     <description>jees-jtls contains classes of some common tools or algorithms.</description>
     <url>${jees.url}</url>
 
-    <!-- Project Information -->
-    <properties>
-        <main.basedir>${basedir}/..</main.basedir>
-        <jees.artifactId>jees-jtls</jees.artifactId>
-    </properties>
-
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jees-boot</artifactId>
-        <version>1.1.8-SNAPSHOT</version>
+        <version>1.2.0</version>
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
-
     <dependencies>
-        <!--Spring Boot-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>${spring.boot.version}</version>
-        </dependency>
-        <!-- Joda Time -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
-        </dependency>
-        <!-- Fastjson -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
-        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,25 +32,29 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!--Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!-- Joda Time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
+        <!-- Fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
         <!-- Apache Commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-            <version>6.16.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>3.0.5</version>
-            <type>pom</type>
+            <version>${commons.lang3.version}</version>
         </dependency>
     </dependencies>
 </project>

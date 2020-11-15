@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Log4j2
 public class MessageFile<ID>{
@@ -31,7 +32,7 @@ public class MessageFile<ID>{
                 log.info( "--生成消息文件：" + file );
             }
             FileUtil.write( _str, file, false );
-        }catch( FileNotFoundException e ){
+        }catch(IOException e ){
             log.warn( "写入文件失败：" + e.toString() );
         }
     }

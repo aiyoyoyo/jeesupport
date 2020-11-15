@@ -2,15 +2,9 @@
 
 ## 内容介绍
 本工具基于Spring和Atomikos实现分布式数据库配置方案，后续见更新说明。
+
 ## 基本用法
-在pom.xml中加入下面2段内容。
-```
-<parent>
-	<groupId>com.github.aiyoyoyo</groupId>
-	<artifactId>jees-boot</artifactId>
-	<version>1.1.5-SNAPSHOT</version>
-</parent>
-```
+> pom.xml
 ```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
@@ -18,12 +12,9 @@
 	<version>${jees.jdbs.version}</version>
 </dependency>
 ```
+
 ## 配置文件说明
-* 日志配置
-> log4j2.xml
-* SpringBoot 配置文件
 > application.yml
-数据库配置模版参考
 ```
 jees:
  jdbs:
@@ -66,6 +57,7 @@ jees:
     xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
     packagesToScan: com.jees.test.entity
 ```
+
 ## 程序实现Demo
 * DAO继承
 ```
@@ -90,15 +82,25 @@ public class MyController{
     }
 }
 ```
-## 其他
-后续内容请关注JEES讨论群或者论坛（未开放）  
-QQ群：8802330  
-论坛：[http://www.jeesupport.com](http://www.jeesupport.com)
 
-## 新内容说明
+## 部分内容说明
 * com.jees.core.database.config
 现已有原来的多配置文件形式简化到application.yml中。详情请参考Github中示例。
 * com.jees.core.database.repository
 该内容为JPA方式的数据库操作，部分内容尚未生效。
 * com.jees.core.database.support
 AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
+
+## 更新内容
+### 1.2.0 <font color='red'>New</font>
+### 1.1.6-SNAPSHOT
+1. 加入Redis数据操作相关函数
+2. 优化相关内容
+### Ver 1.1.5-SNAPSHOT
+1. 优化配置细节，详情见AbstractDataSorceBean得配置项
+### 1.1.4-SNAPSHOT
+1. 更新了jdbs配置方案，由多文件形式转为集中到application.yml中。详细内容见测试代码和配置文件。
+2. 程序配置使用了较多的约定形式，如果不理解，请参考SpringBoot官方文档，或加群咨询。
+3. 建议自定义Dao继承BaseDao来重写自己所需的数据库操作。
+
+

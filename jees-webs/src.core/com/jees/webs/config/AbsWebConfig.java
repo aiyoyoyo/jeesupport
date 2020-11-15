@@ -1,6 +1,7 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
+import com.jees.tool.utils.UrlUtil;
 import com.jees.webs.entity.Page;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.support.ITemplateService;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 @Log4j2
 public abstract class AbsWebConfig implements WebMvcConfigurer {
@@ -118,6 +120,12 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
     public void addInterceptors( InterceptorRegistry _registry) {
         InterceptorRegistration R = _registry.addInterceptor( handlerInterceptor ).addPathPatterns( "/**" );
 
+        StringTokenizer st = CommonConfig.getStringTokenizer("spring.resources.static-locations");
+        while( st.hasMoreTokens() ){
+            String url = UrlUtil.path2url( st.nextToken(), false );
+            if( url != null ) R.excludePathPatterns( "/" + url + "/**" );
+        }
+
         templateService.getTemplateAll().forEach( t -> {
             if( templateService.isTemplate( t.getName() ) ){
                 R.excludePathPatterns( "/" + t.getAssets() + "/**" );
@@ -142,6 +150,18 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
             }
             _registry.addResourceHandler( url + "/**" ).addResourceLocations( path );
         } );
+
+        // 此处的静态根路径不能和模版中静态目录assets重名
+        StringTokenizer st = CommonConfig.getStringTokenizer("spring.resources.static-locations");
+        ResourceHandlerRegistration handler = null;
+        while( st.hasMoreTokens() ){
+            String path = st.nextToken();
+            String url = UrlUtil.path2url( path, false );
+            if( url != null ){
+                log.debug( "--注册静态资源：RES=[" + url + "], PATH=[" + path + "]" );
+                _registry.addResourceHandler(url + "/**").addResourceLocations( path );
+            }
+        }
     }
 
     /**

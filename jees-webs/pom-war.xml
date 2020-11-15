@@ -10,7 +10,7 @@
     <name>Java Web Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>
-    
+    <packaging>war</packaging>
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jees-boot</artifactId>
@@ -19,80 +19,43 @@
     </parent>
 
     <properties>
+        <jees.artifactId>jees-webs</jees.artifactId>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <jees.artifactId>jees-webs</jees.artifactId>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <excludeDevtools>false</excludeDevtools>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
-            </plugin>
-            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>default-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.1</version>
                 <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.jees.test.JwebsApplication</mainClass>
-                            <useUniqueVersions>false</useUniqueVersions>
-                        </manifest>
-                        <!-- (配置文件外置目录) -->
-                        <manifestEntries>
-                            <Class-Path>.</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                    <!--一下分别是排除源文件目录，资源文件， 资源文件目录 -->
-                    <excludes>
-                        <exclude>/config/</exclude>
-                        <exclude>/templates/</exclude>
-                    </excludes>
-                    <includes>
-                        <include>/com/</include>
-                    </includes>
-                </configuration>
-            </plugin>
-            <!-- 自定义发布版本包 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>create-release-zip</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>package.xml</descriptor>
-                    </descriptors>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webappDirectory>src.resources</webappDirectory>
+                    <workDirectory>src.resources/WEB-INF/classes</workDirectory>
+                    <warName>${artifactId}</warName>
+                    <webResources>
+                        <resource>
+                            <directory>src.resources/config</directory>
+                            <targetPath>WEB-INF/classes/config</targetPath>
+                            <filtering>true</filtering>
+                        </resource>
+                        <resource>
+                            <directory>target/test-classes/com</directory>
+                            <targetPath>WEB-INF/classes/com</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>src.resources/templates</directory>
+                            <targetPath>templates</targetPath>
+                        </resource>
+                    </webResources>
+                    <packagingExcludes>
+                        scr/**,
+                        config/**
+                    </packagingExcludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -122,7 +85,7 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Jees -->
+        <!-- Jees-->
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jdbs</artifactId>
@@ -133,6 +96,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
+            <!-- 移除嵌入式tomcat插件 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,6 +119,13 @@
             <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
             <version>${dwr.version}</version>
+        </dependency>
+        <!--添加servlet-api的依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
