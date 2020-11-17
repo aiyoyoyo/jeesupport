@@ -66,12 +66,10 @@ public class FileUtil {
      *
      * @param _conent 写入内容
      * @param _file 待写入对象
-     * @param _thr 是否抛出异常
      * @throws IOException 读写异常
      */
-    public static void write ( String _conent, String _file, boolean _thr ) throws IOException {
-        File file = load( _file, _thr );
-        write( _conent, file );
+    public static void write ( String _conent, String _file ) throws IOException {
+        write( _conent.getBytes( FILE_ENCODING ), _file );
     }
 
     /**
@@ -80,13 +78,25 @@ public class FileUtil {
      * @throws IOException 读写异常
      */
     public static void write( String _conent, @Nullable File _file ) throws IOException {
-        if ( !_file.exists() ) {
+        write( _conent.getBytes( FILE_ENCODING ), _file );
+    }
+
+    public static void write( byte[] _bytes, String _path ) throws IOException {
+        File file = load( _path , false );
+        if( file == null ) {
+            log.error( "文件[" + _path + "]未找到。" );
+            return;
+        }
+        write( _bytes, file );
+    }
+
+    public static void write( byte[] _bytes, @Nullable File _file ) throws IOException {
+        if ( !_file.getParentFile().exists() ) {
             _file.getParentFile().mkdirs();
         }
-
         try{
             @Cleanup FileOutputStream fos = new FileOutputStream( _file );
-            fos.write( _conent.getBytes( FILE_ENCODING ) );
+            fos.write( _bytes );
         } catch ( Exception e ) {
             throw e;
         }
@@ -167,7 +177,7 @@ public class FileUtil {
 
     public static String path( String _path ){
         try {
-            return ResourceUtils.getFile( _path ).getCanonicalPath();
+            return ResourceUtils.getFile( _path ).getCanonicalPath().replaceAll("\\\\", "/");
         } catch (IOException e) {
             log.error( "文件[" + _path + "]没有找到:", e );
         }
