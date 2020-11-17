@@ -30,6 +30,5 @@ public class FileTest {
         log.info( ResourceUtils.getFile( "../dict" ) ); // ../dict
         log.info( ResourceUtils.getFile( "../../dict" ) ); // ../../dict
         log.info( ResourceUtils.getFile( "E:/dict" ) ); //  ${drive}/dict
-
     }
 }

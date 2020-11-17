@@ -68,8 +68,8 @@ public class FileUtil {
      * @param _file 待写入对象
      * @throws IOException 读写异常
      */
-    public static void write ( String _conent, String _file ) throws IOException {
-        write( _conent.getBytes( FILE_ENCODING ), _file );
+    public static void write ( String _conent, String _file, boolean _thr ) throws IOException {
+        write( _conent.getBytes( FILE_ENCODING ), _file, _thr );
     }
 
     /**
@@ -81,12 +81,8 @@ public class FileUtil {
         write( _conent.getBytes( FILE_ENCODING ), _file );
     }
 
-    public static void write( byte[] _bytes, String _path ) throws IOException {
-        File file = load( _path , false );
-        if( file == null ) {
-            log.error( "文件[" + _path + "]未找到。" );
-            return;
-        }
+    public static void write( byte[] _bytes, String _path, boolean _thr ) throws IOException {
+        File file = load( _path , _thr );
         write( _bytes, file );
     }
 

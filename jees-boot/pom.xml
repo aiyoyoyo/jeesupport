@@ -31,10 +31,10 @@
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
         <jees.version>1.2.0-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
-        <jees.jtls.version>1.2.0-SNAPSHOT</jees.jtls.version>
-        <jees.jdbs.version>1.2.0-SNAPSHOT</jees.jdbs.version>
-        <jees.jsts.version>1.2.0-SNAPSHOT</jees.jsts.version>
-        <jees.webs.version>1.2.0-SNAPSHOT</jees.webs.version>
+        <jees.jtls.version>1.2.1-SNAPSHOT</jees.jtls.version>
+        <jees.jdbs.version>1.2.1-SNAPSHOT</jees.jdbs.version>
+        <jees.jsts.version>1.2.1-SNAPSHOT</jees.jsts.version>
+        <jees.webs.version>1.2.1-SNAPSHOT</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
