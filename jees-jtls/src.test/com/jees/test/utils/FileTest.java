@@ -31,4 +31,10 @@ public class FileTest {
         log.info( ResourceUtils.getFile( "../../dict" ) ); // ../../dict
         log.info( ResourceUtils.getFile( "E:/dict" ) ); //  ${drive}/dict
     }
+
+    @Test
+    public void test2(){
+        log.info( FileUtil.path( "classpath:test3", false ) );
+        log.info( FileUtil.path( "classpath:test3", true ) );
+    }
 }

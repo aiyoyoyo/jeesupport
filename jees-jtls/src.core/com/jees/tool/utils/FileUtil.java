@@ -7,6 +7,8 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -178,5 +180,37 @@ public class FileUtil {
             log.error( "文件[" + _path + "]没有找到:", e );
         }
         return null;
+    }
+
+    public static String path( String _path, boolean _make ){
+        File file = null;
+        try {
+            file = ResourceUtils.getFile( _path );
+            if( _make && !file.exists()) {
+                File parent_file = file.getParentFile();
+                List<File> list = new ArrayList<>();
+                while (!parent_file.exists()) {
+                    list.add( 0, parent_file );
+                    parent_file = parent_file.getParentFile();
+                }
+
+                for( File f : list ){
+                    if( !f.exists() ) f.mkdir();
+                }
+                file.mkdir();
+            }
+            return file.getCanonicalPath().replaceAll("\\\\", "/");
+        } catch (IOException e) {
+            if( _make ){
+                if( _path.startsWith( "classpath:" ) ){
+                    _path = _path.replaceAll( "classpath:", "" );
+                }
+                _path = path( "classpath:" )  +"/" + _path;
+                _path = path( _path, true );
+            }else{
+                log.error( "文件[" + _path + "]没有找到:", e );
+            }
+        }
+        return _path;
     }
 }
