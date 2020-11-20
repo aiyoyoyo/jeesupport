@@ -1,6 +1,7 @@
 package com.jees.tool.utils;
 
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
@@ -21,12 +22,49 @@ import java.util.function.Consumer;
 public class FileUtil {
     public static final String FILE_ENCODING = "UTF-8";
 
-    public static File load( String _path, boolean _thr ) throws FileNotFoundException{
-        File file = _try_clspath_loader( _path );
-        if( file == null ) file = _try_absolute_loader( _path );
-        if( file == null ) file = _try_canonical_loader( _path );
-        if( file == null && _thr ) throw new FileNotFoundException( "文件[" + _path + "]没有找到。" );
+    static String classpath = null;
+    public static String classpath(){
+        if( classpath == null ){
+            classpath = path( "classpath:" );
+        }
+        return classpath;
+    }
 
+    public static File load( String _path, boolean _make ){
+        File file = null;
+        boolean is_dir = _path.endsWith("/");
+        try {
+            log.debug( "尝试直接加载文件:" + _path );
+            file = ResourceUtils.getFile( _path );
+            if( !file.exists() ) file = null;
+        } catch (FileNotFoundException e) {
+            log.warn("尝试直接加载失败，文件不存在:" + _path );
+        }
+        if( file == null ){
+            _path = _path.replace( "classpath:", "" );
+            _path = _path.replace( "classpath*:", "" );
+            try {
+                log.debug( "尝试加载相对路径文件:" + _path );
+                file = ResourceUtils.getFile( _path );
+                if( !file.exists() ) file = null;
+            } catch (FileNotFoundException e) {
+                log.warn("尝试加载相对路径失败，文件不存在:" + _path );
+            }
+        }
+        if( file == null ){
+            _path = classpath() + "/" + _path;
+            try {
+                log.debug( "尝试加载绝对路径文件:" + _path );
+                file = ResourceUtils.getFile( _path );
+            } catch (FileNotFoundException e) {
+                log.warn("尝试加载绝对路径失败，文件不存在:" + _path );
+            }
+        }
+        if( file == null ){
+            log.debug( "文件不存在，创建文件对象:" + _path );
+            file = new File( _path );
+        }
+        if( !file.exists() && _make ) make( file, is_dir );
         return file;
     }
 
@@ -126,91 +164,57 @@ public class FileUtil {
         }
     }
 
-    private static File _try_clspath_loader( String _path ){
-        File file = null;
-        if ( _path.startsWith( "classpath:" ) || _path.startsWith( "classpath*:") ){
-            try{
-                file = ResourceUtils.getFile( _path );
-            }catch( FileNotFoundException e ){
-                log.error( "环境路径文件[" + _path + "]没有找到!");
-                file = null;
+    public static void make( File _file, boolean _dir ){
+        File parent_file = _file.getParentFile();
+        List<File> list = new ArrayList<>();
+        while (!parent_file.exists()) {
+            list.add( 0, parent_file );
+            parent_file = parent_file.getParentFile();
+        }
+
+        for( File f : list ){
+            if( !f.exists() ) f.mkdir();
+        }
+
+        if( _dir ){
+            log.debug("创建目录:" + _file.getPath() );
+            _file.mkdir();
+        }else {
+            log.debug("创建文件:" + _file.getPath() );
+            try {
+                _file.createNewFile();
+            } catch (IOException e) {
+                log.error("创建文件失败:" + _file.getPath() );
             }
         }
-        return file;
-    }
-
-    private static File _try_absolute_loader( String _path ){
-        if( _path.startsWith("classpath:") ){
-            _path = _path.replaceFirst( "classpath:", "" );
-        }else if( _path.startsWith("classpath*:") ){
-            _path = _path.replaceFirst( "classpath*:", "" );
-        }
-        File file = null;
-        try{
-            file = ResourceUtils.getFile( _path );
-            File chk_file = new File( file.toURI() );
-            if( !chk_file.exists() ){
-                log.error( "相对路径文件[" + _path + "]没有找到!");
-                file = null;
-            }
-        }catch( FileNotFoundException e ){
-            log.error( "相对路径文件[" + _path + "]没有找到!");
-            file = null;
-        }
-        return file;
-    }
-
-    private static File _try_canonical_loader( String _path ){
-        if( _path.startsWith("classpath:") ){
-            _path = _path.replaceFirst( "classpath:", "" );
-        }else if( _path.startsWith("classpath*:") ){
-            _path = _path.replaceFirst( "classpath*:", "" );
-        }
-        File file = new File( _path );
-        if( !file.exists() ){
-            log.error( "绝对路径文件[" + _path + "]没有找到!");
-        }
-        return file;
     }
 
     public static String path( String _path ){
         try {
-            return ResourceUtils.getFile( _path ).getCanonicalPath().replaceAll("\\\\", "/");
+            File file = load( _path, false );
+            return file.getCanonicalPath().replaceAll("\\\\", "/");
         } catch (IOException e) {
-            log.error( "文件[" + _path + "]没有找到:", e );
+            log.error( "文件[" + _path + "]路径获取失败:", e );
         }
         return null;
     }
 
+    /**
+     * 获取文件实际路径，/结尾的字符串将创建文件夹，否则创建文件
+     * @param _path 路径
+     * @param _make 是否创建
+     * @return 文件地址
+     */
     public static String path( String _path, boolean _make ){
-        File file = null;
-        try {
-            file = ResourceUtils.getFile( _path );
-            if( _make && !file.exists()) {
-                File parent_file = file.getParentFile();
-                List<File> list = new ArrayList<>();
-                while (!parent_file.exists()) {
-                    list.add( 0, parent_file );
-                    parent_file = parent_file.getParentFile();
-                }
-
-                for( File f : list ){
-                    if( !f.exists() ) f.mkdir();
-                }
-                file.mkdir();
-            }
-            return file.getCanonicalPath().replaceAll("\\\\", "/");
-        } catch (IOException e) {
-            if( _make ){
-                if( _path.startsWith( "classpath:" ) ){
-                    _path = _path.replaceAll( "classpath:", "" );
-                }
-                _path = path( "classpath:" )  +"/" + _path;
-                _path = path( _path, true );
-            }else{
-                log.error( "文件[" + _path + "]没有找到:", e );
+        String file_path = path( _path );
+        if( _make ){
+            File file = load( _path, _make );
+            try {
+                return file.getCanonicalPath().replaceAll("\\\\", "/");
+            } catch (IOException e) {
+                log.error( "文件[" + _path + "]路径获取失败:", e );
             }
         }
-        return _path;
+        return file_path;
     }
 }

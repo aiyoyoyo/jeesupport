@@ -34,7 +34,12 @@ public class FileTest {
 
     @Test
     public void test2(){
-        log.info( FileUtil.path( "classpath:test3", false ) );
-        log.info( FileUtil.path( "classpath:test3", true ) );
+//        log.info( FileUtil.path( "classpath:test3/" ) );
+//        log.info( FileUtil.path( "E:/test1/test2/test3/" ) );
+//        log.info( FileUtil.path( "classpath:test3/", false ) );
+//        log.info( FileUtil.path( "classpath:test3/", true ) );
+
+        log.info( FileUtil.load( "E:/test1/test2/test3/", false ) );
+        log.info( FileUtil.load( "E:/test1/test2/test3/", true ) );
     }
 }

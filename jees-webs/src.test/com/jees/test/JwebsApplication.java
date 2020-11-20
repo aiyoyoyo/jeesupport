@@ -14,12 +14,16 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
 
+import java.util.Arrays;
+
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 @ComponentScan( "com.jees" )
 @DependsOn({"commonContextHolder", "commonConfig" })
 @Log4j2
 public class JwebsApplication{
     public static void main(String[] args){
+        System.out.println( "Project Path:" + FileUtil.path( "classpath:" ) );
+        System.out.println( "Start with:" + Arrays.toString( args ) );
         SpringApplication.run( JwebsApplication.class, args);
 //        CommonContextHolder.getBean( ISuperService.class ).initialize();
         log.info( "服务器启动: http"

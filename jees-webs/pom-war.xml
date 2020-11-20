@@ -27,6 +27,16 @@
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${basedir}\src.resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>config/**</exclude>
+                    <exclude>templates/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

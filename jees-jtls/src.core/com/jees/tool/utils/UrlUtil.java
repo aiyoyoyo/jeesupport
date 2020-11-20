@@ -51,19 +51,6 @@ public class UrlUtil{
      * @return 路径
      */
     public static String url2path( String _url, boolean _make ){
-        String path = null;
-        File file = null;
-        try {
-            path = FileUtil.path( "classpath:" );
-            path += "/" + _url;
-            file = FileUtil.load( path, false );
-        } catch (FileNotFoundException e) {
-            log.error( "文件未找到!", e );
-        }finally {
-            if( _make && file != null ){
-                file.mkdir();
-            }
-        }
-        return path;
+        return FileUtil.path( "classpath:" + _url, _make );
     }
 }

@@ -94,10 +94,15 @@ public class InstallConfig{
 
     private boolean _check_install_(){
         try{
-            installFile = FileUtil.load( CommonConfig.getString( "jees.webs.install.file", "classpath:.install" ), true );
+            String install_file = CommonConfig.getString( "jees.webs.install.file", "classpath:.install" );
+            log.info( "检查安装文件:" + install_file );
+            installFile = FileUtil.load( install_file, false );
+            log.info( "--安装文件是否存:" + installFile.exists() );
             if( installFile.exists() ){
+                log.info( "--加载安装文件内容." );
                 installStep = InstallStep.toClass( FileUtil.read( installFile ) );
             }else{
+                log.info( "--创建安装文件." );
                 installFile.createNewFile();
                 installStep = new InstallStep();
                 FileUtil.write( installStep.toString(), installFile );
@@ -106,12 +111,8 @@ public class InstallConfig{
             e.printStackTrace();
             System.exit( 0 );
         }
-
-        if( installFile.exists() ){
-            return (installStep.step & InstallFinish) == InstallFinish;
-        }
-
-        return false;
+        log.info( "--安装文件内容:" + installStep.toString() );
+        return (installStep.step & InstallFinish) == InstallFinish;
     }
 
     public void installRedis( String _host, int _port, String _password, int _db ) throws IOException {

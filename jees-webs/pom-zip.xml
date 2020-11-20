@@ -26,55 +26,52 @@
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${basedir}\src.resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>config/**</exclude>
+                    <exclude>templates/**</exclude>
+                    <exclude>lib/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>${basedir}\src.resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>config/**</exclude>
+                    <exclude>templates/**</exclude>
+                    <exclude>lib/**</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        <testOutputDirectory>target/classes</testOutputDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <excludeDevtools>false</excludeDevtools>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
-            </plugin>
-            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
-                        <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.jees.test.JwebsApplication</mainClass>
-                            <useUniqueVersions>false</useUniqueVersions>
-                        </manifest>
-                        <!-- (配置文件外置目录) -->
-                        <manifestEntries>
-                            <Class-Path>.</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                    <!--一下分别是排除源文件目录，资源文件， 资源文件目录 -->
-                    <excludes>
-                        <exclude>/config/</exclude>
-                        <exclude>/templates/</exclude>
-                    </excludes>
-                    <includes>
-                        <include>/com/</include>
-                    </includes>
+                    <layout>ZIP</layout>
+                    <fork>true</fork>
+                    <skip>false</skip>
+                    <excludeDevtools>false</excludeDevtools>
+                    <includeSystemScope>false</includeSystemScope>
+                    <useTestClasspath>true</useTestClasspath>
+                    <mainClass>com.jees.test.JwebsApplication</mainClass>
                 </configuration>
             </plugin>
-            <!-- 自定义发布版本包-->
+            <!-- 自定义发布版本包 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -149,6 +146,19 @@
             <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
             <version>${dwr.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.30</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
