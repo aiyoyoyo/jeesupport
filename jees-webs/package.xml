@@ -22,6 +22,14 @@
             <destName>${artifactId}-${version}.jar</destName>
             <outputDirectory>/</outputDirectory>
         </file>
+        <file>
+            <source>../jees-jtls/config/logback-jtls.xml</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <file>
+            <source>../jees-jdbs/config/logback-jdbs.xml</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
         <!-- 设置start.sh文件的换行符为unix换行符\n
         <file>
             <source>scr/start.sh</source>

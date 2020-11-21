@@ -9,7 +9,7 @@
     <version>1.2.1-SNAPSHOT</version>
     <name>Java Boot Support</name>
     <description>Jees with SpringBoot Support</description>
-    <url>http://www.jeesupport.com/</url>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
     <packaging>pom</packaging>
 
     <modules>
@@ -80,20 +80,6 @@
             </distributionManagement>
             <build>
                 <plugins>
-                    <!--
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>jees</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    -->
-                    <!-- plugins 中配置maven-javadoc-plugin的additionalparam参数 -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
@@ -164,6 +150,14 @@
                 <directory>${basedir}\src.resources</directory>
             </testResource>
         </testResources>
+        <resources>
+            <resource>
+                <directory>${basedir}\src.resources</directory>
+                <includes>
+                    <include>banner.txt</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
     <dependencies>
         <dependency>

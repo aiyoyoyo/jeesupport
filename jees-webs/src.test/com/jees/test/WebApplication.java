@@ -1,6 +1,5 @@
 package com.jees.test;
 
-
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.CustomSystemUtil;
@@ -20,12 +19,12 @@ import java.util.Arrays;
 @ComponentScan( "com.jees" )
 @DependsOn({"commonContextHolder", "commonConfig" })
 @Log4j2
-public class JwebsApplication{
+public class WebApplication {
     public static void main(String[] args){
         System.out.println( "Project Path:" + FileUtil.path( "classpath:" ) );
         System.out.println( "Start with:" + Arrays.toString( args ) );
-        SpringApplication.run( JwebsApplication.class, args);
-//        CommonContextHolder.getBean( ISuperService.class ).initialize();
+        SpringApplication.run( WebApplication.class, args);
+        CommonContextHolder.getBean( ISuperService.class ).initialize();
         log.info( "服务器启动: http"
                 + ( CommonConfig.getBoolean( "server.useSSL", false ) ? "s" : "" )
                 + "://" + CustomSystemUtil.INTRANET_IP  + ":"
@@ -34,5 +33,3 @@ public class JwebsApplication{
         );
     }
 }
-
-

@@ -97,6 +97,9 @@ clean package -pom-war.xml
 2. 动态获取相对路径寻找更好的写法
 
 ## 更新历史
+### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+1. 优化日志文件
+2. 优化打包内容
 ### 1.2.0
 1. 新增了打包配置package.xml，通过maven的package功能分离配置文件形式打包。
 2. 静态文件夹配置spring.resources.static-locations不可用assets指定。

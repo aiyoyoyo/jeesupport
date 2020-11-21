@@ -25,7 +25,10 @@
 > DataTest 数据转换测试类
 
 ## 更新历史
-### 1.2.0-SNAPSHOT <font color='red'>New</font>
+### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+1. 优化日志文件
+2. 优化打包内容
+### 1.2.0-SNAPSHOT
 1. 优化引用的第三方库
 2. 部分类做了功能调整和优化
 ### 1.1.7-SNAPSHOT

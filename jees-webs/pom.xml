@@ -9,7 +9,7 @@
     <version>1.2.1-SNAPSHOT</version>
     <name>Java Web Support</name>
     <description>Jees with SpringBoot Support</description>
-    <url>http://www.jeesupport.com/</url>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
     
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>

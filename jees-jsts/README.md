@@ -70,7 +70,10 @@ jees:
 ```
 
 ## 版本说明
-### 1.2.0 <font color='red'>New</font>
+### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+1. 优化日志文件
+2. 优化打包内容
+### 1.2.0
 1. 重写了服务器结构，去掉了一些多余的类。
 2. 消息代理机制可以参考演示程序中CustomMessage
 3. 在socket服务器可以使用proto形式，解码过程可以参考MessageCrypto类

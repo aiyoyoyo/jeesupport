@@ -25,7 +25,9 @@
 		</rollingPolicy>
 	</appender>
 
+	<include resource="config/logback-jtls.xml" />
 	<include resource="config/logback-jdbs.xml" />
+	<include resource="config/logback-jsts.xml" />
 
 	<root level="INFO">
 		<appender-ref ref="JEESUPPORT"/>

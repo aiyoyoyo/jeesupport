@@ -92,7 +92,9 @@ public class MyController{
 AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
 
 ## 更新内容
-### 1.2.0 <font color='red'>New</font>
+### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+1. 优化日志文件
+2. 优化打包内容
 ### 1.1.6-SNAPSHOT
 1. 加入Redis数据操作相关函数
 2. 优化相关内容
