@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jtls</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
     <name>Java Tool Support</name>
     <description>jees-jtls contains classes of some common tools or algorithms.</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jees-boot</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
     <dependencies>

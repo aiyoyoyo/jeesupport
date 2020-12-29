@@ -54,6 +54,12 @@ public class CommonConfig {
 		return getLong( _key, 0L );
 	}
 
+	public static byte getByte( String _key ) {
+		return getByte( _key, (byte) 0);
+	}
+
+	public static double getDouble( String _key ) { return getDouble( _key, 0D ); };
+
 	public static String getString( String _key, String _def ) {
 		String val = get( _key );
 		return val == null ? _def : val;
@@ -88,9 +94,29 @@ public class CommonConfig {
 		}
 	}
 
-	public static boolean getEquals( String _key , String _word ) {
+	public static byte getByte( String _key, byte _def ){
+		try {
+			return Byte.parseByte( getString( _key ) );
+		} catch ( Exception e ) {
+			return _def;
+		}
+	}
+
+	public static double getDouble( String _key, double _def ){
+		try {
+			return Double.parseDouble( getString( _key ) );
+		} catch ( Exception e ) {
+			return _def;
+		}
+	}
+
+	public static boolean equals( String _key , String _word ) {
+		return equals( _key, _word, false );
+	}
+
+	public static boolean equals( String _key , String _word, boolean _case ) {
 		String val = getString( _key );
-		return val.equalsIgnoreCase( _word );
+		return _case ? val.equalsIgnoreCase( _word ) : val.equals( _word );
 	}
 
 	public static StringTokenizer getStringTokenizer( String _key ){
@@ -113,6 +139,8 @@ public class CommonConfig {
 			else if( _def instanceof Float ) tpl = getFloat( val );
 			else if( _def instanceof Boolean ) tpl = getBoolean( val );
 			else if( _def instanceof Long ) tpl = getLong( val );
+			else if( _def instanceof Byte ) tpl = getByte( val );
+			else if( _def instanceof Double ) tpl = getByte( val );
 			else tpl = getString( val );
 			return (T) tpl;
 		}catch ( Exception e ){

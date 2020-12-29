@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-webs</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
     <name>Java Web Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>http://www.jeesupport.com/</url>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jees-boot</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
         <relativePath>../jees-boot/pom.xml</relativePath>
     </parent>
 
@@ -44,18 +44,17 @@
                 <version>3.3.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webappDirectory>src.resources</webappDirectory>
-                    <workDirectory>src.resources/WEB-INF/classes</workDirectory>
-                    <warName>${artifactId}</warName>
+                    <webappDirectory>build/${jees.artifactId}</webappDirectory>
+                    <workDirectory>build/${jees.artifactId}/WEB-INF/classes</workDirectory>
                     <webResources>
+                        <resource>
+                            <directory>target/test-classes/com</directory>
+                            <targetPath>WEB-INF/classes/com</targetPath>
+                        </resource>
                         <resource>
                             <directory>src.resources/config</directory>
                             <targetPath>WEB-INF/classes/config</targetPath>
                             <filtering>true</filtering>
-                        </resource>
-                        <resource>
-                            <directory>target/test-classes/com</directory>
-                            <targetPath>WEB-INF/classes/com</targetPath>
                         </resource>
                         <resource>
                             <directory>src.resources/templates</directory>
@@ -63,8 +62,7 @@
                         </resource>
                     </webResources>
                     <packagingExcludes>
-                        scr/**,
-                        config/**
+                        com.jees.test.WebApplication.java
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -123,6 +121,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Dwr -->
         <dependency>

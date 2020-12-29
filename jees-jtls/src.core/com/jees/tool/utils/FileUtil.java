@@ -1,13 +1,11 @@
 package com.jees.tool.utils;
 
 import lombok.Cleanup;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -52,7 +50,12 @@ public class FileUtil {
             }
         }
         if( file == null ){
-            _path = classpath() + "/" + _path;
+            if( _path.indexOf( ":" ) != -1 ){
+            }else if( _path.startsWith("/") ){
+                _path = classpath() + _path;
+            }else{
+                _path = classpath() + "/" + _path;
+            }
             try {
                 log.debug( "尝试加载绝对路径文件:" + _path );
                 file = ResourceUtils.getFile( _path );
@@ -127,11 +130,9 @@ public class FileUtil {
     }
 
     public static void write( byte[] _bytes, @Nullable File _file ) throws IOException {
-        if ( !_file.getParentFile().exists() ) {
-            _file.getParentFile().mkdirs();
-        }
+        File   file   = load( _file.getCanonicalPath(), true );
         try{
-            @Cleanup FileOutputStream fos = new FileOutputStream( _file );
+            @Cleanup FileOutputStream fos = new FileOutputStream( file );
             fos.write( _bytes );
         } catch ( Exception e ) {
             throw e;

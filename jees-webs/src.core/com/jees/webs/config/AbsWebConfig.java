@@ -29,15 +29,22 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
     @Autowired
     InstallConfig                 installConfig;
 
-    static String rootTpl = "classpath:/templates/";
+    static String rootTpl;
+
+    public String getRootTpl(){
+        if( rootTpl == null)
+            rootTpl = CommonConfig.getString( "spring.thymeleaf.prefix", "classpath:/templates/");
+        return rootTpl;
+    }
 
     private String _try_tpl_path(){
+
         String tmp_path = "";
         try {
-            tmp_path = resourcePatternResolver.getResource( rootTpl ).getURL().getPath();
+            tmp_path = resourcePatternResolver.getResource( getRootTpl() ).getURL().getPath();
             if( tmp_path.startsWith( "/" ) )tmp_path = tmp_path.replaceFirst( "/", "" );
         } catch (IOException e) {
-            log.error( "模版路径错误：PATH=[" + rootTpl + "]" );
+            log.error( "模版路径错误：PATH=[" + getRootTpl() + "]" );
         }
 
         return tmp_path;
@@ -49,7 +56,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
         String root_path = _try_tpl_path();
         templateService.getTemplateAll().forEach( t -> {
-            String tpl_path = rootTpl + t.getName();
+            String tpl_path = getRootTpl() + t.getName();
             String res_path = tpl_path + "/**/*.html";
 
             try {
