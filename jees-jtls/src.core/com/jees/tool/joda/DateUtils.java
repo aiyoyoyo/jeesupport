@@ -1,10 +1,16 @@
 package com.jees.tool.joda;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtils {
+
+	public static String DATE_YYYY_MM_DD = "yyyy-MM-dd";
+
+	public static String DATE_Y_M_DDHHMMSS = "yyyy-MM-dd HH:mm:ss";
 	/**
 	 * 返回时间距离当前时间多久, 正数为未来几天，负数为过去几天
 	 * @param _dt 时间
@@ -35,4 +41,49 @@ public class DateUtils {
 	 	int days = Days.daysBetween( start , end ).getDays();
 		return days;
 	}
+
+	/**
+	 * 字符串日期转成11位long型
+	 * @param date    日期
+	 * @param format  日期格式
+	 * @return
+	 */
+	public static long convert2long(String date, String format) {
+		try {
+			if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(format)) {
+				SimpleDateFormat sf = new SimpleDateFormat(format);
+				return sf.parse(date).getTime() / 1000;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0l;
+	}
+
+	/**
+	 * long型日期转成string类型日期
+	 * @param time   日期
+	 * @param format  日期格式
+	 * @return
+	 */
+	public static String convert2String(long time, String format) {
+		if (time > 0l && StringUtils.isNotBlank(format)) {
+			SimpleDateFormat sf = new SimpleDateFormat(format);
+			Date date = new Date(time);
+			return sf.format(date);
+		}
+		return "";
+	}
+
+	/**
+	 * 获取当前时间
+	 * @param format
+	 * @param date
+	 * @return
+	 */
+	public static final String getTimeNow(final String format, final Date date)
+	{
+		return new SimpleDateFormat(format).format(date);
+	}
+
 }

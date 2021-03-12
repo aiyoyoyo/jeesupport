@@ -1,13 +1,19 @@
 package com.jees.tool.license;
 
+import com.jees.tool.crypto.B64Utils;
+import com.jees.tool.crypto.RSAUtils;
+import com.jees.tool.joda.DateUtils;
+
 import java.io.*;
 import java.security.Key;
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.jees.tool.crypto.B64Utils;
-import com.jees.tool.crypto.RSAUtils;
+import static com.jees.tool.joda.DateUtils.DATE_Y_M_DDHHMMSS;
 
 /**
  * 用于生成应用所需的license文件
@@ -31,6 +37,7 @@ public class LicenseUtils {
 		int step = 0;
 		String s0 = "";
 		String s1 = "";
+		String s2="";
 		while ( sc.hasNext() ) {
 			while ( step == 0 ) {
 				int m = sc.nextInt();
@@ -79,7 +86,13 @@ public class LicenseUtils {
 				}
 			}
 			
-			if( step == 2 ) break;
+			if( step == 2 ) {
+				System.out.println( "请输入您想要过期的时间：格式为（yyyy-mm-dd hh:mm:ss）" );
+				s2=sc.next();
+
+				s_generate_intime(s0,s2);
+				break;
+			}
 		}
 
 		String seed = s0;
@@ -142,7 +155,7 @@ public class LicenseUtils {
 		String pub_key_str = B64Utils.s_encode( pub_key );
 		System.out.println( "用户公钥:" + pub_key_str );
 
-		String str = s_encode_string( LicenseClient.MODE_SINGLE , code , _time );
+		String str = s_encode_string( LicenseClient.MODE_INTIME , code , _time );
 		byte[] byt_e = RSAUtils.s_encrypt_private( pri_key , str.getBytes() );
 
 		s_write_license( pub_key_str , B64Utils.s_encode( byt_e ) );
@@ -163,6 +176,43 @@ public class LicenseUtils {
 			pub_key = B64Utils.s_decode( pub_key_str );
 			RSAUtils.s_decrypt_public( pub_key , B64Utils.s_decode( txt[ 1 ] ) );
 			System.out.println( "License文件经验证结果：有效，机器码：" + code );
+		} catch ( Exception e ) {
+			System.out.println( "License文件经验证结果：失败 机器码：" + code );
+		}
+		System.exit( 0 );
+	}
+
+	/**
+	 * 测试License内容与时效有效性
+	 */
+	public static void s_test_time() {
+		File file = new File( "" , "application.license" );
+		String code = LicenseSequences.s_sequence();
+		String[] txt = s_read_license( file );
+		String pub_key_str = txt[ 0 ];
+		System.out.println( "用户公钥:" + pub_key_str );
+
+		byte[] pub_key;
+		try {
+			pub_key = B64Utils.s_decode( pub_key_str );
+			byte[] deString = RSAUtils.s_decrypt_public(pub_key, B64Utils.s_decode(txt[1]));
+			System.out.println("解密出来的内容为："+new String(deString));
+			String regex = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}";
+			Pattern p = Pattern.compile(regex);
+			Matcher matcher = p.matcher(new String(deString));
+			if(matcher.find()){
+				String exp_time = matcher.group(0);
+				System.out.println("License文件中的过期时间为："+exp_time);
+				long exptime = DateUtils.convert2long(exp_time, DATE_Y_M_DDHHMMSS);
+                long now_time=DateUtils.convert2long(DateUtils.getTimeNow(DATE_Y_M_DDHHMMSS,new Date()),DATE_Y_M_DDHHMMSS);
+			    if(now_time>exptime){
+					System.out.println("系统授权已过期");
+					System.exit(0);
+				}else {
+					System.out.println("系统时效验证通过");
+					System.out.println( "License文件经验证结果：有效，机器码：" + code );
+				}
+			}
 		} catch ( Exception e ) {
 			System.out.println( "License文件经验证结果：失败 机器码：" + code );
 		}
