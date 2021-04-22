@@ -92,6 +92,14 @@ public class DataUtil {
 	}
 
 	/**
+	 * 将int类型的数字进行高低位互转
+	 * @param _val 数字
+	 * @return 高位数字
+	 */
+	public static long warpLH(long _val){
+		return ByteBuffer.wrap(long2bytes(_val)).order(ByteOrder.BIG_ENDIAN).getLong();
+	}
+	/**
 	 * 截取bytes
 	 *
 	 * @param _data 字节数组
