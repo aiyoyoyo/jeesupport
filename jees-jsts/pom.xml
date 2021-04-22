@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.github.aiyoyoyo</groupId>
 			<artifactId>jees-jtls</artifactId>
-			<version>${jees.jtls.version}</version>
+			<version>1.2.2-SNAPSHOT</version>
 		</dependency>
 		<!-- netty -->
 		<dependency>
