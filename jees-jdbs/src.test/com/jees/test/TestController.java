@@ -1,15 +1,14 @@
 package com.jees.test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.jees.test.entity.TabA;
+import com.jees.test.entity.TabB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jees.test.entity.TabA;
-import com.jees.test.entity.TabB;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Controller
 public class TestController {
@@ -160,17 +159,18 @@ public class TestController {
 	@Transactional
 	public void simpleTest(){
 		TabA a = new TabA();
-		TabB b = new TabB();
-
-		ex.insert( DB_B, new TabB() );
-
-		a.setId( 1 );
-		ex.insert( DB_A, a );
-		a.setStr("aaa1");
-		ex.update( DB_A, a );
-
-//		ex.delete( DB_A, a );
-		ex.commit();
+		ex.select( "testa", TabA.class );
+//		TabB b = new TabB();
+//
+//		ex.insert( DB_B, new TabB() );
+//
+//		a.setId( 1 );
+//		ex.insert( DB_A, a );
+//		a.setStr("aaa1");
+//		ex.update( DB_A, a );
+//
+////		ex.delete( DB_A, a );
+//		ex.commit();
 
 //		int n = 1 / 0;
 	}

@@ -4,7 +4,7 @@
 
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jdbs</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.2.3-SNAPSHOT</version>
 	<name>Java Database Support</name>
 	<description>Spring Atomikos database support</description>
 	<url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
@@ -63,6 +63,22 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
 			<version>${commons.pool2.version}</version>
+		</dependency>
+		<!-- Orcale -->
+		<dependency>
+			<groupId>ojdbc</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>${oracle.version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src.resources/lib/ojdbc8.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ojdbc</groupId>
+			<artifactId>orai18n</artifactId>
+			<version>${oracle.version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src.resources/lib/orai18n.jar
+			</systemPath>
 		</dependency>
 	</dependencies>
 </project>

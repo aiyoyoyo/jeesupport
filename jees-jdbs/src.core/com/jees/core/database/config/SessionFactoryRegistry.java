@@ -24,47 +24,40 @@ public class SessionFactoryRegistry {
 
     private AtomikosDataSourceBean createXADataSource(String _name) {
         String head = "jees.jdbs.config." + _name + ".";
-        String type = CommonConfig.getString( head + "dbtype" );
+        String type = CommonConfig.getString(head + "dbtype");
         String bean = _name + "XADataSource";
         Properties xaProperties = new Properties();
 
         xaProperties.setProperty("user", CommonConfig.getString(head + "user"));
         xaProperties.setProperty("password", CommonConfig.getString(head + "password"));
-        xaProperties.setProperty("url", CommonConfig.getString(head + "url"));
+
 
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.rootBeanDefinition(AbsXADataSource.class);
 
         // 这里没有列举AbstractDataSourceBean的所有可用属性
-        if( type.equalsIgnoreCase( "mysql" ) ) {
-            xaProperties.setProperty("pinGlobalTxToPhysicalConnection",
-                    CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
-
-            beanDefinitionBuilder.addPropertyValue("uniqueResourceName",
-                    CommonConfig.getString( head + "uniqueResourceName" ));
-            beanDefinitionBuilder.addPropertyValue("xaDataSourceClassName",
-                    CommonConfig.getString( head + "xaDataSourceClassName" ) );
-
-            beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
-
-            beanDefinitionBuilder.addPropertyValue("maxPoolSize",
-                    CommonConfig.getString( head + "maxPoolSize", "1" ));
-            beanDefinitionBuilder.addPropertyValue("minPoolSize",
-                    CommonConfig.getString( head + "minPoolSize", "1" ));
-            beanDefinitionBuilder.addPropertyValue("maxIdleTime",
-                    CommonConfig.getString( head + "maxIdleTime", "60" ));
-
-            beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString( head + "poolSize", "1" ) );
+        if (type.equalsIgnoreCase("mysql")) {
+            xaProperties.setProperty("url", CommonConfig.getString(head + "url"));
+            xaProperties.setProperty("pinGlobalTxToPhysicalConnection",CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
+        }else if (type.equalsIgnoreCase("orcale")) {
+            xaProperties.setProperty("URL", CommonConfig.getString(head + "url"));
         }
+
+        beanDefinitionBuilder.addPropertyValue("uniqueResourceName",CommonConfig.getString(head + "uniqueResourceName"));
+        beanDefinitionBuilder.addPropertyValue("xaDataSourceClassName",CommonConfig.getString(head + "xaDataSourceClassName"));
+        beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
+        beanDefinitionBuilder.addPropertyValue("maxPoolSize",CommonConfig.getString(head + "maxPoolSize", "1"));
+        beanDefinitionBuilder.addPropertyValue("minPoolSize", CommonConfig.getString(head + "minPoolSize", "1"));
+        beanDefinitionBuilder.addPropertyValue("maxIdleTime", CommonConfig.getString(head + "maxIdleTime", "60"));
+        beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString(head + "poolSize", "1"));
 
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
 
-        beanFactory.registerBeanDefinition( bean, beanDefinitionBuilder.getBeanDefinition() );
+        beanFactory.registerBeanDefinition(bean, beanDefinitionBuilder.getBeanDefinition());
 
-        AbsXADataSource xaDataSource = CommonContextHolder.getBean( bean );
+        AbsXADataSource xaDataSource = CommonContextHolder.getBean(bean);
         log.debug("--创建AbsXADataSource[" + bean + "]。");
-
 
 
         return xaDataSource;
@@ -82,8 +75,15 @@ public class SessionFactoryRegistry {
         if( orm.equalsIgnoreCase("hibernate") ){
             Properties hibernateProperties = new Properties();
 
-            hibernateProperties.setProperty("hibernate.dialect",
-                    CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.MySQL55Dialect") );
+            String type = CommonConfig.getString(head + "dbtype");
+            if (type.equalsIgnoreCase("mysql")) {
+                hibernateProperties.setProperty("hibernate.dialect",
+                        CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.MySQL55Dialect") );
+            }else if(type.equalsIgnoreCase("orcale")){
+                hibernateProperties.setProperty("hibernate.dialect",
+                        CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.Oracle8iDialect") );
+            }
+
             hibernateProperties.setProperty("hibernate.show_sql",
                     CommonConfig.getString( hibernate + "showSql","true" ) );
             hibernateProperties.setProperty("hibernate.transaction.factory_class",

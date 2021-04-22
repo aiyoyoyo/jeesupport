@@ -1,19 +1,12 @@
 package com.jees.test;
 
 import com.jees.common.CommonContextHolder;
-import com.jees.core.database.support.IRedisDao;
-import com.jees.test.entity.RedisUser;
-import org.joda.time.DateTime;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 启动时需要剔除DataSourceAutoConfiguration，HibernateJpaAutoConfiguration的自动配置器。
@@ -26,9 +19,9 @@ public class JdbsApplication{
 	public static void main( String[] args ) throws Exception{
 		SpringApplication.run( JdbsApplication.class, args);
 
-//		TestController ctr = CommonContextHolder.getBean( TestController.class );
+		TestController ctr = CommonContextHolder.getBean( TestController.class );
 //		ctr.insertATransSucc();
-//		ctr.simpleTest();
+		ctr.simpleTest();
 
 //		ctr.absTest();
 

@@ -29,47 +29,68 @@ spring:
 
 jees:
  jdbs:
-  enable: false
+  enable: true
   redis: false
   defaultDB: testa
-  dbNames: testa, testb
+  dbNames: testa
   trans:
    timeout: 3000
    allowCustomIsolationLevels: true
   config:
    testa:
-    dbtype: mysql2
+    dbtype: orcale
     orm: hibernate
-    user: root
-    password: root
-    url: jdbc:mysql://localhost:3306/testa
+    user: AGJL
+    password: AGJL
+    url: jdbc:oracle:thin:@127.0.0.1:1521:jldev
     pinGlobalTxToPhysicalConnection: true
     uniqueResourceName: datasourceA
-    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    xaDataSourceClassName: oracle.jdbc.xa.client.OracleXADataSource
     poolSize: 1
     maxPoolSize: 3
     minPoolSize: 1
     maxIdleTime: 60
     packagesToScan: com.jees.test.entity
     hibernate:
-     dialect: org.hibernate.dialect.MySQL55Dialect
+     dialect: org.hibernate.dialect.Oracle8iDialect
      showSql: true
      factoryClass: org.hibernate.transaction.JTATransactionFactory
-     hbm2ddl: create
+     hbm2ddl: none
      platform: com.jees.core.database.config.AtomikosJtaPlatform
      coordinatorClass: jta
-   testb:
-    dbtype: mysql
-    orm: hibernate
-    user: root
-    password: root
-    url: jdbc:mysql://localhost:3306/testb
-    pinGlobalTxToPhysicalConnection: true
-    uniqueResourceName: datasourceB
-    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
-    poolSize: 1
-    maxPoolSize: 3
-    minPoolSize: 1
-    maxIdleTime: 60
-    packagesToScan: com.jees.test.entity
+#   testa:
+#    dbtype: mysql
+#    orm: hibernate
+#    user: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306/iplat
+#    pinGlobalTxToPhysicalConnection: true
+#    uniqueResourceName: datasourceA
+#    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+#    poolSize: 1
+#    maxPoolSize: 3
+#    minPoolSize: 1
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
+#    hibernate:
+#     dialect: org.hibernate.dialect.MySQL55Dialect
+#     showSql: true
+#     factoryClass: org.hibernate.transaction.JTATransactionFactory
+#     hbm2ddl: create
+#     platform: com.jees.core.database.config.AtomikosJtaPlatform
+#     coordinatorClass: jta
+#   testb:
+#    dbtype: mysql
+#    orm: hibernate
+#    user: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306/testb
+#    pinGlobalTxToPhysicalConnection: true
+#    uniqueResourceName: datasourceB
+#    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+#    poolSize: 1
+#    maxPoolSize: 3
+#    minPoolSize: 1
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
 

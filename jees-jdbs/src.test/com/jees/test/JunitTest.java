@@ -2,6 +2,7 @@ package com.jees.test;
 
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.AbsRedisDao;
+import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -40,6 +42,9 @@ public class JunitTest implements Runnable {
 	@Autowired
 	AbsRedisDao dao;
 
+	@Autowired
+	AbsSupportDao dao2;
+
 	@Test
 	public void RedisTest() throws Exception{
 		CommonContextHolder.getBean( IRedisDao.class ).initialize();
@@ -54,9 +59,22 @@ public class JunitTest implements Runnable {
 //		RedisUser u = dao.findById( 1, 1L, RedisUser.class );
 //		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
 	}
-//	@Test
+	@Test
+	@Transactional
 	public void SimpleTest(){
-		ctr.simpleTest();
+//		ctr.simpleTest();
+//		dao2.select( "testa", TabA.class );
+
+//		List list = dao2.select( "testa", MS_TJQWE01.class );
+//		System.out.println( list.size() );
+//
+//		MS_TJQWE01 data = new MS_TJQWE01();
+//		data.setREQUEST_ID( "" + System.currentTimeMillis() );
+//		dao2.insert( "testa", data );
+//		dao2.commit();
+//
+//		list = dao2.select( "testa", MS_TJQWE01.class );
+//		System.out.println( list.size() );
 	}
 //	 @Test
 	public void ExTest() {

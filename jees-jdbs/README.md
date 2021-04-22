@@ -92,7 +92,21 @@ public class MyController{
 AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
 
 ## 更新内容
-### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+### 1.2.3-SNAPSHOT <font color='red'>新版本</font>
+1. 增加orcale连接方式，需要增加xa授权。
+   [comment]: <参考> ( https://blog.csdn.net/qq_43601813/article/details/107248968)
+```
+ 1. cmd使用sqlplus登陆orcale
+ 2. 使用sys连接数据库
+ 3. 使用任意密码登陆角色sysdba： 123 as sysdba
+ 4. 依次给登录名授权:
+    grant all privileges to [USER];
+    grant select on sys.dba_pending_transactions to [USER];
+    grant select on sys.pending_trans$ to [USER];
+    grant select on sys.dba_2pc_pending to [USER];
+    grant execute on sys.dbms_system to [USER];
+```
+### 1.2.1-SNAPSHOT 
 1. 优化日志文件
 2. 优化打包内容
 ### 1.1.6-SNAPSHOT

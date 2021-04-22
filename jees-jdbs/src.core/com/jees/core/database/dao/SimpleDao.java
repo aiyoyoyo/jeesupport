@@ -2,8 +2,6 @@ package com.jees.core.database.dao;
 
 import com.jees.core.database.support.AbsSupportDao;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -44,5 +42,9 @@ public class SimpleDao extends AbsSupportDao {
 	@Deprecated
 	public < T > List< T > selectBy_In( String _db , Class< T > _cls , String _column , Object[] _param ) {
 		return _get_session( _db ).createCriteria( _cls ).add( Restrictions.in( _column , _param ) ).list();
+	}
+
+	@Override
+	public void commit() {
 	}
 }

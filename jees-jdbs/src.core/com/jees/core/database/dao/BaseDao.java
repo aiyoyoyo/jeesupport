@@ -1,6 +1,7 @@
 package com.jees.core.database.dao;
 
 import com.jees.core.database.support.AbsSupportDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,6 +65,7 @@ public class BaseDao extends AbsSupportDao{
     /**
      * 正式提交到数据库，该方法会剔除insert/update数据中已经被声明在delete中的重复对象
      */
+    @Autowired
     public void commit(){
         try {
             deleteMap.keySet().forEach(key -> {
