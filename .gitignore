@@ -12,3 +12,10 @@
 /jees-jtls/jees-jtls.iml
 /jees-webs/jees-webs.iml
 /.log/
+/tmlog.lck
+/tmlog0.log
+/jees-jdbs/tmlog22.log
+/jees-jdbs/.log/
+/.gradle/
+/.output/
+/jees-webs/build/

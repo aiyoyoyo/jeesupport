@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-boot</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.3-SNAPSHOT</version>
     <name>Java Boot Support</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
@@ -32,7 +32,7 @@
         <jees.version>1.2.0-SNAPSHOT</jees.version>
         <jees.boot.version>${jees.version}</jees.boot.version>
         <jees.jtls.version>1.2.2-SNAPSHOT</jees.jtls.version>
-        <jees.jdbs.version>1.2.2-SNAPSHOT</jees.jdbs.version>
+        <jees.jdbs.version>1.2.3-SNAPSHOT</jees.jdbs.version>
         <jees.jsts.version>1.2.2-SNAPSHOT</jees.jsts.version>
         <jees.webs.version>1.2.2-SNAPSHOT</jees.webs.version>
         <main.basedir>${basedir}</main.basedir>
@@ -50,6 +50,7 @@
         <fastjson.version>1.2.75</fastjson.version>
         <protostuff.version>1.7.2</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
+        <oracle.version>19.3.0.0</oracle.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
