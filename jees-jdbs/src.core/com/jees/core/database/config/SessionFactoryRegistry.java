@@ -3,9 +3,11 @@ package com.jees.core.database.config;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.ISupportDao;
+import com.microsoft.sqlserver.jdbc.SQLServerXADataSource;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.internal.SessionFactoryImpl;
-import org.springframework.beans.factory.support.*;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -31,35 +33,48 @@ public class SessionFactoryRegistry {
         xaProperties.setProperty("user", CommonConfig.getString(head + "user"));
         xaProperties.setProperty("password", CommonConfig.getString(head + "password"));
 
+        AbsXADataSource xaDataSource = new AbsXADataSource();
+        xaDataSource.setBeanName( bean );
 
-        BeanDefinitionBuilder beanDefinitionBuilder =
-                BeanDefinitionBuilder.rootBeanDefinition(AbsXADataSource.class);
-
-        // 这里没有列举AbstractDataSourceBean的所有可用属性
+//        // 这里没有列举AbstractDataSourceBean的所有可用属性
         if (type.equalsIgnoreCase("mysql")) {
             xaProperties.setProperty("url", CommonConfig.getString(head + "url"));
             xaProperties.setProperty("pinGlobalTxToPhysicalConnection",CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
+            xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName") );
         }else if (type.equalsIgnoreCase("orcale")) {
             xaProperties.setProperty("URL", CommonConfig.getString(head + "url"));
+            xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName") );
+        }else if(type.equalsIgnoreCase("sqlserver")){
+            String url = CommonConfig.getString(head + "url");
+            String database = CommonConfig.getString(head + "database");
+            String use_xa = CommonConfig.getString(head + "xaDataSourceClassName");
+            String driver_class = CommonConfig.getString(head + "driverClassName");
+            url += ";databaseName=" + database + ";";
+            if( !driver_class.isEmpty() ){
+                SQLServerXADataSource xa_ds = new SQLServerXADataSource();
+                xa_ds.setURL( url );
+                xa_ds.setUser( CommonConfig.getString(head + "user") );
+                xa_ds.setPassword( CommonConfig.getString(head + "password") );
+                xaDataSource.setXaDataSource(xa_ds);
+            }else {
+                xaDataSource.setXaDataSourceClassName( use_xa );
+//                xaDataSource.setBorrowConnectionTimeout(60);
+//                atomikosDataSourceBean.setXaDataSourceClassName("com.alibaba.druid.pool.xa.DruidXADataSource");
+            }
+            xaProperties.setProperty("URL", url);
         }
+//        net.ucanaccess.jdbc.UcanaccessDataSource
+//        org.hibernate.dialect.H
+//        com.h.hxtt.support.hibernate.HxttAccessDialect
 
-        beanDefinitionBuilder.addPropertyValue("uniqueResourceName",CommonConfig.getString(head + "uniqueResourceName"));
-        beanDefinitionBuilder.addPropertyValue("xaDataSourceClassName",CommonConfig.getString(head + "xaDataSourceClassName"));
-        beanDefinitionBuilder.addPropertyValue("xaProperties", xaProperties);
-        beanDefinitionBuilder.addPropertyValue("maxPoolSize",CommonConfig.getString(head + "maxPoolSize", "1"));
-        beanDefinitionBuilder.addPropertyValue("minPoolSize", CommonConfig.getString(head + "minPoolSize", "1"));
-        beanDefinitionBuilder.addPropertyValue("maxIdleTime", CommonConfig.getString(head + "maxIdleTime", "60"));
-        beanDefinitionBuilder.addPropertyValue("poolSize", CommonConfig.getString(head + "poolSize", "1"));
+        xaDataSource.setUniqueResourceName( CommonConfig.getString(head + "uniqueResourceName") );
+        xaDataSource.setXaProperties( xaProperties );
+        xaDataSource.setMaxPoolSize(CommonConfig.getInteger(head + "maxPoolSize", 1));
+        xaDataSource.setMinPoolSize(CommonConfig.getInteger(head + "minPoolSize", 1));
+        xaDataSource.setMaxIdleTime(CommonConfig.getInteger(head + "maxIdleTime", 60));
+        xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 1));
 
-        ConfigurableApplicationContext context = (ConfigurableApplicationContext) CommonContextHolder.getApplicationContext();
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-
-        beanFactory.registerBeanDefinition(bean, beanDefinitionBuilder.getBeanDefinition());
-
-        AbsXADataSource xaDataSource = CommonContextHolder.getBean(bean);
         log.debug("--创建AbsXADataSource[" + bean + "]。");
-
-
         return xaDataSource;
     }
 

@@ -51,6 +51,7 @@
         <protostuff.version>1.7.2</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
         <oracle.version>19.3.0.0</oracle.version>
+        <sqlserver.version>9.2.1.jre8</sqlserver.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->

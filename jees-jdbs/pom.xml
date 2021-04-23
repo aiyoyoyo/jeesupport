@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.2.2-SNAPSHOT</version>
+		<version>1.2.3-SNAPSHOT</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
@@ -79,6 +79,18 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src.resources/lib/orai18n.jar
 			</systemPath>
+		</dependency>
+		<!-- SqlServer -->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>${sqlserver.version}</version>
+		</dependency>
+		<!-- Access -->
+		<dependency>
+			<groupId>net.sf.ucanaccess</groupId>
+			<artifactId>ucanaccess</artifactId>
+			<version>4.0.1</version>
 		</dependency>
 	</dependencies>
 </project>
