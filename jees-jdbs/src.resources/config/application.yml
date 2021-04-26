@@ -37,13 +37,34 @@ jees:
    timeout: 3000
    allowCustomIsolationLevels: true
   config:
+#   testa:
+#    dbtype: sqlserver
+#    orm: hibernate
+#    user: sa
+#    password: 123
+#    url: jdbc:sqlserver://192.168.1.109:1433
+#    database: dev
+#    uniqueResourceName: datasourceA
+#    xaDataSourceClassName: com.microsoft.sqlserver.jdbc.SQLServerXADataSource
+##    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    poolSize: 1
+#    maxPoolSize: 3
+#    minPoolSize: 1
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
+#    hibernate:
+#     dialect: org.hibernate.dialect.SQLServerDialect
+#     showSql: true
+#     factoryClass: org.hibernate.transaction.JTATransactionFactory
+#     hbm2ddl: none
+#     platform: com.jees.core.database.config.AtomikosJtaPlatform
+#     coordinatorClass: jta
    testa:
     dbtype: orcale
     orm: hibernate
-    user: AGJL
-    password: AGJL
-    url: jdbc:oracle:thin:@127.0.0.1:1521:jldev
-    pinGlobalTxToPhysicalConnection: true
+    user: root
+    password: root
+    url: jdbc:oracle:thin:@127.0.0.1:1521:dev
     uniqueResourceName: datasourceA
     xaDataSourceClassName: oracle.jdbc.xa.client.OracleXADataSource
     poolSize: 1
