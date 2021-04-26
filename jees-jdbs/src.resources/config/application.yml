@@ -40,9 +40,9 @@ jees:
 #   testa:
 #    dbtype: sqlserver
 #    orm: hibernate
-#    user: sa
-#    password: 123
-#    url: jdbc:sqlserver://192.168.1.109:1433
+#    user: root
+#    password: root
+#    url: jdbc:sqlserver://127.0.0.1:1433
 #    database: dev
 #    uniqueResourceName: datasourceA
 #    xaDataSourceClassName: com.microsoft.sqlserver.jdbc.SQLServerXADataSource
