@@ -35,7 +35,7 @@ public class CommonConfig {
 	}
 
 	public static String getString( String _key ) {
-		return getString( _key, "" );
+		return getString( _key, null );
 	}
 
 	public static boolean getBoolean( String _key ) {

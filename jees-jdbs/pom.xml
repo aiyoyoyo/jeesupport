@@ -4,7 +4,7 @@
 
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jdbs</artifactId>
-	<version>1.2.3-SNAPSHOT</version>
+	<version>1.2.4-SNAPSHOT</version>
 	<name>Java Database Support</name>
 	<description>Spring Atomikos database support</description>
 	<url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.2.3-SNAPSHOT</version>
+		<version>1.2.4-SNAPSHOT</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>

@@ -20,7 +20,7 @@ public class CustomSystemUtil {
      *
      * @return 内网IP
      */
-    private static String getIntranetIp () {
+    public static String getIntranetIp () {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch ( Exception e ) {
@@ -33,7 +33,7 @@ public class CustomSystemUtil {
      *
      * @return 外网IP
      */
-    private static String getInternetIp () {
+    public static String getInternetIp () {
         try {
             Enumeration< NetworkInterface > networks = NetworkInterface.getNetworkInterfaces();
             InetAddress ip;

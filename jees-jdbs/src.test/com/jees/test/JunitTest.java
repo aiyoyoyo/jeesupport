@@ -5,6 +5,7 @@ import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
+import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 测试方法,执行日志默认在工程目录/logs下
@@ -64,9 +66,12 @@ public class JunitTest implements Runnable {
 	public void SimpleTest(){
 //		ctr.simpleTest();
 //		dao2.select( "testa", TabA.class );
+		String sql = "SELECT *  FROM ( SELECT row_.*, ROWNUM rownum_  FROM ( SELECT * FROM MS_VSWPL01 where 1 = 1  and   GROSS_TIME  >=  '2021-03-01 00:00:00' and GROSS_TIME  <= '2021-04-01 00:00:00'  and REQUEST_TYPE in ('2','7') ORDER BY TOM DESC,TOC DESC ) row_  WHERE ROWNUM <= 99999  )  WHERE rownum_ > 0";
 
-//		List list = dao2.select( "testa", MS_TJQWE01.class );
-//		System.out.println( list.size() );
+		long time = System.currentTimeMillis();
+		List list = dao2.select( "testa", TabA.class, 20000 );
+//		List list = dao2.selectBySQL( "testa", sql, 0, 20000, new String[]{}, new Object[]{}, MS_TSWPL01.class );
+		System.out.println( "查询"+ list.size() + "条数据,用时：" + ( System.currentTimeMillis() - time ) + "毫秒" );
 //
 //		MS_TJQWE01 data = new MS_TJQWE01();
 //		data.setREQUEST_ID( "" + System.currentTimeMillis() );

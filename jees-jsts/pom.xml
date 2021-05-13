@@ -5,7 +5,7 @@
 	<!--  Maven Central  -->
 	<groupId>com.github.aiyoyoyo</groupId>
 	<artifactId>jees-jsts</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.2.4-SNAPSHOT</version>
 	<name>Java Netty Support</name>
 	<description>Netty socket server supprot</description>
 	<url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>com.github.aiyoyoyo</groupId>
 		<artifactId>jees-boot</artifactId>
-		<version>1.2.2-SNAPSHOT</version>
+		<version>1.2.4-SNAPSHOT</version>
 		<relativePath>../jees-boot/pom.xml</relativePath>
 	</parent>
 	<dependencies>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.github.aiyoyoyo</groupId>
 			<artifactId>jees-jtls</artifactId>
-			<version>1.2.2-SNAPSHOT</version>
+			<version>${jees.jtls.version}</version>
 		</dependency>
 		<!-- netty -->
 		<dependency>
