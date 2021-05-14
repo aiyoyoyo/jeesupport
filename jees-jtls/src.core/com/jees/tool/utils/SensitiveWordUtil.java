@@ -21,6 +21,8 @@ import java.util.*;
 @Log4j2
 public class SensitiveWordUtil {
     static Map<String, HashMap> wordMap = new HashMap<>();
+
+    @SuppressWarnings("unchecked")
     private static void _hash_words(){
         Set<String> key_set = new HashSet<>( wordMap.keySet()  );
         wordMap.clear();
@@ -129,7 +131,7 @@ public class SensitiveWordUtil {
      * @return 集合
      */
     public static Set<String> check(String _text, boolean _min){
-        Set< String > sets = new HashSet();
+        Set< String > sets = new HashSet<>();
         for( int i = 0; i < _text.length(); ++i ){
             int match = check( _text, i, _min );
             if( match > 0 ){

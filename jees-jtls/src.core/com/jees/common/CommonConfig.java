@@ -128,6 +128,7 @@ public class CommonConfig {
 		return _cast_value( _key, _t );
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> T _cast_value(Object _obj, T _def ){
 		String val;
 		if( _obj != null ){
