@@ -69,14 +69,14 @@
     </developers>
     <profiles>
         <profile>
-            <id>com.jees</id>
+            <id>jees</id>
             <distributionManagement>
                 <repository>
-                    <id>com.jees</id>
+                    <id>jees</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
                 <snapshotRepository>
-                    <id>com.jees</id>
+                    <id>jees</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
