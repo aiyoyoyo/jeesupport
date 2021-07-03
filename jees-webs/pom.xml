@@ -4,64 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.aiyoyoyo</groupId>
-    <artifactId>jees-webs</artifactId>
-    <version>1.2.4-SNAPSHOT</version>
-    <name>Java Web Support</name>
-    <description>Jees with SpringBoot Support</description>
-    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
-    
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
-        <artifactId>jees-boot</artifactId>
-        <version>1.2.4-SNAPSHOT</version>
-        <relativePath>../jees-boot/pom.xml</relativePath>
+        <artifactId>jeesupport</artifactId>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <jees.artifactId>jees-webs</jees.artifactId>
-    </properties>
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jees-webs</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <name>Jeesupport Website</name>
+    <description>Jees with SpringBoot Support</description>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
 
-    <build>
-        <!--
-        <resources>
-            <resource>
-                <directory>${basedir}\src.resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>config/**</exclude>
-                    <exclude>templates/**</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <excludeDevtools>false</excludeDevtools>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
-            </plugin>
-        </plugins>
-        -->
-    </build>
-    <!--
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-devtools</artifactId>
-                <version>${spring.boot.version}</version>
-                <optional>true</optional>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    -->
     <dependencies>
         <!-- Test -->
         <dependency>
@@ -78,6 +33,11 @@
             <scope>provided</scope>
         </dependency>
         <!-- Jees -->
+        <dependency>
+            <groupId>com.github.aiyoyoyo</groupId>
+            <artifactId>jees-jtls</artifactId>
+            <version>${jees.jtls.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jdbs</artifactId>

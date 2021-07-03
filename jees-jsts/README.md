@@ -70,7 +70,10 @@ jees:
 ```
 
 ## 版本说明
-### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+1. 未做大的改动，仅针对项目结构做了修改。
+
+### 1.2.1-SNAPSHOT 
 1. 优化日志文件
 2. 优化打包内容
 ### 1.2.0

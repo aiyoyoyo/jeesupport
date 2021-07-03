@@ -1,96 +1,106 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.aiyoyoyo</groupId>
-	<artifactId>jees-jdbs</artifactId>
-	<version>1.2.4-SNAPSHOT</version>
-	<name>Java Database Support</name>
-	<description>Spring Atomikos database support</description>
-	<url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
+    <parent>
+        <groupId>com.github.aiyoyoyo</groupId>
+        <artifactId>jeesupport</artifactId>
+        <version>1.5.0-SNAPSHOT</version>
+    </parent>
 
-	<parent>
-		<groupId>com.github.aiyoyoyo</groupId>
-		<artifactId>jees-boot</artifactId>
-		<version>1.2.4-SNAPSHOT</version>
-		<relativePath>../jees-boot/pom.xml</relativePath>
-	</parent>
-	<dependencies>
-		<!-- Test -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring.boot.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- Lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Jees -->
-		<dependency>
-			<groupId>com.github.aiyoyoyo</groupId>
-			<artifactId>jees-jtls</artifactId>
-			<version>${jees.jtls.version}</version>
-		</dependency>
-		<!--Spring Boot -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jta-atomikos</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<!-- MySQL -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
-		</dependency>
-		<!-- Commons-Pool2 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-pool2</artifactId>
-			<version>${commons.pool2.version}</version>
-		</dependency>
-		<!-- Orcale -->
-		<dependency>
-			<groupId>ojdbc</groupId>
-			<artifactId>ojdbc</artifactId>
-			<version>${oracle.version}</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/src.resources/lib/ojdbc8.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>ojdbc</groupId>
-			<artifactId>orai18n</artifactId>
-			<version>${oracle.version}</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/src.resources/lib/orai18n.jar
-			</systemPath>
-		</dependency>
-		<!-- SqlServer -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>${sqlserver.version}</version>
-		</dependency>
-		<!-- Access -->
-		<dependency>
-			<groupId>net.sf.ucanaccess</groupId>
-			<artifactId>ucanaccess</artifactId>
-			<version>4.0.1</version>
-		</dependency>
-	</dependencies>
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jees-jdbs</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <name>Jeesupport Database</name>
+    <description>Spring Atomikos com.jees.core.database support</description>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
+
+    <properties>
+        <ucanaccess.version>4.0.1</ucanaccess.version>
+    </properties>
+
+    <dependencies>
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Jees -->
+        <dependency>
+            <groupId>com.github.aiyoyoyo</groupId>
+            <artifactId>jees-jtls</artifactId>
+            <version>${jees.jtls.version}</version>
+        </dependency>
+        <!--Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!-- Commons-Pool2 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${commons.pool2.version}</version>
+        </dependency>
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Orcale
+        <dependency>
+            <groupId>ojdbc</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>${oracle.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/test/resources/lib/ojdbc8.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>ojdbc</groupId>
+            <artifactId>orai18n</artifactId>
+            <version>${oracle.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/test/resources/lib/orai18n.jar
+            </systemPath>
+        </dependency>
+         -->
+        <!-- SqlServer -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${sqlserver.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Access -->
+        <dependency>
+            <groupId>net.sf.ucanaccess</groupId>
+            <artifactId>ucanaccess</artifactId>
+            <version>${ucanaccess.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

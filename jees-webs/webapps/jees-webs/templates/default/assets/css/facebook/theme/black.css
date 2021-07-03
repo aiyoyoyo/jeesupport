@@ -1,0 +1,58 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
+*/
+
+.header .navbar-logo,
+.label.label-theme,
+.btn.btn-scroll-to-top,
+.header.navbar-inverse,
+.sidebar .nav > li.active > a, 
+.sidebar .nav > li.active > a:hover, 
+.sidebar .nav > li.active > a:focus {
+	background: #1f2225;
+}
+.text-theme,
+.float-sub-menu li > a:hover, 
+.float-sub-menu li > a:focus, 
+.float-sub-menu li.active > a, 
+.float-sub-menu li.active > a:hover, 
+.float-sub-menu li.active > a:focus,
+.sidebar .sub-menu > li > a:hover, 
+.sidebar .sub-menu > li > a:focus, 
+.sidebar .sub-menu > li.active > a, 
+.sidebar .sub-menu > li.active > a:hover, 
+.sidebar .sub-menu > li.active > a:focus,
+.header.navbar-default .navbar-brand i {
+	color: #1f2225;
+}
+.float-sub-menu li.active:after {
+	border-color: #1f2225;
+}
+.sidebar .sub-menu > li > a,
+.top-menu .sub-menu > li > a {
+	color: #818890;
+}
+.header.navbar-inverse .navbar-brand {
+	color: #fff !important;
+}
+.sidebar .label.label-theme,
+.top-menu .label.label-theme {
+	background: #ff107e;
+}
+.sidebar .text-theme,
+.top-menu .text-theme {
+	color: #ff107e;
+}
+.header .navbar-nav > li > a .label {
+	background: #f9172c !important;
+}
+.pace-progress {
+	background: #000;
+}
+.pace .pace-activity {
+	border-top-color: #000;
+	border-left-color: #000;
+}

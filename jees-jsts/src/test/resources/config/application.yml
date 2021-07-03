@@ -1,0 +1,60 @@
+#日志配置，此处使用默认日志
+logging:
+ config: classpath:config/logback.xml
+ level:
+  org.springframework: WARN
+  com.jees: DEBUG
+  com.jees.common: ERROR
+
+spring:
+ application:
+  name: jees-jsts
+
+jees:
+ jsts:
+  message:
+   request:
+    enable: false
+    exception: false
+    clazz: com.jees.interf.IRequest,com.jees.interf.IResponse
+   handler:
+    enable: false
+    clazz: com.jees.interf.IResponse
+   error:
+    enable: false
+    clazz: com.jees.interf.IError
+   proxy: false
+   type: json
+   jsonFile: false
+   jsonFormat: yyyy-MM-dd_HH-mm-ss-SSS
+   jsonPath: classpath:jsons/
+   jsonLogs: true
+   monitor: false
+  socket:
+   enable: true
+   trigger: true
+   standMax: 1
+   standTime: 60000
+   port: 8000
+   bom: false
+  websocket:
+   enable: true
+   url: /
+   trigger: true
+   standMax: 1
+   standTime: 60000
+   port: 8001
+   ssl:
+    enable: false
+    file: config/cert/jees.pfx
+    keyfile: config/cert/jees.key
+    type: PKCS12
+    pass: PASSWORD
+  connector:
+   enable: true
+   retry:
+    max: 3
+    rate: 10000
+    delay: 300000
+   hosts: 127.0.0.1:8000
+

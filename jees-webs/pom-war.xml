@@ -4,39 +4,45 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.aiyoyoyo</groupId>
-    <artifactId>jees-webs</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
-    <name>Java Web Support</name>
-    <description>Jees with SpringBoot Support</description>
-    <url>http://www.jeesupport.com/</url>
-    <packaging>war</packaging>
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
-        <artifactId>jees-boot</artifactId>
-        <version>1.2.2-SNAPSHOT</version>
-        <relativePath>../jees-boot/pom.xml</relativePath>
+        <artifactId>jeesupport</artifactId>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <jees.artifactId>jees-webs</jees.artifactId>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jees-webs</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <name>Jeesupport Website</name>
+    <description>Jees with SpringBoot Support</description>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
+
+    <packaging>war</packaging>
 
     <build>
         <resources>
             <resource>
-                <directory>${basedir}\src.resources</directory>
+                <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>config/**</exclude>
                     <exclude>templates/**</exclude>
+                    <exclude>scr/**</exclude>
                 </excludes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>lib/**</exclude>
+                    <exclude>scr/**</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -44,25 +50,29 @@
                 <version>3.3.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webappDirectory>build/${jees.artifactId}</webappDirectory>
-                    <workDirectory>build/${jees.artifactId}/WEB-INF/classes</workDirectory>
+                    <webappDirectory>webapps/jees-webs</webappDirectory>
+                    <workDirectory>webapps/jees-webs/WEB-INF/classes</workDirectory>
                     <webResources>
+                        <resource>
+                            <directory>target/classes/com</directory>
+                            <targetPath>WEB-INF/classes/com</targetPath>
+                        </resource>
                         <resource>
                             <directory>target/test-classes/com</directory>
                             <targetPath>WEB-INF/classes/com</targetPath>
                         </resource>
                         <resource>
-                            <directory>src.resources/config</directory>
+                            <directory>target/test-classes/config</directory>
                             <targetPath>WEB-INF/classes/config</targetPath>
                             <filtering>true</filtering>
                         </resource>
                         <resource>
-                            <directory>src.resources/templates</directory>
+                            <directory>target/test-classes/templates</directory>
                             <targetPath>templates</targetPath>
                         </resource>
                     </webResources>
                     <packagingExcludes>
-                        com.jees.test.WebApplication.java
+                        com.jees.test.WebApplication.class
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -93,7 +103,6 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Jees-->
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jdbs</artifactId>
@@ -121,12 +130,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <version>${spring.boot.version}</version>
-            <scope>provided</scope>
         </dependency>
         <!-- Dwr -->
         <dependency>

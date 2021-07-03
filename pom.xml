@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.aiyoyoyo</groupId>
+    <artifactId>jeesupport</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <name>Jeesupport Boot</name>
+    <description>Jees with SpringBoot Support</description>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>jees-jtls</module>
+        <module>jees-jdbs</module>
+        <module>jees-jsts</module>
+        <module>jees-webs</module>
+    </modules>
+
+    <!-- 自定义配置 -->
+    <properties>
+        <!-- 环境配置 -->
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 项目配置 -->
+        <skipTests>true</skipTests>
+        <main.basedir>${basedir}</main.basedir>
+        <!-- Jees配置 -->
+        <jees.groupId>com.github.aiyoyoyo</jees.groupId>
+        <jees.artifactId>jeesupport</jees.artifactId>
+        <jees.url>http://www.jeesupport.com</jees.url>
+        <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
+        <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
+        <jees.version>1.5.0-SNAPSHOT</jees.version>
+        <jees.jtls.version>1.5.0-SNAPSHOT</jees.jtls.version>
+        <jees.jdbs.version>1.5.0-SNAPSHOT</jees.jdbs.version>
+        <jees.jsts.version>1.5.0-SNAPSHOT</jees.jsts.version>
+        <jees.webs.version>1.5.0-SNAPSHOT</jees.webs.version>
+        <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
+        <mysql.version>5.1.44</mysql.version>
+        <jodatime.version>2.10.8</jodatime.version>
+        <lombok.version>1.16.20</lombok.version>
+        <netty.version>4.1.50.Final</netty.version>
+        <commons.pool2.version>2.6.1</commons.pool2.version>
+        <commons.lang3.version>3.11</commons.lang3.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <protostuff.version>1.7.2</protostuff.version>
+        <dwr.version>3.0.2-RELEASE</dwr.version>
+        <oracle.version>19.3.0.0</oracle.version>
+        <sqlserver.version>9.2.1.jre8</sqlserver.version>
+        <ucanaccess.version>4.0.1</ucanaccess.version>
+    </properties>
+    <!-- OSS配置，用于Maven Central -->
+    <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>aiyoyoyo</name>
+            <email>aiyoyoyo@163.com</email>
+        </developer>
+    </developers>
+    <profiles>
+        <profile>
+            <id>com.jees</id>
+            <distributionManagement>
+                <repository>
+                    <id>com.jees</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>com.jees</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.3</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                            <fork>true</fork>
+                            <verbose>true</verbose>
+                            <encoding>UTF-8</encoding>
+                            <meminitial>256m</meminitial>
+                            <maxmem>1024m</maxmem>
+                        </configuration>
+                    </plugin>
+                    <!-- 发布Release版本以及生成DOC -->
+                    <!--
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <charset>UTF-8</charset>
+                            <docencoding>UTF-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <doclint>none</doclint>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <scm>
+        <connection>${jees.scm.url}</connection>
+        <developerConnection>${jees.scm.url}</developerConnection>
+        <url>${jees.scm.url}</url>
+    </scm>
+    <!-- 项目环境 -->
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}\src\main\resources</directory>
+                <includes>
+                    <include>banner.txt</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring.boot.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

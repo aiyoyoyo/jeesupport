@@ -1,0 +1,72 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Version: 4.3.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v4.3/admin/
+*/
+
+.navbar-logo i {
+	text-shadow: 3px -3px #b8daff;
+}
+.navbar-inverse .navbar-logo i {
+	text-shadow: 3px -3px #0d56a6;
+}
+.header .navbar-nav > li > a .label,
+.header .navbar-nav > li .dropdown-toggle .label,
+.sidebar .nav > li.active > a, 
+.sidebar .nav > li.active > a:focus, 
+.sidebar .nav > li.active > a:hover,
+.navbar-nav > li > a .user-image.online:before,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+	background: #007aff;
+}
+.navbar.navbar-inverse .navbar-brand {
+	color: #fff !important;
+}
+.text-theme,
+.header .navbar-logo,
+.sidebar .sub-menu > li.active > a:before {
+	color: #007aff;
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top,
+.gradient-enabled .top-menu .nav > li.active > a, 
+.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a:hover {
+	color: #fff !important;
+	background: #24d0f4;
+	background: -moz-linear-gradient(top,  #24d0f4 0%, #007aff 100%);
+	background: -webkit-linear-gradient(top,  #24d0f4 0%,#007aff 100%);
+	background: linear-gradient(to bottom,  #24d0f4 0%,#007aff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#24d0f4', endColorstr='#007aff',GradientType=0 );
+}
+.pace-progress {
+	background: #007aff;
+}
+.pace .pace-activity {
+	border-top-color: #007aff;
+	border-left-color: #007aff;
+}
+
+
+/* Added in v1.9 */
+
+.top-menu .nav > li.active > a, 
+.top-menu .nav > li.active > a:focus, 
+.top-menu .nav > li.active > a:hover {
+	background: #007aff;
+}

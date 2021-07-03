@@ -4,7 +4,7 @@
 jeesupport提供了Java开发中常用的一些技术和框架供使用和参考。
 开发工具需要安装Lombok。
 ## 支持内容
-* [jees-boot](https://github.com/aiyoyoyo/jeesupport/tree/master/jees-boot)
+> 移除了jees-boot项，直接由jeesupport来管理
 > 基于Spring-Boot的学习和使用参考，同时是下面4个的核心依赖项。 
 * [jees-jtls](https://github.com/aiyoyoyo/jeesupport/tree/master/jees-jtls)
 > 提供了一些可能用到的组件或算法

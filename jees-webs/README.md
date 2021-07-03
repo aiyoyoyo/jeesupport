@@ -85,8 +85,8 @@ clean package -f pom.xml
 3. 原因同第二种方式, classpath指向了tomcat/lib目录，导致根路径不统一
 4. 为了不影响正常文件结构，我修改了打包路径
 ```
-<webappDirectory>target/webapp</webappDirectory>
-<workDirectory>target/classes</workDirectory>
+<webappDirectory>webapps/jees-webs</webappDirectory>
+<workDirectory>webapps/jees-webs/WEB-INF/classes</workDirectory>
 ```
 ```
 打包命名参考
@@ -97,7 +97,14 @@ clean package -pom-war.xml
 2. 动态获取相对路径寻找更好的写法
 
 ## 更新历史
-### 1.2.1-SNAPSHOT <font color='red'>新版本</font>
+### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+1. 优化了pom配置文件，针对4种运行方式做了测试。开发工具为idea社区版2020.1和smart tomcat
+2. 四种方式分别为：idea tomcat war-expo / idea tomcat war / tomcat jees-webs / tomcat ROOT /
+3. 提供了几种打包方式： 普通打包、war打包、zip打包参考目录见 webapps 和 jees-webs-1.5.0-SNAPSHOT
+4. 优化了部分代码和加载内容，这里不说详细说明了，请自行参考：AbsWebConfig、AbsTemplateService
+5. 一些Thymeleaf的用法，可以参考templates/defualt/_inc/下的内容
+
+### 1.2.1-SNAPSHOT
 1. 优化日志文件
 2. 优化打包内容
 ### 1.2.0

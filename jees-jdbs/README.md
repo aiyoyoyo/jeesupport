@@ -92,7 +92,11 @@ public class MyController{
 AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
 
 ## 更新内容
-### 1.2.3-SNAPSHOT <font color='red'>新版本</font>
+### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+1. 增加了SqlServer连接方式，需要启用分布式事务支持，此版本测试了2019。
+2. 优化了Oracle连接方式, oracle连接包请独立下载，此版本测试了11、19。
+3. 优化了Redis的加载结构，主要针对jees-webs的使用。
+### 1.2.3-SNAPSHOT 
 1. 增加orcale连接方式，需要增加xa授权。
    [comment]: <参考> ( https://blog.csdn.net/qq_43601813/article/details/107248968)
 ```
