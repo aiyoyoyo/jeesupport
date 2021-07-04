@@ -74,10 +74,12 @@
                 <repository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <uniqueVersion>false</uniqueVersion>
                 </repository>
                 <snapshotRepository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
             <build>
