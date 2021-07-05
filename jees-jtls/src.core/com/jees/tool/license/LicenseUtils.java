@@ -3,10 +3,10 @@ package com.jees.tool.license;
 import com.jees.tool.crypto.B64Utils;
 import com.jees.tool.crypto.RSAUtils;
 import com.jees.tool.joda.DateUtils;
+import org.joda.time.DateTime;
 
 import java.io.*;
 import java.security.Key;
-import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -17,7 +17,7 @@ import static com.jees.tool.joda.DateUtils.DATE_Y_M_DDHHMMSS;
 
 /**
  * 用于生成应用所需的license文件
- * 
+ *
  * @author aiyoyoyo
  *
  */
@@ -41,23 +41,23 @@ public class LicenseUtils {
 		while ( sc.hasNext() ) {
 			while ( step == 0 ) {
 				int m = sc.nextInt();
-				
+
 				switch( m ){
-				case 0:
-					s_test();
-					break;
-				case 1:
-					mode = LicenseClient.MODE_SINGLE;
-					step = 1;
-					break;
-				case 2:
-					mode = LicenseClient.MODE_INTIME;
-					step = 1;
-					break;
-				case 3:
-					mode = LicenseClient.MODE_ONLINE;
-					step = 1;
-					break;
+					case 0:
+						s_test();
+						break;
+					case 1:
+						mode = LicenseClient.MODE_SINGLE;
+						step = 1;
+						break;
+					case 2:
+						mode = LicenseClient.MODE_INTIME;
+						step = 1;
+						break;
+					case 3:
+						mode = LicenseClient.MODE_ONLINE;
+						step = 1;
+						break;
 				}
 
 				if ( step == 0 ) {
@@ -85,7 +85,7 @@ public class LicenseUtils {
 					}
 				}
 			}
-			
+
 			if( step == 2 ) {
 				System.out.println( "请输入您想要过期的时间：格式为（yyyy-mm-dd hh:mm:ss）" );
 				s2=sc.next();
@@ -97,16 +97,16 @@ public class LicenseUtils {
 
 		String seed = s0;
 		switch ( mode ) {
-		case LicenseClient.MODE_SINGLE:
-			s_generate_single( seed );
-			break;
+			case LicenseClient.MODE_SINGLE:
+				s_generate_single( seed );
+				break;
 		}
 	}
 
 	/**
 	 * 编码密文内容：模式:机器码(xxxx-xxxx-xxxxxxxx-xxxxxxxxxxxxxxxx):服务日期(yyyy-mm-dd
 	 * hh:MM:ss)
-	 * 
+	 *
 	 * @param _mode
 	 *            模式
 	 * @param _code
@@ -118,7 +118,7 @@ public class LicenseUtils {
 	private static String s_encode_string( int _mode , String _code , String _days ) {
 		return _mode + ":" + _code + ":" + _days;
 	}
-	
+
 	/**
 	 * 解码密文内容
 	 * @param _data 字符串二进制数组
@@ -126,13 +126,13 @@ public class LicenseUtils {
 	 */
 	public static String[] s_decode_string( byte[] _data ){
 		StringTokenizer st = new StringTokenizer( new String( _data ) , ":" );
-		
+
 		String[] str = new String[3];
 		int idx = 0;
-		
+
 		while( st.hasMoreTokens() )
 			str[ idx++ ] = st.nextToken();
-		
+
 		return str;
 	}
 	/**
@@ -144,10 +144,10 @@ public class LicenseUtils {
 	public static void s_generate( String _seed, String _time ) throws Exception{
 		System.out.println( "基础种子:" + _seed );
 		System.out.println( "可用时长:" + _time );
-		
+
 		String code = LicenseSequences.s_sequence();
 		System.out.println( "机器码:" + code );
-		
+
 		Map< String , Key > key_map = RSAUtils.s_genkeys_map( _seed );
 
 		byte[] pri_key = RSAUtils.s_private_key_byte( key_map );
@@ -160,7 +160,7 @@ public class LicenseUtils {
 
 		s_write_license( pub_key_str , B64Utils.s_encode( byt_e ) );
 	}
-	
+
 	/**
 	 * 测试License内容有效性
 	 */
@@ -170,7 +170,7 @@ public class LicenseUtils {
 		String[] txt = s_read_license( file );
 		String pub_key_str = txt[ 0 ];
 		System.out.println( "用户公钥:" + pub_key_str );
-		
+
 		byte[] pub_key;
 		try {
 			pub_key = B64Utils.s_decode( pub_key_str );
@@ -186,44 +186,44 @@ public class LicenseUtils {
 	 * 测试License内容与时效有效性
 	 */
 	public static void s_test_time() {
-		File file = new File( "" , "application.license" );
+		File file = new File("", "application.license");
 		String code = LicenseSequences.s_sequence();
-		String[] txt = s_read_license( file );
-		String pub_key_str = txt[ 0 ];
-		System.out.println( "用户公钥:" + pub_key_str );
+		String[] txt = s_read_license(file);
+		String pub_key_str = txt[0];
+		System.out.println("用户公钥:" + pub_key_str);
 
 		byte[] pub_key;
 		try {
-			pub_key = B64Utils.s_decode( pub_key_str );
+			pub_key = B64Utils.s_decode(pub_key_str);
 			byte[] deString = RSAUtils.s_decrypt_public(pub_key, B64Utils.s_decode(txt[1]));
-			System.out.println("解密出来的内容为："+new String(deString));
+			System.out.println("解密出来的内容为：" + new String(deString));
 			String regex = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}";
 			Pattern p = Pattern.compile(regex);
 			Matcher matcher = p.matcher(new String(deString));
-			if(matcher.find()){
+			if (matcher.find()) {
 				String exp_time = matcher.group(0);
-				System.out.println("License文件中的过期时间为："+exp_time);
+				System.out.println("License文件中的过期时间为：" + exp_time);
 				long exptime = DateUtils.convert2long(exp_time, DATE_Y_M_DDHHMMSS);
-                long now_time=DateUtils.convert2long(DateUtils.getTimeNow(DATE_Y_M_DDHHMMSS,new Date()),DATE_Y_M_DDHHMMSS);
-			    if(now_time>exptime){
+				long now_time = DateTime.now().getMillis() / 1000;
+				if (now_time > exptime) {
 					System.out.println("系统授权已过期");
 					System.exit(0);
-				}else {
+				} else {
 					System.out.println("系统时效验证通过");
-					System.out.println( "License文件经验证结果：有效，机器码：" + code );
+					System.out.println("License文件经验证结果：有效，机器码：" + code);
 				}
 			}
-		} catch ( Exception e ) {
-			System.out.println( "License文件经验证结果：失败 机器码：" + code );
+		} catch (Exception e) {
+			System.out.println("License文件经验证结果：失败 机器码：" + code);
 		}
-		System.exit( 0 );
+		System.exit(0);
 	}
-	
+
 	/**
 	 * 创建单机模式License
 	 * 通过机器码生成MD5加密内容
 	 * 私钥由供应商分配，由客户保管
-	 * 
+	 *
 	 * @param _seed 私钥种子
 	 * @throws Exception 错误
 	 */
@@ -231,12 +231,12 @@ public class LicenseUtils {
 		System.out.println( "当前选择单机License方式。" );
 		s_generate( _seed, "" );
 	}
-	
+
 	/**
 	 * 创建单机模式License
 	 * 通过机器码生成MD5加密内容
 	 * 私钥由供应商分配，由客户保管
-	 * 
+	 *
 	 * @param _seed 私钥种子
 	 * @param _time 时长 秒
 	 * @throws Exception 错误
@@ -247,9 +247,9 @@ public class LicenseUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * 将信息写入文件
-	 * 
+	 *
 	 * @param _keys 用户公钥
 	 * @param _data 加密内容
 	 */
@@ -276,7 +276,7 @@ public class LicenseUtils {
 
 	/**
 	 * 读取License文件信息
-	 * 
+	 *
 	 * @param _file License文件
 	 * @return [2]-0:Key 1:Txt
 	 */
