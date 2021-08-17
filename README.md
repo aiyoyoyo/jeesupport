@@ -48,7 +48,7 @@ jeesupport提供了Java开发中常用的一些技术和框架供使用和参考
 2. SpringBoot的配置内容，在相关的Resources目录下可以找到。
 3. 部分内容固定成了Java类。命名目前可能有点乱，请见谅。大致在config包下或者类名以Config结尾。
 
-### IDEA-COMMUNITY 2020.2
+### IDEA-COMMUNITY 2021.2
 1. 版本基本上没太大影响，我把功能环境基本独立出来，除了依赖Lombok，其他的没有影响。
 2. 其实建立基础项目，对应下载目录jeesupport，然后通过jees-boot的pom.xml导入maven信息即可，不会太复杂。
 3. 请在idea设置中设置工程环境等均为UTF-8以保证中文可以正常使用。
@@ -56,10 +56,11 @@ jeesupport提供了Java开发中常用的一些技术和框架供使用和参考
 ```
 d:/jeesupport                  -- 项目目录
    .idea                       -- IDEA项目配置目录
-   jees-boot                   -- JBOOT根模块位置
-       src.core                -- 源文件夹
-       resources               -- 资源文件夹
-           config              -- 项目配置文件夹
+   jees-[mod]                  -- JBOOT根模块位置
+       src.main
+            java               -- 源文件夹
+            resources          -- 资源文件夹
+                config         -- 项目配置文件夹
        src.test                -- 测试源文件夹
    jees-jdbs                   -- JDBS 子模块位置
    jees-jsts                   -- JSTS 子模块位置
