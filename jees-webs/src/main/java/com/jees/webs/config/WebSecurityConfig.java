@@ -110,11 +110,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new SessionRegistryImpl();
     }
 
-    private void _configure_dwr_( HttpSecurity _hs ) throws Exception{
-        String dwr_url  = CommonConfig.getString( "jees.webs.dwr.url", "/dwr" );
-        String csrf_url = CommonConfig.getString( "jees.webs.csrf.url", "/csrf" );
+    private void _configure_cross_( HttpSecurity _hs ) throws Exception{
+        String dwr_url  = CommonConfig.get( "jees.webs.dwr.url", "/dwr" );
+        String csrf_url = CommonConfig.get( "jees.webs.csrf.url", "/csrf" );
+        boolean csrf_frame = CommonConfig.get( "jees.webs.csrf.frame", false );
         _hs.csrf().ignoringAntMatchers( dwr_url + "/**" );
         _hs.csrf().ignoringAntMatchers( csrf_url + "/**" );
+        if( csrf_frame ) {
+            _hs.authorizeRequests().and().headers().frameOptions().disable();
+        }
     }
 
     private void _configure_tpl_notaccess_( HttpSecurity _hs, String _url, Template _tpl, List< SuperMenu > _menus ) throws Exception{
@@ -202,12 +206,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
         if( !installConfig.isInstalled() ){
             _hs.authorizeRequests().antMatchers( "/**" ).permitAll();
-            _configure_dwr_( _hs );
+            _configure_cross_( _hs );
             return;
         }
 
         _configure_tpl_( _hs );
-        _configure_dwr_( _hs );
+        _configure_cross_( _hs );
         _configure_login_( _hs );
 
         // 其他
