@@ -66,7 +66,7 @@ jees:
 #    orm: hibernate
 #    user: com.jees.test
 #    password: com.jees.test
-#    url: jdbc:oracle:thin:@127.0.0.1:1521:test
+#    url: jdbc:oracle:thin:@127.0.0.1:1521:com.jees.test
 #    uniqueResourceName: datasourceA
 #    xaDataSourceClassName: oracle.jdbc.xa.client.OracleXADataSource
 #    poolSize: 1

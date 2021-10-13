@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -133,7 +134,6 @@ public class CommonConfig {
 
 	public static StringTokenizer getStringTokenizer( String _key, String _delim ){
 		String val = getString( _key );
-		if( val == null ) val = "";
 		return new StringTokenizer( val, _delim );
 	}
 

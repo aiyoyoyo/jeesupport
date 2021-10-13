@@ -6,16 +6,15 @@
 
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
-        <version>1.5.0-SNAPSHOT</version>
         <artifactId>jeesupport</artifactId>
+        <version>1.5.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jtls</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
     <name>Jeesupport Tools</name>
     <description>com.jees-jtls contains classes of some common tools or algorithms.</description>
-    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
 
     <dependencies>
         <!-- Test -->

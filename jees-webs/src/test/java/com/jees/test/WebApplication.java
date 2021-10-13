@@ -6,6 +6,7 @@ import com.jees.tool.utils.CustomSystemUtil;
 import com.jees.tool.utils.FileUtil;
 import com.jees.webs.support.ISuperService;
 import lombok.extern.log4j.Log4j2;
+import org.junit.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -20,9 +21,11 @@ import java.util.Arrays;
 @DependsOn({"commonContextHolder", "commonConfig" })
 @Log4j2
 public class WebApplication {
-    public static void main(String[] args){
-        System.out.println( "Project Path:" + FileUtil.path( "classpath:" ) );
+    public static void main(String...args){
         System.out.println( "Start with:" + Arrays.toString( args ) );
+        FileUtil.classpath();
+        FileUtil.project();
+        FileUtil.webroot();
         SpringApplication.run( WebApplication.class, args);
         CommonContextHolder.getBean( ISuperService.class ).initialize();
         log.info( "服务器启动: http"

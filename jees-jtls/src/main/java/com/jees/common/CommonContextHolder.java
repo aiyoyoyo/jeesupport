@@ -65,18 +65,6 @@ public class CommonContextHolder implements ApplicationContextAware {
 	}
 
 	/**
-	 * 从静态变量ApplicationContext中取得Bean, 通过别名来指定具体的对象
-	 * @param _name
-	 * @param _cls
-	 * @param <T>
-	 * @return
-	 */
-	public static <T> T getBean( String _name, Class<T> _cls){
-		_check_application_context();
-		return applicationContext.getBean(_name, _cls);
-	}
-
-	/**
 	 * 获取通类的所有实例
 	 *
 	 * @param _cls 类

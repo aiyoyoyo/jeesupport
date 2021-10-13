@@ -24,6 +24,7 @@ public class FileUtil {
     public static String classpath(){
         if( classpath == null ){
             classpath = path( "classpath:" );
+            log.info( "Class Path:" + classpath );
         }
         return classpath;
     }
@@ -244,10 +245,15 @@ public class FileUtil {
      */
     public static String project() {
         if( projectPath == null ) {
-            Class app = FileUtil.class;
+            Class app = null;
+            try {
+                app = Class.forName( FileUtil.class.getName() );
+            } catch (ClassNotFoundException e) {
+            }
             String path = app.getResource("").getPath();
+            StringBuffer str_sb = new StringBuffer();
 
-            int sub_idx = 0;
+            int sub_idx;
 
             sub_idx = path.indexOf("target");
             devMaven = sub_idx != -1;

@@ -14,21 +14,26 @@
             <directory>src/test/resources</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>../jees-jtls/src/test/resources/</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../jees-jdbs/src/test/resources/</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/test/resources/scr/</directory>
+            <lineEnding>dos</lineEnding>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
     </fileSets>
     <!-- 把编译好的jar文件包含到发布的目录中去并设置脚本文件的权限-->
     <files>
         <file>
             <source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
-            <destName>${artifactId}-${version}.jar</destName>
+            <destName>${project.artifactId}-${version}.jar</destName>
             <outputDirectory>/</outputDirectory>
-        </file>
-        <file>
-            <source>../jees-jtls/src/test/resources/config</source>
-            <outputDirectory>/config</outputDirectory>
-        </file>
-        <file>
-            <source>../jees-jdbs/src/test/resources/config</source>
-            <outputDirectory>/config</outputDirectory>
         </file>
         <!-- 设置start.sh文件的换行符为unix换行符\n
         <file>

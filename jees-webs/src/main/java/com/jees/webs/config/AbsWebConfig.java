@@ -1,6 +1,7 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
+import com.jees.tool.utils.FileUtil;
 import com.jees.tool.utils.UrlUtil;
 import com.jees.webs.entity.Page;
 import com.jees.webs.entity.SuperMenu;
@@ -21,7 +22,7 @@ import java.util.StringTokenizer;
 public abstract class AbsWebConfig implements WebMvcConfigurer {
     public static String               defPage;
     @Autowired
-    ITemplateService< SuperMenu > templateService;
+    ITemplateService<SuperMenu> templateService;
     @Autowired
     ResourcePatternResolver       resourcePatternResolver;
     @Autowired
@@ -33,8 +34,11 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
 
     public String getRootTpl(){
         if( rootTpl == null) {
-            rootTpl = CommonConfig.getString("spring.thymeleaf.prefix", "classpath:/templates/");
+            rootTpl = CommonConfig.getString("spring.thymeleaf.prefix", "classpath:templates/");
             rootTpl = rootTpl.replaceAll("%20", " ");
+            if( !rootTpl.startsWith( "classpath:" ) ){
+                rootTpl = "classpath:" + rootTpl;
+            }
         }
         return rootTpl;
     }
@@ -42,10 +46,10 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
     private String _try_tpl_path(){
         String tmp_path = "";
         try {
-            tmp_path = resourcePatternResolver.getResource( getRootTpl() ).getURL().getPath();
+            tmp_path = FileUtil.path( getRootTpl() );
             if( tmp_path.startsWith( "/" ) )tmp_path = tmp_path.replaceFirst( "/", "" );
             tmp_path = tmp_path.replaceAll("%20", " ");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error( "模版路径错误: PATH=[" + getRootTpl() + "]", e );
         }
 
@@ -65,7 +69,12 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
             try {
                 Resource[] rfs = resourcePatternResolver.getResources( res_path );
                 for( Resource r : rfs ){
-                    String r_path = r.getURI().getPath();
+                    String r_path = "";
+                    if( r.getURI() != null ){
+                        r_path = r.getURI().getPath();
+                    }else{
+                        r_path = r.toString();
+                    }
                     if( r_path.indexOf( "/" + t.getAssets() + "/" ) != -1 ) continue;
                     if( r_path.startsWith("_") ) continue;
                     if( r_path.indexOf("/_") != -1 ) continue;

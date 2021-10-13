@@ -25,10 +25,7 @@
 > DataTest 数据转换测试类
 
 ## 更新历史
-### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
-1. 未做大的改动，仅针对项目结构做了修改。
-2. 更新了个别工具类的用法
-### 1.3.0-SNAPSHOT 
+### 1.3.0-SNAPSHOT <font color='red'>新版本</font>
 1. 使用标准目录结构构建项目
 2. 修正CommonConfig的部分函数使用的问题
 3. 增加一个StringUtil工具类

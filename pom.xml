@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.1-SNAPSHOT</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -31,14 +31,10 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
+        <jees.version>1.5.1-SNAPSHOT</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
-        <jees.version>1.5.0-SNAPSHOT</jees.version>
-        <jees.jtls.version>1.5.0-SNAPSHOT</jees.jtls.version>
-        <jees.jdbs.version>1.5.0-SNAPSHOT</jees.jdbs.version>
-        <jees.jsts.version>1.5.0-SNAPSHOT</jees.jsts.version>
-        <jees.webs.version>1.5.0-SNAPSHOT</jees.webs.version>
         <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
         <mysql.version>5.1.44</mysql.version>
         <jodatime.version>2.10.8</jodatime.version>
@@ -74,12 +70,10 @@
                 <repository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                    <uniqueVersion>false</uniqueVersion>
                 </repository>
                 <snapshotRepository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                    <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
             <build>

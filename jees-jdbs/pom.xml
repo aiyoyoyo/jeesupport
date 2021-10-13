@@ -7,15 +7,14 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jeesupport</artifactId>
-        <version>1.5.0-SNAPSHOT</version>
+        <version>1.5.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jdbs</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
     <name>Jeesupport Database</name>
     <description>Spring Atomikos com.jees.core.database support</description>
-    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${artifactId}</url>
+    <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
 
     <properties>
         <ucanaccess.version>4.0.1</ucanaccess.version>
@@ -40,7 +39,7 @@
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jtls</artifactId>
-            <version>${jees.jtls.version}</version>
+            <version>${jees.version}</version>
         </dependency>
         <!--Spring Boot -->
         <dependency>
@@ -77,14 +76,14 @@
             <artifactId>ojdbc</artifactId>
             <version>${oracle.version}</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/test/resources/lib/ojdbc8.jar</systemPath>
+            <systemPath>${basedir}/src.resources/lib/ojdbc8.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>ojdbc</groupId>
             <artifactId>orai18n</artifactId>
             <version>${oracle.version}</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/test/resources/lib/orai18n.jar
+            <systemPath>${basedir}/src.resources/lib/orai18n.jar
             </systemPath>
         </dependency>
          -->
