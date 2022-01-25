@@ -98,4 +98,8 @@ public class StringUtil {
     public static boolean isNotNull(String _val){
         return !isNull(_val);
     }
+
+    public static String firstLower(String _val){
+        return _val.substring( 0, 1 ).toLowerCase() + _val.substring( 1 );
+    }
 }

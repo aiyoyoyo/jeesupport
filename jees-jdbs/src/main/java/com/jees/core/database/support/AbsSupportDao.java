@@ -6,18 +6,15 @@ import org.hibernate.query.Query;
 
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * 
+ *
  * 实现了标准查询内容，根据需要可以继承后扩展数据操作，事务实现通过上层业务类加入注解：org.
  * springframework.transaction.annotation.Transactional 来管理。
- * 
+ *
  * @author aiyoyoyo
- * 
+ *
  */
 public abstract class AbsSupportDao implements ISupportDao {
 	/** 从配置文件中获取数据库链接对象。**/
@@ -34,6 +31,21 @@ public abstract class AbsSupportDao implements ISupportDao {
 					_query.setParameterList( _param[i] , ( Collection<?> ) _value[i] );
 				else
 					_query.setParameter( _param[i] ,_value[i] );
+			}
+		}
+	}
+
+	private void _set_parameter( Query _query, Map _param ){
+		if( _param != null ){
+			Iterator key_it = _param.keySet().iterator();
+			while( key_it.hasNext() ){
+				Object key = key_it.next();
+				Object value = _param.get( key );
+				if( value instanceof Collection ) {
+					_query.setParameterList(key.toString(), (Collection<?>) value);
+				}else {
+					_query.setParameter(key.toString(), value);
+				}
 			}
 		}
 	}
@@ -194,6 +206,22 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	@Override
+	public <T> List<T> selectByHQL(String _db, String _hql, Map _param, Class<T> _cls) {
+		return selectByHQL( _db, _hql, DEFAULT_FIRST, DEFAULT_LIMIT, _param, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectByHQL(String _db, String _hql, int _first, int _limit, Map _param, Class<T> _cls) {
+		Session session = _get_session( _db );
+		Query< T > query = session.createQuery( _hql );
+		query.setFirstResult( _first );
+		query.setMaxResults( _limit );
+
+		_set_parameter( query, _param );
+		return query.getResultList();
+	}
+
+	@Override
 	public < T > List< T > selectBySQL( String _db , String _sql , String[] _param , Object[] _value, Class< T > _cls ) {
 		return selectBySQL( _db , _sql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _value, _cls );
 	}
@@ -212,11 +240,28 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	@Override
+	@SuppressWarnings( "unchecked" )
+	public < T > List< T > selectBySQL( String _db , String _sql , Map _param, Class< T > _cls ){
+		return selectBySQL( _db , _sql , DEFAULT_FIRST , DEFAULT_LIMIT , _param , _cls );
+	}
+
+	@Override
+	@SuppressWarnings( "unchecked" )
+	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Map _param,
+								 Class< T > _cls ){
+		Session session = _get_session( _db );
+		Query< T > query = session.createNativeQuery( _sql, _cls );
+		query.setFirstResult( _first );
+		query.setMaxResults( _limit );
+
+		_set_parameter( query, _param );
+		return query.getResultList();
+	}
+
+	@Override
 	public < T > long selectCount( String _db , Class< T > _cls ) {
 		String hql = "SELECT COUNT(*) FROM ";
-
 		Query query = _get_session( _db ).createQuery( hql + _cls.getName() );
-
 		return ( long ) query.iterate().next();
 	}
 
@@ -245,7 +290,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 			_flush_session( session );
 		}
 	}
-	
+
 	@Override
 	public int executeBySQL( String _db , String _sql , String[] _param, Object[] _value ) {
 		Session session = _get_session( _db );

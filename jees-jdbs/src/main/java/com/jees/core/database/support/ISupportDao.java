@@ -4,11 +4,12 @@ import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 
+ *
  * 定义了标准数据库处理模型的接口
- * 
+ *
  * @author aiyoyoyo
  *
  */
@@ -50,10 +51,19 @@ public interface ISupportDao {
 	< T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , String[] _param , Object[] _value,
 			Class< T > _cls );
 
+	< T > List< T > selectByHQL( String _db , String _hql , Map _param, Class< T > _cls );
+
+	< T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , Map _param, Class< T > _cls );
+
 	< T > List< T > selectBySQL( String _db , String _sql , String[] _param , Object[] _value, Class< T > _cls );
 
 	< T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , String[] _param , Object[] _value,
 			Class< T > _cls );
+
+	< T > List< T > selectBySQL( String _db , String _sql , Map _param, Class< T > _cls );
+
+	< T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Map _param,
+								 Class< T > _cls );
 
 	< T > long selectCount( String _db , Class< T > _cls );
 
