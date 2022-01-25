@@ -73,7 +73,7 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
         ParserConfig.getGlobalInstance().setAutoTypeSupport( true );
         ParserConfig.getGlobalInstance().addAccept( CommonConfig.getString( "spring.redis.package" ) );
 
-        int idx = CommonConfig.getInteger( "spring.redis.com.jees.core.database", 0 );
+        int idx = CommonConfig.getInteger( "spring.redis.database", 0 );
         database( idx );
     }
 
