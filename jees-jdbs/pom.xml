@@ -13,7 +13,7 @@
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jdbs</artifactId>
     <name>Jeesupport Database</name>
-    <description>Spring Atomikos com.jees.core.database support</description>
+    <description>Spring Atomikos support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
 
     <properties>

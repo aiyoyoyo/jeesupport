@@ -106,7 +106,7 @@ public class SessionFactoryRegistry {
             hibernateProperties.setProperty("hibernate.hbm2ddl.auto",
                     CommonConfig.getString( hibernate + "hbm2ddl", "none" ) );
             hibernateProperties.setProperty("hibernate.transaction.jta.platform",
-                    CommonConfig.getString( hibernate + "platform", "com.jees.core.com.jees.core.database.config.AtomikosJtaPlatform" ) );
+                    CommonConfig.getString( hibernate + "platform", "com.jees.core.database.config.AtomikosJtaPlatform" ) );
             hibernateProperties.setProperty("hibernate.transaction.coordinator_class",
                     CommonConfig.getString( hibernate + "coordinatorClass","jta" ) );
 
