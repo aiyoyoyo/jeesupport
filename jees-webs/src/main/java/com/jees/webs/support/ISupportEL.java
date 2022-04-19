@@ -22,4 +22,6 @@ public interface ISupportEL {
     String Request_Actives_EL           = "ACTIVES";
 
     String Login_Err                    = "ERR";
+
+    String DIALECT_NAME                 = "TH_AUTH";
 }

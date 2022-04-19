@@ -29,6 +29,8 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
     AbsRedisDao sDB;
     @Autowired
     AbsSuperService absSS;
+    @Autowired
+    AbsVerifyService absVer;
 
     /**
      * 超级账号在启动时随机生成密码，可以通过日志查询。
@@ -73,11 +75,17 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
     }
 
     public UserDetails loadUserByUsername( String _username ) throws UsernameNotFoundException{
-        UserDetails user = checkSuperman( _username );
-        if( user == null ) user = findUserByUsername( _username );
-        log.debug( "--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]" );
-        build( user );
-        log.debug( "--用户信息：U=[" + user + "]" );
+        UserDetails user = checkSuperman(_username);
+        if (CommonConfig.getBoolean("jees.webs.verify.enable", false)) {
+            // verify配置中查找用户
+            if (user == null) user = absVer.findUserByUsername(_username);
+        } else {
+            // redis中查找用户
+            if (user == null) user = findUserByUsername(_username);
+        }
+        log.debug("--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]");
+        build(user);
+        log.debug("--用户信息：U=[" + user + "]");
         return user;
     }
 

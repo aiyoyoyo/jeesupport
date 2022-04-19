@@ -17,6 +17,8 @@ public interface ITemplateService<M extends SuperMenu> {
 
     Template getDefaultTemplate();
 
+    void setDefTemplate( String _tpl );
+
     boolean isTemplate( String _tpl );
 
     boolean isDefault( String _tpl );

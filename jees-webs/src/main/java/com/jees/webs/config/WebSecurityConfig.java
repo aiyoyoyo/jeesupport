@@ -4,16 +4,20 @@ import com.jees.common.CommonConfig;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.abs.AbsSuperService;
+import com.jees.webs.abs.AbsUserDetailsService;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.Template;
 import com.jees.webs.support.ISupportEL;
 import com.jees.webs.support.ITemplateService;
+import com.jees.webs.support.IVerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -23,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -36,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Spring security核心配置项
@@ -46,9 +52,11 @@ import java.util.List;
 @Log4j2
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
+    IVerifyService     verifyService;
+    @Autowired
     ITemplateService   templateService;
     @Autowired
-    UserDetailsService userDetailsService;
+    AbsUserDetailsService userDetailsService;
     @Autowired
     InstallConfig      installConfig;
     @Autowired
@@ -94,8 +102,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             @Override
             public void onAuthenticationFailure( HttpServletRequest _request, HttpServletResponse _response, AuthenticationException _e ) throws IOException, ServletException{
                 log.debug( "--登陆失败：" + _e.getMessage() );
+                _request.getSession().setAttribute("message", _e.getMessage());
                 redirectStrategy().sendRedirect( _request, _response,
                                                  "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err );
+            }
+        };
+    }
+
+    /**
+     * 访问无权限后的处理，重定向至自定义403页面
+     */
+    @Bean
+    public AccessDeniedHandler deniedHandler() {
+        return new AccessDeniedHandler() {
+            @Override
+            public void handle(HttpServletRequest _request, HttpServletResponse _response, AccessDeniedException _e) throws IOException, ServletException {
+                log.debug("--重定向页面：" + _e.getMessage());
+                _request.getSession().setAttribute("message", _e.getMessage());
+                String access_msg = _request.getSession().getAttribute("access_msg").toString();
+                if (!access_msg.equals(""))
+                    _request.getSession().setAttribute("message", access_msg);
+                String uri = _request.getRequestURI();
+                String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
+                String l403_page = "/" + CommonConfig.getString("jees.webs.verify.403", "403");
+                if (uri.equals("/")) {
+                    // 登录页面无权限则重定向至登录页面
+                    _response.sendRedirect(login_page);
+                } else {
+                    // 其他页面无权限则重定向至自定义/403
+                    _response.sendRedirect(l403_page);
+                }
             }
         };
     }
@@ -183,13 +219,50 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         }
     }
 
+    /**
+     * 通过权限配置文件来进行请求的过滤
+     *
+     * @param _hs 权限管理器
+     * @throws Exception 错误
+     */
+    private void _configure_base_(HttpSecurity _hs) throws Exception {
+        String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
+        String logout_page = "/" + CommonConfig.getString("jees.webs.logout", "logout");
+        String l403_page = "/" + CommonConfig.getString("jees.webs.verify.403", "403");
+
+        // 遍历模版放行模版下的资源
+        List<String> tpl_names = templateService.getTemplateNames();
+        for (String tpl : tpl_names) {
+            String tpl_assets = "/" + CommonConfig.getString("jees.webs." + tpl + ".assets", "assets") + "/**";
+            String tpl_url = "/" + tpl;
+            log.debug("--模板资源放行：TPL=[" + tpl_url + "], PAGE=[" + login_page + ", " + logout_page + ", " + l403_page + "]");
+            _hs.authorizeRequests()
+                    .antMatchers(
+                            tpl_url + tpl_assets,
+                            "/dwr/**",
+                            "/**/*.ico").permitAll()
+                    .antMatchers(
+                            tpl_url + login_page,
+                            tpl_url + logout_page,
+                            tpl_url + l403_page).permitAll();
+        }
+        _hs.authorizeRequests().antMatchers(login_page, logout_page, l403_page).permitAll();
+        _hs.authorizeRequests().anyRequest().access(
+                "@accessImpl.hasPath(request, authentication) and " +
+                        "@accessImpl.hasBlackIP(request, authentication) and " +
+                        "@accessImpl.hasBlackUser(request, authentication)"
+        );
+    }
+
     private void _configure_login_( HttpSecurity _hs ) throws Exception{
         String login_page = "/" + CommonConfig.getString( "jees.webs.login", "login" );
         String logout_page = "/" + CommonConfig.getString( "jees.webs.logout", "logout" );
         _hs.authorizeRequests()
-                .and().formLogin().loginPage( login_page )
+                .and().formLogin().loginPage( login_page ).loginProcessingUrl( login_page)
                 .successHandler( successHandler() ).failureHandler( failureHandler() ).permitAll()
-                .and().logout().logoutUrl( logout_page ).permitAll();
+                .and().logout().logoutUrl( logout_page ).permitAll()
+                .and().exceptionHandling().accessDeniedHandler( deniedHandler() );
+        _hs.csrf().disable();
     }
 
     /**
@@ -200,17 +273,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
      */
     @Override
     protected void configure( HttpSecurity _hs ) throws Exception{
+        verifyService.initialize();
         sDB.initialize();
 
-        if( !installConfig.isInstalled() ){
-            _hs.authorizeRequests().antMatchers( "/**" ).permitAll();
-            _configure_dwr_( _hs );
-            return;
+        // 配置文件权限认证启用
+        if ( CommonConfig.getBoolean( "jees.webs.verify.enable", false ) ) {
+            _configure_base_(_hs);
+        } else {
+            if( !installConfig.isInstalled() ){
+                _hs.authorizeRequests().antMatchers( "/**" ).permitAll();
+                _configure_dwr_( _hs );
+                return;
+            }
+            _configure_tpl_( _hs );
         }
-
-        _configure_tpl_( _hs );
-        _configure_dwr_( _hs );
-        _configure_login_( _hs );
+        _configure_dwr_(_hs);
+        _configure_login_(_hs);
 
         // 其他
         if( CommonConfig.getBoolean( "jees.webs.header.frameOptions", false ) )
