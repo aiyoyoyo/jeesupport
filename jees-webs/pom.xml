@@ -55,6 +55,11 @@
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>${extras.sec.version}</version>
+        </dependency>
         <!-- Dwr -->
         <dependency>
             <groupId>org.directwebremoting</groupId>

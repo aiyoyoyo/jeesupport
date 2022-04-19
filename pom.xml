@@ -36,6 +36,7 @@
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
         <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
+        <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
         <jodatime.version>2.10.8</jodatime.version>
         <lombok.version>1.16.20</lombok.version>
