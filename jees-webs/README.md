@@ -97,7 +97,48 @@ clean package -pom-war.xml
 2. 动态获取相对路径寻找更好的写法
 
 ## 更新历史
-### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+### 1.6.0-SNAPSHOT <font color='red'>新版本</font>
+1. 重做了系统登录的权限认证，简单认证、数据库认证方式
+2. 相关配置调整
+```
+    # 启用安装程序
+    jees.webs.install.enable = true
+    # 验证启用
+    jees.webs.verify.enable = true
+    # 验证方式 simple/database
+    jees.webs.verify.model = simple
+```
+3. 简单验证 config/verify.cfg
+```
+    # 配置会自动继承继承上级配置,并追加人员
+    # 默认配置
+    [*] 
+    # *-全允许; 空白-全拒绝
+    user =
+    # 根路径 等于[/index]
+    [/]
+    # 所有人可以访问
+    user = *
+    [/manager]
+    # admin可以访问
+    user = admin
+    [/manager/roles]
+    # admin/john可以访问
+    user = john
+    [/manager/menus]
+    # admin/lina可以访问
+    user = lina
+    [/super]
+    # admin/john,lina可以访问, marri不可以访问
+    user = admin,john,lina
+    deny = marri
+    # /super页面的元素#BTN_SUBMIT访问权限
+    [/super$#BTN_SUBMIT]
+    # admin/john可以访问, lina/marri不可以访问
+    user = admin,john
+```
+4. 
+### 1.5.0-SNAPSHOT 
 1. 优化了pom配置文件，针对4种运行方式做了测试。开发工具为idea社区版2020.1和smart tomcat
 
 ### 1.2.1-SNAPSHOT
