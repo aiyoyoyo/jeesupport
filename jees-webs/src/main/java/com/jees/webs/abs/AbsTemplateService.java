@@ -109,6 +109,13 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
     }
 
     @Override
+    public void setDefTemplate( String _tpl){
+        if( isTemplate( _tpl ) && !isDefault( _tpl) ) {
+            defTemplate = getTemplate( _tpl );
+        }
+    }
+
+    @Override
     public List< Template > getTemplateAll(){
         return templates.values().stream().collect( Collectors.toList() );
     }
