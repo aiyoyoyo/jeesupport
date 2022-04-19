@@ -31,6 +31,7 @@ public class LicenseUtils {
 		int step = 0;
 		String s0 = "";
 		String s1 = "";
+		String s2 = "";
 		while ( sc.hasNext() ) {
 			while ( step == 0 ) {
 				int m = sc.nextInt();
@@ -78,14 +79,25 @@ public class LicenseUtils {
 					}
 				}
 			}
-			
-			if( step == 2 ) break;
+
+			while( step == 2 ) {
+				if( s2.equalsIgnoreCase( "" ) ){
+					if( mode == LicenseClient.MODE_INTIME ) {
+						System.out.println("请输入您想要过期的时间：格式为（yyyy-mm-dd hh:mm:ss）");
+						s2 = sc.next();
+					}
+					break;
+				}
+			}
 		}
 
 		String seed = s0;
 		switch ( mode ) {
 		case LicenseClient.MODE_SINGLE:
 			s_generate_single( seed );
+			break;
+		case LicenseClient.MODE_INTIME:
+			s_generate_intime( s0, s2 );
 			break;
 		}
 	}
@@ -128,9 +140,10 @@ public class LicenseUtils {
 	 * @param _time 可用时长
 	 * @throws Exception 错误
 	 */
-	public static void s_generate( String _seed, String _time ) throws Exception{
+	public static void s_generate( String _seed, String _time, int _mode ) throws Exception{
 		System.out.println( "基础种子:" + _seed );
 		System.out.println( "可用时长:" + _time );
+		System.out.println( "模式:" + _mode );
 		
 		String code = LicenseSequences.s_sequence();
 		System.out.println( "机器码:" + code );
@@ -142,7 +155,7 @@ public class LicenseUtils {
 		String pub_key_str = B64Utils.s_encode( pub_key );
 		System.out.println( "用户公钥:" + pub_key_str );
 
-		String str = s_encode_string( LicenseClient.MODE_SINGLE , code , _time );
+		String str = s_encode_string( _mode , code , _time );
 		byte[] byt_e = RSAUtils.s_encrypt_private( pri_key , str.getBytes() );
 
 		s_write_license( pub_key_str , B64Utils.s_encode( byt_e ) );
@@ -179,7 +192,7 @@ public class LicenseUtils {
 	 */
 	public static void s_generate_single( String _seed ) throws Exception {
 		System.out.println( "当前选择单机License方式。" );
-		s_generate( _seed, "" );
+		s_generate( _seed, "", LicenseClient.MODE_SINGLE );
 	}
 	
 	/**
@@ -193,7 +206,7 @@ public class LicenseUtils {
 	 */
 	public static void s_generate_intime( String _seed, String _time ) throws Exception {
 		System.out.println( "当前选择时长License方式。" );
-		s_generate( _seed, _time );
+		s_generate( _seed, _time, LicenseClient.MODE_INTIME );
 	}
 
 	/**
