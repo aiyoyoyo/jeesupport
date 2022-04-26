@@ -24,4 +24,7 @@ public interface ISupportEL {
     String Login_Err                    = "ERR";
 
     String DIALECT_NAME                 = "TH_AUTH";
+    String VERIFY_USER_EL               = "users";
+    String VERIFY_ROLE_EL               = "roles";
+    String VERIFY_BLACK_EL              = "black";
 }
