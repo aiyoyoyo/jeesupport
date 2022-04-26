@@ -30,7 +30,7 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
     @Autowired
     AbsSuperService absSS;
     @Autowired
-    AbsVerifyService absVer;
+    AbsVerifyService absVS;
 
     /**
      * 超级账号在启动时随机生成密码，可以通过日志查询。
@@ -76,12 +76,12 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
 
     public UserDetails loadUserByUsername( String _username ) throws UsernameNotFoundException{
         UserDetails user = checkSuperman(_username);
-        if (CommonConfig.getBoolean("jees.webs.verify.enable", false)) {
-            // verify配置中查找用户
-            if (user == null) user = absVer.findUserByUsername(_username);
-        } else {
+        if (CommonConfig.getBoolean("jees.jdbs.enable", false)) {
             // redis中查找用户
             if (user == null) user = findUserByUsername(_username);
+        } else {
+            // 配置文件中查找用户
+            if (user == null) user = absVS.findUserByUsername(_username);
         }
         log.debug("--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]");
         build(user);
@@ -90,13 +90,13 @@ public abstract class AbsUserDetailsService<U extends SuperUser> implements User
     }
 
     protected U findUserByUsername( String _username ){
+        log.debug( "--查找登陆用户信息：U=[" + _username + "]" );
         List< U > list = sDB.findByEquals( "username", _username, superClass() );
         if( list.size() == 1 ){
             U u = list.get( 0 );
             absSS.loadUserRoles( u );
             return u;
         }
-        log.debug( "--查找登陆用户信息：U=[" + _username + "]" );
         throw new UsernameNotFoundException( "用户不存在" );
     }
 
