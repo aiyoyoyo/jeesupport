@@ -63,6 +63,7 @@ public class JeesTagProcessor extends AbstractAttributeTagProcessor {
             HttpSession session = context.getSession();
             String uri = request.getRequestURI();
             SuperUser su = (SuperUser) session.getAttribute("USER");
+            if (su == null) return;
             Set<SimpleGrantedAuthority> auths = su.getAuthorities();
             for (SimpleGrantedAuthority auth : auths) {
                 if (auth.equals(new SimpleGrantedAuthority(uri)) && elements.containsKey(uri)) {
