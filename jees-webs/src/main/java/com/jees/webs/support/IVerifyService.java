@@ -15,12 +15,6 @@ public interface IVerifyService<M extends SuperMenu,U extends SuperUser,R extend
 
     UserDetails findUserByUsername(String _username);
 
-    List< M > mergeMenus();
-
-    List< U > mergeUsers();
-
-    List< R > mergeRoles();
-
     void loadUserMenus(HttpServletRequest _request);
 
 }

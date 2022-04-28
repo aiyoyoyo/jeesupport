@@ -2,6 +2,7 @@ package com.jees.webs.abs;
 
 import com.jees.tool.utils.FileUtil;
 import com.jees.tool.utils.ReflectUtils;
+import com.jees.webs.entity.Page;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
@@ -33,7 +34,7 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
     // 配置文件中的菜单，角色，用户信息，可与AbsSuperService中合并
     @Getter
     @Setter
-    Map<Integer, M> menus = new HashMap<>();
+    Map<String, M> menus = new HashMap<>();
     @Getter
     @Setter
     Map<Integer, R> roles = new HashMap<>();
@@ -53,7 +54,7 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
     Map<String, Object> elementList = new HashMap<>();
 
     // 存放用户名称-菜单ID关联信息
-    private Map<String, List<Integer>> userMenuMap = new HashMap<>();
+    private Map<String, List<String>> userMenuMap = new HashMap<>();
 
     // 自增主键，配置文件中的数据默认从101开始递增
     AtomicInteger userIdx = new AtomicInteger(100);
@@ -62,6 +63,8 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
 
     @Autowired
     AbsSuperService ASS;
+    @Autowired
+    AbsTemplateService TS;
 
     @Override
     public void initialize() {
@@ -90,7 +93,7 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
         if (user == null) return;
         Set<M> menu_list = this.users.get(user.getUsername()).getMenus();
         Map<String, M> menu_map = menu_list.stream().collect(Collectors.toMap(
-            M::getUrl, m -> m, (k1, k2) -> k2
+                M::getUrl, m -> m, (k1, k2) -> k2
         ));
         // 菜单排序
         //Set<M> sort_list = new TreeSet<>(Comparator.comparing(M::getIndex));
@@ -99,7 +102,7 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
         Collections.sort(list, new Comparator<Map.Entry<String, M>>() {
             @Override
             public int compare(Map.Entry<String, M> _m1, Map.Entry<String, M> _m2) {
-                return _m1.getValue().getIndex() - _m2.getValue().getIndex();
+                return _m2.getValue().getId() - _m1.getValue().getId();
             }
         });
         Map<String, M> res_map = new LinkedHashMap<>();
@@ -182,184 +185,139 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
      * 从配置文件加载基础配置，形成【用户-路径】数据
      */
     private void _handle_path(Map<String, List<String>> _map) {
-        for (String key : _map.keySet()) {
-            List<String> val = _map.get(key);
-            M parent_menu = null;
-            M current_menu = null;
+        Map<String, Page> tpl_menus = TS.defTemplate.getPages();
+        for (String path : tpl_menus.keySet()) {
+            List<M> menu_list = null;
+            M menu = null;
+            M sub_menu = null;
             try {
-                parent_menu = this.build(menuClass());
-                current_menu = this.build(menuClass());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+                menu = this.build(menuClass());
+                sub_menu = this.build(menuClass());
+            } catch (IllegalAccessException | InstantiationException e) {
+                log.error("--构建后台菜单实例错误：" + e.getMessage());
             }
-            current_menu.setUrl(key);
-
-            this._handle_path_fields(val, current_menu);
-            this._handle_path_custom(val, current_menu);
-
-            // 暂时不使用自增ID
-            // this.menus.put(menuIdx.get(), m);
-            if (current_menu.getId() != current_menu.getParentId()) {
-                if (this.menus.containsKey(current_menu.getParentId())) {
-                    parent_menu = this.menus.get(current_menu.getParentId());
-                    parent_menu.getMenus().add(current_menu);
-                } else {
-                    parent_menu.setId(current_menu.getParentId());
-                    parent_menu.getMenus().add(current_menu);
+            // 先存储父级菜单，通过判断路径起始字符完成
+            for (String key : _map.keySet()) {
+                List<String> val = _map.get(key);
+                if (path.startsWith(key) && !key.equals(path) && !key.equals("/")) {
+                    menu.setUrl(key);
+                    this._handle_path_info(val, menu);
+                    if (!this.menus.containsKey(key)) {
+                        this.menus.put(menu.getUrl(), menu);
+                    }
                 }
-                this.menus.put(current_menu.getParentId(), parent_menu);
-            } else {
-                if (this.menus.containsKey(current_menu.getId())) {
-                    List<M> menus = this.menus.get(current_menu.getId()).getMenus();
-                    current_menu.setMenus(menus);
-                }
-                this.menus.put(current_menu.getId(), current_menu);
             }
-            // menuIdx.getAndIncrement();
-
-            this._handle_path_user(val, current_menu);
-            this._handle_path_role(val, current_menu);
-
-//            val.forEach(_row -> {
-//                String[] row_arr = _row.split("=");
-//                if (row_arr.length < 2) return;
-//                String row_key = row_arr[0].trim();
-//                String row_val = row_arr[1].trim();
-//                switch (row_key) {
-//                    case "user":
-//                        for (String name :) {
-//                            M m = (M) new SuperMenu();
-//                            m.setId(menuIdx.get());
-//                            m.setUrl(key);
-//                            this._set_user_menu(new String[]{name}), m);
-//                            menuIdx.getAndIncrement();
-//                            U su = this._get_user(name);
-//                            Set<SimpleGrantedAuthority> auths = su.getAuthorities();
-//                            if (!public_key.get().equals("")) {
-//                                auths.add(new SimpleGrantedAuthority(public_key.get()));
-//                            }
-//                            auths.add(new SimpleGrantedAuthority(key));
-//                            auths.add(new SimpleGrantedAuthority(key.endsWith("/") ? key + "**" : key + "/**"));
-//                            su.setAuthorities(auths);
-//                            this.users.put(name, su);
-//                        }
-//                        break;
-//                    case "role":
-//                        for (String name : user_arr) {
-//                            U su = this._get_user(name);
-//                            Set<SimpleGrantedAuthority> auths = su.getAuthorities();
-//                            if (!public_key.get().equals("")) {
-//                                auths.add(new SimpleGrantedAuthority(public_key.get()));
-//                            }
-//                            auths.add(new SimpleGrantedAuthority(key));
-//                            auths.add(new SimpleGrantedAuthority(key.endsWith("/") ? key + "**" : key + "/**"));
-//                            if (key.equals("/"))
-//                                auths.add(new SimpleGrantedAuthority("/index"));
-//                            su.setAuthorities(auths);
-//                            this.users.put(name, su);
-//                        }
-//                        break;
-//                }
-//            });
+            // 再存储子菜单，通过判断模版中的Page对象的parent元素来决定父级菜单
+            for (String key : _map.keySet()) {
+                List<String> val = _map.get(key);
+                if (key.equals(path)) {
+                    Page page = tpl_menus.get(path);
+                    sub_menu.setUrl(page.getUrl());
+                    sub_menu.setTpl(page.getTpl());
+                    this._handle_path_info(val, sub_menu);
+                    String parent_url = page.getParent();
+                    if (!parent_url.equals("")) {
+                        if (this.menus.containsKey(parent_url)) {
+                            M parent_menu = this.menus.get(page.getParent());
+                            menu_list = parent_menu.getMenus();
+                            if (!menu_list.contains(sub_menu))
+                                menu_list.add(sub_menu);
+                            parent_menu.setMenus(menu_list);
+                            this.menus.put(parent_menu.getUrl(), parent_menu);
+                        }
+                    } else {
+                        this.menus.put(sub_menu.getUrl(), sub_menu);
+                    }
+                }
+            }
         }
+//            this._handle_path_fields(val, current_menu);
+//            this._handle_path_custom(val, current_menu);
+//
+//            // 暂时不使用自增ID
+//            // this.menus.put(menuIdx.get(), m);
+//            if (current_menu.getId() != current_menu.getParentId()) {
+//                if (this.menus.containsKey(current_menu.getParentId())) {
+//                    parent_menu = this.menus.get(current_menu.getParentId());
+//                    parent_menu.getMenus().add(current_menu);
+//                } else {
+//                    parent_menu.setId(current_menu.getParentId());
+//                    parent_menu.getMenus().add(current_menu);
+//                }
+//                this.menus.put(current_menu.getParentId(), parent_menu);
+//            } else {
+//                if (this.menus.containsKey(current_menu.getId())) {
+//                    List<M> menus = this.menus.get(current_menu.getId()).getMenus();
+//                    current_menu.setMenus(menus);
+//                }
+//                this.menus.put(current_menu.getId(), current_menu);
+//            }
+//            // menuIdx.getAndIncrement();
+//
+//            this._handle_path_user(val, current_menu);
+//            this._handle_path_role(val, current_menu);
     }
 
     /**
-     * 处理路径下的字段信息，为菜单属性赋值
-     * 0:id 1:parentId 2:index 3:tpl 4:name 5:VISIBLE
+     * 处理配置文件中的菜单信息
+     * name：菜单名称Key
+     * user：可授权的用户
+     * role：可授权的角色
+     *
+     * @param _rows 菜单信息数组
+     * @param _menu 需要封装的菜单对象
      */
-    private void _handle_path_fields(List<String> _rows, M _menu) {
+    private void _handle_path_info(List<String> _rows, M _menu) {
         _rows.forEach(_row -> {
             String[] row_arr = _row.split("=", 2);
             if (row_arr.length < 2) return;
             String row_key = row_arr[0].trim();
             String row_val = row_arr[1].trim();
-            if (row_key.equals("fields")) {
-                String[] fields_arr = row_val.split(":");
-                _menu.setId(Integer.parseInt(fields_arr[0]));
-                _menu.setParentId(Integer.parseInt(fields_arr[1]));
-                _menu.setIndex(Integer.parseInt(fields_arr[2]));
-                _menu.setTpl(fields_arr[3]);
-                _menu.setName(fields_arr[4]);
-                _menu.setVisible(Integer.parseInt(fields_arr[5]));
-            }
-        });
-    }
-
-    /**
-     * 处理路径下的自定义字段，采用反射赋值
-     */
-    public void _handle_path_custom(List<String> _rows, M _menu) {
-        _rows.forEach(_row -> {
-            String[] row_arr = _row.split("=", 2);
-            if (row_arr.length < 2) return;
-            String row_key = row_arr[0].trim();
-            String row_val = row_arr[1].trim();
-            if (row_key.equals("custom")) {
-                String[] fields = row_val.split(",");
-                for (String field : fields) {
-                    String[] field_arr = field.split(":");
-                    String field_name = field_arr[0];
-                    String field_value = field_arr[1];
-                    ReflectUtils.invokeSet(_menu, field_name, field_value);
-                }
-            }
-        });
-    }
-
-    /**
-     * 处理路径下的用户信息，形成用户-菜单关联数据
-     */
-    private void _handle_path_user(List<String> _rows, M _menu) {
-        _rows.forEach(_row -> {
-            String[] row_arr = _row.split("=", 2);
-            if (row_arr.length < 2) return;
-            String row_key = row_arr[0].trim();
-            String row_val = row_arr[1].trim();
-            if (row_key.equals("user")) {
+            _menu.setId(menuIdx.get());
+            if (row_key.equals("name")) {
+                _menu.setName(row_val);
+                _menu.setVisible(1);
+            } else if (row_key.equals("user")) {
                 String[] user_arr = null;
                 if (row_val.equals("*")) {
                     user_arr = this.users.keySet().toArray(new String[this.users.keySet().size()]);
                 } else {
                     user_arr = row_val.split(",");
                 }
-                this._set_user_menu_map(user_arr, _menu.getId());
-            }
-        });
-    }
-
-    /**
-     * 处理路径下的角色信息，形成用户-菜单关联数据
-     */
-    private void _handle_path_role(List<String> _rows, M _menu) {
-        _rows.forEach(_row -> {
-            String[] row_arr = _row.split("=", 2);
-            if (row_arr.length < 2) return;
-            String row_key = row_arr[0].trim();
-            String row_val = row_arr[1].trim();
-            if (row_key.equals("role")) {
+                this._set_user_menu_map(user_arr, _menu.getUrl());
+            } else if (row_key.equals("role")) {
                 for (String role : row_val.split(",")) {
                     if (this.roleList.containsKey(role)) {
                         String[] user_arr = this.roleList.get(role);
-                        this._set_user_menu_map(user_arr, _menu.getId());
+                        this._set_user_menu_map(user_arr, _menu.getUrl());
                     }
                 }
+            } else {
+                // 自定义属性
+                try {
+                    String field_name = row_key;
+                    String field_value = row_val;
+                    ReflectUtils.invokeSet(_menu, field_name, field_value);
+                } catch (Exception e) {
+                    log.warn("菜单设值错误：" + e.getMessage() + " [ " + row_key + " ]");
+                }
             }
+            menuIdx.incrementAndGet();
         });
     }
+
 
     /**
      * 给用户-菜单ID关联信息设置值
      */
-    private void _set_user_menu_map(String[] _users, Integer _menu_id) {
+    private void _set_user_menu_map(String[] _users, String _menu_url) {
         for (String name : _users) {
             if (this.userMenuMap.containsKey(name)) {
-                this.userMenuMap.get(name).add(_menu_id);
+                if (!this.userMenuMap.get(name).contains(_menu_url))
+                    this.userMenuMap.get(name).add(_menu_url);
             } else {
-                this.userMenuMap.put(name, new ArrayList<Integer>() {{
-                    add(_menu_id);
+                this.userMenuMap.put(name, new ArrayList<String>() {{
+                    add(_menu_url);
                 }});
             }
         }
@@ -490,17 +448,14 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
     private void _set_user_menu() {
         if (!this.users.isEmpty()) {
             for (String name : this.userMenuMap.keySet()) {
-                List<Integer> menu_ids = this.userMenuMap.get(name);
-                if (!menu_ids.isEmpty()) {
-                    menu_ids.forEach(_id -> {
-                        if (this.users.containsKey(name) && this.menus.containsKey(_id)) {
-                            M m = this.menus.get(_id);
-                            if (m.getId() == m.getParentId()) {
-                                U u = this.users.get(name);
-                                Set<M> user_menus = u.getMenus();
-                                user_menus.add(m);
-                                u.setMenus(user_menus);
-                            }
+                List<String> menu_urls = this.userMenuMap.get(name);
+                if (!menu_urls.isEmpty()) {
+                    menu_urls.forEach(_url -> {
+                        if (this.users.containsKey(name) && this.menus.containsKey(_url)) {
+                            M m = this.menus.get(_url);
+                            U u = this.users.get(name);
+                            Set<M> user_menus = u.getMenus();
+                            user_menus.add(m);
                         }
                     });
                 }
@@ -539,43 +494,5 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
     protected abstract Class<R> roleClass();
 
     protected abstract Class<M> menuClass();
-
-    /**
-     * 暂时不使使用mergeXXXXX方法
-     * <p>
-     * 作用：将用户角色菜单与数据库数据合并
-     */
-    @Override
-    public List<M> mergeMenus() {
-        Map<Integer, M> res = new HashMap<>();
-        if (!ASS.getMenus().isEmpty())
-            res.putAll(ASS.getMenus());
-        if (!this.menus.isEmpty())
-            res.putAll(this.menus);
-        List<M> datas = res.values().stream().collect(Collectors.toList());
-        return datas;
-    }
-
-    @Override
-    public List<U> mergeUsers() {
-        Map<Object, U> res = new HashMap<>();
-        if (!ASS.getUsers().isEmpty())
-            res.putAll(ASS.getUsers());
-        if (!this.users.isEmpty())
-            res.putAll(this.users);
-        List<U> datas = res.values().stream().collect(Collectors.toList());
-        return datas;
-    }
-
-    @Override
-    public List<R> mergeRoles() {
-        Map<Integer, R> res = new HashMap<>();
-        if (!ASS.getRoles().isEmpty())
-            res.putAll(ASS.getRoles());
-        if (!this.roles.isEmpty())
-            res.putAll(this.roles);
-        List<R> datas = res.values().stream().collect(Collectors.toList());
-        return datas;
-    }
 
 }

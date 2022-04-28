@@ -84,7 +84,7 @@ public class AccessImpl implements IAccessService {
         for (SuperMenu menu : _menus) {
             String url = menu.getUrl();
             if (_uri.equals(url)) return true;
-            if (_uri.startsWith(url)) return true;
+//            if (_uri.startsWith(url)) return true;
             if (!menu.getMenus().isEmpty()) {
                 List<SuperMenu> sub_menus = menu.getMenus();
                 for (SuperMenu sub_menu : sub_menus) {
