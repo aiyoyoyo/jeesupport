@@ -240,6 +240,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             _hs.authorizeRequests()
                     .antMatchers(
                             tpl_url + tpl_assets,
+                            "/tpl/**",
                             "/dwr/**",
                             "/**/*.ico").permitAll()
                     .antMatchers(
