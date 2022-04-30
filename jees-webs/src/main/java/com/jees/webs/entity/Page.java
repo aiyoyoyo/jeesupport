@@ -12,6 +12,7 @@ public class Page {
     private String url;
     private String file;
     private String tpl;
+    private String parent;
 
     @Override
     public String toString(){

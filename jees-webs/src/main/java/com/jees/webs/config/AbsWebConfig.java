@@ -78,6 +78,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                     if( r_path.indexOf( "/" + t.getAssets() + "/" ) != -1 ) continue;
                     if( r_path.startsWith("_") ) continue;
                     if( r_path.indexOf("/_") != -1 ) continue;
+                    if (r_path.startsWith("/")) r_path = r_path.substring(1);
 
                     log.debug( "Resource uri path:" + r_path );
                     r_path = r_path.replace( root_path , "" );
@@ -88,6 +89,7 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                     String file = r_path.substring( l_idx + 1 );
                     String url = r_path.replace( tpl, "" ).replace( file, "" );
                     String path = r_path.replace( ".html", "" );
+                    String parent = "";
 
                     if( file.equalsIgnoreCase( defPage + ".html" ) ){
                         url = tpl + url;
@@ -95,7 +97,8 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                         url = tpl + url + file.replace(".html", "" );
                     }
                     if( templateService.isDefault( tpl ) ) url = url.replace( "/" + templateService.getDefaultTemplate().getName(), "" );
-                    Page p = new Page( url, path, tpl );
+                    if( !url.equals("/") ) parent = url.substring( 0, url.lastIndexOf("/") );
+                    Page p = new Page( url, path, tpl, parent);
                     t.addPage( p );
                 }
             } catch (IOException e) {
@@ -120,10 +123,11 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                 String r_path = r.getURI().getPath();
                 int idx = r_path.lastIndexOf( "/" );
                 String file = r_path.substring( idx + 1 );
+                String parent = r_path.substring( 0, idx );
                 String url = install_path + "/" + file.replace( ".html", "" );
                 String path = url;
 
-                Page page = new Page( url, path, install_path );
+                Page page = new Page( url, path, install_path, parent );
                 view_pages.add( page );
             }
         } catch (IOException e) {

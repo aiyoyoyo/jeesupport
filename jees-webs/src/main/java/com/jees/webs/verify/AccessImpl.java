@@ -1,6 +1,8 @@
 package com.jees.webs.verify;
 
 import com.jees.webs.abs.AbsVerifyService;
+import com.jees.webs.entity.SuperMenu;
+import com.jees.webs.entity.SuperUser;
 import com.jees.webs.support.IAccessService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,14 +39,15 @@ public class AccessImpl implements IAccessService {
     public boolean hasPath(HttpServletRequest _request, Authentication _auth) {
         Object obj = _auth.getPrincipal();
         if (obj instanceof UserDetails) {
-            UserDetails user = (UserDetails) obj;
-            Collection<? extends GrantedAuthority> auths = user.getAuthorities();
-            if (verifyService.getUsers().containsKey(user.getUsername())) {
-                auths = verifyService.getUsers().get(user.getUsername()).getAuthorities();
-            }
+            SuperUser user = (SuperUser) obj;
+            Set<SuperMenu> menus = user.getMenus();
+//            Collection<? extends GrantedAuthority> auths = user.getAuthorities();
+//            if (verifyService.getUsers().containsKey(user.getUsername())) {
+//                auths = verifyService.getUsers().get(user.getUsername()).getAuthorities();
+//            }
             String uri = _request.getRequestURI();
             log.debug("--校验路径：URI=[" + uri + "]");
-            return allowPath(uri, auths);
+            return allowMenu(uri, menus);
         }
         return false;
     }
@@ -72,6 +78,23 @@ public class AccessImpl implements IAccessService {
             return allowUser(remote_name, _request);
         }
         return true;
+    }
+
+    public boolean allowMenu(String _uri, Set<SuperMenu> _menus) {
+        for (SuperMenu menu : _menus) {
+            String url = menu.getUrl();
+            if (_uri.equals(url)) return true;
+//            if (_uri.startsWith(url)) return true;
+            if (!menu.getMenus().isEmpty()) {
+                List<SuperMenu> sub_menus = menu.getMenus();
+                for (SuperMenu sub_menu : sub_menus) {
+                    String sub_url = sub_menu.getUrl();
+                    if (_uri.equals(sub_url)) return true;
+                    if (_uri.startsWith(sub_url)) return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean allowPath(String _uri, Collection<? extends GrantedAuthority> _auths) {

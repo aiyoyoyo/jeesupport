@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
@@ -124,7 +125,20 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
         user_menus = _load_user_menus_( user.getRoles() );
 //        }
 
-        session.setAttribute( Session_Menus_EL, user_menus );
+        List<Map.Entry<String, M>> list = new LinkedList<>(user_menus.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, M>>() {
+            @Override
+            public int compare(Map.Entry<String, M> _m1, Map.Entry<String, M> _m2) {
+                return _m1.getValue().getIndex() - _m2.getValue().getIndex();
+            }
+        });
+
+        Map<String, M> sort_menus = new LinkedHashMap<>();
+        for (Map.Entry<String, M> entry : list) {
+            sort_menus.put(entry.getKey(), entry.getValue());
+        }
+
+        session.setAttribute( Session_Menus_EL, sort_menus );
     }
 
     @Override

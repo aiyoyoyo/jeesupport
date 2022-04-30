@@ -82,7 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
                 SavedRequest savedRequest = requestCache.getRequest( _request, _response );
                 String       url          = null;
-                if( savedRequest != null ) url = savedRequest.getRedirectUrl();
+                String       err_url      = "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err;
+                if( savedRequest != null && !savedRequest.getRedirectUrl().contains(err_url) ) url = savedRequest.getRedirectUrl();
                 log.debug( "--登陆后转向：" + url );
 
                 if( url == null ) redirectStrategy().sendRedirect( _request, _response, "/" );
@@ -119,9 +120,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             public void handle(HttpServletRequest _request, HttpServletResponse _response, AccessDeniedException _e) throws IOException, ServletException {
                 log.debug("--重定向页面：" + _e.getMessage());
                 _request.getSession().setAttribute("message", _e.getMessage());
-                String access_msg = _request.getSession().getAttribute("access_msg").toString();
-                if (!access_msg.equals(""))
-                    _request.getSession().setAttribute("message", access_msg);
+                Object access_msg = _request.getSession().getAttribute("access_msg");
+                if (access_msg != null)
+                    _request.getSession().setAttribute("message", access_msg.toString());
                 String uri = _request.getRequestURI();
                 String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
                 String l403_page = "/" + CommonConfig.getString("jees.webs.verify.403", "403");
@@ -204,7 +205,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 tpl_url = is_default ? m.getUrl() : m.getTpl() + "/" + m.getUrl();
                 if( m.isPermit() && !tpl_access ){
                     log.debug( "--访问权限：URL=[" + tpl_url + "], ROLE=[]" );
-                    _hs.authorizeRequests().antMatchers( tpl_url );
+                    _hs.authorizeRequests().antMatchers( tpl_url ).permitAll();
                 }else{
                     @SuppressWarnings( "unchecked" )
                     List< String > list = absSS.loadMenuRoles( m.getId() );
@@ -239,6 +240,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             _hs.authorizeRequests()
                     .antMatchers(
                             tpl_url + tpl_assets,
+                            "/tpl/**",
                             "/dwr/**",
                             "/**/*.ico").permitAll()
                     .antMatchers(
@@ -278,16 +280,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
         // 配置文件权限认证启用
         if ( CommonConfig.getBoolean( "jees.webs.verify.enable", false ) ) {
-            _configure_base_(_hs);
+            // 如果开启数据库链接那么就全套走数据库验证与授权
+            if ( CommonConfig.getBoolean( "jees.jdbs.enable", false ) )
+                _configure_tpl_( _hs );
+            else
+                _configure_base_(_hs);
         } else {
-            if( !installConfig.isInstalled() ){
+            boolean installed = installConfig.isInstalled();
+            if( !installed ){
                 _hs.authorizeRequests().antMatchers( "/**" ).permitAll();
-                _configure_dwr_( _hs );
                 return;
             }
-            _configure_tpl_( _hs );
         }
+        // 放行dwr跨域
         _configure_dwr_(_hs);
+        // 放行登录相关接口
         _configure_login_(_hs);
 
         // 其他
