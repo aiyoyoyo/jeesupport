@@ -1,6 +1,7 @@
 package com.jees.webs.config;
 
 import com.jees.common.CommonConfig;
+import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.abs.AbsSuperService;
@@ -10,9 +11,12 @@ import com.jees.webs.entity.Template;
 import com.jees.webs.support.ISupportEL;
 import com.jees.webs.support.ITemplateService;
 import com.jees.webs.support.IVerifyService;
+import com.jees.webs.verify.AnonymousAccess;
+import com.jees.webs.verify.AnonymousMapping;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -34,14 +38,14 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Spring security核心配置项
@@ -126,6 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 String uri = _request.getRequestURI();
                 String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
                 String l403_page = "/" + CommonConfig.getString("jees.webs.verify.403", "403");
+
                 if (uri.equals("/")) {
                     // 登录页面无权限则重定向至登录页面
                     _response.sendRedirect(login_page);
@@ -248,12 +253,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                             tpl_url + logout_page,
                             tpl_url + l403_page).permitAll();
         }
+        Collection< Object > anons = CommonContextHolder.getApplicationContext()
+                .getBeansWithAnnotation(AnonymousAccess.class).values();
+
+        Set<String> anon_url_map = new HashSet<>();
+        for( Object anon : anons ){
+            Method[] mths = anon.getClass().getMethods();
+            String cls_name = anon.getClass().getName();
+            for ( Method m : mths ) {
+                AnonymousMapping mr = AnnotationUtils.findAnnotation( m , AnonymousMapping.class );
+                if( mr != null ){
+                    RequestMapping mp = AnnotationUtils.findAnnotation(m, RequestMapping.class);
+                    String[] urls = mp.value();
+                    for( String url : urls ) {
+                        if ( !url.isEmpty() && !anon_url_map.contains(url)) anon_url_map.add(url);
+                    }
+                }
+            }
+        }
+        if( !anon_url_map.isEmpty() ) {
+            String[] aono_urls = new String[ anon_url_map.size() ];
+            anon_url_map.toArray( aono_urls );
+            log.info( "匿名访问地址：" + Arrays.toString( aono_urls ) );
+            _hs.authorizeRequests().antMatchers( aono_urls ).permitAll();
+        }
+
         _hs.authorizeRequests().antMatchers(login_page, logout_page, l403_page).permitAll();
         _hs.authorizeRequests().anyRequest().access(
                 "@accessImpl.hasPath(request, authentication) and " +
                         "@accessImpl.hasBlackIP(request, authentication) and " +
                         "@accessImpl.hasBlackUser(request, authentication)"
         );
+
     }
 
     private void _configure_login_( HttpSecurity _hs ) throws Exception{

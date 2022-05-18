@@ -71,7 +71,15 @@ public abstract class AbsWebConfig implements WebMvcConfigurer {
                 for( Resource r : rfs ){
                     String r_path = "";
                     if( r.getURI() != null ){
-                        r_path = r.getURI().getPath();
+//                        jar:file:/D:/repository/maven/com/jees/datascale/sdk-admin/2.0.6/sdk-admin-2.0.6.jar!/templates/datavue/index.html
+                        String uri_str = r.getURI().toString();
+                        if( uri_str.startsWith( "jar:file" ) ){
+                            // jar包的文件
+                            uri_str = uri_str.substring( uri_str.lastIndexOf("!" ) + 1 );
+                            r_path = uri_str;
+                        }else {
+                            r_path = r.getURI().getPath();
+                        }
                     }else{
                         r_path = r.toString();
                     }

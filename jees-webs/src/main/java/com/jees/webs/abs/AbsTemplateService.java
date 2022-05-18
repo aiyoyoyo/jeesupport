@@ -149,15 +149,19 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
     @Override
     public List< M > loadTemplateMenus( String _tpl ){
         List< M > list;
-        if( CommonConfig.getBoolean( "jees.jdbs.enable", false ) ){
-            list = sDao.select( sDao.getDefaultDB(), getMenuClass() );
-        }else if( CommonConfig.getBoolean( "jees.redis.enable", false ) ){
-            list = rDao.findAll( getMenuClass() );
-        }else{
+        if( CommonConfig.getString( "jees.webs.verify.mode", "local" ).equalsIgnoreCase( "local") ){
             // TODO 从文件加载菜单
             list = new ArrayList<>();
+        }else{
+            if( CommonConfig.getBoolean( "jees.jdbs.enable", false ) ){
+                list = sDao.select( sDao.getDefaultDB(), getMenuClass() );
+            }else if( CommonConfig.getBoolean( "jees.redis.enable", false ) ){
+                list = rDao.findAll( getMenuClass() );
+            }else{
+                // TODO 从文件加载菜单
+                list = new ArrayList<>();
+            }
         }
-
         return list;
     }
 }
