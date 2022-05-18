@@ -185,7 +185,7 @@ public abstract class AbsVerifyService<M extends SuperMenu, U extends SuperUser,
      * 从配置文件加载基础配置，形成【用户-路径】数据
      */
     private void _handle_path(Map<String, List<String>> _map) {
-        Map<String, Page> tpl_menus = TS.defTemplate.getPages();
+        Map<String, Page> tpl_menus = TS.getDefaultTemplate().getPages();
         for (String path : tpl_menus.keySet()) {
             List<M> menu_list = null;
             M menu = null;

@@ -2,12 +2,14 @@ package com.jees.webs.abs;
 
 import com.jees.common.CommonConfig;
 import com.jees.core.database.support.IRedisDao;
+import com.jees.core.database.support.ISupportDao;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.Template;
 import com.jees.webs.support.ISupportEL;
 import com.jees.webs.support.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,7 +25,9 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
     Map< String, Template > templates = new HashMap<>();
     Template                defTemplate;
     @Autowired
-    IRedisDao sDB;
+    IRedisDao rDao;
+    @Autowired
+    ISupportDao sDao;
 
     public AbsTemplateService(){
         // 加载配置中的模版和主题
@@ -141,9 +145,19 @@ public abstract class AbsTemplateService<M extends SuperMenu> implements ITempla
         return template.getName() + "/" + _path;
     }
 
+    @Transactional
     @Override
     public List< M > loadTemplateMenus( String _tpl ){
-        List< M > list = sDB.findAll( getMenuClass() );
+        List< M > list;
+        if( CommonConfig.getBoolean( "jees.jdbs.enable", false ) ){
+            list = sDao.select( sDao.getDefaultDB(), getMenuClass() );
+        }else if( CommonConfig.getBoolean( "jees.redis.enable", false ) ){
+            list = rDao.findAll( getMenuClass() );
+        }else{
+            // TODO 从文件加载菜单
+            list = new ArrayList<>();
+        }
+
         return list;
     }
 }
