@@ -38,6 +38,8 @@
         <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
         <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
+        <mysql5.version>5.1.44</mysql5.version>
+        <mysql8.version>8.0.12</mysql8.version>
         <jodatime.version>2.10.8</jodatime.version>
         <lombok.version>1.16.20</lombok.version>
         <netty.version>4.1.50.Final</netty.version>

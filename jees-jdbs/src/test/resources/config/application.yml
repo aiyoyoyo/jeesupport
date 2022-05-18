@@ -96,8 +96,8 @@ jees:
     minPoolSize: 1
     maxIdleTime: 60
     packagesToScan: com.jees.test.entity
-    hibernate:
-     dialect: org.hibernate.dialect.MySQL55Dialect
+     hibernate:
+      dialect: org.hibernate.dialect.MySQL55Dialect
      showSql: true
      factoryClass: org.hibernate.transaction.JTATransactionFactory
      # create/update/none

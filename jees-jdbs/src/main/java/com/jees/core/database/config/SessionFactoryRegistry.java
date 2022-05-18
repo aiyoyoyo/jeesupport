@@ -37,10 +37,15 @@ public class SessionFactoryRegistry {
         xaDataSource.setBeanName( bean );
 
 //        // 这里没有列举AbstractDataSourceBean的所有可用属性
-        if (type.equalsIgnoreCase("mysql")) {
+        if (type.startsWith("mysql")) {
             xaProperties.setProperty("url", CommonConfig.getString(head + "url"));
             xaProperties.setProperty("pinGlobalTxToPhysicalConnection",CommonConfig.getString(head + "pinGlobalTxToPhysicalConnection", "true"));
-            xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName") );
+
+            if( type.equalsIgnoreCase("mysql8")){
+                xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName", "com.mysql.cj.jdbc.MysqlXADataSource" ) );
+            }else{
+                xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName",  "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource") );
+            }
         }else if (type.equalsIgnoreCase("orcale")) {
             xaProperties.setProperty("URL", CommonConfig.getString(head + "url"));
             xaDataSource.setXaDataSourceClassName( CommonConfig.getString(head + "xaDataSourceClassName") );
@@ -91,9 +96,14 @@ public class SessionFactoryRegistry {
             Properties hibernateProperties = new Properties();
 
             String type = CommonConfig.getString(head + "dbtype");
-            if (type.equalsIgnoreCase("mysql")) {
-                hibernateProperties.setProperty("hibernate.dialect",
-                        CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.MySQL55Dialect") );
+            if (type.startsWith("mysql") ) {
+                if( type.equalsIgnoreCase("mysql8")){
+                    hibernateProperties.setProperty("hibernate.dialect",
+                            CommonConfig.getString(hibernate + "dialect", "org.hibernate.dialect.MySQL8Dialect"));
+                }else{
+                    hibernateProperties.setProperty("hibernate.dialect",
+                            CommonConfig.getString(hibernate + "dialect", "org.hibernate.dialect.MySQL55Dialect"));
+                }
             }else if(type.equalsIgnoreCase("orcale")){
                 hibernateProperties.setProperty("hibernate.dialect",
                         CommonConfig.getString( hibernate + "dialect","org.hibernate.dialect.Oracle8iDialect") );
