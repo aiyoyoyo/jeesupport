@@ -1,8 +1,7 @@
 package com.jees.webs.remote;
 
-import com.jees.webs.abs.AbsInstallService;
-import com.jees.webs.entity.Template;
-import com.jees.webs.support.ITemplateService;
+import com.jees.webs.modals.templates.struct.Template;
+import com.jees.webs.modals.templates.interf.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -16,8 +15,6 @@ public class SuperRemote{
 
     @Autowired
     ITemplateService TS;
-    @Autowired
-    AbsInstallService IS;
 
     @RemoteMethod
     public List< Template > loadTemplates(){
@@ -27,6 +24,5 @@ public class SuperRemote{
     @RemoteMethod
     public void reload() throws Exception{
         log.debug( "--reload" );
-        IS.refresh();
     }
 }

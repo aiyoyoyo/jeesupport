@@ -1,21 +1,13 @@
 package com.jees.webs.verify;
 
-import com.jees.webs.abs.AbsVerifyService;
-import com.jees.webs.entity.SuperUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.context.WebEngineContext;
 import org.thymeleaf.engine.AttributeName;
-import org.thymeleaf.model.IModel;
-import org.thymeleaf.model.IModelFactory;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractAttributeTagProcessor;
-import org.thymeleaf.processor.element.AbstractElementTagProcessor;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
-import org.thymeleaf.spring5.context.SpringContextUtils;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,30 +50,30 @@ public class JeesTagProcessor extends AbstractAttributeTagProcessor {
             }
         }
         if (attr.size() > 0) {
-            WebEngineContext context = (WebEngineContext) _context;
-            HttpServletRequest request = context.getRequest();
-            HttpSession session = context.getSession();
-            String uri = request.getRequestURI();
-            SuperUser su = (SuperUser) session.getAttribute("USER");
-            if (su == null) return;
-            Set<SimpleGrantedAuthority> auths = su.getAuthorities();
-            for (SimpleGrantedAuthority auth : auths) {
-                if (auth.equals(new SimpleGrantedAuthority(uri)) && elements.containsKey(uri)) {
-                    Map<String, Object> ele_map = (Map<String, Object>) elements.get(uri);
-                    attr.forEach(a -> {
-                        if (ele_map.containsKey(a)) {
-                            List<String> users = (List<String>) ele_map.get(a);
-                            if (!users.isEmpty()) {
-                                users.forEach(user -> {
-                                    if (!user.equals(su.getUsername())) {
-                                        _handler.removeElement();
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
+//            WebEngineContext context = (WebEngineContext) _context;
+//            HttpServletRequest request = context.getRequest();
+//            HttpSession session = context.getSession();
+//            String uri = request.getRequestURI();
+//            SuperUser su = (SuperUser) session.getAttribute("USER");
+//            if (su == null) return;
+//            Set<SimpleGrantedAuthority> auths = su.getAuthorities();
+//            for (SimpleGrantedAuthority auth : auths) {
+//                if (auth.equals(new SimpleGrantedAuthority(uri)) && elements.containsKey(uri)) {
+//                    Map<String, Object> ele_map = (Map<String, Object>) elements.get(uri);
+//                    attr.forEach(a -> {
+//                        if (ele_map.containsKey(a)) {
+//                            List<String> users = (List<String>) ele_map.get(a);
+//                            if (!users.isEmpty()) {
+//                                users.forEach(user -> {
+//                                    if (!user.equals(su.getUsername())) {
+//                                        _handler.removeElement();
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    });
+//                }
+//            }
 //            IModelFactory factory = _context.getModelFactory();
 //            IModel model = factory.createModel();
 //            model.add(factory.createOpenElementTag("span style='display:none;'"));

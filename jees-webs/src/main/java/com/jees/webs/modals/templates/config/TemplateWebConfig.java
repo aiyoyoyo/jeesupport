@@ -1,0 +1,107 @@
+package com.jees.webs.modals.templates.config;
+
+import com.jees.common.CommonConfig;
+import com.jees.common.CommonContextHolder;
+import com.jees.tool.utils.UrlUtil;
+import com.jees.webs.entity.SuperMenu;
+import com.jees.webs.modals.install.interf.IInstallModel;
+import com.jees.webs.modals.templates.interf.ITemplateService;
+import com.jees.webs.modals.templates.struct.Page;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.*;
+
+import java.util.Collection;
+import java.util.StringTokenizer;
+
+/**
+ * 配置页面文件访问规则
+ */
+@Log4j2
+@Configuration
+public class TemplateWebConfig implements WebMvcConfigurer {
+    @Autowired
+    ITemplateService<SuperMenu>   iTS;
+    @Autowired
+    HandlerInterceptor            handlerInterceptor;
+
+    /**
+     * 拦截器
+     * @param _registry 拦截器
+     */
+    @Override
+    public void addInterceptors( InterceptorRegistry _registry) {
+        InterceptorRegistration R = _registry.addInterceptor( handlerInterceptor ).addPathPatterns( "/**" );
+
+        StringTokenizer st = CommonConfig.getStringTokenizer("spring.resources.static-locations");
+        while( st.hasMoreTokens() ){
+            String url = UrlUtil.path2url( st.nextToken(), false );
+            if( url != null ) R.excludePathPatterns( "/" + url + "/**" );
+        }
+        this.iTS.getTemplateAll().forEach( t -> {
+            if( this.iTS.isTemplate( t.getName() ) ){
+                R.excludePathPatterns( "/" + t.getAssets() + "/**" );
+            }
+            R.excludePathPatterns( "/" + t.getName() + "/" + t.getAssets() + "/**" );
+        } );
+    }
+
+    /**
+     * 这里根据模版设置，注册静态资源
+     * @param _registry 拦截器
+     */
+    @Override
+    public void addResourceHandlers( ResourceHandlerRegistry _registry ) {
+        // 此处的静态根路径不能和模版中静态目录assets重名
+        StringTokenizer st = CommonConfig.getStringTokenizer("spring.resources.static-locations");
+        ResourceHandlerRegistration handler = null;
+        while( st.hasMoreTokens() ){
+            String path = st.nextToken();
+            String url = UrlUtil.path2url( path, false );
+            if( url != null ){
+                log.debug( "--注册静态资源：RES=[" + url + "], PATH=[" + path + "]" );
+                _registry.addResourceHandler(url + "/**").addResourceLocations( path );
+            }
+        }
+
+        this.iTS.getTemplateAll().forEach( t-> {
+            String url = t.getName() + "/" + t.getAssets();
+            String ass_path = t.getTemplatePath() + "/" + t.getAssets() + "/";
+            log.debug( "--注册静态资源：RES=[" + url + "], PATH=[" + ass_path + "]" );
+            if( this.iTS.isDefault( t.getName() ) ){
+                // 将默认模板路径指定为根路径
+                _registry.addResourceHandler(t.getAssets() + "/**" ).addResourceLocations( ass_path );
+            }
+            _registry.addResourceHandler( url + "/**" ).addResourceLocations( ass_path );
+        } );
+    }
+
+    /**
+     * 根据模版文件夹内的文件，加载页面及对应URL映射
+     * @param _registry 拦截器
+     */
+    @Override
+    public void addViewControllers( ViewControllerRegistry _registry ) {
+        this.iTS.getTemplateAll().forEach( t-> {
+            Collection<Page> pages = this.iTS.getTemplatePages(t);
+            if( this.iTS.isDefault( t.getName() ) ){
+                pages.forEach( p -> {
+                    _registry.addViewController( p.getUrl().replace( t.getName(), "" ) ).setViewName( p.getPath() );
+                });
+                String index_page = CommonConfig.getString( "jees.webs.modals.templates.index", "index" );
+                String page_suffix = CommonConfig.getString( "spring.thymeleaf.suffix", ".html" );
+                _registry.addViewController( "/" ).setViewName( t.getName() + "/" + index_page + page_suffix );
+            }
+            pages.forEach( p -> {
+                _registry.addViewController( p.getUrl() ).setViewName( p.getPath() );
+            });
+        });
+
+        IInstallModel iIM = CommonContextHolder.getBean( IInstallModel.class );
+        if( !iIM.isFinish() ){
+            iIM.setViewController( _registry );
+        }
+    }
+}

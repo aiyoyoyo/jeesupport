@@ -29,7 +29,7 @@
 	<include resource="config/logback-jdbs.xml" />
 	<include resource="config/logback-webs.xml" />
 
-	<root level="INFO">
+	<root level="DEBUG">
 		<appender-ref ref="JEESUPPORT"/>
 		<appender-ref ref="JEESUPPORT_APPENDER"/>
 	</root>

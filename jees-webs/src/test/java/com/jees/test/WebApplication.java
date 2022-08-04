@@ -4,9 +4,8 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.CustomSystemUtil;
 import com.jees.tool.utils.FileUtil;
-import com.jees.webs.support.ISuperService;
+import com.jees.webs.core.interf.ISupport;
 import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -27,12 +26,12 @@ public class WebApplication {
         FileUtil.project();
         FileUtil.webroot();
         SpringApplication.run( WebApplication.class, args);
-        CommonContextHolder.getBean( ISuperService.class ).initialize();
+        CommonContextHolder.getBean( ISupport.class ).initialize();
         log.info( "服务器启动: http"
                 + ( CommonConfig.getBoolean( "server.useSSL", false ) ? "s" : "" )
                 + "://" + CustomSystemUtil.INTRANET_IP  + ":"
                 + CommonConfig.getString( "server.port", "8080" )
-                + CommonConfig.getString( "server.path", "/" )
+                + CommonConfig.getString( "server.servlet.context-path", "/" )
         );
     }
 }

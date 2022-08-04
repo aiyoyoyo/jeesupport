@@ -4,9 +4,8 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.CustomSystemUtil;
 import com.jees.tool.utils.FileUtil;
-import com.jees.webs.support.ISuperService;
+import com.jees.webs.core.interf.ISupport;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -14,7 +13,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -34,13 +32,13 @@ public class Application extends SpringBootServletInitializer {
         super.onStartup(servletContext);
 
         System.out.println( "Project Path:" + FileUtil.path( "classpath:" ) );
+        CommonContextHolder.getBean( ISupport.class ).initialize();
         log.info( "服务器启动: http"
                 + ( CommonConfig.getBoolean( "server.useSSL", false ) ? "s" : "" )
                 + "://" + CustomSystemUtil.INTRANET_IP  + ":"
                 + CommonConfig.getString( "server.port", "8080" )
                 + CommonConfig.getString( "server.servlet.context-path", "/" )
         );
-        CommonContextHolder.getBean( ISuperService.class ).initialize();
     }
 
     //    @Bean

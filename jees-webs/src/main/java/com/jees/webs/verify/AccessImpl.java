@@ -6,27 +6,20 @@ import com.jees.webs.entity.SuperUser;
 import com.jees.webs.support.IAccessService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 自定义过滤规则
  * 使用：_hs.authorizeRequests().anyRequest().access("@pathAccessImpl.hasPath(request, authentication)");
  */
-@Component
 @Log4j2
 public class AccessImpl implements IAccessService {
     @Autowired
@@ -114,52 +107,52 @@ public class AccessImpl implements IAccessService {
 
     public boolean allowIP(String _ip, HttpServletRequest _request) {
         // 遍历IP黑名单
-        if (verifyService.getBlackList().containsKey("ip")) {
-            boolean res_flag = true;
-            String[] ips = (String[]) verifyService.getBlackList().get("ip");
-            for (String ip : ips) {
-                Pattern pattern = Pattern.compile(ip);
-                Matcher matcher = pattern.matcher(_ip);
-                if (matcher.find()) {
-                    // throw new BadCredentialsException("Invalid IP");
-                    if (_request != null)
-                        _request.getSession().setAttribute("access_msg", "Invalid IP");
-                    res_flag = false;
-                }
-                if (!res_flag) return false;
-            }
-        }
+//        if (verifyService.getBlackList().containsKey("ip")) {
+//            boolean res_flag = true;
+//            String[] ips = (String[]) verifyService.getBlackList().get("ip");
+//            for (String ip : ips) {
+//                Pattern pattern = Pattern.compile(ip);
+//                Matcher matcher = pattern.matcher(_ip);
+//                if (matcher.find()) {
+//                    // throw new BadCredentialsException("Invalid IP");
+//                    if (_request != null)
+//                        _request.getSession().setAttribute("access_msg", "Invalid IP");
+//                    res_flag = false;
+//                }
+//                if (!res_flag) return false;
+//            }
+//        }
         return true;
     }
 
     public boolean allowUser(String _name, HttpServletRequest _request) {
-        // 遍历user黑名单
-        if (verifyService.getBlackList().containsKey("user")) {
-            boolean res_flag = true;
-            String[] users = (String[]) verifyService.getBlackList().get("user");
-            for (String user : users) {
-                res_flag = !user.equals(_name);
-                if (_request != null)
-                    _request.getSession().setAttribute("access_msg", "该用户无权限");
-                if (!res_flag) return false;
-            }
-        }
-        // 遍历role黑名单
-        if (verifyService.getBlackList().containsKey("role")) {
-            boolean res_flag = true;
-            String[] roles = (String[]) verifyService.getBlackList().get("role");
-            for (String role : roles) {
-                if (verifyService.getRoleList().containsKey(role)) {
-                    String[] users = (String[]) verifyService.getRoleList().get(role);
-                    for (String user : users) {
-                        res_flag = !user.equals(_name);
-                    }
-                }
-                if (_request != null)
-                    _request.getSession().setAttribute("access_msg", "该角色无权限");
-                if (!res_flag) return false;
-            }
-        }
+//        // 遍历user黑名单
+//        if (verifyService.getBlackList().containsKey("user")) {
+//            boolean res_flag = true;
+//            String[] users = (String[]) verifyService.getBlackList().get("user");
+//            for (String user : users) {
+//                res_flag = !user.equals(_name);
+//                if (_request != null)
+//                    _request.getSession().setAttribute("access_msg", "该用户无权限");
+//                if (!res_flag) return false;
+//            }
+//        }
+//        // 遍历role黑名单
+//        if (verifyService.getBlackList().containsKey("role")) {
+//            boolean res_flag = true;
+//            String[] roles = (String[]) verifyService.getBlackList().get("role");
+//            for (String role : roles) {
+//                if (verifyService.getRoleList().containsKey(role)) {
+//                    String[] users = (String[]) verifyService.getRoleList().get(role);
+//                    for (String user : users) {
+//                        res_flag = !user.equals(_name);
+//                    }
+//                }
+//                if (_request != null)
+//                    _request.getSession().setAttribute("access_msg", "该角色无权限");
+//                if (!res_flag) return false;
+//            }
+//        }
         return true;
     }
 

@@ -6,7 +6,7 @@ spring:
  application:
   name: WebApplication
  autoconfigure:
-  exclude:org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
  config:
   location: config/
  resources:
@@ -18,7 +18,7 @@ spring:
    enabled: false
  thymeleaf:
   cache: false
-  prefix: templates/
+  prefix: classpath:templates/
   check-template-location: true
   suffix: .html
   encoding: UTF-8
@@ -44,29 +44,36 @@ spring:
   package: com.jees.test.entity
 
 server:
- port: 8080
+ port: 8088
  servlet:
-  context-path: /jees-webs/
+  context-path: /
 jees:
  webs:
-  install:
-   file: classpath:.install
-   tpl: install
-   step: 4
-  dwr:
-   debug: true
-   url: /dwr
-  maxSession: 1000
-  superman: superman
-  superpwd: 6
-  encodePwd: true
-  defPage: index
-  templates: default
-  login: login
-  logout: logout
+# 新的配置方案将以模块化形式配置
+  modals:
+   install:
+    enable: false
+    tpl: install
+   dwr:
+    debug: true
+    url: /dwr
+    lazyLoad: false
+   templates:
+    dirs: default
+    index: index
+    default:
+     assets: assets
+  security:
+   enable: false
+   cross: false
+   superman: superman
+   superpwd: 6
+   encodePwd: true
+   login: login
+   logout: logout
+   header:
+    frameOptions: false
+   maxSession: 1000
   identity: 10000
-  default:
-   assets: assets
-   access: true
  jdbs:
   enable: false

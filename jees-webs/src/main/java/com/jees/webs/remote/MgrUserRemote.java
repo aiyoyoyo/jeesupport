@@ -7,7 +7,6 @@ import com.jees.webs.abs.AbsSuperService;
 import com.jees.webs.entity.SuperUser;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 @RemoteProxy
 public class MgrUserRemote{
 
-    @Autowired
+//    @Autowired
     AbsSuperService     absSS;
 
     @RemoteMethod
@@ -40,7 +39,7 @@ public class MgrUserRemote{
 
         u.setUsername( RandomUtil.s_random_string( 6 ) );
         u.setPassword( u.getUsername() );
-        if( CommonConfig.getBoolean( "jees.webs.encodePwd", true ) ){
+        if( CommonConfig.getBoolean( "jees.webs.security.encodePwd", true ) ){
             u.setPassword( MD5Utils.s_encode( u.getPassword() ) );
         }
 

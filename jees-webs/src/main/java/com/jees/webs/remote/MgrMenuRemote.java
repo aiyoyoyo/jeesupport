@@ -4,7 +4,6 @@ import com.jees.webs.abs.AbsSuperService;
 import com.jees.webs.entity.SuperMenu;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 @RemoteProxy
 public class MgrMenuRemote{
 
-    @Autowired
+//    @Autowired
     AbsSuperService     absSS;
 
     @RemoteMethod

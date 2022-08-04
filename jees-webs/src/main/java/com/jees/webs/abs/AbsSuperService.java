@@ -7,13 +7,12 @@ import com.jees.webs.dao.IdentityDao;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.support.ISuperService;
-import com.jees.webs.support.ISupportEL;
+import com.jees.webs.core.interf.ISuperService;
+import com.jees.webs.core.interf.ISupportEL;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,17 +45,17 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
 
     @Override
     public void initialize(){
-        menus = sDB.findHashAll( getExMenuClass() );
-        roles = sDB.findHashAll( getExRoleClass() );
-        users = sDB.findHashAll( getExUserClass() );
-
-        Set< M > menus_sets = new HashSet<>( menus.values() );
-        for( M m : menus_sets ){
-            if( !m.isRoot() ){
-                M sm = menus.get( m.getParentId() );
-                sm.addMenu( m );
-            }
-        }
+//        menus = sDB.findHashAll( getExMenuClass() );
+//        roles = sDB.findHashAll( getExRoleClass() );
+//        users = sDB.findHashAll( getExUserClass() );
+//
+//        Set< M > menus_sets = new HashSet<>( menus.values() );
+//        for( M m : menus_sets ){
+//            if( !m.isRoot() ){
+//                M sm = menus.get( m.getParentId() );
+//                sm.addMenu( m );
+//            }
+//        }
     }
 
     public List< String > loadMenuRoles( int _menu ){
@@ -287,7 +286,7 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
     public void save( U _user ){
         U      u   = users.get( _user.getId() );
         String pwd = _user.getPassword();
-        if( CommonConfig.getBoolean( "jees.webs.encodePwd", true ) ){
+        if( CommonConfig.getBoolean( "jees.webs.security.encodePwd", true ) ){
             if( pwd == null ){
                 pwd = u.getPassword();
             }else{
