@@ -386,7 +386,8 @@ public class FileUtil {
      * @param _all 为真时，当源文件为目录时拷贝源文件夹下的所有子文件到目标文件夹
      */
     public void copy( String _form, String _to, boolean _all ){
-
+//        File file_form = new File( _form );
+//        file_form.renameTo( new File( _to ) );
     }
 
     /**
@@ -411,5 +412,13 @@ public class FileUtil {
             log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
         }
         return buffer.toString();
+    }
+
+    /**
+     * 删除文件
+     * @param _file
+     */
+    public void delete( String _file ){
+
     }
 }
