@@ -3,15 +3,14 @@ package com.jees.webs.modals.templates.service;
 import com.jees.common.CommonConfig;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.core.database.support.ISupportDao;
-import com.jees.tool.utils.FileUtil;
 import com.jees.webs.core.interf.ISupportEL;
-import com.jees.webs.modals.templates.interf.ITemplateService;
 import com.jees.webs.modals.templates.struct.Page;
 import com.jees.webs.modals.templates.struct.Template;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-public class TemplateService<M> implements ITemplateService, ISupportEL {
+public class TemplateService<M> implements ISupportEL {
     /**
      * 模板对象
      */
@@ -49,19 +48,6 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
             }
         }
         return sRootTpl;
-    }
-
-    private String _try_tpl_path(){
-        String tmp_path = "";
-        try {
-            tmp_path = FileUtil.path( getRootTpl() );
-            if( tmp_path.startsWith( "/" ) )tmp_path = tmp_path.replaceFirst( "/", "" );
-            tmp_path = tmp_path.replaceAll("%20", " ");
-        } catch (Exception e) {
-            log.error( "模版路径错误: PATH=[" + getRootTpl() + "]", e );
-        }
-
-        return tmp_path;
     }
 
     public TemplateService(){
@@ -182,80 +168,44 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
         return tpl_pages;
     }
 
-    /**
-     * 通过模版，设置用户Session信息，用于页面显示
-     * @param _tpl 模版名
-     * @param _request HttpServletRequest
-     */
-    @Override
-    public void loadTemplate( String _tpl, HttpServletRequest _request ){
-        String app_path = CommonConfig.getString( "server.servlet.context-path", "/" );
-        if( app_path.endsWith( "/" ) ){
-            app_path = app_path.substring( 0, app_path.length() - 1 );
-        }
-        log.debug( "Load template el: app=[" + app_path + "]" );
-        HttpSession session = _request.getSession();
-
-        Template template = ( Template ) session.getAttribute( Template_Object_EL );
-        if( template == null ){
-            templates.values().forEach( t->{
-                session.setAttribute( Template_EL + t.getName(), t );
-                session.setAttribute( Template_Assets_EL + t.getName(), t.getName() + "/" + t.getAssets() );
-            } );
-        }
-
-        template = getTemplate( _tpl );
-        if( template == null ){
-            template = getDefaultTemplate();
-        }
-        session.setAttribute( Template_Name_EL, template.getName() );
-        session.setAttribute( Template_Object_EL, template );
-        session.setAttribute( Session_Templates_EL, templates.values() );
-        _request.setAttribute( Template_Object_EL, template );
-        _request.setAttribute( Assets_Current_EL, app_path + "/" + template.getName() + "/" + template.getAssets() );
-        _request.setAttribute( App_EL, app_path );
-    }
-
-    @Override
     public Template getTemplate( String _tpl ){
         return templates.get( _tpl );
     }
 
-    @Override
+
     public List< String > getTemplateNames(){
         return templates.keySet().stream().collect( Collectors.toList() );
     }
 
-    @Override
+
     public Template getDefaultTemplate(){
         return templates.get( sTplName );
     }
 
-    @Override
     public void setDefTemplate( String _tpl ){
         if( isTemplate( _tpl ) && !isDefault( _tpl) ) {
             sTplName = _tpl;
         }
     }
 
-    @Override
+
     public List< Template > getTemplateAll(){
         return templates.values().stream().collect( Collectors.toList() );
     }
 
-    @Override
+
     public boolean isTemplate( String _tpl ){
         if( _tpl.isEmpty() || _tpl.equals( "/" ) ) return true;
         return templates.containsKey( _tpl );
     }
 
-    @Override
+
     public boolean isDefault( String _tpl ){
         if( _tpl.isEmpty() || _tpl.equals( "/" ) ) return true;
         return sTplName.equalsIgnoreCase( _tpl );
     }
 
-    @Override
+
     public String getTemplatePath( String _url, HttpServletRequest _request ){
         HttpSession session  = _request.getSession();
         String tpl = (String) session.getAttribute( Template_Name_EL );
@@ -266,7 +216,7 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
         return page.getPath();
     }
 
-    @Override
+
     public Page getTemplatePage( String _tpl, String _url ){
         Template template = this.getTemplate(_tpl);
         Page page = template.findPage( _url );
@@ -276,12 +226,12 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
         return page;
     }
 
-    @Override
+
     public Class<M> getMenuClass() {
         return null;
     }
 
-    @Override
+
     public Collection<Page> getTemplatePages(Template _tpl) {
         Map<String, Page> tpl_pages = _tpl.getPages();
         if( tpl_pages == null || tpl_pages.isEmpty() ){
@@ -290,8 +240,46 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
         return _tpl.getPages().values();
     }
 
+    public void setHttpSecurity(HttpSecurity _hs) throws Exception {
+        _hs.authorizeRequests().antMatchers("/**/*.ico").permitAll();
+        Collection<Template> tpls = this.templates.values();
+        for( Template t : tpls ){
+            _hs.authorizeRequests().antMatchers("/" + t.getName() + "/" + t.getAssets() + "/**").permitAll();
+            if( this.isDefault( t.getName() ) ){
+                _hs.authorizeRequests().antMatchers("/" + t.getAssets() + "/**").permitAll();
+            }
+        }
+    }
+
+    /**
+     * 设置页面用的模板相关变量
+     * @param _request
+     */
+    public void setRequestEL(HttpServletRequest _request) {
+        HttpSession session = _request.getSession();
+
+        Template template = ( Template ) session.getAttribute( Template_Object_EL );
+        if( template == null ){
+            template = this.getDefaultTemplate();
+//            templates.values().forEach( t->{
+//                session.setAttribute( Template_EL + t.getName(), t );
+//                session.setAttribute( Template_Assets_EL + t.getName(), t.getName() + "/" + t.getAssets() );
+//            } );
+        }
+
+        session.setAttribute( Template_Name_EL, template.getName() );
+        session.setAttribute( Template_Object_EL, template );
+        _request.setAttribute( Template_Object_EL, template );
+        _request.setAttribute( Template_Name_EL, template.getName() );
+        _request.setAttribute( Template_Current_EL, template.getName() );
+        _request.setAttribute( Assets_Current_EL, "/" + template.getName() + "/" + template.getAssets() );
+        if( isDefault( template.getName() ) ){
+            _request.setAttribute( Assets_Current_EL, "/" + template.getAssets() );
+            _request.setAttribute( Template_Current_EL, "" );
+        }
+    }
+
     @Transactional
-    @Override
     public List< M > loadTemplateMenus( String _tpl ){
         List< M > list;
         if( CommonConfig.getString( "jees.webs.verify.mode", "local" ).equalsIgnoreCase( "local") ){
@@ -309,4 +297,5 @@ public class TemplateService<M> implements ITemplateService, ISupportEL {
         }
         return list;
     }
+
 }

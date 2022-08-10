@@ -1,7 +1,7 @@
 package com.jees.webs.remote;
 
+import com.jees.webs.modals.templates.service.TemplateService;
 import com.jees.webs.modals.templates.struct.Template;
-import com.jees.webs.modals.templates.interf.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -14,11 +14,11 @@ import java.util.List;
 public class SuperRemote{
 
     @Autowired
-    ITemplateService TS;
+    TemplateService templateService;
 
     @RemoteMethod
     public List< Template > loadTemplates(){
-        return TS.getTemplateAll();
+        return templateService.getTemplateAll();
     }
 
     @RemoteMethod

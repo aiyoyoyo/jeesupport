@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${APP}">Title</title>
 </head>
 <body>
 登录页
+<form th:action="@{/login}" method="post" >
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <button type="submit">登录</button>
+</form>
+<a th:href="|${APP}${TPL}/assets/test.png|">测试</a>
 </body>
 </html>

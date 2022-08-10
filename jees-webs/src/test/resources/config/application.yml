@@ -50,6 +50,8 @@ server:
 jees:
  webs:
 # 新的配置方案将以模块化形式配置
+  maxSession: 1000
+  identity: 10000
   modals:
    install:
     enable: false
@@ -64,8 +66,9 @@ jees:
     default:
      assets: assets
   security:
-   enable: false
    cross: false
+   # 安全认证方式 none/local/database/mixed
+   model: local
    superman: superman
    superpwd: 6
    encodePwd: true
@@ -73,7 +76,5 @@ jees:
    logout: logout
    header:
     frameOptions: false
-   maxSession: 1000
-  identity: 10000
  jdbs:
   enable: false

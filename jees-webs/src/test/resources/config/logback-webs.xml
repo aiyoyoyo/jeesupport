@@ -15,6 +15,13 @@
 			<maxFileSize>4MB</maxFileSize>
 		</rollingPolicy>
 	</appender>
+	<!-- DBUEG 模式下，非必要日志 -->
+	<logger name="org.springframework.data.convert" level="INFO"/>
+	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="INFO"/>
+	<logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener"
+			level="INFO"/>
+	<logger name="org.thymeleaf.ConfigurationPrinterHelper" level="INFO"/>
+	<logger name="com.jees.common.CommonConfig" level="INFO"/>
 
 	<logger name="com.jees.webs" level="DEBUG">
 		<appender-ref ref="WEBS_APPENDER"/>

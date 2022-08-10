@@ -5,7 +5,7 @@ import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.UrlUtil;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.modals.install.interf.IInstallModel;
-import com.jees.webs.modals.templates.interf.ITemplateService;
+import com.jees.webs.modals.templates.service.TemplateService;
 import com.jees.webs.modals.templates.struct.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 @Configuration
 public class TemplateWebConfig implements WebMvcConfigurer {
     @Autowired
-    ITemplateService<SuperMenu>   iTS;
+    TemplateService<SuperMenu>    templateService;
     @Autowired
     HandlerInterceptor            handlerInterceptor;
 
@@ -40,8 +40,8 @@ public class TemplateWebConfig implements WebMvcConfigurer {
             String url = UrlUtil.path2url( st.nextToken(), false );
             if( url != null ) R.excludePathPatterns( "/" + url + "/**" );
         }
-        this.iTS.getTemplateAll().forEach( t -> {
-            if( this.iTS.isTemplate( t.getName() ) ){
+        this.templateService.getTemplateAll().forEach( t -> {
+            if( this.templateService.isTemplate( t.getName() ) ){
                 R.excludePathPatterns( "/" + t.getAssets() + "/**" );
             }
             R.excludePathPatterns( "/" + t.getName() + "/" + t.getAssets() + "/**" );
@@ -66,11 +66,11 @@ public class TemplateWebConfig implements WebMvcConfigurer {
             }
         }
 
-        this.iTS.getTemplateAll().forEach( t-> {
+        this.templateService.getTemplateAll().forEach( t-> {
             String url = t.getName() + "/" + t.getAssets();
             String ass_path = t.getTemplatePath() + "/" + t.getAssets() + "/";
             log.debug( "--注册静态资源：RES=[" + url + "], PATH=[" + ass_path + "]" );
-            if( this.iTS.isDefault( t.getName() ) ){
+            if( this.templateService.isDefault( t.getName() ) ){
                 // 将默认模板路径指定为根路径
                 _registry.addResourceHandler(t.getAssets() + "/**" ).addResourceLocations( ass_path );
             }
@@ -84,9 +84,9 @@ public class TemplateWebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers( ViewControllerRegistry _registry ) {
-        this.iTS.getTemplateAll().forEach( t-> {
-            Collection<Page> pages = this.iTS.getTemplatePages(t);
-            if( this.iTS.isDefault( t.getName() ) ){
+        this.templateService.getTemplateAll().forEach( t-> {
+            Collection<Page> pages = this.templateService.getTemplatePages(t);
+            if( this.templateService.isDefault( t.getName() ) ){
                 pages.forEach( p -> {
                     _registry.addViewController( p.getUrl().replace( t.getName(), "" ) ).setViewName( p.getPath() );
                 });

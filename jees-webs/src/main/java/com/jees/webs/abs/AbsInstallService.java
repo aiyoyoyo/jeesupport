@@ -1,26 +1,18 @@
 package com.jees.webs.abs;
 
 import com.jees.common.CommonConfig;
-import com.jees.core.database.support.IRedisDao;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.dao.IdentityDao;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.modals.templates.interf.ITemplateService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Log4j2
 public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUser, R extends SuperRole > {
     @Autowired
-    ITemplateService templateService;
-    @Autowired
-    IRedisDao        sDB;
-    @Autowired
     IdentityDao      identityDao;
-//    @Autowired
-//    AbsSuperService  absSS;
 
     public void install( String _account, String _password, String _group ) throws Exception{
         U u = buildUser();
