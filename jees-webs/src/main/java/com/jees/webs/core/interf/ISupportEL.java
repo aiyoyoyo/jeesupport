@@ -5,6 +5,7 @@ package com.jees.webs.core.interf;
  */
 public interface ISupportEL {
     String ROLE_SUPERMAN                = "SUPERMAN";
+    String ROLE_ANONYMOUS               = "anonymousUser";
 
     String App_EL                       = "APP";
 

@@ -28,6 +28,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public String getDefaultDB(){
 		return CommonConfig.get( "jees.jdbs.defaultDB", "default" );
 	}
+
 	private void _set_parameter( Query _query, String[] _param, Object[] _value ){
 		if ( _param != null && _value != null ) {
 			for( int i = 0; i < _param.length; i ++ ){

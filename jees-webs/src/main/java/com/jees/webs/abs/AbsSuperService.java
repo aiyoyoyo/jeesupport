@@ -3,12 +3,12 @@ package com.jees.webs.abs;
 import com.jees.common.CommonConfig;
 import com.jees.core.database.support.AbsRedisDao;
 import com.jees.tool.crypto.MD5Utils;
+import com.jees.webs.core.interf.ISuperService;
+import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.dao.IdentityDao;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.core.interf.ISuperService;
-import com.jees.webs.core.interf.ISupportEL;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -77,21 +77,21 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
     }
 
     public Set< SimpleGrantedAuthority > loadUserRoles( U u ){
-        if( roles.isEmpty() ){
-            this.initialize();
-        }
-
-        Iterator< Integer > r_it = u.getRoles().iterator();
-        while( r_it.hasNext() ){
-            Integer r_id = r_it.next();
-            R       r    = roles.getOrDefault( r_id, null );
-            if( r != null ){
-                SimpleGrantedAuthority sga = new SimpleGrantedAuthority( r.getName() );
-                if( !u.getAuthorities().contains( sga ) ){
-                    u.getAuthorities().add( sga );
-                }
-            }
-        }
+//        if( roles.isEmpty() ){
+//            this.initialize();
+//        }
+//
+//        Iterator< Integer > r_it = u.getRoles().iterator();
+//        while( r_it.hasNext() ){
+//            Integer r_id = r_it.next();
+//            R       r    = roles.getOrDefault( r_id, null );
+//            if( r != null ){
+//                SimpleGrantedAuthority sga = new SimpleGrantedAuthority( r.getName() );
+//                if( !u.getAuthorities().contains( sga ) ){
+//                    u.getAuthorities().add( sga );
+//                }
+//            }
+//        }
 
         return u.getAuthorities();
     }
@@ -121,7 +121,7 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
 
         Map< String, M > user_menus = ( Map ) session.getAttribute( Session_Menus_EL );
 //        if( user_menus == null ){
-        user_menus = _load_user_menus_( user.getRoles() );
+//        user_menus = _load_user_menus_( user.getRoles() );
 //        }
 
         List<Map.Entry<String, M>> list = new LinkedList<>(user_menus.entrySet());
@@ -299,7 +299,7 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
         u.setLocked( _user.isLocked() );
         u.setEnabled( _user.isEnabled() );
         u.setUsername( _user.getUsername() );
-        u.setRoles( _user.getRoles() );
+//        u.setRoles( _user.getRoles() );
 
         sDB.update( u );
     }

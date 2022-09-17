@@ -86,16 +86,28 @@ public class TemplateWebConfig implements WebMvcConfigurer {
     public void addViewControllers( ViewControllerRegistry _registry ) {
         this.templateService.getTemplateAll().forEach( t-> {
             Collection<Page> pages = this.templateService.getTemplatePages(t);
+            String index_page = CommonConfig.getString( "jees.webs.modals.templates.index", "index" );
+            String page_suffix = CommonConfig.getString( "spring.thymeleaf.suffix", ".html" );
             if( this.templateService.isDefault( t.getName() ) ){
                 pages.forEach( p -> {
-                    _registry.addViewController( p.getUrl().replace( t.getName(), "" ) ).setViewName( p.getPath() );
+                    if( p.getPath().endsWith( index_page + page_suffix ) ){
+                        String path = p.getPath().replace( page_suffix, "" );
+                        String url = p.getUrl().replace( index_page, "" );
+                        _registry.addViewController( url.replace( t.getName(), "" ) ).setViewName( path );
+                    }else{
+                        _registry.addViewController( p.getUrl().replace( t.getName(), "" ) ).setViewName( p.getPath() );
+                    }
                 });
-                String index_page = CommonConfig.getString( "jees.webs.modals.templates.index", "index" );
-                String page_suffix = CommonConfig.getString( "spring.thymeleaf.suffix", ".html" );
                 _registry.addViewController( "/" ).setViewName( t.getName() + "/" + index_page + page_suffix );
             }
             pages.forEach( p -> {
-                _registry.addViewController( p.getUrl() ).setViewName( p.getPath() );
+                if( p.getPath().endsWith( index_page + page_suffix ) ){
+                    String path = p.getPath().replace( page_suffix, "" );
+                    String url = p.getUrl().replace( index_page, "" );
+                    _registry.addViewController( url ).setViewName( path );
+                }else{
+                    _registry.addViewController( p.getUrl() ).setViewName( p.getPath() );
+                }
             });
         });
 

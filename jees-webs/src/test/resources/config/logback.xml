@@ -2,7 +2,7 @@
 <!-- 转载：http://blog.csdn.net/appleyk/article/details/78717388 -->
 <configuration>
 	<property name="LOG_PATH" value=".log" />
-	<property name="LOG_PATTERN" value="[%p]%d{yyyy-MM-dd HH:mm:ss }[%C:%L] - %m%n" />
+	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{1.} - %msg%n" />
 	<property name="JEESUPPORT_FILE" value="jeesupport" />
 
 	<appender name="JEESUPPORT" class="ch.qos.logback.core.ConsoleAppender">

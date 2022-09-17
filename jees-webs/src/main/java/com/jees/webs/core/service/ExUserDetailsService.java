@@ -7,7 +7,9 @@ import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
+import com.jees.webs.security.service.VerifyModelService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +27,9 @@ import java.io.IOException;
 public class ExUserDetailsService<U extends SuperUser> implements UserDetailsService, ISupportEL{
     private final String USER_SUPERMAN = "sUpermAn";
     private       String supermanPassword;
+
+    @Autowired
+    VerifyModelService verifyModelService;
 
     /**
      * 超级账号在启动时随机生成密码，可以通过日志查询。
@@ -52,7 +57,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
      * @return 用户信息
      */
     @SuppressWarnings( "unchecked" )
-    protected UserDetails checkSuperman( String _username ){
+    protected SuperUser checkSuperman( String _username ){
         SuperUser user = new SuperUser();
         if( _username.equals( CommonConfig.getString( "jees.webs.security.superman", USER_SUPERMAN ) ) ){
             log.warn( "--使用超级账号登陆。" );
@@ -71,15 +76,15 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
 
         return null;
     }
-
+    @Override
     public UserDetails loadUserByUsername( String _username ) throws UsernameNotFoundException{
-        UserDetails user = checkSuperman(_username);
-        if (CommonConfig.getBoolean("jees.jdbs.enable", false)) {
-            // redis中查找用户
-            if (user == null) user = findUserByUsername(_username);
-        } else {
-            // 配置文件中查找用户
-//            if (user == null) user = absVS.findUserByUsername(_username);
+        SuperUser user = checkSuperman(_username);
+        if( user == null ){
+            // 一般用户入库
+            user = verifyModelService.findUserByUsername( _username );
+        }
+        if( user == null ){
+            throw new UsernameNotFoundException( "用户[" + _username + "]不存在" );
         }
         log.debug("--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]");
         build(user);
@@ -87,19 +92,8 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
         return user;
     }
 
-    protected U findUserByUsername( String _username ){
-        log.debug( "--查找登陆用户信息：U=[" + _username + "]" );
-//        List< U > list = sDB.findByEquals( "username", _username, superClass() );
-//        if( list.size() == 1 ){
-//            U u = list.get( 0 );
-////            absSS.loadUserRoles( u );
-//            return u;
-//        }
-        throw new UsernameNotFoundException( "用户不存在" );
-    }
-
-    protected void build( UserDetails _user ){
-        User.withUserDetails( _user ).build();
+    protected void build( SuperUser _user ){
+        User.withUserDetails( _user ).roles( "" + _user.getRoles() ).build();
     }
 
     protected Class< U > superClass(){

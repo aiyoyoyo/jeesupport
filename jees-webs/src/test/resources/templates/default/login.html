@@ -7,12 +7,14 @@
     <title th:text="${APP}">Title</title>
 </head>
 <body>
-登录页
+登录页 - 当前访问模式<t th:text="*{@commonConfig.get('jees.webs.security.model')}"></t>
 <form th:action="@{/login}" method="post" >
     <input type="text" name="username" />
     <input type="password" name="password" />
     <button type="submit">登录</button>
 </form>
-<a th:href="|${APP}${TPL}/assets/test.png|">测试</a>
+</br>
+<a th:href="|${APP}${TPL}/anonymous.html|" target="_blank">测试匿名页面</a></br>
+<a th:href="|${APP}${TPL}/anonymous|" target="_blank">测试匿名URL</a>
 </body>
 </html>

@@ -68,6 +68,11 @@ public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements Use
     public void addRole( R _role ){
         if( !roles.contains( _role.getId() ) ){
             roles.add( _role.getId() );
+            authorities.add( new SimpleGrantedAuthority(_role.getName() ) );
         }
+    }
+
+    public long getRoles(){
+        return roles.stream().mapToLong(Integer::longValue).sum();
     }
 }

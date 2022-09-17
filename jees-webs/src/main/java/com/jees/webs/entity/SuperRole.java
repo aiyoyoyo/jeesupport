@@ -8,6 +8,7 @@ import org.directwebremoting.annotations.RemoteProperty;
 import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,6 +34,10 @@ public class SuperRole < M extends SuperMenu, U extends SuperUser >{
     int id;
     @RemoteProperty
     String name;
+    @RemoteProperty
+    Set<String> users;
+
+
     @RemoteProperty
     List< Integer > menus = new ArrayList<>();
 

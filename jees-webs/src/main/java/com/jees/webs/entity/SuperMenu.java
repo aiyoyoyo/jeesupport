@@ -23,9 +23,13 @@ public class SuperMenu <R extends SuperRole> {
     @RemoteProperty
     String name;
     @RemoteProperty
-    String tpl;
-    @RemoteProperty
     String url;
+
+
+
+
+    @RemoteProperty
+    String tpl;
     @RemoteProperty
     int visible;
     @RemoteProperty

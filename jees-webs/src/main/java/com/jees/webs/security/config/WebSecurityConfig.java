@@ -1,9 +1,8 @@
 package com.jees.webs.security.config;
 
 import com.jees.common.CommonConfig;
-import com.jees.tool.crypto.MD5Utils;
-import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.service.ExUserDetailsService;
+import com.jees.webs.core.service.SupportELService;
 import com.jees.webs.modals.dwr.config.DwrConfig;
 import com.jees.webs.modals.templates.service.TemplateService;
 import com.jees.webs.security.service.SecurityService;
@@ -17,14 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,6 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     SecurityService     securityService;
     @Autowired
     TemplateService     templateService;
+    @Autowired
+    SupportELService    supportELService;
 
     SessionRegistry sessionRegistry;
     /**
@@ -78,21 +71,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         _auth.userDetailsService( userDetailsService ).passwordEncoder( new PasswordEncoder(){
             @Override
             public String encode( CharSequence _pwd ){
-                String encode =  ( String ) _pwd;
-                if( CommonConfig.getBoolean( "jees.webs.security.encodePwd", true ) ){
-                    encode = MD5Utils.s_encode( encode );
-                }
-                log.debug( "--ENCODE PWD: [" + _pwd + "]->ENCODE: [" + encode + "]" );
-                return encode;
+                return securityService.encodePwd((String) _pwd);
             }
 
             @Override
             public boolean matches( CharSequence _pwd, String _encode ){
-                String encode =  ( String ) _pwd;
-                if( CommonConfig.getBoolean( "jees.webs.security.encodePwd", true ) ){
-                    encode = MD5Utils.s_encode( encode );
-                }
-                return _encode.equals( encode );
+                return _encode.equals( securityService.encodePwd((String) _pwd) );
             }
         } );
     }
@@ -103,76 +87,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             sessionRegistry = new SessionRegistryImpl();
         }
         return sessionRegistry;
-    }
-
-    /**
-     * 登陆成功后的处理
-     *
-     * @return 登陆账号后验证结果
-     */
-    @Bean
-    public AuthenticationSuccessHandler successHandler(){
-        return (_request, _response, _auth) -> {
-            log.debug( "--登陆成功" );
-
-            _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getPrincipal() );
-            sessionRegistry().registerNewSession( _request.getSession().getId(), _auth.getPrincipal() );
-
-            RequestCache requestCache = new HttpSessionRequestCache();
-
-            SavedRequest savedRequest = requestCache.getRequest( _request, _response );
-            String       url          = null;
-            String       err_url      = "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err;
-            if( savedRequest != null && !savedRequest.getRedirectUrl().contains(err_url) ) url = savedRequest.getRedirectUrl();
-            log.debug( "--登陆后转向：" + url );
-
-            if( url == null ) redirectStrategy().sendRedirect( _request, _response, "/" );
-            else _response.sendRedirect( url );
-        };
-    }
-
-    /**
-     * 登陆失败后的处理，提示可以通过URL参数或者Session参数获取
-     *
-     * @return 验证函数
-     */
-    @Bean
-    public AuthenticationFailureHandler failureHandler(){
-        return (_request, _response, _e) -> {
-            log.debug( "--登陆失败：" + _e.getMessage() );
-            _request.getSession().setAttribute("message", _e.getMessage());
-            redirectStrategy().sendRedirect( _request, _response,
-                    "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err );
-        };
-    }
-
-    /**
-     * 访问无权限后的处理，重定向至自定义403页面
-     */
-    @Bean
-    public AccessDeniedHandler deniedHandler() {
-        return (_request, _response, _e) -> {
-            log.debug("--重定向页面：" + _e.getMessage());
-            _request.getSession().setAttribute("message", _e.getMessage());
-            Object access_msg = _request.getSession().getAttribute("access_msg");
-            if (access_msg != null)
-                _request.getSession().setAttribute("message", access_msg.toString());
-            String uri = _request.getRequestURI();
-            String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
-            String l403_page = "/" + CommonConfig.getString("jees.webs.verify.403", "403");
-
-            if (uri.equals("/")) {
-                // 登录页面无权限则重定向至登录页面
-                _response.sendRedirect(login_page);
-            } else {
-                // 其他页面无权限则重定向至自定义/403
-                _response.sendRedirect(l403_page);
-            }
-        };
-    }
-
-    @Bean
-    public RedirectStrategy redirectStrategy(){
-        return new DefaultRedirectStrategy();
     }
 }

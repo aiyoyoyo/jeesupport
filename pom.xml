@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -31,7 +31,7 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
-        <jees.version>1.6.0-SNAPSHOT</jees.version>
+        <jees.version>1.7.0-SNAPSHOT</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
@@ -177,4 +177,28 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.aiyoyoyo</groupId>
+                <artifactId>jees-jtls</artifactId>
+                <version>${jees.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.aiyoyoyo</groupId>
+                <artifactId>jees-jdbs</artifactId>
+                <version>${jees.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.aiyoyoyo</groupId>
+                <artifactId>jees-jsts</artifactId>
+                <version>${jees.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.aiyoyoyo</groupId>
+                <artifactId>jees-webs</artifactId>
+                <version>${jees.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

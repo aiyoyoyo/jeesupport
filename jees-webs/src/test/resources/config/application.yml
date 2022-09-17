@@ -67,13 +67,14 @@ jees:
      assets: assets
   security:
    cross: false
-   # 安全认证方式 none/local/database/mixed
+   # 安全认证方式 none/local/database/mixed(暂不支持）
    model: local
    superman: superman
    superpwd: 6
    encodePwd: true
    login: login
    logout: logout
+   anonymous:
    header:
     frameOptions: false
  jdbs:

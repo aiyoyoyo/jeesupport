@@ -1,13 +1,12 @@
 package com.jees.webs.abs;
 
 import com.jees.webs.core.interf.ISupportEL;
-import com.jees.webs.support.IVerifyService;
 import lombok.extern.log4j.Log4j2;
 /**
  * AbsVerifyService 抽象实现类，实现了操作权限配置文件verify.cfg的一些方法。
  */
 @Log4j2
-public abstract class AbsVerifyService implements IVerifyService, ISupportEL {
+public abstract class AbsVerifyService implements ISupportEL {
 
 //    // 配置文件中的菜单，角色，用户信息，可与AbsSuperService中合并
 //    @Getter

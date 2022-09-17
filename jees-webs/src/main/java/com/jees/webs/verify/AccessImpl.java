@@ -3,7 +3,6 @@ package com.jees.webs.verify;
 import com.jees.webs.abs.AbsVerifyService;
 import com.jees.webs.entity.SuperMenu;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.support.IAccessService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,14 +20,13 @@ import java.util.Set;
  * 使用：_hs.authorizeRequests().anyRequest().access("@pathAccessImpl.hasPath(request, authentication)");
  */
 @Log4j2
-public class AccessImpl implements IAccessService {
+public class AccessImpl {
     @Autowired
     AbsVerifyService verifyService;
 
     /**
      * 校验请求URI路径
      */
-    @Override
     public boolean hasPath(HttpServletRequest _request, Authentication _auth) {
         Object obj = _auth.getPrincipal();
         if (obj instanceof UserDetails) {
@@ -48,7 +46,6 @@ public class AccessImpl implements IAccessService {
     /**
      * 校验黑名单IP地址
      */
-    @Override
     public boolean hasBlackIP(HttpServletRequest _request, Authentication _auth) {
         Object obj = _auth.getDetails();
         if (obj instanceof WebAuthenticationDetails) {
@@ -62,7 +59,6 @@ public class AccessImpl implements IAccessService {
     /**
      * 校验黑名单用户
      */
-    @Override
     public boolean hasBlackUser(HttpServletRequest _request, Authentication _auth) {
         Object obj = _auth.getPrincipal();
         if (obj instanceof UserDetails) {

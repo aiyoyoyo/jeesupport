@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jeesupport</artifactId>
-        <version>1.6.0-SNAPSHOT</version>
+        <version>1.7.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
@@ -39,7 +39,6 @@
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jtls</artifactId>
-            <version>${jees.version}</version>
         </dependency>
         <!--Spring Boot -->
         <dependency>

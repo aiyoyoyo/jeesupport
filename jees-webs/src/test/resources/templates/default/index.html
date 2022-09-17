@@ -6,5 +6,13 @@
 </head>
 <body>
 测试首页
+<a th:href="|${APP}/logout|">登出</a></br>
+<a th:href="|${APP}${TPL}/assets/test.png|" target="_blank">测试访问资源1</a></br>
+<a th:href="|${APP}${TPL}/assets/test/test.js|" target="_blank">测试访问资源2</a></br>
+<a th:href="|${APP}${TPL}/anonymous.html|" target="_blank">测试匿名页面</a></br>
+<a th:href="|${APP}${TPL}/anonymous|" target="_blank">测试匿名URL</a></br>
+<a th:href="|${APP}${TPL}/access1|" target="_blank">测试授权页面1</a></br>
+<a th:href="|${APP}${TPL}/access/|" target="_blank">测试授权页面2-1</a></br>
+<a th:href="|${APP}${TPL}/access/access2|" target="_blank">测试授权页面2-2</a></br>
 </body>
 </html>
