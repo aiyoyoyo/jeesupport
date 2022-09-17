@@ -96,14 +96,14 @@ jees:
     minPoolSize: 1
     maxIdleTime: 60
     packagesToScan: com.jees.test.entity
-     hibernate:
+    hibernate:
       dialect: org.hibernate.dialect.MySQL55Dialect
-     showSql: true
-     factoryClass: org.hibernate.transaction.JTATransactionFactory
-     # create/update/none
-     hbm2ddl: create
-     platform: com.jees.core.database.config.AtomikosJtaPlatform
-     coordinatorClass: jta
+    showSql: true
+    factoryClass: org.hibernate.transaction.JTATransactionFactory
+    # create/update/none
+    hbm2ddl: create
+    platform: com.jees.core.database.config.AtomikosJtaPlatform
+    coordinatorClass: jta
 ## 多数据库 ###
 #   testb:
 #    dbtype: mysql

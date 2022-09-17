@@ -48,6 +48,8 @@ public class DwrConfig extends AbsSupportModel {
         _hs.authorizeRequests().antMatchers( dwr_url + "/**" ).permitAll();
         if( CommonConfig.getBoolean( "jees.webs.security.cross", false ) ){
             _hs.csrf().ignoringAntMatchers( dwr_url + "/**" );
+        }else{
+            _hs.csrf().disable();
         }
     }
 }

@@ -257,7 +257,13 @@ public class FileUtil {
 
             sub_idx = path.indexOf("target");
             devMaven = sub_idx != -1;
-
+            if (!devMaven) {
+                sub_idx = FileUtil.classpath().indexOf("target");
+                devMaven = sub_idx != -1;
+                if( devMaven ){
+                    path = FileUtil.classpath();
+                }
+            }
             if (!devMaven) {
                 sub_idx = path.indexOf("out");
                 devWebroot = sub_idx != -1;

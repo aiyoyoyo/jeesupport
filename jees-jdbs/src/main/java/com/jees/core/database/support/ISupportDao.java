@@ -75,6 +75,8 @@ public interface ISupportDao {
 
 	int executeBySQL( String _db , String _sql , String[] _param, Object[] _value );
 
+	int executeBySQL( String _db , String _sql , Map _data );
+
 	void commit();
 
 	String getDefaultDB();

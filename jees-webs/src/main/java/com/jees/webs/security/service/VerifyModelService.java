@@ -127,19 +127,18 @@ public class VerifyModelService {
 
     private void _load_config_line_auth_page( PageAccess _page, String _line ){
         String[] auth_str = _line.split("=");
-        if (auth_str.length > 1) {
-            String[] auth_data = auth_str[1].split(",");
-            switch (auth_str[0].trim()) {
-                case "role":
-                    _page.addRoles(auth_data);
-                    break;
-                case "deny":
-                    _page.addDenys(auth_data);
-                    break;
-                case "user":
-                    _page.addUsers(auth_data);
-                    break;
-            }
+        if( auth_str.length == 1 ) return;
+        String[] auth_data = auth_str[1].split(",");
+        switch (auth_str[0].trim()) {
+            case "role":
+                _page.addRoles(auth_data);
+                break;
+            case "deny":
+                _page.addDenys(auth_data);
+                break;
+            case "user":
+                _page.addUsers(auth_data);
+                break;
         }
     }
     /**
@@ -148,6 +147,7 @@ public class VerifyModelService {
      */
     private void _load_config_line_users( String _line ){
         String[] user_str = _line.split( "=" );
+        if( user_str.length == 1 ) return;
         SuperUser user = new SuperUser();
         user.setEnabled( true );
         user.setLocked( false );
@@ -163,6 +163,7 @@ public class VerifyModelService {
     private void _load_config_line_roles( String _line ){
         // 角色 = 用户1, ..., 用户N
         String[] role_str = _line.split( "=" );
+        if( role_str.length == 1 ) return;
         String[] role_user_str = role_str[1].split(",");
 
         SuperRole role = new SuperRole();

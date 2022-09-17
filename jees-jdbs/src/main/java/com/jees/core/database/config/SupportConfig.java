@@ -108,7 +108,9 @@ public class SupportConfig {
             String d = st.nextToken();
             sfr.registerSessionFactory( d.trim() );
         }
-
-        return CommonContextHolder.getBean( CommonConfig.getString( "jees.jdbs.defaultDB", "default" ) + "SessionFactory" );
+        if( st.countTokens() > 0 ) {
+            return CommonContextHolder.getBean(CommonConfig.getString("jees.jdbs.defaultDB", "default") + "SessionFactory");
+        }
+        return null;
     }
 }

@@ -4,6 +4,8 @@ import com.jees.common.CommonConfig;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.hibernate.query.internal.NativeQueryImpl;
+import org.hibernate.transform.Transformers;
 
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
@@ -223,6 +225,9 @@ public abstract class AbsSupportDao implements ISupportDao {
 		query.setMaxResults( _limit );
 
 		_set_parameter( query, _param );
+		if( _cls == null ){
+			query.unwrap( NativeQueryImpl.class ).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP );
+		}
 		return query.getResultList();
 	}
 
@@ -236,11 +241,20 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , String[] _param , Object[] _value,
 					Class< T > _cls ) {
 		Session session = _get_session( _db );
-		Query< T > query = session.createNativeQuery( _sql, _cls );
+
+		Query< T > query;
+		if( _cls == null ){
+			query = session.createNativeQuery( _sql );
+			query.unwrap( NativeQueryImpl.class ).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP );
+		}else{
+			query = session.createNativeQuery( _sql, _cls );
+		}
+
 		query.setFirstResult( _first );
 		query.setMaxResults( _limit );
 
 		_set_parameter( query, _param, _value );
+
 		return query.getResultList();
 	}
 
@@ -255,7 +269,14 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Map _param,
 								 Class< T > _cls ){
 		Session session = _get_session( _db );
-		Query< T > query = session.createNativeQuery( _sql, _cls );
+		Query< T > query;
+		if( _cls == null ){
+			query = session.createNativeQuery( _sql );
+			query.unwrap( NativeQueryImpl.class ).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP );
+		}else{
+			query = session.createNativeQuery( _sql, _cls );
+		}
+
 		query.setFirstResult( _first );
 		query.setMaxResults( _limit );
 
@@ -302,6 +323,18 @@ public abstract class AbsSupportDao implements ISupportDao {
 		try {
 			Query query = _get_session( _db ).createNativeQuery( _sql );
 			_set_parameter( query, _param, _value );
+			return query.executeUpdate();
+		} finally {
+			_flush_session( session );
+		}
+	}
+
+	@Override
+	public int executeBySQL( String _db , String _sql , Map _data ) {
+		Session session = _get_session( _db );
+		try {
+			Query query = _get_session( _db ).createNativeQuery( _sql );
+			_set_parameter( query, _data );
 			return query.executeUpdate();
 		} finally {
 			_flush_session( session );
