@@ -79,6 +79,12 @@ public class LocalConfig {
                     _load_config_line_roles( _line );
                 }
             }
+            if(is_read_blank.get()){
+                if( _node == null || _node.equalsIgnoreCase( "black" ) ) {
+                    // 解析授权中的角色
+                    _load_config_line_blacks( _line );
+                }
+            }
         } );
     }
 
@@ -131,10 +137,10 @@ public class LocalConfig {
     }
 
     private void _load_config_line_auth_page( PageAccess _page, String _line ){
-        String[] auth_str = _line.split("=");
-        if( auth_str.length == 1 ) return;
-        String[] auth_data = auth_str[1].split(",");
-        switch (auth_str[0].trim()) {
+        String[] line_str = _line.split("=");
+        if( line_str.length == 1 ) return;
+        String[] auth_data = line_str[1].split(",");
+        switch (line_str[0].trim()) {
             case "role":
                 _page.addRoles(auth_data);
                 break;
@@ -145,7 +151,7 @@ public class LocalConfig {
                 _page.addUsers(auth_data);
                 break;
             case "anonymous":
-                _page.setAnonymous( Boolean.parseBoolean( auth_str[1].trim() ));
+                _page.setAnonymous( Boolean.parseBoolean( line_str[1].trim() ));
                 break;
         }
     }
@@ -154,13 +160,13 @@ public class LocalConfig {
      * @param _line
      */
     private void _load_config_line_users( String _line ){
-        String[] user_str = _line.split( "=" );
-        if( user_str.length == 1 ) return;
+        String[] line_str = _line.split( "=" );
+        if( line_str.length == 1 ) return;
         SuperUser user = new SuperUser();
         user.setEnabled( true );
         user.setLocked( false );
-        user.setUsername( user_str[0].trim() );
-        user.setPassword( user_str[1].trim() );
+        user.setUsername( line_str[0].trim() );
+        user.setPassword( line_str[1].trim() );
         verifyModelService.getUsers().put( user.getUsername().toLowerCase(), user );
     }
 
@@ -170,13 +176,13 @@ public class LocalConfig {
      */
     private void _load_config_line_roles( String _line ){
         // 角色 = 用户1, ..., 用户N
-        String[] role_str = _line.split( "=" );
-        if( role_str.length == 1 ) return;
-        String[] role_user_str = role_str[1].split(",");
+        String[] line_str = _line.split( "=" );
+        if( line_str.length == 1 ) return;
+        String[] role_user_str = line_str[1].split(",");
 
         SuperRole role = new SuperRole();
         role.setId( verifyModelService.getRoles().size() );
-        role.setName( role_str[0].trim() );
+        role.setName( line_str[0].trim() );
 
         Set<String> users = new HashSet<>();
         role.setUsers( users );
@@ -189,10 +195,40 @@ public class LocalConfig {
         for( String role_user : role_user_str ) {
             SuperUser user = verifyModelService.findUserByUsername(role_user.trim());
             if (user == null) {
-                log.warn("角色[" + role_str[0] + "]未找到相关用户[" + role_user + "]信息!");
+                log.warn("角色[" + line_str[0] + "]未找到相关用户[" + role_user + "]信息!");
                 return;
             }else{
                 user.addRole( role );
+            }
+        }
+    }
+
+    /**
+     * 读取黑名单行内容
+     * @param _line
+     */
+    private void _load_config_line_blacks( String _line ){
+        String[] line_str = _line.split( "=" );
+        if( line_str.length == 1 ) return;
+        String line_key = line_str[0].trim();
+        String[] line_val = line_str[1].split(",");
+        for( String val : line_val ) {
+            switch (line_key) {
+                case "user":
+                    if( !verifyModelService.getBUsers().contains( val ) ){
+                        verifyModelService.getBUsers().add( val );
+                    }
+                    break;
+                case "role":
+                    if( !verifyModelService.getBRoles().contains( val ) ){
+                        verifyModelService.getBRoles().add( val );
+                    }
+                    break;
+                case "ip":
+                    if( !verifyModelService.getBIps().contains( val ) ){
+                        verifyModelService.getBIps().add( val );
+                    }
+                    break;
             }
         }
     }

@@ -8,6 +8,7 @@ import com.jees.webs.security.configs.LocalConfig;
 import com.jees.webs.security.struct.PageAccess;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
@@ -69,6 +70,31 @@ public class VerifyModelService {
      */
     public boolean validateBlack( HttpServletRequest request, Authentication authentication ){
         boolean result = false;
+        Object principal = authentication.getPrincipal();
+
+        if( principal instanceof  SuperUser ) {
+            SuperUser user = (SuperUser) principal;
+            if (this.bUsers.contains(user.getUsername())) {
+                result = true;
+            }
+            if (!result) {
+                Iterator<SimpleGrantedAuthority> auth_it = user.getAuthorities().iterator();
+                while (auth_it.hasNext()) {
+                    SimpleGrantedAuthority auth = auth_it.next();
+                    String user_auth = auth.getAuthority();
+                    if (this.bRoles.contains(user_auth)) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if( !result ){
+            // 验证ip
+            String ip = VerifyModelService.getRequestIp( request );
+
+        }
+
         return result;
     }
     /**
@@ -254,5 +280,45 @@ public class VerifyModelService {
         }
         // 如果黑名单有，则没有权限
         return deny_has ? false : ( user_has || role_has );
+    }
+
+    /**
+     * 获取访问者IP
+     * 在一般情况下使用Request.getRemoteAddr()即可，但是经过nginx等反向代理软件后，这个方法会失效。
+     * 本方法先从Header中获取X-Real-IP，如果不存在再从X-Forwarded-For获得第一个IP(用,分割)，
+     * 如果还不存在则调用Request .getRemoteAddr()。
+     * @param _request
+     * @return
+     */
+    public static String getRequestIp(HttpServletRequest _request) {
+        String ip = _request.getHeader("X-Real-IP");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+            return ip;
+        }
+        ip = _request.getHeader("X-Forwarded-For");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            // 多次反向代理后会有多个IP值，第一个为真实IP。
+            int index = ip.indexOf(',');
+            if (index != -1) {
+                ip = ip.substring(0, index);
+            }
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+            return ip;
+        } else {
+            ip = _request.getRemoteAddr();
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+            if (ip.equals("0:0:0:0:0:0:0:1")) {
+                ip = "127.0.0.1";
+            }
+            return ip;
+        }
+
     }
 }

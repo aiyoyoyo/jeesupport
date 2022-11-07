@@ -17,7 +17,7 @@ public class RuleUtil {
      * @param _matchMap
      */
     public static void build(String _skips, String _match, Map<String, Set<String>> _skipMap, Map<String, Set<String>> _matchMap ){
-        if( _match.isEmpty() ){
+        if( _match == null || _match.trim().isEmpty() ){
             _match = "*[*]";//默认全匹配
         }
         String[] rules = _skips.split(";");
@@ -116,3 +116,4 @@ public class RuleUtil {
         return match;
     }
 }
+
