@@ -17,6 +17,7 @@ import org.thymeleaf.model.IAttribute;
 import org.thymeleaf.model.IProcessableElementTag;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,12 @@ public class VerifyModelService {
     @Getter
     Map<String, PageAccess> auths = new ConcurrentHashMap<>();
 
+    @Getter
+    Set<String> bUsers = new HashSet<>();
+    @Getter
+    Set<String> bRoles = new HashSet<>();
+    @Getter
+    Set<String> bIps = new HashSet<>();
     LocalConfig localConfig;
     public void initialize(SecurityService.SecurityModel _model){
         switch ( _model ){
@@ -54,6 +61,25 @@ public class VerifyModelService {
         return this.users.getOrDefault( _username.trim().toLowerCase(), null );
     }
 
+    /**
+     * 验证是否在黑名单里面，包括IP、账号、角色
+     * @param request
+     * @param authentication
+     * @return
+     */
+    public boolean validateBlack( HttpServletRequest request, Authentication authentication ){
+        boolean result = false;
+        return result;
+    }
+    /**
+     * 验证匿名页面
+     * @param _uri
+     * @return
+     */
+    public boolean validateAnonymous( String _uri ){
+        PageAccess page = this.auths.get( _uri );
+        return page.isAnonymous();
+    }
     /**
      * 判断用户是否可以访问
      * 超级管理员>IP黑名单>允许匿名>全局账号黑名单>全局角色黑名单>页面账号黑名单>页面账号>页面角色>用户全允许
@@ -133,18 +159,24 @@ public class VerifyModelService {
             return false;
         }
 
-        boolean success = false;
+        Boolean success = false;
         // 从session中提取登录信息
         SessionInformation session = CommonContextHolder.getBean(SessionRegistry.class).getSessionInformation(_request.getSession().getId());
-
-        SuperUser user = (SuperUser) session.getPrincipal();
-        String user_name = user.getUsername();
-        Set<SimpleGrantedAuthority> user_roles = user.getAuthorities();
-        // 判断ID授权
-        success = _verify_page_attribute( _tag, "id", "#", page, user_name, user_roles );
-        // 判断样式授权
-        success = _verify_page_attribute( _tag, "class", ".", page, user_name, user_roles );
-        // 正常都通过才会是true
+        if( session != null ) {
+            SuperUser user = (SuperUser) session.getPrincipal();
+            String user_name = user.getUsername();
+            Set<SimpleGrantedAuthority> user_roles = user.getAuthorities();
+            // 判断ID授权
+            success = _verify_page_attribute(_tag, "id", "#", page, user_name, user_roles);
+            // 判断样式授权
+            if( success == null ) {// 为null表示ID没有配置
+                success = _verify_page_attribute(_tag, "class", ".", page, user_name, user_roles);
+            }
+            // 正常都通过才会是true
+            if( success == null ){
+                success = false;
+            }
+        }
         return success;
     }
 
@@ -158,15 +190,24 @@ public class VerifyModelService {
      * @param _roles
      * @return
      */
-    private boolean _verify_page_attribute( IProcessableElementTag _tag, String _attr, String _lab, PageAccess _page, String _user, Set<SimpleGrantedAuthority> _roles ){
-        boolean result = false;
+    private Boolean _verify_page_attribute( IProcessableElementTag _tag, String _attr, String _lab, PageAccess _page, String _user, Set<SimpleGrantedAuthority> _roles ){
+        Boolean result = null;
         IAttribute attr = _tag.getAttribute(_attr);
         if( attr != null ) {
             String[] values = attr.getValue().split(" ");
             for (String value : values) {
                 result = _verify_page_elements( _page, _lab + value, _user, _roles );
                 if( !result ){
-                    return false;
+                    break;
+                }
+            }
+        }else{
+            for( SimpleGrantedAuthority role : _roles ){
+                if( role.getAuthority().equalsIgnoreCase(ISupportEL.ROLE_ADMIN)
+                        || role.getAuthority().equalsIgnoreCase(ISupportEL.ROLE_SUPERMAN)
+                ){
+                    result = true;
+                    break;
                 }
             }
         }

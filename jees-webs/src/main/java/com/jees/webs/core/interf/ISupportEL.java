@@ -7,7 +7,7 @@ public interface ISupportEL {
     String ROLE_SUPERMAN                = "SUPERMAN"; // 系统级管理员 > 应用级管理员
     String ROLE_ADMIN                   = "ADMIN";// 应用级管理员
     String ROLE_ANONYMOUS               = "anonymousUser";
-
+    String ROLE_BLACK                   = "BLACK"; // 黑名单
     String App_EL                       = "APP";
 
     String Template_Name_EL             = "TPL_NAME";

@@ -89,21 +89,24 @@ public class SecurityService {
         String uri = request.getRequestURI();
         Object principal = authentication.getPrincipal();
         log.debug( "验证用户访问权限，访问地址=" + uri + "， 用户=" + principal );
+        boolean result = verifyModelService.validateBlack( request, authentication );
+        if( result ){
 
-        boolean result = false;
-        if( principal == null || ISupportEL.ROLE_ANONYMOUS.equals( principal ) ){
-            // TODO 判断是否访问匿名页面
-            boolean is_anonymous = false;
-            if( is_anonymous ){
+        }else {
+            if (principal == null || ISupportEL.ROLE_ANONYMOUS.equals(principal)) {
+                // 判断是否访问匿名页面
+                boolean is_anonymous = verifyModelService.validateAnonymous(uri);
+                if (is_anonymous) {
+                    result = true;
+                }
+            } else if (ISupportEL.ROLE_SUPERMAN.equals(principal)) {
+                log.info("使用超级管理账号访问。");
                 result = true;
             }
-        }else if(ISupportEL.ROLE_SUPERMAN.equals( principal ) ){
-            log.info( "使用超级管理账号访问。" );
-            result = true;
-        }
 
-        if( !result ){
-            result = verifyModelService.velidateRequest( request, authentication );
+            if (!result) {
+                result = verifyModelService.velidateRequest(request, authentication);
+            }
         }
         log.debug( "验证结果：" + result );
         return result;

@@ -145,7 +145,7 @@ public class LocalConfig {
                 _page.addUsers(auth_data);
                 break;
             case "anonymous":
-                _page.setAnonymous( Boolean.parseBoolean( auth_str[0] ));
+                _page.setAnonymous( Boolean.parseBoolean( auth_str[1].trim() ));
                 break;
         }
     }
