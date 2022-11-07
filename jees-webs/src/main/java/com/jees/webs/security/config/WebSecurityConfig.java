@@ -8,13 +8,11 @@ import com.jees.webs.modals.templates.service.TemplateService;
 import com.jees.webs.security.service.SecurityService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     SupportELService    supportELService;
 
+    @Autowired
     SessionRegistry sessionRegistry;
     /**
      * 通过栏目包含的权限，来决定所需要的权限
@@ -50,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             _hs.headers().frameOptions().disable();
         }
         _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) )
-                .sessionRegistry( sessionRegistry() );
+                .sessionRegistry( sessionRegistry );
 
         dwrConfig.setHttpSecurity( _hs );
         if( securityService.isEnable() ){
@@ -79,13 +78,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 return _encode.equals( securityService.encodePwd((String) _pwd) );
             }
         } );
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry(){
-        if( sessionRegistry == null ){
-            sessionRegistry = new SessionRegistryImpl();
-        }
-        return sessionRegistry;
     }
 }

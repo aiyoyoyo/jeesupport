@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script th:src="|${RES}/jquery-3.2.1.min.js|"></script>
+    <script th:src="|${APP}/dwr/engine.js|"></script>
+    <script th:src="|${APP}/dwr/interface/VerifyModelService.js|"></script>
+    <script th:src="|${RES}/super/VerifyModelService.js|"></script>
 </head>
 <body>
 授权访问2-2
+<pre>
+    [/access/access2:#BTN_SUBMIT,.CSS_BLOCK_ID]
+    # admin/john/marry可以访问，lina不可以访问
+    user = john
+    role = manager
+    deny = lina
+</pre>
+<div class="CSS_BLOCK_ID" th:verify >
+    admin/john/marry能访问这个区域。lina是看不见的。
+</div>
+<pre>
+    [/access/access2:#BTN_SUBMIT]
+    # admin/marry可以访问，lina/john是看不见的。
+    deny = john
+</pre>
+<button id="BTN_SUBMIT" th:verify >admin/john/marry可以访问，lina/jack是看不见的。</button>
 </body>
 </html>

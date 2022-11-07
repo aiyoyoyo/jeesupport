@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 public class PageAccess {
     private String url;
+
+    private boolean anonymous = false;
     private Set<String> roles = new HashSet<>();
     private Set<String> users = new HashSet<>();
     private Set<String> denys = new HashSet<>();

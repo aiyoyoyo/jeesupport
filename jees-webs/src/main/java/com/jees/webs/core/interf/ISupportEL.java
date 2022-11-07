@@ -4,7 +4,8 @@ package com.jees.webs.core.interf;
  * 用于页面的EL变量
  */
 public interface ISupportEL {
-    String ROLE_SUPERMAN                = "SUPERMAN";
+    String ROLE_SUPERMAN                = "SUPERMAN"; // 系统级管理员 > 应用级管理员
+    String ROLE_ADMIN                   = "ADMIN";// 应用级管理员
     String ROLE_ANONYMOUS               = "anonymousUser";
 
     String App_EL                       = "APP";

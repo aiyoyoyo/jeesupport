@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -43,6 +45,8 @@ public class SecurityService {
     SecurityModel model;
     @Autowired
     VerifyModelService verifyModelService;
+
+    SessionRegistry sessionRegistry;
 
     public SecurityService(){
         this.model = SecurityModel.cast( CommonConfig.getString( "jees.webs.security.model", "local" ) );
@@ -85,6 +89,7 @@ public class SecurityService {
         String uri = request.getRequestURI();
         Object principal = authentication.getPrincipal();
         log.debug( "验证用户访问权限，访问地址=" + uri + "， 用户=" + principal );
+
         boolean result = false;
         if( principal == null || ISupportEL.ROLE_ANONYMOUS.equals( principal ) ){
             // TODO 判断是否访问匿名页面
@@ -104,6 +109,14 @@ public class SecurityService {
         return result;
     }
 
+    @Bean
+    public SessionRegistry getSessionRegistry(){
+        if( sessionRegistry == null ){
+            sessionRegistry = new SessionRegistryImpl();
+        }
+        return sessionRegistry;
+    }
+
     /**
      * 登陆成功后的处理
      *
@@ -113,7 +126,7 @@ public class SecurityService {
     public AuthenticationSuccessHandler successHandler(){
         return (_request, _response, _auth) -> {
             log.debug( "--登陆成功" );
-//            sessionRegistry().registerNewSession( _request.getSession().getId(), _auth.getPrincipal() );
+            getSessionRegistry().registerNewSession( _request.getSession().getId(), _auth.getPrincipal() );
 //            supportELService.onSuccessHandler( _request, _response, _auth );
 
 //            RequestCache requestCache = new HttpSessionRequestCache();
