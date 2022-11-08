@@ -92,7 +92,7 @@ public class VerifyModelService {
         if( !result ){
             // 验证ip
             String ip = VerifyModelService.getRequestIp( request );
-
+            result = VerifyModelService.matchIp( this.bIps, ip );
         }
 
         return result;
@@ -105,6 +105,25 @@ public class VerifyModelService {
     public boolean validateAnonymous( String _uri ){
         PageAccess page = this.auths.get( _uri );
         return page.isAnonymous();
+    }
+
+    public boolean validateAdministrator(HttpServletRequest request, Authentication authentication){
+        boolean result = false;
+        Object principal = authentication.getPrincipal();
+        if( principal instanceof SuperUser ) {
+            SuperUser user = (SuperUser) principal;
+            Iterator<SimpleGrantedAuthority> auth_it = user.getAuthorities().iterator();
+            while (auth_it.hasNext()) {
+                SimpleGrantedAuthority auth = auth_it.next();
+                String user_auth = auth.getAuthority();
+                if (user_auth.equalsIgnoreCase(ISupportEL.ROLE_SUPERMAN)
+                        || user_auth.equalsIgnoreCase(ISupportEL.ROLE_ADMIN)) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
     /**
      * 判断用户是否可以访问
@@ -319,6 +338,41 @@ public class VerifyModelService {
             }
             return ip;
         }
+    }
 
+    /**
+     * 比对IP是否符合规则清单，多个规则有一个匹配即匹配，*号只能放在后面
+     * 10.10.10.10 全匹配 10.10.10.10
+     * 10.10.10.* 匹配前3位 10.10.10.X
+     * 10.10.* 匹配前2位 10.10.X.X
+     * 10.* 匹配前1位 10.X.X.X
+     * "*" 匹配 所有IP
+     * @param _rules
+     * @param _ip
+     * @return
+     */
+    public static boolean matchIp( Set<String> _rules, String _ip ){
+        boolean result = false;
+        String[] ips = _ip.split( "\\." );
+        for( String rule : _rules ){
+            String[] tmps = rule.split( "\\." );
+            for( int i = 0; i < ips.length; i ++ ){
+                if( i < tmps.length ){
+                    String tmp = tmps[i];
+                    if( tmp.equalsIgnoreCase("*" ) ){
+                        if( i == 0 ){
+                            result = true;
+                        }
+                        break;
+                    }else{
+                        result = ips[i].equalsIgnoreCase( tmp );
+                    }
+                }
+            }
+            if( result ){
+                break;
+            }
+        }
+        return result;
     }
 }

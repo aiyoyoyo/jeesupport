@@ -91,7 +91,7 @@ public class SecurityService {
         log.debug( "验证用户访问权限，访问地址=" + uri + "， 用户=" + principal );
         boolean result = verifyModelService.validateBlack( request, authentication );
         if( result ){
-
+            result = verifyModelService.validateAdministrator(request, authentication);
         }else {
             if (principal == null || ISupportEL.ROLE_ANONYMOUS.equals(principal)) {
                 // 判断是否访问匿名页面
@@ -99,15 +99,12 @@ public class SecurityService {
                 if (is_anonymous) {
                     result = true;
                 }
-            } else if (ISupportEL.ROLE_SUPERMAN.equals(principal)) {
-                log.info("使用超级管理账号访问。");
-                result = true;
             }
-
             if (!result) {
                 result = verifyModelService.velidateRequest(request, authentication);
             }
         }
+
         log.debug( "验证结果：" + result );
         return result;
     }
