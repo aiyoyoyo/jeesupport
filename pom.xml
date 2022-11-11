@@ -72,11 +72,11 @@
             <distributionManagement>
                 <repository>
                     <id>jees</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
                 <snapshotRepository>
                     <id>jees</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
             <build>
@@ -95,6 +95,21 @@
                             <maxmem>1024m</maxmem>
                         </configuration>
                     </plugin>
+                    <!-- Gpg Signature -->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                        <version>1.6</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>sign-artifacts</id>-->
+<!--                                <phase>verify</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>sign</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
                     <!-- 发布Release版本以及生成DOC -->
                     <!--
                     <plugin>
