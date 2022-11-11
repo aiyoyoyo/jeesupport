@@ -6,5 +6,10 @@
 </head>
 <body>
 默认4xx错误提示页
+<div th:if="session.MESSAGE">
+    自定义结果：代码=<t th:text="${session.MESSAGE.code}">无</t>，描述=<t th:text="${session.MESSAGE.desc}">无</t>
+    <br/>
+    系统结果： 代码=<t th:text="${status}">无</t> 描述=<t th:text="${error}">无</t>
+</div>
 </body>
 </html>

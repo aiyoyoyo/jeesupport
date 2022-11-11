@@ -7,7 +7,7 @@ import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.security.service.VerifyModelService;
+import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -29,7 +29,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
     private       String supermanPassword;
 
     @Autowired
-    VerifyModelService verifyModelService;
+    VerifyService verifyService;
 
     /**
      * 超级账号在启动时随机生成密码，可以通过日志查询。
@@ -81,7 +81,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
         SuperUser user = checkSuperman(_username);
         if( user == null ){
             // 一般用户入库
-            user = verifyModelService.findUserByUsername( _username );
+            user = verifyService.findUserByUsername( _username );
         }
         if( user == null ){
             throw new UsernameNotFoundException( "用户[" + _username + "]不存在" );

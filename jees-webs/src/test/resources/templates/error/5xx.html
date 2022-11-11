@@ -6,5 +6,8 @@
 </head>
 <body>
 默认5xx错误提示页
+<div th:if="session.MESSAGE">
+    显示登录失败的结果：代码=<t th:text="${session.MESSAGE.code}">无</t>，描述=<t th:text="${session.MESSAGE.desc}">无</t>
+</div>
 </body>
 </html>

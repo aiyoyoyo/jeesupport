@@ -4,7 +4,7 @@ import com.jees.common.CommonConfig;
 import com.jees.tool.utils.FileUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
-import com.jees.webs.security.service.VerifyModelService;
+import com.jees.webs.security.service.VerifyService;
 import com.jees.webs.security.struct.PageAccess;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,20 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class LocalConfig {
     @Autowired
-    VerifyModelService verifyModelService;
+    VerifyService verifyService;
 
     public void initialize(){
         this._load_config_line( null );
+        // 系统匿名配置
+        // /login,/logout,/error*
+        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.login", "login" ) );
+        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" ) );
+        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.error", "error*" ) );
+        // 将全局匿名配置加载
+        String[] anons = CommonConfig.getArray( "jees.webs.security.anonymous", String.class );
+        for( String anon : anons ){
+            verifyService.getAnonymous().add( anon );
+        }
     }
 
     /**
@@ -111,11 +121,11 @@ public class LocalConfig {
             auth_url = this.lastAuth;
         }
 
-        PageAccess page = verifyModelService.getAuths().get(auth_url);
+        PageAccess page = verifyService.getAuths().get(auth_url);
         if (page == null) {
             page = new PageAccess();
             page.setUrl(auth_url);
-            verifyModelService.getAuths().put(auth_url, page);
+            verifyService.getAuths().put(auth_url, page);
         }else{
             if( auth_arr != null ){
                 String[] elements = auth_arr[1].split( "," );
@@ -167,7 +177,7 @@ public class LocalConfig {
         user.setLocked( false );
         user.setUsername( line_str[0].trim() );
         user.setPassword( line_str[1].trim() );
-        verifyModelService.getUsers().put( user.getUsername().toLowerCase(), user );
+        verifyService.getUsers().put( user.getUsername().toLowerCase(), user );
     }
 
     /**
@@ -181,7 +191,7 @@ public class LocalConfig {
         String[] role_user_str = line_str[1].split(",");
 
         SuperRole role = new SuperRole();
-        role.setId( verifyModelService.getRoles().size() );
+        role.setId( verifyService.getRoles().size() );
         role.setName( line_str[0].trim() );
 
         Set<String> users = new HashSet<>();
@@ -193,7 +203,7 @@ public class LocalConfig {
         }
 
         for( String role_user : role_user_str ) {
-            SuperUser user = verifyModelService.findUserByUsername(role_user.trim());
+            SuperUser user = verifyService.findUserByUsername(role_user.trim());
             if (user == null) {
                 log.warn("角色[" + line_str[0] + "]未找到相关用户[" + role_user + "]信息!");
                 return;
@@ -213,20 +223,21 @@ public class LocalConfig {
         String line_key = line_str[0].trim();
         String[] line_val = line_str[1].split(",");
         for( String val : line_val ) {
+            val = val.trim();
             switch (line_key) {
                 case "user":
-                    if( !verifyModelService.getBUsers().contains( val ) ){
-                        verifyModelService.getBUsers().add( val );
+                    if( !verifyService.getBUsers().contains( val ) ){
+                        verifyService.getBUsers().add( val );
                     }
                     break;
                 case "role":
-                    if( !verifyModelService.getBRoles().contains( val ) ){
-                        verifyModelService.getBRoles().add( val );
+                    if( !verifyService.getBRoles().contains( val ) ){
+                        verifyService.getBRoles().add( val );
                     }
                     break;
                 case "ip":
-                    if( !verifyModelService.getBIps().contains( val ) ){
-                        verifyModelService.getBIps().add( val );
+                    if( !verifyService.getBIps().contains( val ) ){
+                        verifyService.getBIps().add( val );
                     }
                     break;
             }

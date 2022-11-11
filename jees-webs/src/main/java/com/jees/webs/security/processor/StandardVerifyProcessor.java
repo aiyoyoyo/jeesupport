@@ -1,7 +1,7 @@
 package com.jees.webs.security.processor;
 
 import com.jees.common.CommonContextHolder;
-import com.jees.webs.security.service.VerifyModelService;
+import com.jees.webs.security.service.VerifyService;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.context.WebEngineContext;
 import org.thymeleaf.engine.AttributeName;
@@ -42,7 +42,7 @@ public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor
 
     @Override
     protected final void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) {
-        VerifyModelService vms = CommonContextHolder.getBean( VerifyModelService.class );
+        VerifyService vms = CommonContextHolder.getBean( VerifyService.class );
         boolean visible = vms.validateElement( ((WebEngineContext)context).getRequest(), tag, attributeValue );
         if (!visible) {
             structureHandler.removeElement();

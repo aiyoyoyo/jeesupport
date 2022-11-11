@@ -1,7 +1,10 @@
 package com.jees.webs.security.service;
 
 import com.jees.common.CommonContextHolder;
+import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
+import com.jees.webs.core.service.SecurityService;
+import com.jees.webs.core.struct.ServerMessage;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.configs.LocalConfig;
@@ -29,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 @Service
-public class VerifyModelService {
+public class VerifyService {
 
     // 用户授权信息
     @Getter
@@ -47,6 +50,8 @@ public class VerifyModelService {
     Set<String> bRoles = new HashSet<>();
     @Getter
     Set<String> bIps = new HashSet<>();
+    @Getter
+    Set<String> anonymous = new HashSet<>();
     LocalConfig localConfig;
     public void initialize(SecurityService.SecurityModel _model){
         switch ( _model ){
@@ -63,14 +68,75 @@ public class VerifyModelService {
     }
 
     /**
-     * 验证是否在黑名单里面，包括IP、账号、角色
+     * 验证用户页面授权
      * @param request
      * @param authentication
      * @return
      */
-    public boolean validateBlack( HttpServletRequest request, Authentication authentication ){
-        boolean result = false;
+    public boolean validate(HttpServletRequest request, Authentication authentication){
+        String uri = request.getRequestURI();
         Object principal = authentication.getPrincipal();
+        log.debug( "验证用户访问权限，访问地址=" + uri + "， 用户=" + principal );
+
+        boolean result = false;
+        // 1. 先验证页面是否允许访问： 匿名页面、错误页面、登录、注册、登出不验证是否登录
+        boolean is_anonymous = this.validateAnonymous(uri);
+        if( is_anonymous ){
+            result = this.validateBlack(request, authentication);
+            if( result ){
+                return false;
+            }
+            return true;
+        }
+        int error_code = this.validateErrorPage(request,uri);
+        if( error_code >= ICodeDefine.ErrorCode ){
+            return true;
+        }
+        // 2. 验证页面是否需要登录访问
+        if( principal instanceof SuperUser ){
+            ServerMessage msg = new ServerMessage();
+            // 3. 验证页面是否配置了访问权限
+            result = this.validateBlack(request, authentication);
+            if (result) {
+                msg.setCode(ICodeDefine.User_IsBlack);
+            } else {
+                // 4. 验证用户是否有页面访问权限
+                int code = this.velidateRequest(request, authentication);
+                msg.setCode(code);
+                result = code == ICodeDefine.SuccessCode;
+            }
+            log.debug( "验证结果：" + msg );
+            request.getSession().setAttribute( ISupportEL.Message_EL, msg );
+        }else{
+            // 没有登录
+        }
+        if( !result ){
+            result = this.validateAdministrator(authentication);
+        }
+        return result;
+    }
+
+    public int validateErrorPage( HttpServletRequest _request, String _uri ){
+        int code = ICodeDefine.SuccessCode;
+        switch ( _uri ){
+            case "/error/403": code = ICodeDefine.File_NotFound; break;
+            case "/error/500":
+            case "/error":
+                code = ICodeDefine.Server_ErrorState; break;
+            default:
+                break;
+        }
+        return code;
+    }
+    /**
+     * 验证是否在黑名单里面，包括IP、账号、角色
+     * @param _request
+     * @param _authentication
+     * @return
+     */
+    public boolean validateBlack( HttpServletRequest _request, Authentication _authentication ){
+        boolean result = false;
+        Object principal = _authentication.getPrincipal();
 
         if( principal instanceof  SuperUser ) {
             SuperUser user = (SuperUser) principal;
@@ -91,8 +157,8 @@ public class VerifyModelService {
         }
         if( !result ){
             // 验证ip
-            String ip = VerifyModelService.getRequestIp( request );
-            result = VerifyModelService.matchIp( this.bIps, ip );
+            String ip = VerifyService.getRequestIp( _request );
+            result = VerifyService.matchIp( this.bIps, ip );
         }
 
         return result;
@@ -103,13 +169,24 @@ public class VerifyModelService {
      * @return
      */
     public boolean validateAnonymous( String _uri ){
+        if( this.anonymous.contains( _uri ) ){
+            return true;
+        }
         PageAccess page = this.auths.get( _uri );
+        if( page == null ){
+            return false;
+        }
         return page.isAnonymous();
     }
 
-    public boolean validateAdministrator(HttpServletRequest request, Authentication authentication){
+    /**
+     * 验证是否是管理员
+     * @param _authentication
+     * @return
+     */
+    public boolean validateAdministrator(Authentication _authentication){
         boolean result = false;
-        Object principal = authentication.getPrincipal();
+        Object principal = _authentication.getPrincipal();
         if( principal instanceof SuperUser ) {
             SuperUser user = (SuperUser) principal;
             Iterator<SimpleGrantedAuthority> auth_it = user.getAuthorities().iterator();
@@ -128,17 +205,17 @@ public class VerifyModelService {
     /**
      * 判断用户是否可以访问
      * 超级管理员>IP黑名单>允许匿名>全局账号黑名单>全局角色黑名单>页面账号黑名单>页面账号>页面角色>用户全允许
-     * @param request
-     * @param authentication
+     * @param _request
+     * @param _authentication
      * @return
      */
-    public boolean velidateRequest(HttpServletRequest request, Authentication authentication) {
-        String uri = request.getRequestURI();
-        Object principal = authentication.getPrincipal();
+    public int velidateRequest(HttpServletRequest _request, Authentication _authentication) {
+        String uri = _request.getRequestURI();
+        Object principal = _authentication.getPrincipal();
 
         PageAccess page = this.auths.get( uri );
         if( page == null ){
-            return false;
+            return ICodeDefine.Page_NotAccess;
         }
         boolean is_super = false;
         boolean is_deny = false;
@@ -171,21 +248,20 @@ public class VerifyModelService {
                 }
             }
         }
-        //TODO 可以用错误码代替
         //超级管理员>IP黑名单>允许匿名>全局账号黑名单>全局角色黑名单>页面账号黑名单>页面账号>页面角色>用户全允许
         if( is_super ){
-            return true;
+            return ICodeDefine.SuccessCode;
         }
         if( is_anonymous ){
-            return true;
+            return ICodeDefine.SuccessCode;
         }
         if( is_deny ){
-            return false;
+            return ICodeDefine.User_IsDeny;
         }
         if( is_auth ){
-            return true;
+            return ICodeDefine.SuccessCode;
         }
-        return false;
+        return ICodeDefine.User_IsDeny;
     }
 
     /**
@@ -366,6 +442,9 @@ public class VerifyModelService {
                         break;
                     }else{
                         result = ips[i].equalsIgnoreCase( tmp );
+                        if( !result ){
+                            break;
+                        }
                     }
                 }
             }

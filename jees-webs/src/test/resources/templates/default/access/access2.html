@@ -13,8 +13,8 @@
 <pre>
     [/access/access2:#BTN_SUBMIT,.CSS_BLOCK_ID]
     # admin/john/marry可以访问，lina不可以访问
-    user = john
     role = manager
+    user = john
     deny = lina
 </pre>
 <div class="CSS_BLOCK_ID" th:verify >
@@ -22,9 +22,9 @@
 </div>
 <pre>
     [/access/access2:#BTN_SUBMIT]
-    # admin/marry可以访问，lina/john是看不见的。
+    # admin/lina/marry可以访问，lina/john不可以访问
     deny = john
 </pre>
-<button id="BTN_SUBMIT" th:verify >admin/john/marry可以访问，lina/jack是看不见的。</button>
+<button id="BTN_SUBMIT" th:verify >admin/marry可以访问，john/lina/jack是看不见的。</button>
 </body>
 </html>

@@ -1,11 +1,10 @@
-package com.jees.webs.security.config;
+package com.jees.webs.core.config;
 
 import com.jees.common.CommonConfig;
 import com.jees.webs.core.service.ExUserDetailsService;
-import com.jees.webs.core.service.SupportELService;
+import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.modals.dwr.config.DwrConfig;
 import com.jees.webs.modals.templates.service.TemplateService;
-import com.jees.webs.security.service.SecurityService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,8 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     SecurityService     securityService;
     @Autowired
     TemplateService     templateService;
-    @Autowired
-    SupportELService    supportELService;
 
     @Autowired
     SessionRegistry sessionRegistry;

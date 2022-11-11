@@ -40,10 +40,11 @@ public class SupportELService extends AbsSupportEL {
     }
 
     /**
-     * 有权限访问时
+     * 有权限访问时，存入用户（SuperUser）信息到session中
      * @param _request
+     * @see com.jees.webs.entity.SuperUser
      */
-    public void onSuccessHandler(HttpServletRequest _request, HttpServletResponse _response, Authentication _auth) {
+    public void registerLoginSession(HttpServletRequest _request, HttpServletResponse _response, Authentication _auth) {
         _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getPrincipal() );
     }
 }

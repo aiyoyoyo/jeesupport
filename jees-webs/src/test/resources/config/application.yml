@@ -74,6 +74,7 @@ jees:
    encodePwd: true
    login: login
    logout: logout
+   # *全局匿名可以访问的url
    anonymous:
    header:
     frameOptions: false

@@ -25,6 +25,6 @@ public interface ISupportEL {
     String Request_Menu_EL              = "MENU";
     String Request_Page_EL              = "PAGE";
     String Request_Actives_EL           = "ACTIVES";
-
-    String Login_Err                    = "ERR";
+    // 通用页面请求信息
+    String Message_EL                   = "MESSAGE";
 }

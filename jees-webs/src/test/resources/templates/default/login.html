@@ -13,6 +13,9 @@
     <input type="password" name="password" />
     <button type="submit">登录</button>
 </form>
+<div th:if="${session.MESSAGE}">
+    显示登录失败的结果：代码=<t th:text="${session.MESSAGE.code}">无</t>，描述=<t th:text="${session.MESSAGE.desc}">无</t>
+</div>
 </br>
 <a th:href="|${APP}${TPL}/anonymous.html|" target="_blank">测试匿名页面</a></br>
 <a th:href="|${APP}${TPL}/anonymous|" target="_blank">测试匿名URL</a>
