@@ -31,7 +31,7 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
-        <jees.version>1.7.0-SNAPSHOT</jees.version>
+        <jees.version>1.7.0</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
