@@ -14,6 +14,9 @@ jeesupport提供了Java开发中常用的一些技术和框架供使用和参考
 > 基于Netty的Socket/WebSocket解决方案
 * [jees-jwebs](https://github.com/aiyoyoyo/jeesupport/tree/master/jees-jwebs)
 > 基于Spring-Boot的web开发解决方案
+## 新版本1.7.0发布
+正式版1.7.0提供了基础文件授权方案。详情参考[verify.cfg](https://github.com/aiyoyoyo/jeesupport/blob/master/jees-webs/src/test/resources/config/verify.cfg)文件。
+后续会支持数据库版本。
 
 ## 基本用法
 在pom.xml中加入下面2段内容。

@@ -97,7 +97,11 @@ clean package -pom-war.xml
 2. 动态获取相对路径寻找更好的写法
 
 ## 更新历史
-### 1.7.0-SNAPSHOT <font color='red'>新版本</font>
+### 1.7.0 <font color='red'>新版本</font>
+1. 新增了verify.cfg配置方案
+2. 重写了账号授权验证体系
+3. 其他细节优化
+### 1.7.0-SNAPSHOT
 1. 重新设计了底层框架
 ### 1.6.0-SNAPSHOT 
 1. 重做了系统登录的权限认证，简单认证、数据库认证方式

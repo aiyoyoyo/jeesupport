@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.0</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -34,7 +34,7 @@
         <jees.version>1.7.0-SNAPSHOT</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
-        <jees.scm.url>${jees.scm}/jeesupport.git</jees.scm.url>
+        <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
         <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
         <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
@@ -73,10 +73,12 @@
                 <repository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <uniqueVersion>true</uniqueVersion>
                 </repository>
                 <snapshotRepository>
                     <id>jees</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <uniqueVersion>true</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
             <build>
@@ -93,6 +95,21 @@
                             <encoding>UTF-8</encoding>
                             <meminitial>256m</meminitial>
                             <maxmem>1024m</maxmem>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <!--官方文档 https://maven.apache.org/maven-release/maven-release-plugin/prepare-mojo.html-->
+                            <!-- 是否允许带时间戳的 SNAPSHOT 依赖项。 默认false-->
+                            <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                            <!--是否为子版本分配父亲版本号，默认false-->
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <!--release:perform中参数 https://maven.apache.org/maven-release/maven-release-plugin/perform-mojo.html-->
+                            <!--发布配置文件将从未来版本的super pom中删除 默认false-->
+                            <useReleaseProfile>false</useReleaseProfile>
                         </configuration>
                     </plugin>
                     <!-- Gpg Signature -->
@@ -168,9 +185,9 @@
         </profile>
     </profiles>
     <scm>
-        <connection>${jees.scm.url}</connection>
-        <developerConnection>${jees.scm.url}</developerConnection>
-        <url>${jees.scm.url}</url>
+        <connection>scm:git:git@github.com:aiyoyoyo/jeesupport.git</connection>
+        <url>scm:git:git@github.com:aiyoyoyo/jeesupport</url>
+        <tag>HEAD</tag>
     </scm>
     <!-- 项目环境 -->
     <build>
