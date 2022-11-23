@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jeesupport</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
@@ -45,8 +45,8 @@
         </dependency>
         <!-- Fastjson -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
         <!-- Apache Commons -->

@@ -1,6 +1,7 @@
 package com.jees.core.database.support;
 
 import com.jees.common.CommonConfig;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -19,6 +20,7 @@ import java.util.*;
  * @author aiyoyoyo
  *
  */
+@Log4j2
 public abstract class AbsSupportDao implements ISupportDao {
 	/** 从配置文件中获取数据库链接对象。**/
 	private static Map< String , SessionFactory > sessionFactoryMap = new HashMap<>();
@@ -69,8 +71,12 @@ public abstract class AbsSupportDao implements ISupportDao {
 	protected Session _get_session( String _db ) {
 		if ( sessionFactoryMap.containsKey( _db ) ) {
 			SessionFactory sessionFactory = sessionFactoryMap.get( _db );
-			if( sessionFactory.isClosed()) return sessionFactory.openSession();
-			return sessionFactory.getCurrentSession();
+			Session sess = sessionFactory.openSession();
+//			if( sessionFactory.isClosed()) return sessionFactory.openSession();
+			log.debug( sessionFactory.getSessionFactoryOptions() );
+			log.debug( "当前连接数：" + sessionFactory.getStatistics().getConnectCount() );
+			return sess;
+//			return sessionFactory.getCurrentSession();
 		}
 
 		throw new NullPointerException( "没有找到数据库[" + _db + "]的对应Session容器，请检查配置文件中是否正确。" );
@@ -181,6 +187,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > select( String _db , Class< T > _cls , int _first , int _limit ) {
 		Session session = _get_session( _db );
+		System.out.println( "session->" + session.toString() );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
 		criteria.from( _cls );
 		return session.createQuery( criteria )

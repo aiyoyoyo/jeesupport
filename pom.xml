@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -31,11 +31,11 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
-        <jees.version>1.7.0</jees.version>
+        <jees.version>1.7.1</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
-        <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
+        <spring.boot.version>2.7.5</spring.boot.version>
         <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
         <mysql5.version>5.1.44</mysql5.version>
@@ -45,7 +45,7 @@
         <netty.version>4.1.50.Final</netty.version>
         <commons.pool2.version>2.6.1</commons.pool2.version>
         <commons.lang3.version>3.11</commons.lang3.version>
-        <fastjson.version>1.2.76</fastjson.version>
+        <fastjson.version>2.0.19</fastjson.version>
         <protostuff.version>1.7.2</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
         <oracle.version>19.3.0.0</oracle.version>

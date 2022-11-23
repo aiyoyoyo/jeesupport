@@ -2,7 +2,7 @@ package com.jees.test.utils;
 
 import com.jees.tool.utils.SensitiveWordUtil;
 import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.util.Set;

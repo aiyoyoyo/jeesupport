@@ -2,7 +2,7 @@ package com.jees.test.utils;
 
 import com.jees.tool.utils.StringUtil;
 import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @Log4j2
 public class StringTest {

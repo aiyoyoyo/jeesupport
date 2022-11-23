@@ -1,6 +1,6 @@
 package com.jees.test.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

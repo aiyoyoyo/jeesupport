@@ -5,20 +5,15 @@ import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
-import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * 测试方法,执行日志默认在工程目录/logs下
@@ -26,7 +21,7 @@ import java.util.List;
  * @author aiyoyoyo
  * 
  */
-@RunWith( SpringJUnit4ClassRunner.class )
+//@RunWith( SpringJUnit4ClassRunner.class )
 @SpringBootTest
 @ComponentScan("com.jees")
 @Log4j2

@@ -42,6 +42,11 @@ spring:
 # 连接超时时间（毫秒）
    timeout: 3000
   package: com.jees.test.entity
+ jta:
+  atomikos:
+   database:
+    borrow-connection-timeout: 10000
+    max-pool-size: 10
 
 server:
  port: 8088
@@ -79,4 +84,21 @@ jees:
    header:
     frameOptions: false
  jdbs:
-  enable: false
+  enable: true
+  defaultDB: default
+  dbNames: default
+  trans:
+   timeout: 30000
+  config:
+   default:
+    dbtype: mysql8
+    maxPoolSize: 10
+    borrowConnectionTimeout: 60
+    orm: hibernate
+    uniqueResourceName: default
+    packagesToScan: com.jees.test.entity
+    url: jdbc:mysql://106.14.104.30:3388/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    user: lims_zh
+    password: lIms@123
+    hibernate:
+     hbm2ddl: create

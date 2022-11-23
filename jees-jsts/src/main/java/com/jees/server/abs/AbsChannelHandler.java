@@ -1,7 +1,7 @@
 package com.jees.server.abs;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.server.annotation.MessageLabel;
@@ -185,7 +185,7 @@ public abstract class AbsChannelHandler<NET extends ChannelHandlerContext, ID > 
             cmd = ( m ).getId();
             m.setUserId( user.getId() );
             MessageFile.write( cmd, id,  m, false );
-        }else if( msg instanceof JSONObject ){
+        }else if( msg instanceof JSONObject){
             JSONObject job = ( JSONObject ) msg;
             cmd = ( job ).getInteger( "id" );
             MessageFile.write( cmd, id,  job, false );

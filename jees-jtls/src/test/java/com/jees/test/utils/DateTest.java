@@ -3,7 +3,7 @@ package com.jees.test.utils;
 import com.jees.tool.joda.DateUtils;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 

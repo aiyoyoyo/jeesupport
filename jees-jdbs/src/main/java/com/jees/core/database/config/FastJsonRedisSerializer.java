@@ -1,9 +1,6 @@
 package com.jees.core.database.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializeFilter;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSON;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -12,22 +9,13 @@ import java.nio.charset.Charset;
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     public static final Charset DEFAULT_CHARSET = Charset.forName( "UTF-8" );
 
-    SerializeFilter[] filters = new SerializeFilter[]{};
-    int features = SerializerFeature.config( JSON.DEFAULT_GENERATE_FEATURE, SerializerFeature.WriteEnumUsingName, false );
-
     @Override
     public byte[] serialize ( T _data ) throws SerializationException {
         if ( null == _data ) {
             return new byte[ 0 ];
         }
 
-        String json_data = JSON.toJSONString( _data, SerializeConfig.globalInstance, filters, null, features,
-                SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteClassName,
-                SerializerFeature.WriteDateUseDateFormat,
-                SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullListAsEmpty );
-
+        String json_data = JSON.toJSONString( _data );
         return json_data.getBytes(DEFAULT_CHARSET);
     }
 

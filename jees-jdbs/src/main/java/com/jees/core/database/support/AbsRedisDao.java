@@ -1,6 +1,5 @@
 package com.jees.core.database.support;
 
-import com.alibaba.fastjson.parser.ParserConfig;
 import com.jees.common.CommonConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +69,8 @@ public abstract class AbsRedisDao<ID,T> implements IRedisDao<ID,T>{
 
     @Override
     public void initialize() {
-        ParserConfig.getGlobalInstance().setAutoTypeSupport( true );
-        ParserConfig.getGlobalInstance().addAccept( CommonConfig.getString( "spring.redis.package" ) );
+//        ParserConfig.getGlobalInstance().setAutoTypeSupport( true );
+//        ParserConfig.getGlobalInstance().addAccept( CommonConfig.getString( "spring.redis.package" ) );
 
         int idx = CommonConfig.getInteger( "spring.redis.database", 0 );
         database( idx );

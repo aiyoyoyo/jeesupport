@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jeesupport</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
@@ -64,6 +64,11 @@
             <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
             <version>${dwr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql8.version}</version>
         </dependency>
     </dependencies>
 </project>

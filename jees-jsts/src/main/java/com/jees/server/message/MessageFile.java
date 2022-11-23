@@ -1,6 +1,6 @@
 package com.jees.server.message;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.tool.utils.FileUtil;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +42,7 @@ public class MessageFile<ID>{
         }
     }
 
-    public static void write( Integer _cmd, Object _usr, JSONObject _job, boolean _toc ){
+    public static void write(Integer _cmd, Object _usr, JSONObject _job, boolean _toc ){
         if( check() ){
             _write_( _cmd, _usr, _job.toString(), _toc );
         }
