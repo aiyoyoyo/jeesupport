@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 @ComponentScan( "com.jees" )
 public class JstsApplication{
 
-	@SuppressWarnings( "resource" )
 	public static void main( String[] args ){
 		SpringApplication.run( JstsApplication.class, args );
 		CommonContextHolder.getBean( IServerService.class ).onload();
@@ -37,6 +36,7 @@ public class JstsApplication{
 		return new AbsConnectorHandler(){};
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Bean
 	@Scope( value = ISocketServer.SCOPE_CREATOR )
 	public ISuperUser superuser(){
@@ -51,10 +51,11 @@ public class JstsApplication{
 	/**
 	 * 客户端时间执行器，需要自己实现相应的关联方法
 	 *
-	 * @return
+	 * @return IChannelHandler
 	 */
+	@SuppressWarnings("rawtypes")
 	@Bean
-	public IChannelHandler< ChannelHandlerContext > requestHandler(){
+	public AbsChannelHandler requestHandler(){
 		return new AbsChannelHandler(){
 			@Override
 			public void error( ChannelHandlerContext _net, Throwable _thr ){

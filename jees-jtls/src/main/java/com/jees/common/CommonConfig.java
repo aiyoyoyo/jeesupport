@@ -8,7 +8,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -30,7 +29,7 @@ public class CommonConfig {
 
 	/**
 	 * 获取所有配置内容中的某个Key对应的Value
-	 * @param _key
+	 * @param _key 标签名
 	 * @return String null
 	 */
 	public static String get( String _key ) {
@@ -67,7 +66,7 @@ public class CommonConfig {
 		return getByte( _key, (byte) 0);
 	}
 
-	public static double getDouble( String _key ) { return getDouble( _key, 0D ); };
+	public static double getDouble( String _key ) { return getDouble( _key, 0D ); }
 
 	public static String getString( String _key, String _def ) {
 		String val = get( _key );
@@ -76,7 +75,7 @@ public class CommonConfig {
 
 	public static boolean getBoolean( String _key, boolean _def ) {
 		String val = getString( _key, _def ? "true" : "false" );
-		return val.equalsIgnoreCase( "true" );
+		return "true".equalsIgnoreCase( val );
 	}
 
 	public static int getInteger( String _key, int _def ) {
@@ -141,7 +140,8 @@ public class CommonConfig {
 		return getArray( _key, _t, SPLIT_DELIM );
 	}
 
-	public static <T> T[] getArray( String _key, Class<T> _t, String _delim ){
+	@SuppressWarnings("unchecked")
+	public static <T> T[] getArray(String _key, Class<T> _t, String _delim ){
 		StringTokenizer st = getStringTokenizer( _key, _delim );
 		T[] t = (T[]) Array.newInstance(_t, st.countTokens());
 
@@ -162,16 +162,26 @@ public class CommonConfig {
 		String val;
 		if( _obj != null ){
 			val = _obj.toString();
-		}else return _def;
+		}else {
+			return _def;
+		}
 		try{
 			Object tpl;
-			if( _def instanceof Integer ) tpl = getInteger( val, ((Integer) _def).intValue());
-			else if( _def instanceof Float ) tpl = getFloat( val, ((Float) _def).floatValue());
-			else if( _def instanceof Boolean ) tpl = getBoolean( val, ((Boolean) _def).booleanValue());
-			else if( _def instanceof Long ) tpl = getLong( val, ((Long) _def).longValue());
-			else if( _def instanceof Byte ) tpl = getByte( val, ((Byte) _def).byteValue() );
-			else if( _def instanceof Double ) tpl = getDouble( val, ((Double) _def).doubleValue() );
-			else tpl = getString( val, (String) _def);
+			if( _def instanceof Integer ) {
+				tpl = getInteger( val, (Integer) _def);
+			} else if( _def instanceof Float ) {
+				tpl = getFloat( val, (Float) _def);
+			} else if( _def instanceof Boolean ) {
+				tpl = getBoolean( val, (Boolean) _def);
+			} else if( _def instanceof Long ) {
+				tpl = getLong( val, (Long) _def);
+			} else if( _def instanceof Byte ) {
+				tpl = getByte( val, (Byte) _def);
+			} else if( _def instanceof Double ) {
+				tpl = getDouble( val, (Double) _def);
+			} else {
+				tpl = getString( val, (String) _def);
+			}
 			return (T) tpl;
 		}catch ( Exception e ){
 			return _def;

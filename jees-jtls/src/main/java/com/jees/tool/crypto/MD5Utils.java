@@ -8,7 +8,6 @@ import org.springframework.util.DigestUtils;
  * @author aiyoyoyo
  */
 public class MD5Utils {
-
 	/**
 	 * 无私钥MD5加密
 	 * 

@@ -15,20 +15,40 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 @Log4j2
+@SuppressWarnings("unchecked")
 public class Session< ID, NET >{
     Map< NET, ISuperUser< ID, NET > >           net2usr = new ConcurrentHashMap<>();
     // 是否有效用户，以下数据为准
     Map< ID, NET > id2net = new ConcurrentHashMap<>();
 
-    public < T extends ISuperUser< ID, NET > > T findById( ID _id ){
+    /**
+     * 根据用户ID查找用户
+     * @param _id
+     * @return
+     * @param <T>
+     */
+    public < T extends ISuperUser< ID, NET > > T findById(ID _id ){
         NET net = id2net.getOrDefault( _id, null );
         return ( T ) net2usr.getOrDefault( net, null );
     }
+
+    /**
+     * 根据网络对象查找用户
+     * @param _net
+     * @return
+     * @param <T>
+     */
     public < T extends ISuperUser< ID, NET > > T findByNet( NET _net ){
         return ( T ) net2usr.getOrDefault( _net, null );
     }
 
     // 客户端行为方法
+
+    /**
+     * 用户进入并连接
+     * @param _user
+     * @param <T>
+     */
     public < T extends ISuperUser< ID, NET > > void enter( T _user ){
         NET net = _user.getNet();
         net2usr.put( net, _user );

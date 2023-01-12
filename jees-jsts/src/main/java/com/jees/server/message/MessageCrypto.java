@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Log4j2
 @Component
 @Scope( value = ISocketServer.SCOPE_CREATOR )
+@SuppressWarnings("unchecked")
 public class MessageCrypto extends AbsNettyDecoder{
 	// 网络字节序，默认为大端字节序
 	public static final int		MAX_FRAME_LENGTH		= 1024 * 4;

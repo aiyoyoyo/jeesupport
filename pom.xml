@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -31,25 +31,25 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
-        <jees.version>1.7.1</jees.version>
+        <jees.version>1.7.2</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
-        <spring.boot.version>2.7.5</spring.boot.version>
+        <spring.boot.version>2.7.7</spring.boot.version>
         <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
         <mysql5.version>5.1.44</mysql5.version>
-        <mysql8.version>8.0.12</mysql8.version>
-        <jodatime.version>2.10.8</jodatime.version>
+        <mysql8.version>8.0.30</mysql8.version>
+        <jodatime.version>2.12.2</jodatime.version>
         <lombok.version>1.18.24</lombok.version>
         <netty.version>4.1.50.Final</netty.version>
-        <commons.pool2.version>2.6.1</commons.pool2.version>
-        <commons.lang3.version>3.11</commons.lang3.version>
-        <fastjson.version>2.0.19</fastjson.version>
+        <commons.pool2.version>2.11.1</commons.pool2.version>
+        <commons.lang3.version>3.12.0</commons.lang3.version>
+        <fastjson.version>2.0.22</fastjson.version>
         <protostuff.version>1.7.2</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
         <oracle.version>19.3.0.0</oracle.version>
-        <sqlserver.version>9.2.1.jre8</sqlserver.version>
+        <sqlserver.version>11.2.2.jre8</sqlserver.version>
         <ucanaccess.version>4.0.1</ucanaccess.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
@@ -201,16 +201,16 @@
         </resources>
     </build>
     <dependencies>
+        <!-- Lombok -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring.boot.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <!-- Jeesupport -->
             <dependency>
                 <groupId>com.github.aiyoyoyo</groupId>
                 <artifactId>jees-jtls</artifactId>
@@ -230,6 +230,128 @@
                 <groupId>com.github.aiyoyoyo</groupId>
                 <artifactId>jees-webs</artifactId>
                 <version>${jees.version}</version>
+            </dependency>
+            <!-- Apache Commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons.pool2.version}</version>
+            </dependency>
+            <!-- Fastjson -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- joda-time -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${jodatime.version}</version>
+            </dependency>
+            <!-- Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-thymeleaf</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- SqlServer -->
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>${sqlserver.version}</version>
+            </dependency>
+            <!-- Access -->
+            <dependency>
+                <groupId>net.sf.ucanaccess</groupId>
+                <artifactId>ucanaccess</artifactId>
+                <version>${ucanaccess.version}</version>
+            </dependency>
+            <!-- netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <!-- io protostuff -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-api</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <!-- thymeleaf -->
+            <dependency>
+                <groupId>org.thymeleaf.extras</groupId>
+                <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+                <version>${extras.sec.version}</version>
+            </dependency>
+            <!-- directwebremoting -->
+            <dependency>
+                <groupId>org.directwebremoting</groupId>
+                <artifactId>dwr</artifactId>
+                <version>${dwr.version}</version>
+            </dependency>
+            <!-- Mysql -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql8.version}</version>
+<!--                <version>${mysql5.version}</version>-->
             </dependency>
         </dependencies>
     </dependencyManagement>

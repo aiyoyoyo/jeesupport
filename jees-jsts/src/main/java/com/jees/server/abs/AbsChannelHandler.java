@@ -31,6 +31,7 @@ import java.util.Map;
  * 客户端连接的请求处理器，可以用作通用的消息发送器。
  */
 @Log4j2
+@SuppressWarnings("unchecked")
 public abstract class AbsChannelHandler<NET extends ChannelHandlerContext, ID > implements IChannelHandler< NET >{
 
     private static Map< Integer , Class< ? > > handlerClases = new HashMap<>();

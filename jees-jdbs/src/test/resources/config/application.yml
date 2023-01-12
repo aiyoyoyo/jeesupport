@@ -1,6 +1,6 @@
 #日志配置，此处使用默认日志
 logging:
- config: classpath:config/logback.xml
+ config: classpath:config/log4j2.xml
 
 spring:
  application:

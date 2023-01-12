@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 @Log4j2
 @Component
 @Scope( value = "prototype" )
+@SuppressWarnings("unchecked")
 public class Sender{
     Queue< Object > queue = new LinkedList<>();
 

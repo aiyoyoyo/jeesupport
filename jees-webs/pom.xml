@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.aiyoyoyo</groupId>
         <artifactId>jeesupport</artifactId>
-        <version>1.7.1</version>
+        <version>1.7.2</version>
     </parent>
 
     <groupId>com.github.aiyoyoyo</groupId>
@@ -19,21 +19,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring.boot.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Jees -->
+        <!-- Jeesupport -->
         <dependency>
             <groupId>com.github.aiyoyoyo</groupId>
             <artifactId>jees-jdbs</artifactId>
@@ -41,23 +27,25 @@
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>${spring.boot.version}</version>
         </dependency>
+        <!-- thymeleaf -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-            <version>${extras.sec.version}</version>
         </dependency>
         <!-- Dwr -->
         <dependency>
@@ -65,10 +53,12 @@
             <artifactId>dwr</artifactId>
             <version>${dwr.version}</version>
         </dependency>
+        <!-- Mysql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql8.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
