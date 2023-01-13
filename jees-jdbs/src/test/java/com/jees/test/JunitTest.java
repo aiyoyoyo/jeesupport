@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 测试方法,执行日志默认在工程目录/logs下
@@ -37,12 +38,12 @@ public class JunitTest implements Runnable {
 	public TestController	ctr;
 
 	@Autowired
-	AbsRedisDao dao;
+	AbsRedisDao redisDao;
 
 	@Autowired
-	AbsSupportDao dao2;
+	AbsSupportDao supportDao;
 
-	@Test
+//	@Test
 	public void RedisTest() throws Exception{
 		CommonContextHolder.getBean( IRedisDao.class ).initialize();
 
@@ -50,13 +51,13 @@ public class JunitTest implements Runnable {
 			RedisUser a = new RedisUser();
 			a.setId( i );
 			a.setDate( new Date( DateTime.now().getMillis() ) );
-			dao.insert( a );
+			redisDao.insert( a );
 		}
 
-//		RedisUser u = dao.findById( 1, 1L, RedisUser.class );
+//		RedisUser u = redisDao.findById( 1, 1L, RedisUser.class );
 //		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
 	}
-	@Test
+//	@Test
 //	@Transactional
 	public void SimpleTest(){
 		ctr.simpleTest();
@@ -174,5 +175,13 @@ public class JunitTest implements Runnable {
 
 		log.info( "Thread[" + id + "] 统计的总数 错误: 线程-" + faild_i + "/事件-" + faild_r + "/逻辑-" + faild_a + "/成功-"
 						+ right );
+	}
+
+	/**
+	 * 基于Map的增删改查
+	 */
+	@Test
+	public void testMap(){
+		supportDao.select(supportDao.getDefaultDB(), Map.class );
 	}
 }

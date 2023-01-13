@@ -29,6 +29,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 		AbsSupportDao.sessionFactoryMap = sessionFactoryMap;
 	}
 
+	@Override
 	public String getDefaultDB(){
 		return CommonConfig.get( "jees.jdbs.defaultDB", "default" );
 	}
@@ -36,10 +37,11 @@ public abstract class AbsSupportDao implements ISupportDao {
 	private void _set_parameter( Query _query, String[] _param, Object[] _value ){
 		if ( _param != null && _value != null ) {
 			for( int i = 0; i < _param.length; i ++ ){
-				if( _value[i] instanceof Collection )
-					_query.setParameterList( _param[i] , ( Collection<?> ) _value[i] );
-				else
-					_query.setParameter( _param[i] ,_value[i] );
+				if( _value[i] instanceof Collection ) {
+					_query.setParameterList(_param[i], (Collection<?>) _value[i]);
+				}else {
+					_query.setParameter(_param[i], _value[i]);
+				}
 			}
 		}
 	}
@@ -83,12 +85,15 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	protected void _flush_session( Session _session ) {
-		if ( _session == null ) return;
+		if ( _session == null ) {
+			return;
+		}
 		_session.flush();
 		_session.clear();
 	}
 
-	public void putSessionFactory( String _db, SessionFactory _sf ){
+	@Override
+	public void putSessionFactory(String _db, SessionFactory _sf ){
 		sessionFactoryMap.put( _db, _sf );
 	}
 	// insert /////////////////////////////////////////////////////////////
@@ -112,7 +117,9 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 		for ( T e : _list ) {
 			session.save( e );
-			if ( ++exnum % _flush == monum ) _flush_session( session );
+			if ( ++exnum % _flush == monum ) {
+				_flush_session( session );
+			}
 		}
 
 		_flush_session( session );
@@ -139,7 +146,9 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 		for ( T e : _list ) {
 			session.delete( e );
-			if ( ++exnum % _flush == monum ) _flush_session( session );
+			if ( ++exnum % _flush == monum ) {
+				_flush_session( session );
+			}
 		}
 
 		_flush_session( session );
@@ -166,13 +175,16 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 		for ( T e : _list ) {
 			session.merge( e );
-			if ( ++exnum % _flush == monum ) _flush_session( session );
+			if ( ++exnum % _flush == monum ) {
+				_flush_session( session );
+			}
 		}
 
 		_flush_session( session );
 	}
 
 	// select /////////////////////////////////////////////////////////////////
+
 	@Override
 	public < T > List< T > select( String _db , Class< T > _cls ) {
 		return select( _db , _cls , DEFAULT_LIMIT );
@@ -187,7 +199,6 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > select( String _db , Class< T > _cls , int _first , int _limit ) {
 		Session session = _get_session( _db );
-		System.out.println( "session->" + session.toString() );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
 		criteria.from( _cls );
 		return session.createQuery( criteria )
@@ -198,7 +209,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@SuppressWarnings( "unchecked" )
 	public < T > T selectById( String _db , Class< T > _cls , Serializable _id ) {
 		Session session = _get_session( _db );
-		return ( T ) session.get( _cls , _id );
+		return session.get( _cls , _id );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -346,5 +357,141 @@ public abstract class AbsSupportDao implements ISupportDao {
 		} finally {
 			_flush_session( session );
 		}
+	}
+
+
+	@Override
+	public void insert(Object _entity) {
+		this.insert( getDefaultDB(), _entity);
+	}
+
+	@Override
+	public <T> void insertAll(List<T> _list) {
+		this.insertAll( getDefaultDB(), _list);
+	}
+
+	@Override
+	public <T> void insertAll(List<T> _list, int _flush) {
+		this.insertAll( getDefaultDB(), _list, _flush );
+	}
+
+	@Override
+	public void delete(Object _entity) {
+		this.delete( getDefaultDB(), _entity );
+	}
+
+	@Override
+	public <T> void deleteAll(List<T> _list) {
+		this.deleteAll( getDefaultDB(), _list );
+	}
+
+	@Override
+	public <T> void deleteAll(List<T> _list, int _flush) {
+		this.deleteAll( getDefaultDB(), _list, _flush );
+	}
+
+	@Override
+	public void update(Object _entity) {
+		this.update( getDefaultDB(), _entity );
+	}
+
+	@Override
+	public <T> void updateAll(List<T> _list) {
+		this.updateAll( getDefaultDB(), _list );
+	}
+
+	@Override
+	public <T> void updateAll(List<T> _list, int _flush) {
+		this.updateAll( getDefaultDB(), _list, _flush );
+	}
+
+	@Override
+	public <T> List<T> select(Class<T> _cls) {
+		return this.select( getDefaultDB(), _cls );
+	}
+
+	@Override
+	public <T> List<T> select(Class<T> _cls, int _limit) {
+		return this.select( getDefaultDB(), _cls, _limit );
+	}
+
+	@Override
+	public <T> List<T> select(Class<T> _cls, int _first, int _limit) {
+		return this.select( getDefaultDB(), _cls, _first, _limit );
+	}
+
+	@Override
+	public <T> T selectById(Class<T> _cls, Serializable _id) {
+		return this.selectById( getDefaultDB(), _cls, _id );
+	}
+
+	@Override
+	public <T> List<T> selectByHQL(String _hql, String[] _param, Object[] _value, Class<T> _cls) {
+		return this.selectByHQL( getDefaultDB(), _hql, _param, _value, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectByHQL(String _hql, int _first, int _limit, String[] _param, Object[] _value, Class<T> _cls) {
+		return this.selectByHQL( getDefaultDB(), _hql, _first, _limit,  _param, _value, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectByHQL(String _hql, Map _param, Class<T> _cls) {
+		return this.selectByHQL( getDefaultDB(), _hql, _param, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectByHQL(String _hql, int _first, int _limit, Map _param, Class<T> _cls) {
+		return this.selectByHQL( getDefaultDB(), _hql, _first, _limit, _param, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectBySQL(String _sql, String[] _param, Object[] _value, Class<T> _cls) {
+		return this.selectBySQL( getDefaultDB(), _sql, _param, _value, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectBySQL(String _sql, int _first, int _limit, String[] _param, Object[] _value, Class<T> _cls) {
+		return this.selectBySQL( getDefaultDB(), _sql, _first, _limit, _param, _value, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectBySQL(String _sql, Map _param, Class<T> _cls) {
+		return this.selectBySQL( getDefaultDB(), _sql, _param, _cls );
+	}
+
+	@Override
+	public <T> List<T> selectBySQL(String _sql, int _first, int _limit, Map _param, Class<T> _cls) {
+		return this.selectBySQL( getDefaultDB(), _sql, _first, _limit, _param, _cls );
+	}
+
+	@Override
+	public <T> long selectCount(Class<T> _cls) {
+		return this.selectCount( getDefaultDB(), _cls );
+	}
+
+	@Override
+	public long selectCountByHQL(String _hql, String[] _param, Object[] _value) {
+		return this.selectCountByHQL( getDefaultDB(), _param, _value );
+	}
+
+	@Override
+	public long selectCountBySQL(String _sql, String[] _param, Object[] _value) {
+		return this.selectCountBySQL( getDefaultDB(), _sql, _param, _value );
+	}
+
+	@Override
+	public int executeByHQL(String _hql, String[] _param, Object[] _value) {
+		return this.executeByHQL( getDefaultDB(), _hql, _param, _value );
+	}
+
+	@Override
+	public int executeBySQL(String _sql, String[] _param, Object[] _value) {
+		return this.executeBySQL( getDefaultDB(), _sql, _param, _value );
+	}
+
+	@Override
+	public int executeBySQL(String _sql, Map _data) {
+		return this.executeBySQL( getDefaultDB(), _sql, _data );
 	}
 }

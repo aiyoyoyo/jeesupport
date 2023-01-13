@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 通过缓存操作的形式，先记录要操作的数据（不包含查询），在需要的时候通过commit()提交。
  * @author aiyoyoyo
  */
-public class BaseDao extends AbsSupportDao{
+public class CacheDao extends AbsSupportDao{
     private Map< String, List<Object> > insertMap = new ConcurrentHashMap<>();
     private Map< String, List<Object> > deleteMap = new ConcurrentHashMap<>();
     private Map< String, List<Object> > updateMap = new ConcurrentHashMap<>();
@@ -22,17 +22,24 @@ public class BaseDao extends AbsSupportDao{
         if( _obj instanceof Collection ) {
             Collection<?> coll = (Collection<?>) _obj;
             list.forEach( o -> {
-                if( coll.contains( o ) ) coll.remove( o );
+                if( coll.contains( o ) ) {
+                    coll.remove( o );
+                }
             } );
             real_push = coll.size() > 0;
-            if( real_push ) list.addAll( coll );
+            if( real_push ) {
+                list.addAll( coll );
+            }
         }else {
-            if( _obj != null && !list.contains( _obj ) )
+            if( _obj != null && !list.contains( _obj ) ) {
                 list.add(_obj);
+            }
             real_push = list.size() > 0;
         }
 
-        if( real_push ) _map.put( _db, list );
+        if( real_push ) {
+            _map.put( _db, list );
+        }
     }
 
     /**
@@ -40,7 +47,8 @@ public class BaseDao extends AbsSupportDao{
      * @param _db 数据库标识
      * @param _obj 映射类
      */
-    public void insert( String _db, Object _obj ){
+    @Override
+    public void insert(String _db, Object _obj ){
         _push( _db, _obj, insertMap );
     }
 
@@ -49,7 +57,8 @@ public class BaseDao extends AbsSupportDao{
      * @param _db 数据库标识
      * @param _obj 映射类
      */
-    public void update( String _db, Object _obj ){
+    @Override
+    public void update(String _db, Object _obj ){
         _push( _db, _obj, updateMap );
     }
 
@@ -58,13 +67,15 @@ public class BaseDao extends AbsSupportDao{
      * @param _db 数据库标识
      * @param _obj 映射类
      */
-    public void delete( String _db, Object _obj ){
+    @Override
+    public void delete(String _db, Object _obj ){
         _push( _db, _obj, deleteMap );
     }
 
     /**
      * 正式提交到数据库，该方法会剔除insert/update数据中已经被声明在delete中的重复对象
      */
+    @Override
     @Autowired
     public void commit(){
         try {
@@ -95,15 +106,27 @@ public class BaseDao extends AbsSupportDao{
             insertMap.keySet().forEach(key -> {
                 List<?> list = insertMap.getOrDefault(key, new ArrayList<>() );
                 Iterator< ? > it = list.iterator();
-                while( it.hasNext() ) if ( it.next() == null ) it.remove();
-                if( list.size() > 0 ) insertAll(key, list );
+                while( it.hasNext() ) {
+                    if ( it.next() == null ) {
+                        it.remove();
+                    }
+                }
+                if( list.size() > 0 ) {
+                    insertAll(key, list );
+                }
             });
 
             updateMap.keySet().forEach(key ->{
                 List<?> list = updateMap.getOrDefault(key, new ArrayList<>() );
                 Iterator< ? > it = list.iterator();
-                while( it.hasNext() ) if ( it.next() == null ) it.remove();
-                if( list.size() > 0 ) updateAll(key, list );
+                while( it.hasNext() ) {
+                    if ( it.next() == null ) {
+                        it.remove();
+                    }
+                }
+                if( list.size() > 0 ) {
+                    updateAll(key, list );
+                }
             });
 
         }finally {

@@ -1,10 +1,15 @@
 package com.jees.core.database.dao;
 
 import com.jees.core.database.support.AbsSupportDao;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
+/**
+ * 此类实现了基础的Dao操作，需要的修改的话自行继承并覆盖
+ */
+@Log4j2
 public class SimpleDao extends AbsSupportDao {
 	// 一些常用的SQL查询
 
@@ -46,5 +51,6 @@ public class SimpleDao extends AbsSupportDao {
 
 	@Override
 	public void commit() {
+		log.warn( "无提交处理实现，需要继承实现！" );
 	}
 }
