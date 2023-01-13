@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -137,4 +138,14 @@ public interface ISupportDao {
 	int executeBySQL( String _sql , String[] _param, Object[] _value );
 
 	int executeBySQL( String _sql , Map _data );
+
+	<T> List<T> select( String _table );
+	<T> List<T> select( String _db, String _table );
+	<T> List<T> select( String _table, int _offset, int _limit );
+	<T> List<T> select( String _db, String _table, int _offset, int _limit );
+	<T> List<T> select( String _table, Map _param );
+	<T> List<T> select( String _db, String _table, Map _param );
+	<T> List<T> select( String _table, Map _param, int _offset, int _limit );
+	<T> List<T> select( String _db, String _table, Map _param, int _offset, int _limit );
+	<T> List<T> select(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit );
 }

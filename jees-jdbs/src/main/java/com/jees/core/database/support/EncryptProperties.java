@@ -39,9 +39,11 @@ public class EncryptProperties extends Properties {
 	public Object setProperty( String _key , String _val ) {
 		try {
 			if ( _key.equalsIgnoreCase( "user" ) || _key.equalsIgnoreCase( "password" )
-					|| _key.equalsIgnoreCase( "url" ) )
+					|| _key.equalsIgnoreCase( "url" ) ) {
 				return super.setProperty( _key , AESUtils.s_decrypt( this.keys , _val ) ) ;
-			else return super.setProperty( _key , _val ) ;
+			} else {
+				return super.setProperty( _key , _val ) ;
+			}
 		} catch ( Exception e ) {
 			log.error( "密钥错误，请确认密钥和密文是否配套。" ) ;
 		}

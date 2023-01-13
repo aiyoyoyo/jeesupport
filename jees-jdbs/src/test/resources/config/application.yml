@@ -82,41 +82,43 @@ jees:
 #     platform: com.jees.core.database.config.AtomikosJtaPlatform
 #     coordinatorClass: jta
 ### MySQL ###
-   testa:
-    dbtype: mysql
-    orm: hibernate
-    user: root
-    password: root
-    url: jdbc:mysql://192.168.3.128:3306/testa
-    pinGlobalTxToPhysicalConnection: true
-    uniqueResourceName: datasourceA
-    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
-    poolSize: 1
-    maxPoolSize: 3
-    minPoolSize: 1
-    maxIdleTime: 60
-    packagesToScan: com.jees.test.entity
-    hibernate:
-      dialect: org.hibernate.dialect.MySQL55Dialect
-    showSql: true
-    factoryClass: org.hibernate.transaction.JTATransactionFactory
-    # create/update/none
-    hbm2ddl: create
-    platform: com.jees.core.database.config.AtomikosJtaPlatform
-    coordinatorClass: jta
-## 多数据库 ###
-#   testb:
+#   testa:
 #    dbtype: mysql
 #    orm: hibernate
 #    user: root
 #    password: root
-#    url: jdbc:mysql://localhost:3306/testb
+#    url: jdbc:mysql://127.0.0.1:3306/testa
 #    pinGlobalTxToPhysicalConnection: true
-#    uniqueResourceName: datasourceB
+#    uniqueResourceName: datasourceA
 #    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
 #    poolSize: 1
 #    maxPoolSize: 3
 #    minPoolSize: 1
 #    maxIdleTime: 60
 #    packagesToScan: com.jees.test.entity
+#    hibernate:
+#      dialect: org.hibernate.dialect.MySQL55Dialect
+#    showSql: true
+#    factoryClass: org.hibernate.transaction.JTATransactionFactory
+#    # create/update/none
+#    hbm2ddl: create
+#    platform: com.jees.core.database.config.AtomikosJtaPlatform
+#    coordinatorClass: jta
+## 多数据库 Mysql8 ###
+#   testb:
+#    dbtype: mysql8
+#    orm: hibernate
+#    user: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306/testb
+#    pinGlobalTxToPhysicalConnection: true
+#    uniqueResourceName: datasourceB
+#    xaDataSourceClassName: com.mysql.cj.jdbc.MysqlXADataSource
+#    poolSize: 1
+#    maxPoolSize: 3
+#    minPoolSize: 1
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
+#   hibernate:
+#    dialect: com.mysql.cj.jdbc.MysqlXADataSource
 

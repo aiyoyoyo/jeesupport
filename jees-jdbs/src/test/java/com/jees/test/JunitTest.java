@@ -1,5 +1,6 @@
 package com.jees.test;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +27,7 @@ import java.util.Map;
  */
 //@RunWith( SpringJUnit4ClassRunner.class )
 @SpringBootTest
+@ActiveProfiles("test")
 @ComponentScan("com.jees")
 @Log4j2
 @PropertySource(value={"classpath: config/com.jees.test.cfg"})
@@ -182,6 +186,8 @@ public class JunitTest implements Runnable {
 	 */
 	@Test
 	public void testMap(){
-		supportDao.select(supportDao.getDefaultDB(), Map.class );
+		String[] test = CommonConfig.getArray( "test.list", String.class );
+		List<Map> As = supportDao.select("A");
+		log.debug( "查询结果" + As.size() );
 	}
 }

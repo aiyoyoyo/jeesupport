@@ -1,6 +1,7 @@
 package com.jees.core.database.support;
 
 import com.jees.common.CommonConfig;
+import com.jees.tool.utils.StringUtil;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,6 +23,7 @@ import java.util.*;
  */
 @Log4j2
 public abstract class AbsSupportDao implements ISupportDao {
+	public static final int DEFAULT_LIMIT = 100;
 	/** 从配置文件中获取数据库链接对象。**/
 	private static Map< String , SessionFactory > sessionFactoryMap = new HashMap<>();
 
@@ -48,13 +50,11 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 	private void _set_parameter( Query _query, Map _param ){
 		if( _param != null ){
-			Iterator key_it = _param.keySet().iterator();
-			while( key_it.hasNext() ){
-				Object key = key_it.next();
-				Object value = _param.get( key );
-				if( value instanceof Collection ) {
+			for (Object key : _param.keySet()) {
+				Object value = _param.get(key);
+				if (value instanceof Collection) {
 					_query.setParameterList(key.toString(), (Collection<?>) value);
-				}else {
+				} else {
 					_query.setParameter(key.toString(), value);
 				}
 			}
@@ -200,7 +200,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > select( String _db , Class< T > _cls , int _first , int _limit ) {
 		Session session = _get_session( _db );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
-		criteria.from( _cls );
+//		criteria.from( _cls );
 		return session.createQuery( criteria )
 				.setFirstResult( _first ).setMaxResults( _limit ).getResultList();
 	}
@@ -306,21 +306,21 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > long selectCount( String _db , Class< T > _cls ) {
 		String hql = "SELECT COUNT(*) FROM ";
 		Query query = _get_session( _db ).createQuery( hql + _cls.getName() );
-		return ( long ) query.iterate().next();
+		return ( long ) query.getResultList().get( 0 );
 	}
 
 	@Override
 	public long selectCountBySQL( String _db , String _sql , String[] _param , Object[] _value ) {
 		Query query = _get_session( _db ).createNativeQuery( _sql );
 		_set_parameter( query, _param, _value );
-		return ( long ) query.iterate().next();
+		return ( long ) query.getResultList().get( 0 );
 	}
 
 	@Override
 	public long selectCountByHQL( String _db , String _hql , String[] _param , Object[] _value ) {
 		Query query = _get_session( _db ).createQuery( _hql );
 		_set_parameter( query, _param, _value );
-		return ( long ) query.iterate().next();
+		return ( long ) query.getResultList().get( 0 );
 	}
 
 	@Override
@@ -472,7 +472,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 	@Override
 	public long selectCountByHQL(String _hql, String[] _param, Object[] _value) {
-		return this.selectCountByHQL( getDefaultDB(), _param, _value );
+		return this.selectCountByHQL( getDefaultDB(), _hql, _param, _value );
 	}
 
 	@Override
@@ -493,5 +493,190 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	public int executeBySQL(String _sql, Map _data) {
 		return this.executeBySQL( getDefaultDB(), _sql, _data );
+	}
+
+	// 基于Map的查询 //////////////////////////////////////////////////////////
+
+	@Override
+	public <T> List<T> select( String _table ){
+		return this.select( getDefaultDB(), _table, null, 0, DEFAULT_LIMIT );
+	}
+	@Override
+	public <T> List<T> select( String _db, String _table ){
+		return this.select( _db, _table, null, 0, DEFAULT_LIMIT );
+	}
+	@Override
+	public <T> List<T> select( String _table, int _offset, int _limit ){
+		return this.select( getDefaultDB(), _table, null, _offset, _limit );
+	}
+	@Override
+	public <T> List<T> select( String _db, String _table, int _offset, int _limit ){
+		return this.select( _db, _table, null, _offset, _limit );
+	}
+	@Override
+	public <T> List<T> select( String _table, Map _param ){
+		return this.select( getDefaultDB(), _table, _param, 0, DEFAULT_LIMIT );
+	}
+	@Override
+	public <T> List<T> select( String _db, String _table, Map _param ){
+		return this.select( _db, _table, _param, 0, DEFAULT_LIMIT );
+	}
+	@Override
+	public <T> List<T> select( String _table, Map _param, int _offset, int _limit ){
+		return this.select( getDefaultDB(), _table, _param, _offset, _limit );
+	}
+	@Override
+	public <T> List<T> select( String _db, String _table, Map _param, int _offset, int _limit ){
+		return this.select( getDefaultDB(), _table, null, _param, _offset, _limit );
+	}
+
+	/**
+	 * 基于Map的基础查询，此处仅表示基础用法，扩展用法需要自己实现
+	 * @param _db
+	 * @param _table
+	 * @param _column
+	 * @param _param
+	 * @param _offset
+	 * @param _limit
+	 * @return
+	 * @param <T>
+	 */
+	@Override
+	public <T> List<T> select(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit ){
+		// jees.jdbs.config.testa.dbtype = mysql //不同数据库会有不同语法情况
+		// jees.jdbs.config.testa.orm = hibernate //可能增加mybatis支持
+		String sql = "SELECT ";
+		// 生成column字段
+		if( _column != null && _column.size() > 0 ){
+			for( String col : _column ){
+				sql += col + ",";
+			}
+			sql = sql.substring( 0, sql.length() - 1 );
+		}else{
+			sql += "*";
+		}
+		sql += " FROM " + _db + "." + _table + " WHERE 1=1 ";
+		String order_by = null;
+		// 生成 where
+		if( _param!= null && _param.size() > 0 ) {
+			order_by = (String) _param.remove( "orderBy" );
+
+			Set<String> keys = _param.keySet();
+			for (String key : keys) {
+				// 生成where的值
+				Object value = _param.get( key );
+				if( value != null ){
+					// 不判断 列是否存在, 仅排除特殊字段
+					sql += " AND ";
+					// 这里仅列出  type == mysql;
+					sql += "`" + key + "`";
+					// 仅支持简单条件，以防字符串拼接注入
+					if( value instanceof String ){
+						String tmp_val = ((String) value).trim();
+						// 特殊字符开头的处理
+						if( tmp_val.startsWith( "%" ) || tmp_val.endsWith( "%" ) || tmp_val.startsWith( "!%") ){
+							if( tmp_val.startsWith( "!%") ){
+								tmp_val = " NOT LIKE " + tmp_val;
+							}else {
+								tmp_val = " LIKE " + tmp_val;
+							}
+						}else if( tmp_val.startsWith( ">" ) || tmp_val.startsWith( "<" ) || tmp_val.startsWith( "=" )
+							|| tmp_val.toLowerCase().startsWith( "not" ) ){
+							// TODO 不做处理直接拼接，但是需要判定结尾是否合法 防止sql注入
+							// not like 要重新
+							// > >= < <= <> = 都需要限定是数字或者时间
+						}else{
+							// TODO 处理字符串中的特殊符号 # ' " 等
+							tmp_val = " = '" + tmp_val + "'";
+						}
+						sql += tmp_val;
+					}else if( value instanceof List || value instanceof Set || value.getClass().isArray() ) {
+						List<Object> list = toList(value);
+						if( list.isEmpty() ){
+						}else{
+							sql += " IN (";
+                            String tmp_o = "";
+							for( Object o : list ){
+								if (o == null) {
+									continue;
+								}
+								if( o instanceof String ){
+									tmp_o += "'" + o + "',";
+								}else if (o instanceof Integer || o instanceof Double
+										|| o instanceof Float || o instanceof Boolean) {
+									tmp_o += o + ",";
+								}else{
+									log.warn( "--未支持的数据类型：" + o );
+								}
+							}
+							sql += tmp_o.substring( 0, tmp_o.length() - 1 ) + ")";
+						}
+					}else{
+						// 仅限整型和布尔型
+						sql += " = " + value;
+					}
+				}else{
+					// 这里可能有2种情况，一种是查 is null 一种是不查，这里取不查
+				}
+			}
+		}
+		// 生成 order by
+		if(StringUtil.isNotEmpty( order_by ) ){
+			sql += " ORDER BY " + order_by;
+		}
+		log.debug( "生成查询语句：" + sql );
+		return this.selectBySQL( sql, new String[]{}, new String[]{}, null );
+	}
+
+	public static List<Object> toList(Object val) {
+		List<Object> list = new ArrayList();
+		if (val instanceof String[]) {
+			String[] arr = (String[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Integer[]) {
+			Integer[] arr = (Integer[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof int[]) {
+			int[] arr = (int[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Long[]) {
+			Long[] arr = (Long[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof long[]) {
+			long[] arr = (long[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Float[]) {
+			Float[] arr = (Float[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof float[]) {
+			float[] arr = (float[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Double[]) {
+			Double[] arr = (Double[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof double[]) {
+			double[] arr = (double[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Boolean[]) {
+			Boolean[] arr = (Boolean[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof boolean[]) {
+			int[] arr = (int[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof Byte[]) {
+			Byte[] arr = (Byte[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof byte[]) {
+			byte[] arr = (byte[]) val;
+			Collections.addAll(list, arr);
+		} else if (val instanceof List || val instanceof ArrayList) {
+			list = (List<Object>) val;
+		} else if (val instanceof Set || val instanceof HashSet){
+			Set tmps = (Set) val;
+			list.addAll( tmps );
+		}else {
+			throw new RuntimeException("can't add to Array");
+		}
+		return list;
 	}
 }

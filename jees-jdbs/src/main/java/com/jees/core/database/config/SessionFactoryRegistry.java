@@ -74,10 +74,10 @@ public class SessionFactoryRegistry {
 
         xaDataSource.setUniqueResourceName( CommonConfig.getString(head + "uniqueResourceName") );
         xaDataSource.setXaProperties( xaProperties );
-//        xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 1));
-        xaDataSource.setMaxPoolSize(CommonConfig.getInteger(head + "maxPoolSize", 10));
-        xaDataSource.setMinPoolSize(CommonConfig.getInteger(head + "minPoolSize", 5));
+        xaDataSource.setMaxPoolSize(CommonConfig.getInteger(head + "maxPoolSize", 30));
+        xaDataSource.setMinPoolSize(CommonConfig.getInteger(head + "minPoolSize", 10));
         xaDataSource.setMaxIdleTime(CommonConfig.getInteger(head + "maxIdleTime", 60));
+        xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 30));
         xaDataSource.setBorrowConnectionTimeout( CommonConfig.getInteger(head + "borrowConnectionTimeout", 60 ) );
 
         log.debug("--创建AbsXADataSource[" + bean + "]。");
@@ -198,11 +198,11 @@ public class SessionFactoryRegistry {
 
         xaDataSource.setUniqueResourceName( _prop.getProperty(head + "uniqueResourceName") );
         xaDataSource.setXaProperties( xaProperties );
-        xaDataSource.setMaxPoolSize(CommonConfig.getInteger(head + "maxPoolSize", 10));
-        xaDataSource.setMinPoolSize(CommonConfig.getInteger(head + "minPoolSize", 1));
+        xaDataSource.setMaxPoolSize(CommonConfig.getInteger(head + "maxPoolSize", 30));
+        xaDataSource.setMinPoolSize(CommonConfig.getInteger(head + "minPoolSize", 10));
         xaDataSource.setMaxIdleTime(CommonConfig.getInteger(head + "maxIdleTime", 60));
         xaDataSource.setBorrowConnectionTimeout( CommonConfig.getInteger(head + "borrowConnectionTimeout", 5000 ) );
-        xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 1));
+        xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 30));
 
         log.debug("--创建AbsXADataSource[" + bean + "]。");
         return xaDataSource;
