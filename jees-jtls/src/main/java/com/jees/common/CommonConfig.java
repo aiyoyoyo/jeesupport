@@ -133,6 +133,9 @@ public class CommonConfig {
 
 	public static StringTokenizer getStringTokenizer( String _key, String _delim ){
 		String val = getString( _key );
+		if(StringUtil.isEmpty(val)){
+			return new StringTokenizer( "", _delim);
+		}
 		return new StringTokenizer( val, _delim );
 	}
 
