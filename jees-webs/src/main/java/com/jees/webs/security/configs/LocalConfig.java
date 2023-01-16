@@ -162,6 +162,9 @@ public class LocalConfig {
                 break;
             case "anonymous":
                 _page.setAnonymous( Boolean.parseBoolean( line_str[1].trim() ));
+                if( !verifyService.getAnonymous().contains( _page.getUrl())){
+                    verifyService.getAnonymous().add(_page.getUrl());
+                }
                 break;
         }
     }

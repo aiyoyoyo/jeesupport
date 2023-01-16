@@ -169,6 +169,29 @@ public class VerifyService {
      * @return
      */
     public boolean validateAnonymous( String _uri ){
+        String[] uri_arr = _uri.split( "/" );
+        for( String anon : this.anonymous ){
+            String[] anon_arr = anon.split( "/" );
+            boolean match_anon = true;
+            for( int i = 0; i < anon_arr.length; i++ ){
+                String anon_arr_str = anon_arr[i];
+                if( i < uri_arr.length ){
+                    String uri_arr_str = uri_arr[i];
+                    if( !anon_arr_str.equals( "*"  ) && !anon_arr_str.equalsIgnoreCase( uri_arr_str ) ){
+                        match_anon = false;
+                        break;
+                    }
+                }else if( !anon_arr_str.equals( "*" ) ){
+                    match_anon = false;
+                    break;
+                }
+            }
+            if( match_anon == true ){
+                // 匹配
+                log.debug( "匿名匹配：" + _uri );
+                return true;
+            }
+        }
         if( this.anonymous.contains( _uri ) ){
             return true;
         }

@@ -1,6 +1,6 @@
 #日志配置，此处使用默认日志
 logging:
-  config: classpath:config/logback.xml
+  config: classpath:config/log4j2.xml
 
 spring:
  application:
@@ -80,7 +80,7 @@ jees:
    login: login
    logout: logout
    # *全局匿名可以访问的url
-   anonymous:
+   anonymous: /test*
    header:
     frameOptions: false
  jdbs:
@@ -97,8 +97,8 @@ jees:
     orm: hibernate
     uniqueResourceName: default
     packagesToScan: com.jees.test.entity
-    url: jdbc:mysql://106.14.104.30:3388/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    user: lims_zh
-    password: lIms@123
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    user: root
+    password: root
     hibernate:
-     hbm2ddl: create
+     hbm2ddl: none

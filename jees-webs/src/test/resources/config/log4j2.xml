@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="project_name">jeesupport</Property>
+        <property name="basePath">.log</property>
+        <property name="console_file">${basePath}/${project_name}.log</property>
+        <!-- 固定格式, 不能修改 -->
+        <property name="console_file_pattern">${basePath}/%d{yyyyMM}/${project_name}.%d{yyyyMMdd}.%i.log.gz</property>
+        <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5level][%thread][%logger{1.}] - %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="ConsoleLog" fileName="${console_file}" filePattern="${console_file_pattern}" append="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="128MB" />
+                <TimeBasedTriggeringPolicy />
+                <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            </Policies>
+            <!-- 实测没效果，用别的方式重写了-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseDir}" maxDepth="1">
+                    <IfFileName glob="*/${project_name}.*.*.log.gz" />
+                    <IfLastModified age="30d">
+                    </IfLastModified>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <Async name="Async" bufferSize="2000" blocking="false">
+            <AppenderRef ref="ConsoleLog"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <!--过滤掉spring的一些无用的debug信息-->
+        <Logger name="org.springframework" level="error"/>
+        <Logger name="org.thymeleaf" level="error"/>
+        <!--JdbcTemplate日志start-->
+        <Logger name="org.springframework.jdbc.core" level="debug"/>
+        <Logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="trace"/>
+        <!--JdbcTemplate日志end-->
+
+        <!--自定义过滤start-->
+        <!--自定义过滤end-->
+
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Async" />
+        </Root>
+    </Loggers>
+</Configuration>
