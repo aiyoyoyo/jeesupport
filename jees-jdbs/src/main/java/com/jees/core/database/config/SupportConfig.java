@@ -102,14 +102,13 @@ public class SupportConfig {
 
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
 
-        StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jdbs.dbNames");
-
-        while( st.hasMoreTokens() ){
-            String d = st.nextToken();
-            sfr.registerSessionFactory( d.trim() );
-        }
-        if( st.countTokens() > 0 ) {
-            return CommonContextHolder.getBean(CommonConfig.getString("jees.jdbs.defaultDB", "default") + "SessionFactory");
+        String[] db_names = CommonConfig.getArray( "jees.jdbs.dataSources", String.class);
+        if( db_names.length == 0){
+            sfr.registerSessionFactory( "default" );//尝试注册默认数据源
+        }else{
+            for( String db_name : db_names ){
+                sfr.registerSessionFactory( db_name.trim() );
+            }
         }
         return null;
     }
