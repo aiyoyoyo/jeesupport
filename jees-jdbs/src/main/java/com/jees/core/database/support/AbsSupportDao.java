@@ -10,6 +10,8 @@ import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
 
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.*;
 
@@ -209,7 +211,8 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > select( String _db , Class< T > _cls , int _first , int _limit ) {
 		Session session = _get_session( _db );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
-//		criteria.from( _cls );
+		criteria.select( criteria.from( _cls ) );
+
 		return session.createQuery( criteria )
 				.setFirstResult( _first ).setMaxResults( _limit ).getResultList();
 	}

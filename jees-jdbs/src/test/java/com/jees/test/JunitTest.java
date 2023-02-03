@@ -6,6 +6,7 @@ import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.test.entity.RedisUser;
+import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
@@ -187,7 +188,8 @@ public class JunitTest implements Runnable {
 	@Test
 	public void testMap(){
 		String[] test = CommonConfig.getArray( "test.list", String.class );
-		List<Map> As = supportDao.select("A");
-		log.debug( "查询结果" + As.size() );
+//		List<Map> As = supportDao.select("A");
+		List<TabA> select = supportDao.select(TabA.class);
+		log.debug( "查询结果" + select.size() );
 	}
 }
