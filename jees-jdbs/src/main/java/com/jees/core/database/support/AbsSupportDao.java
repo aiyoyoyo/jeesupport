@@ -31,9 +31,18 @@ public abstract class AbsSupportDao implements ISupportDao {
 		AbsSupportDao.sessionFactoryMap = sessionFactoryMap;
 	}
 
+	String defaultDB;
 	@Override
 	public String getDefaultDB(){
-		return CommonConfig.get( "jees.jdbs.defaultDB", "default" );
+		if( defaultDB == null ){
+			String[] db_names = CommonConfig.getArray( "jees.jdbs.dataSources", String.class );
+			if( db_names.length == 0 || db_names[0].isEmpty() ){
+				defaultDB = "default";
+			}else{
+				defaultDB = db_names[0];
+			}
+		}
+		return defaultDB;
 	}
 
 	private void _set_parameter( Query _query, String[] _param, Object[] _value ){

@@ -79,7 +79,6 @@ public class SessionFactoryRegistry {
         xaDataSource.setMaxIdleTime(CommonConfig.getInteger(head + "maxIdleTime", 60));
         xaDataSource.setPoolSize(CommonConfig.getInteger(head + "poolSize", 30));
         xaDataSource.setBorrowConnectionTimeout( CommonConfig.getInteger(head + "borrowConnectionTimeout", 60 ) );
-
         log.debug("--创建AbsXADataSource[" + bean + "]。");
         return xaDataSource;
     }
