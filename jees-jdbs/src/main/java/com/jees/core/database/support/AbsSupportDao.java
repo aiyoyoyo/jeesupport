@@ -84,12 +84,12 @@ public abstract class AbsSupportDao implements ISupportDao {
 	protected Session _get_session( String _db ) {
 		if ( sessionFactoryMap.containsKey( _db ) ) {
 			SessionFactory sessionFactory = sessionFactoryMap.get( _db );
-			Session sess = sessionFactory.openSession();
-//			if( sessionFactory.isClosed()) return sessionFactory.openSession();
-			log.debug( sessionFactory.getSessionFactoryOptions() );
-			log.debug( "当前连接数：" + sessionFactory.getStatistics().getConnectCount() );
-			return sess;
-//			return sessionFactory.getCurrentSession();
+			return sessionFactory.getCurrentSession();
+//			Session sess = sessionFactory.openSession();
+////			if( sessionFactory.isClosed()) return sessionFactory.openSession();
+//			log.debug( sessionFactory.getSessionFactoryOptions() );
+//			log.debug( "当前连接数：" + sessionFactory.getStatistics().getConnectCount() );
+//			return sess;
 		}
 
 		throw new NullPointerException( "没有找到数据库[" + _db + "]的对应Session容器，请检查配置文件中是否正确。" );
@@ -101,6 +101,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 		}
 		_session.flush();
 		_session.clear();
+	}
+
+	protected void _close_session( Session _session ) {
+		if ( _session == null ) {
+			return;
+		}
+		_session.close();
 	}
 
 	@Override

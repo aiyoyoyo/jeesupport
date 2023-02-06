@@ -59,7 +59,8 @@ public class CommonContextHolder implements ApplicationContextAware {
 		_check_application_context();
 		Collection<T> beans = applicationContext.getBeansOfType(_cls).values();
 		if (beans.size() == 0) {
-			log.warn(_cls.getName() + "没有注入对象。");
+			log.warn(_cls.getName() + "没有被注入或者缺少实现类!");
+			return null;
 		}
 		return beans.iterator().next();
 	}

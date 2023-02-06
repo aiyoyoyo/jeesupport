@@ -4,6 +4,7 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.core.interf.ICodeDefine;
+import com.jees.webs.core.interf.ISuperLogin;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.struct.ServerMessage;
 import com.jees.webs.security.service.VerifyService;
@@ -98,19 +99,29 @@ public class SecurityService {
     public AuthenticationSuccessHandler successHandler(){
         return (_request, _response, _auth) -> {
             log.debug( "--登陆成功" );
-            // TODO 登录限制，重复登录，账号锁定等在这里判断
+            _request.getSession().setAttribute( ISupportEL.Message_EL, null );
+
             getSessionRegistry().registerNewSession( _request.getSession().getId(), _auth.getPrincipal() );
             supportELService.registerLoginSession( _request, _response, _auth );
 
+            // TODO 登录限制，重复登录，账号锁定等在这里判断
+            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            if( login_impl != null ){
+                login_impl.success( _request, _response, _auth );
+            }
+            // TODO 记录未登录的路径，登录成功后自动跳转
+            String cache_url = null;
 //            RequestCache requestCache = new HttpSessionRequestCache();
 //            SavedRequest savedRequest = requestCache.getRequest( _request, _response );
-            String       url          = null;
 //            String       err_url      = "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err;
 //            if( savedRequest != null && !savedRequest.getRedirectUrl().contains(err_url) ) url = savedRequest.getRedirectUrl();
 //            log.debug( "--登陆后转向：" + url );
 //
-            if( url == null ) redirectStrategy().sendRedirect( _request, _response, "/" );
-            else _response.sendRedirect( url );
+            if( cache_url == null ){// 默认跳转首页
+                redirectStrategy().sendRedirect( _request, _response, "/" );
+            }else{
+                _response.sendRedirect( cache_url );
+            }
         };
     }
 
@@ -122,11 +133,14 @@ public class SecurityService {
     @Bean
     public AuthenticationFailureHandler failureHandler(){
         return (_request, _response, _e) -> {
-            String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
-
+            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            if( login_impl != null ){
+                login_impl.failure( _request, _response, _e );
+            }
             ServerMessage msg = new ServerMessage();
             msg.setCode( ICodeDefine.Login_PasswordInvalid );
             _request.getSession().setAttribute( ISupportEL.Message_EL, msg );
+            String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
             _response.sendRedirect(login_page);
         };
     }

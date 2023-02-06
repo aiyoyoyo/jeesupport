@@ -409,34 +409,45 @@ public class VerifyService {
      * @return
      */
     public static String getRequestIp(HttpServletRequest _request) {
+        String request_ip;
         String ip = _request.getHeader("X-Real-IP");
         if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
             if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
+                request_ip = "";
+            }else {
+                request_ip = ip;
             }
-            return ip;
+        }else{
+            ip = _request.getHeader("X-Forwarded-For");
+            if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+                // 多次反向代理后会有多个IP值，第一个为真实IP。
+                int index = ip.indexOf(',');
+                if (index != -1) {
+                    ip = ip.substring(0, index);
+                }
+                if (ip.contains("../") || ip.contains("..\\")) {
+                    request_ip = "";
+                }else{
+                    request_ip = ip;
+                }
+            } else {
+                try{
+                    ip = _request.getRemoteAddr();
+                    if (ip.contains("../") || ip.contains("..\\")) {
+                        request_ip = "";
+                    }else {
+                        if (ip.equals("0:0:0:0:0:0:0:1")) {
+                            ip = "127.0.0.1";
+                        }
+                        request_ip = ip;
+                    }
+                }catch (Exception e){
+                    log.error("访问者IP未能正确获取，将返回空白IP!");
+                    request_ip = "";
+                }
+            }
         }
-        ip = _request.getHeader("X-Forwarded-For");
-        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
-            // 多次反向代理后会有多个IP值，第一个为真实IP。
-            int index = ip.indexOf(',');
-            if (index != -1) {
-                ip = ip.substring(0, index);
-            }
-            if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
-            }
-            return ip;
-        } else {
-            ip = _request.getRemoteAddr();
-            if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
-            }
-            if (ip.equals("0:0:0:0:0:0:0:1")) {
-                ip = "127.0.0.1";
-            }
-            return ip;
-        }
+        return request_ip;
     }
 
     /**
