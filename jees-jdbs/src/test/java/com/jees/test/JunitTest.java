@@ -5,6 +5,7 @@ import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
+import com.jees.core.database.support.ISupportDao;
 import com.jees.test.entity.RedisUser;
 import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -153,43 +155,71 @@ public class JunitTest implements Runnable {
 	}
 
 	@Override
+	@Transactional
 	public void run() {
-		int c = 0;
-		while ( c < 100 ) {
-			try {
-				Thread.sleep( 30 );
-				if( id % 3 == 0 ){
-					ctr.moreThreadTestA();
-				}else if( id % 3 == 1 ){
-					ctr.moreThreadTestB();
-				}else{
-					ctr.moreThreadTestC();
+//		int c = 0;
+//		while ( c < 100 ) {
+//			try {
+//				Thread.sleep( 30 );
+//				if( id % 3 == 0 ){
+//					ctr.moreThreadTestA();
+//				}else if( id % 3 == 1 ){
+//					ctr.moreThreadTestB();
+//				}else{
+//					ctr.moreThreadTestC();
+//				}
+//				right++;
+//			} catch ( ArithmeticException e ) {
+//				// 这里可以认为是正确，程序代码逻辑错误导致运算异常，比如 变量除以零
+//				faild_a++;
+//			} catch ( InterruptedException e ) {
+//				faild_i++;
+//			} catch ( RuntimeException e ) {
+//				faild_r++;
+//			} catch ( Exception e ) {} finally {
+//				c++;
+//			}
+//		}
+//
+//		log.info( "Thread[" + id + "] 统计的总数 错误: 线程-" + faild_i + "/事件-" + faild_r + "/逻辑-" + faild_a + "/成功-"
+//						+ right );
+
+		while( true ){
+			try{
+				ctr.selectA();
+			}catch( RuntimeException e ){
+				log.error( e.getMessage() );
+				ctr.changeDynamicDataSource();
+			}catch (Exception e){
+				log.error( e.getMessage() );
+			}finally {
+				try {
+					Thread.sleep( 1000 );
+				} catch (InterruptedException ex) {
 				}
-				right++;
-			} catch ( ArithmeticException e ) {
-				// 这里可以认为是正确，程序代码逻辑错误导致运算异常，比如 变量除以零
-				faild_a++;
-			} catch ( InterruptedException e ) {
-				faild_i++;
-			} catch ( RuntimeException e ) {
-				faild_r++;
-			} catch ( Exception e ) {} finally {
-				c++;
 			}
 		}
-
-		log.info( "Thread[" + id + "] 统计的总数 错误: 线程-" + faild_i + "/事件-" + faild_r + "/逻辑-" + faild_a + "/成功-"
-						+ right );
 	}
 
 	/**
 	 * 基于Map的增删改查
 	 */
-	@Test
+//	@Test
 	public void testMap(){
 		String[] test = CommonConfig.getArray( "test.list", String.class );
 //		List<Map> As = supportDao.select("A");
 		List<TabA> select = supportDao.select(TabA.class);
 		log.debug( "查询结果" + select.size() );
+	}
+
+	@Test
+	public void testReConnect(){
+		JunitTest t = new JunitTest();
+		t.id = 0;
+		t.ctr = ctr;
+		new Thread( t ).start();
+		try {
+			Thread.sleep( 1000 * 60 * 1 );
+		} catch ( InterruptedException e ) {}
 	}
 }

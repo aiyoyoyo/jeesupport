@@ -1,8 +1,14 @@
 package com.jees.test;
 
+import com.jees.common.CommonContextHolder;
+import com.jees.core.database.config.SessionFactoryRegistry;
+import com.jees.core.database.support.ISupportDao;
+import com.jees.test.entity.DS_DATA;
 import com.jees.test.entity.TabA;
 import com.jees.test.entity.TabB;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,12 +126,20 @@ public class TestController {
 		@SuppressWarnings( "unused" )
 		int n = 1/ 0;
 	}
-	
-//	@Transactional
+
+	String db;
+	@Transactional
 	public void selectA(){
-		System.out.println( "--SELECT ID:" + ex.selectById( DB_A , TabA.class , 1 ) );
+		if( db == null ){
+			db = DB_A;
+		}
+		System.out.println( "--SELECT ID:" + ex.selectById( db , DS_DATA.class , "1" ) );
 	}
-	
+	public void changeDynamicDataSource(){
+		db = "db";
+		SessionFactoryRegistry sfr = new SessionFactoryRegistry();
+		sfr.registerSessionFactory(db);
+	}
 	@Transactional
 	public void otherTest() {
 		ex.insert( DB_A , new TabA() );

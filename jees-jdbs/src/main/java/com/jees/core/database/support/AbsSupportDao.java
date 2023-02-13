@@ -10,8 +10,6 @@ import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
 
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.*;
 
@@ -84,14 +82,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 	protected Session _get_session( String _db ) {
 		if ( sessionFactoryMap.containsKey( _db ) ) {
 			SessionFactory sessionFactory = sessionFactoryMap.get( _db );
-			return sessionFactory.getCurrentSession();
-//			Session sess = sessionFactory.openSession();
-////			if( sessionFactory.isClosed()) return sessionFactory.openSession();
-//			log.debug( sessionFactory.getSessionFactoryOptions() );
-//			log.debug( "当前连接数：" + sessionFactory.getStatistics().getConnectCount() );
-//			return sess;
+			try {
+				Session sess = sessionFactory.getCurrentSession();
+				return sess;
+			}catch (RuntimeException e){
+				log.error("获取连接对象失败：" + e.getMessage() );
+			}
 		}
-
 		throw new NullPointerException( "没有找到数据库[" + _db + "]的对应Session容器，请检查配置文件中是否正确。" );
 	}
 
@@ -113,6 +110,10 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	public void putSessionFactory(String _db, SessionFactory _sf ){
 		sessionFactoryMap.put( _db, _sf );
+	}
+
+	public SessionFactory getSessionFactory(String _db){
+		return sessionFactoryMap.get( _db );
 	}
 	// insert /////////////////////////////////////////////////////////////
 	@Override
@@ -219,9 +220,11 @@ public abstract class AbsSupportDao implements ISupportDao {
 		Session session = _get_session( _db );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
 		criteria.select( criteria.from( _cls ) );
-
-		return session.createQuery( criteria )
-				.setFirstResult( _first ).setMaxResults( _limit ).getResultList();
+		List<T> results = new ArrayList<>();
+		results = session.createQuery(criteria)
+				.setFirstResult(_first).setMaxResults(_limit).getResultList();
+		_close_session(session);
+		return results;
 	}
 
 	@Override

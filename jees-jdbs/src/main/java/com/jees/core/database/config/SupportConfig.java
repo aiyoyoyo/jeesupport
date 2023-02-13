@@ -6,6 +6,7 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.jta.atomikos.AtomikosProperties;
@@ -101,13 +102,17 @@ public class SupportConfig {
         if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
 
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
-
+        SessionFactoryImpl def_ssf = null;
         String[] db_names = CommonConfig.getArray( "jees.jdbs.dataSources", String.class);
         if( db_names.length == 0){
-            sfr.registerSessionFactory( "default" );//尝试注册默认数据源
+            def_ssf = sfr.registerSessionFactory( "default" );//尝试注册默认数据源
         }else{
+
             for( String db_name : db_names ){
-                sfr.registerSessionFactory( db_name.trim() );
+                SessionFactoryImpl tmp_def = sfr.registerSessionFactory(db_name.trim());
+                if( def_ssf == null ){
+                    def_ssf = tmp_def;
+                }
             }
         }
         return null;

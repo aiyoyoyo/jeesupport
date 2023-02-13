@@ -21,6 +21,8 @@ public interface ISupportDao {
 
 	void putSessionFactory(String _db, SessionFactory _sf );
 
+	SessionFactory getSessionFactory(String _db);
+
 	void insert( String _db , Object _entity );
 
 	< T > void insertAll( String _db , List< T > _list );
