@@ -59,6 +59,7 @@ public class SessionFactoryRegistry {
             IntraVmObjectRegistry.removeResource(res_name);
         } catch (NameNotFoundException e) {
         }
+        new SessionFactoryRegistry().registerSessionFactory(_name);
     }
     private <T> T _get_config( Properties _prop, String _key, T _def ){
         if( _prop == null){
