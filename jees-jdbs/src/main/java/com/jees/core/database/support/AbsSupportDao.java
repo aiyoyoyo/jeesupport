@@ -112,6 +112,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 		sessionFactoryMap.put( _db, _sf );
 	}
 
+	@Override
 	public SessionFactory getSessionFactory(String _db){
 		return sessionFactoryMap.get( _db );
 	}
@@ -220,10 +221,8 @@ public abstract class AbsSupportDao implements ISupportDao {
 		Session session = _get_session( _db );
 		CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(_cls);
 		criteria.select( criteria.from( _cls ) );
-		List<T> results = new ArrayList<>();
-		results = session.createQuery(criteria)
+		List<T> results = session.createQuery(criteria)
 				.setFirstResult(_first).setMaxResults(_limit).getResultList();
-		_close_session(session);
 		return results;
 	}
 
