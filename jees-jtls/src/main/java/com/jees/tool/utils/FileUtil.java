@@ -3,11 +3,16 @@ package com.jees.tool.utils;
 import com.jees.common.CommonConfig;
 import lombok.Cleanup;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -165,6 +170,36 @@ public class FileUtil {
         } catch ( IOException e ) {
             log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
         }
+    }
+
+    /**
+     * 按指定编码读取文件内容
+     * @param _file 文件地址
+     * @param _charset 编码
+     * @param _consumer 读取每行的处理过程
+     * @return
+     * @throws Exception
+     */
+    public static String read( String _file, String _charset, Consumer< ? super String > _consumer ){
+        StringBuffer sb = new StringBuffer();
+        try {
+            @Cleanup LineIterator line_it = FileUtils.lineIterator( new File( _file ), _charset );
+            try {
+                String read_line;
+                while (line_it.hasNext()) {
+                    read_line = line_it.nextLine();
+                    if ( _consumer != null ) {
+                        _consumer.accept( read_line );
+                    }
+                    sb.append( read_line );
+                }
+            } finally {
+                line_it.close();
+            }
+        } catch ( IOException e ) {
+            log.error( "文件读取错误:FILE=[" + _file + "]", e );
+        }
+        return sb.toString();
     }
 
     public static void make( File _file, boolean _dir ){
@@ -426,5 +461,96 @@ public class FileUtil {
      */
     public void delete( String _file ){
 
+    }
+
+    /**
+     * 查找目录下所有匹配格式的文件
+     * @param _path 路径
+     * @param _suffix 指定文件后缀，不指定则查找全部, "/"参数代表仅查找目录
+     * @return
+     */
+    public static Map<String, File> scanFolder(String _path, String _suffix ){
+        Map<String, File> files = new HashMap<>();
+        _scan_files( files, _path, _suffix );
+        return files;
+    }
+
+    /**
+     * 特殊扫描方式，排除filename.ds文件
+     * @param _loads
+     * @param _dir
+     */
+    private static void _scan_files(Map<String, File> _loads, String _dir, String _suffix ){
+        File file = new File( _dir );
+        if( file.exists() && file.isDirectory() ){
+            File[] files = file.listFiles();
+            for( File f : files ){
+                if( _suffix != null && _suffix.equals( "/" ) ){
+                    if( f.isDirectory() ){
+                        _scan_files_load( _loads, f, null );
+                    }
+                }else{
+                    if( f.isDirectory() ){
+                        _scan_files( _loads, f.getAbsolutePath(), _suffix );
+                    }else{
+                        _scan_files_load( _loads, f, _suffix );
+                    }
+                }
+            }
+        }else{
+            _scan_files_load( _loads, file, _suffix );
+        }
+    }
+
+    /**
+     * 排除filename.ds文件
+     * @param _file
+     */
+    private static void _scan_files_load( Map<String, File> _loads, File _file, String _suffix ){
+        String[] file_nanmes = _file.getName().split("\\.");
+        String file_suffix = file_nanmes[file_nanmes.length - 1];
+        String file_full_name = _file.getAbsolutePath();
+        if( _suffix != null && _suffix.indexOf( file_suffix + "," ) == -1 ) { // 如果指定后缀，则进行匹配
+            _loads.put( file_full_name, _file );
+        }else{
+            _loads.put( file_full_name, _file );
+        }
+    }
+
+    /**
+     * 读取gz压缩文件内容
+     * @param _file
+     * @param _buffSize
+     * @param _consumer
+     */
+    public static String[] readGZ( String _file, int _buffSize, Consumer< ? super String > _consumer ){
+        int read_count = 0;
+        String read_line;
+        StringBuffer sb = new StringBuffer();
+        try {
+            @Cleanup FileInputStream fis = new FileInputStream(_file);
+            //使用GZIPInputStream解压GZ文件
+            @Cleanup GzipCompressorInputStream gcis = new GzipCompressorInputStream( fis );
+            @Cleanup ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
+            int count;
+            byte[] buffer = new byte[_buffSize];
+            while ((count = gcis.read(buffer)) != -1) {
+                baos.write(buffer, 0, count);
+            }
+            String str = new String( baos.toByteArray() );
+            String[] str_arr = str.split( "\r\n" );
+            if( _consumer != null ) {
+                for (String tmp : str_arr) {
+                    _consumer.accept( tmp );
+                    read_count++;
+                }
+            }
+            return str_arr;
+        } catch ( FileNotFoundException e ) {
+            log.error( "文件没有找到:FILE=[" + _file + "]" );
+        } catch ( IOException e ) {
+            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
+        }
+        return new String[0];
     }
 }

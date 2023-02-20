@@ -21,6 +21,7 @@ import org.thymeleaf.model.IAttribute;
 import org.thymeleaf.model.IProcessableElementTag;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -77,6 +78,13 @@ public class VerifyService {
         String uri = request.getRequestURI();
         Object principal = authentication.getPrincipal();
         log.debug( "验证用户访问权限，访问地址=" + uri + "， 用户=" + principal );
+        try {
+            HttpSession session = request.getSession();
+        }catch (Exception e){
+            // 一些额外得请求，不能正确获取session信息
+            log.warn("路径[" + uri + "]访问无效：" + e.getMessage());
+            return false;
+        }
 
         boolean result = false;
         // 1. 先验证页面是否允许访问： 匿名页面、错误页面、登录、注册、登出不验证是否登录
@@ -112,6 +120,7 @@ public class VerifyService {
         }
         if( !result ){
             result = this.validateAdministrator(authentication);
+            request.getSession().removeAttribute("MESSAGE" );
         }
         return result;
     }

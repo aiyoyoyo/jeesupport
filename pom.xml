@@ -43,8 +43,10 @@
         <jodatime.version>2.12.2</jodatime.version>
         <lombok.version>1.18.24</lombok.version>
         <netty.version>4.1.50.Final</netty.version>
+        <commons.io.version>2.11.0</commons.io.version>
         <commons.pool2.version>2.11.1</commons.pool2.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
+        <commons.compress.version>1.15</commons.compress.version>
         <fastjson.version>2.0.22</fastjson.version>
         <protostuff.version>1.7.2</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
@@ -201,6 +203,16 @@
         </resources>
     </build>
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-compiler-plugin</artifactId>-->
+<!--            <version>3.3</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-release-plugin</artifactId>-->
+<!--            <version>2.5.3</version>-->
+<!--        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -233,6 +245,11 @@
             </dependency>
             <!-- Apache Commons -->
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
@@ -241,6 +258,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons.pool2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons.compress.version}</version>
             </dependency>
             <!-- Fastjson -->
             <dependency>

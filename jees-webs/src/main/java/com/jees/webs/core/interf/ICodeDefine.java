@@ -28,7 +28,7 @@ public interface ICodeDefine {
     @CodeDesc("用户没有访问权限")
     int User_IsDeny = 406;
     @CodeDesc("服务器出现问题，需要稍后访问")
-    int Server_ErrorState = 500;    // 没有授权配置
+    int Server_ErrorState = 500;    // 没有授权配置，或者其他问题
     @CodeDesc("页面缺少授权信息")
     int Page_NotAccess = 504;
 
