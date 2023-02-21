@@ -62,20 +62,16 @@ public class WebSecurityConfig{
 
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity _hs) throws Exception {
-        AuthenticationManager authenticationManager = _hs.getSharedObject(AuthenticationManagerBuilder.class)
+        AuthenticationManager auth_mgr = _hs.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(securityService)
                 .and()
                 .build();
-        return authenticationManager;
+        return auth_mgr;
     }
 
-//    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
     @Bean
-    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager, HttpSecurity _hs) throws Exception {
+    public SecurityFilterChain securityFilterChain(AuthenticationManager _authMgr, HttpSecurity _hs) throws Exception {
         //Configuring HttpSecurity
         return _hs.build();
     }
