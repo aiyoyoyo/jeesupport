@@ -11,9 +11,12 @@ import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class SecurityService {
+public class SecurityService implements PasswordEncoder {
     public enum SecurityModel{
         NONE,
         LOCAL,
@@ -167,5 +170,47 @@ public class SecurityService {
     @Bean
     public RedirectStrategy redirectStrategy(){
         return new DefaultRedirectStrategy();
+    }
+
+
+    @Override
+    public String encode(CharSequence _pwd) {
+        return this.encodePwd((String) _pwd);
+    }
+    @Override
+    public boolean matches(CharSequence _pwd, String _encode) {
+        boolean match = false;
+        switch( this.model ) {
+            case LOCAL:
+                match = _encode.equals( this.encodePwd((String) _pwd) );
+                break;
+            case DATABASE:
+                // 数据库验证
+                break;
+            case MIXED:
+                match = _encode.equals( this.encodePwd((String) _pwd) );
+                if( match ){
+                    // 数据库验证
+                }
+                break;
+            case NONE:
+            default:
+                // 无验证
+                break;
+        }
+        // 第三方验证
+        boolean thrid = CommonConfig.get("jees.webs.security.enableCustomMatch", false);
+        if( thrid && !match ){
+            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            if( login_impl != null ){
+                match = login_impl.matches( _pwd );
+            }
+        }
+        return match;
+    }
+
+    @Override
+    public boolean upgradeEncoding(String _encode) {
+        return false;
     }
 }

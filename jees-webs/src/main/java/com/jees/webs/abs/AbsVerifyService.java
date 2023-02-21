@@ -1,13 +1,19 @@
 package com.jees.webs.abs;
 
 import com.jees.webs.core.interf.ISupportEL;
+import com.jees.webs.core.service.SecurityService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.regex.Matcher;
+
 /**
  * AbsVerifyService 抽象实现类，实现了操作权限配置文件verify.cfg的一些方法。
  */
 @Log4j2
-public abstract class AbsVerifyService implements ISupportEL {
-
+public abstract class AbsVerifyService implements ISupportEL, PasswordEncoder {
 //    // 配置文件中的菜单，角色，用户信息，可与AbsSuperService中合并
 //    @Getter
 //    @Setter
@@ -471,5 +477,4 @@ public abstract class AbsVerifyService implements ISupportEL {
 //    protected abstract Class<R> roleClass();
 //
 //    protected abstract Class<M> menuClass();
-
 }

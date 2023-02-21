@@ -30,4 +30,11 @@ public interface ISuperLogin {
      * @param _ex
      */
     void failure(HttpServletRequest _request, HttpServletResponse _response, AuthenticationException _ex);
+
+    /**
+     * 自定义登录密码校验，需要开启
+     * @param _pwd
+     * @return
+     */
+    boolean matches(CharSequence _pwd);
 }

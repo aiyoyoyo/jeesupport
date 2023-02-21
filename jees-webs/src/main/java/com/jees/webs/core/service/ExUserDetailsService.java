@@ -35,7 +35,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
      * 超级账号在启动时随机生成密码，可以通过日志查询。
      */
     public ExUserDetailsService(){
-        int len = CommonConfig.getInteger( "jees.webs.security.superpwd", 6 );
+        int len = CommonConfig.getInteger( "jees.webs.security.superPwd", 6 );
         if( len < 6 ) len = 6;
         if( len > 20 ) len = 20;
         if( supermanPassword == null ){
