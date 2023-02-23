@@ -7,15 +7,17 @@ import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISuperLogin;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.struct.ServerMessage;
+import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -198,17 +200,30 @@ public class SecurityService implements PasswordEncoder {
                 // 无验证
                 break;
         }
-        // 第三方验证
-        boolean thrid = CommonConfig.get("jees.webs.security.enableCustomMatch", false);
-        if( thrid && !match ){
-            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
-            if( login_impl != null ){
-                match = login_impl.matches( _pwd );
-            }
-        }
         return match;
     }
-
+    public UserDetails thirdMatches(String _username, CharSequence _pwd){
+        boolean match = false;
+        // 第三方验证
+        boolean third = CommonConfig.get("jees.webs.security.third.enable", false);
+        if( third ){
+            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            if( login_impl != null ){
+                match = login_impl.matches( _username, _pwd );
+            }
+        }
+        SuperUser user = null;
+        if( match ){
+            String role = CommonConfig.get("jees.webs.security.third.role", "ThirdUser" );
+            user = new SuperUser();
+            user.setUsername( _username );
+            user.setPassword( _pwd.toString() );
+            user.setLocked( false );
+            user.getAuthorities().add(new SimpleGrantedAuthority(role));
+            User.withUserDetails( user ).roles( role ).build();
+        }
+        return user;
+    }
     @Override
     public boolean upgradeEncoding(String _encode) {
         return false;

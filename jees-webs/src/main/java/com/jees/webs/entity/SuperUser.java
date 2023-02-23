@@ -9,7 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Id;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -39,7 +41,8 @@ public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements Use
     @RemoteProperty
     @JSONField( serialize = false )
     Set< M >                      menus       = new HashSet<>();
-
+    @RemoteProperty
+    Map< String, Object > properties = new HashMap<>();
     @Override
     public boolean isAccountNonExpired(){
         return true;

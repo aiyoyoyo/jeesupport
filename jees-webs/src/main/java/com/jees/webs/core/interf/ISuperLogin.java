@@ -33,8 +33,9 @@ public interface ISuperLogin {
 
     /**
      * 自定义登录密码校验，需要开启
+     * @param _username
      * @param _pwd
      * @return
      */
-    boolean matches(CharSequence _pwd);
+    boolean matches(String _username, CharSequence _pwd);
 }

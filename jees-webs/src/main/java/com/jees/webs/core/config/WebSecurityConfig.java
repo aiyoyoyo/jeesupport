@@ -5,6 +5,7 @@ import com.jees.webs.core.service.ExUserDetailsService;
 import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.modals.dwr.config.DwrConfig;
 import com.jees.webs.modals.templates.service.TemplateService;
+import com.jees.webs.security.service.AuthenticationProviderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,8 @@ public class WebSecurityConfig{
     SecurityService     securityService;
     @Autowired
     TemplateService     templateService;
-
+    @Autowired
+    AuthenticationProviderService authenticationProviderService;
     @Autowired
     SessionRegistry sessionRegistry;
 
@@ -72,8 +74,9 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager _authMgr, HttpSecurity _hs) throws Exception {
-        //Configuring HttpSecurity
-        return _hs.build();
+        //使用自定义验证
+        SecurityFilterChain sfc = _hs.authenticationProvider( authenticationProviderService ).build();
+        return sfc;
     }
 
 
