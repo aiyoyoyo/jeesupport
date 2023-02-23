@@ -50,7 +50,6 @@ public class WebSecurityConfig{
         }
         _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) )
                 .sessionRegistry( sessionRegistry );
-
         dwrConfig.setHttpSecurity( _hs );
         if( securityService.isEnable() ){
             templateService.setHttpSecurity( _hs );

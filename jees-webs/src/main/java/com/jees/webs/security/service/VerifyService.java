@@ -120,7 +120,9 @@ public class VerifyService {
         }
         if( !result ){
             result = this.validateAdministrator(authentication);
-            request.getSession().removeAttribute("MESSAGE" );
+            if( result ){
+                request.getSession().removeAttribute("MESSAGE" );
+            }
         }
         return result;
     }
@@ -247,6 +249,19 @@ public class VerifyService {
 
         PageAccess page = this.auths.get( uri );
         if( page == null ){
+            if( this.auths.containsKey("*") ){
+                PageAccess any_page = this.auths.get("*");
+                SuperUser user = (SuperUser) principal;
+                Set<SimpleGrantedAuthority> set_auth = user.getAuthorities();
+                for( SimpleGrantedAuthority sga : set_auth ){
+                    if( any_page.getRoles().stream().anyMatch( _r -> _r.equalsIgnoreCase(sga.getAuthority()) ) ){
+                        return ICodeDefine.SuccessCode;
+                    }
+                    if( any_page.getUsers().stream().anyMatch( _r -> _r.equalsIgnoreCase(user.getUsername()))){
+                        return ICodeDefine.SuccessCode;
+                    }
+                }
+            }
             return ICodeDefine.Page_NotAccess;
         }
         boolean is_super = false;
