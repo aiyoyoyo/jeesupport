@@ -183,7 +183,7 @@ public class FileUtil {
     public static String read( String _file, String _charset, Consumer< ? super String > _consumer ){
         StringBuffer sb = new StringBuffer();
         try {
-            @Cleanup LineIterator line_it = FileUtils.lineIterator( new File( _file ), _charset );
+            @Cleanup LineIterator line_it = FileUtils.lineIterator( ResourceUtils.getFile( _file ), _charset );
             try {
                 String read_line;
                 while (line_it.hasNext()) {
