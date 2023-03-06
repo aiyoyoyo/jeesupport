@@ -12,6 +12,7 @@ import com.jees.webs.security.struct.PageAccess;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
@@ -68,6 +69,17 @@ public class VerifyService {
         return this.users.getOrDefault( _username.trim().toLowerCase(), null );
     }
 
+    public boolean validateUserPassword( String _username, String _password ){
+        SecurityService securityService = CommonContextHolder.getBean(SecurityService.class);
+        SuperUser user = this.findUserByUsername( _username );
+        String password = securityService.encodePwd( _password );
+        return user.getPassword().equalsIgnoreCase( password );
+    }
+
+    public String encodeString( String _string ){
+        SecurityService securityService = CommonContextHolder.getBean(SecurityService.class);
+        return securityService.encodePwd( _string );
+    }
     /**
      * 验证用户页面授权
      * @param request
@@ -511,5 +523,10 @@ public class VerifyService {
             }
         }
         return result;
+    }
+
+    public void updateUser( String _username, String _password ){
+        SuperUser user = this.findUserByUsername( _username );
+        user.setPassword( this.encodeString( _password ) );
     }
 }

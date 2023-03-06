@@ -2,6 +2,7 @@ package com.jees.webs.remote;
 
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.security.configs.LocalConfig;
+import com.jees.webs.security.service.VerifyService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class VerifyRemote implements ISupportEL {
     @Autowired
     LocalConfig localConfig;
+    @Autowired
+    VerifyService verifyService;
 
     @SneakyThrows
     @RemoteMethod
@@ -38,5 +41,13 @@ public class VerifyRemote implements ISupportEL {
 //        localConfig.changeItem( "/test1", "role", "manager" );
 //        localConfig.changeItem( "/test1", "deny", "lina" );
 //        localConfig.changeItem( "/test1", "anonymous", "true" );
+    }
+
+    public void changeUserPassword( String _username, String _password) throws Exception {
+        String password = this.verifyService.encodeString(_password);
+        localConfig.backup();
+        localConfig.loadConfig();
+        localConfig.changeItem("users", _username, password );
+        verifyService.updateUser( _username, _password );
     }
 }

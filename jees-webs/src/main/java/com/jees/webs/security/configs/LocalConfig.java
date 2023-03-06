@@ -1,6 +1,7 @@
 package com.jees.webs.security.configs;
 
 import com.jees.common.CommonConfig;
+import com.jees.tool.utils.FileOperationUtil;
 import com.jees.tool.utils.FileUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
@@ -9,6 +10,7 @@ import com.jees.webs.security.struct.PageAccess;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -277,14 +279,13 @@ public class LocalConfig {
         String cfg_file = CommonConfig.get( "spring.config.location", "config/" );
         StringBuffer sb = new StringBuffer();
         for( String line : cfgLines ){
-            System.out.println( line );
-            sb.append( line );
+            sb.append( line + "\r\n" );
         }
-//        try {
-//            FileUtil.write( sb.toString(), FileUtil.classpath() + "/" + cfg_file + "verify.cfg", false);
-//        } catch (IOException e) {
-//            log.error( "写入文件失败：", e);
-//        }
+        try {
+            FileUtil.write( sb.toString(), FileUtil.classpath() + "/" + cfg_file + "verify.cfg", false);
+        } catch (IOException e) {
+            log.error( "写入文件失败：", e);
+        }
     }
     // 基础配置项的新增、修改和删除，部分固定内容不允许删除
     /**
@@ -431,5 +432,11 @@ public class LocalConfig {
         }else{
             throw new Exception("要移除的页面不存在：" + _page );
         }
+    }
+
+    public void backup(){
+        String cfg_file = CommonConfig.get( "spring.config.location", "config/" );
+        String file_path = FileUtil.classpath() + "/" + cfg_file + "verify.cfg";
+        FileOperationUtil.copyFile( file_path,file_path + ".bak." + DateTime.now().toString("yyyyMMddHHmmssSSS") );
     }
 }

@@ -173,8 +173,6 @@ public class SecurityService implements PasswordEncoder {
     public RedirectStrategy redirectStrategy(){
         return new DefaultRedirectStrategy();
     }
-
-
     @Override
     public String encode(CharSequence _pwd) {
         return this.encodePwd((String) _pwd);
