@@ -82,7 +82,7 @@ public class SecurityService implements PasswordEncoder {
     }
 
     public String encodePwd(String _pwd){
-        if( CommonConfig.getBoolean( "jees.webs.security.encodePwd", true ) ){
+        if( this.encodePwd ){
             _pwd = MD5Utils.s_encode( _pwd );
         }
         return _pwd;

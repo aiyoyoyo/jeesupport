@@ -1,6 +1,7 @@
 package com.jees.webs.security.service;
 
 import com.jees.common.CommonContextHolder;
+import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.service.SecurityService;
@@ -527,8 +528,19 @@ public class VerifyService {
         return result;
     }
 
-    public void updateUser( String _username, String _password ){
+    public String updateUser( String _username, String _password ){
+        String encode_password = this.encodeString( _password );
         SuperUser user = this.findUserByUsername( _username );
-        user.setPassword( this.encodeString( _password ) );
+        user.setPassword( encode_password );
+        return encode_password;
+    }
+
+    public String rebuildUserPassword( String _username ) throws Exception {
+        String password = RandomUtil.s_random_string( 8 );
+        String save_password = this.updateUser( _username, password );
+        localConfig.backup();
+        localConfig.loadConfig();
+        localConfig.changeItem("users", _username, save_password );
+        return password;
     }
 }
