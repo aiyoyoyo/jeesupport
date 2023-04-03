@@ -152,10 +152,10 @@ public class FileUtil {
      * @param _file 待读取文件
      * @param _consumer 每行处理方法
      */
-    public static void read ( String _file, Consumer< ? super String > _consumer ) {
+    public static String read ( String _file, Consumer< ? super String > _consumer ) {
         int read_count = 0;
         String read_line;
-
+        StringBuffer sb = new StringBuffer();
         try {
             File   file   = load( _file, false );
             @Cleanup BufferedReader buff_read = new BufferedReader( new FileReader( file ) );
@@ -163,6 +163,7 @@ public class FileUtil {
                 if ( _consumer != null ) {
                     _consumer.accept( read_line );
                 }
+                sb.append( read_line );
                 read_count++;
             }
         } catch ( FileNotFoundException e ) {
@@ -170,6 +171,7 @@ public class FileUtil {
         } catch ( IOException e ) {
             log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
         }
+        return sb.toString();
     }
 
     /**
@@ -181,6 +183,7 @@ public class FileUtil {
      * @throws Exception
      */
     public static String read( String _file, String _charset, Consumer< ? super String > _consumer ){
+        int read_count = 0;
         StringBuffer sb = new StringBuffer();
         try {
             @Cleanup LineIterator line_it = FileUtils.lineIterator( ResourceUtils.getFile( _file ), _charset );
@@ -192,12 +195,13 @@ public class FileUtil {
                         _consumer.accept( read_line );
                     }
                     sb.append( read_line );
+                    read_count++;
                 }
             } finally {
                 line_it.close();
             }
         } catch ( IOException e ) {
-            log.error( "文件读取错误:FILE=[" + _file + "]", e );
+            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
         }
         return sb.toString();
     }
