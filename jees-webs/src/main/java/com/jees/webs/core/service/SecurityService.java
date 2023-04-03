@@ -4,7 +4,8 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.core.interf.ICodeDefine;
-import com.jees.webs.core.interf.ISuperLogin;
+import com.jees.webs.security.exception.RequestException;
+import com.jees.webs.security.interf.IVerifyLogin;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.struct.ServerMessage;
 import com.jees.webs.entity.SuperUser;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -50,8 +50,6 @@ public class SecurityService implements PasswordEncoder {
     boolean cross;
     SecurityModel model;
     @Autowired
-    VerifyService verifyService;
-    @Autowired
     SupportELService supportELService;
 
     SessionRegistry sessionRegistry;
@@ -61,7 +59,10 @@ public class SecurityService implements PasswordEncoder {
         this.cross = CommonConfig.getBoolean( "jees.webs.security.cross", false );
         this.encodePwd = CommonConfig.getBoolean( "jees.webs.security.encodePwd", true );
         log.info( "权限配置方案：" + model );
-        CommonContextHolder.getBean( VerifyService.class ).initialize( this.model );
+        VerifyService verifyService = CommonContextHolder.getBean( VerifyService.class );
+        if( verifyService != null ){
+            verifyService.initialize( this.model );
+        }
     }
 
     public boolean isEnable(){
@@ -110,22 +111,22 @@ public class SecurityService implements PasswordEncoder {
             supportELService.registerLoginSession( _request, _response, _auth );
 
             // TODO 登录限制，重复登录，账号锁定等在这里判断
-            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            IVerifyLogin login_impl = CommonContextHolder.getBean( IVerifyLogin.class );
             if( login_impl != null ){
                 login_impl.success( _request, _response, _auth );
             }
             // TODO 记录未登录的路径，登录成功后自动跳转
-            String cache_url = null;
+            String redirect_url = null;
 //            RequestCache requestCache = new HttpSessionRequestCache();
 //            SavedRequest savedRequest = requestCache.getRequest( _request, _response );
 //            String       err_url      = "/" + CommonConfig.getString( "jees.webs.login", "login" ) + "?" + ISupportEL.Login_Err;
 //            if( savedRequest != null && !savedRequest.getRedirectUrl().contains(err_url) ) url = savedRequest.getRedirectUrl();
 //            log.debug( "--登陆后转向：" + url );
 //
-            if( cache_url == null ){// 默认跳转首页
+            if( redirect_url == null ){// 默认跳转首页
                 redirectStrategy().sendRedirect( _request, _response, "/" );
             }else{
-                _response.sendRedirect( cache_url );
+                _response.sendRedirect( redirect_url );
             }
         };
     }
@@ -138,12 +139,18 @@ public class SecurityService implements PasswordEncoder {
     @Bean
     public AuthenticationFailureHandler failureHandler(){
         return (_request, _response, _e) -> {
-            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            IVerifyLogin login_impl = CommonContextHolder.getBean( IVerifyLogin.class );
             if( login_impl != null ){
                 login_impl.failure( _request, _response, _e );
             }
-            ServerMessage msg = new ServerMessage();
-            msg.setCode( ICodeDefine.Login_PasswordInvalid );
+            ServerMessage msg;
+            if( _e instanceof RequestException){
+                msg = ((RequestException) _e).getServerMessage();
+            }else{
+                msg = new ServerMessage();
+                msg.setCode( ICodeDefine.ErrorCode );
+            }
+
             _request.getSession().setAttribute( ISupportEL.Message_EL, msg );
             String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
             _response.sendRedirect(login_page);
@@ -191,6 +198,7 @@ public class SecurityService implements PasswordEncoder {
                 match = _encode.equals( this.encodePwd((String) _pwd) );
                 if( match ){
                     // 数据库验证
+                    log.warn("数据验证未实现！");
                 }
                 break;
             case NONE:
@@ -200,12 +208,13 @@ public class SecurityService implements PasswordEncoder {
         }
         return match;
     }
+    @SuppressWarnings("unchecked")
     public UserDetails thirdMatches(String _username, CharSequence _pwd){
         boolean match = false;
         // 第三方验证
         boolean third = CommonConfig.get("jees.webs.security.third.enable", false);
         if( third ){
-            ISuperLogin login_impl = CommonContextHolder.getBean( ISuperLogin.class );
+            IVerifyLogin login_impl = CommonContextHolder.getBean( IVerifyLogin.class );
             if( login_impl != null ){
                 match = login_impl.matches( _username, _pwd );
             }
@@ -213,12 +222,11 @@ public class SecurityService implements PasswordEncoder {
         SuperUser user = null;
         if( match ){
             String role = CommonConfig.get("jees.webs.security.third.role", "ThirdUser" );
-            user = new SuperUser();
+            user = new SuperUser<>();
             user.setUsername( _username );
             user.setPassword( _pwd.toString() );
-            user.setLocked( false );
+            user.setThirdUser(true);
             user.getAuthorities().add(new SimpleGrantedAuthority(role));
-            User.withUserDetails( user ).roles( role ).build();
         }
         return user;
     }

@@ -12,7 +12,6 @@ import com.jees.webs.security.struct.PageAccess;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
@@ -62,11 +61,12 @@ public class VerifyService {
                 localConfig.initialize();
             break;
         }
-
     }
 
     public SuperUser findUserByUsername( String _username ) {
-        return this.users.getOrDefault( _username.trim().toLowerCase(), null );
+        SuperUser user = this.users.getOrDefault(_username.trim().toLowerCase(), null);
+
+        return user;
     }
 
     public boolean validateUserPassword( String _username, String _password ){
@@ -160,9 +160,11 @@ public class VerifyService {
     public boolean validateBlack( HttpServletRequest _request, Authentication _authentication ){
         boolean result = false;
         Object principal = _authentication.getPrincipal();
-
+        SuperUser user = null;
         if( principal instanceof  SuperUser ) {
-            SuperUser user = (SuperUser) principal;
+            user = (SuperUser) principal;
+        }
+        if( user != null ){
             if (this.bUsers.contains(user.getUsername())) {
                 result = true;
             }
@@ -183,7 +185,6 @@ public class VerifyService {
             String ip = VerifyService.getRequestIp( _request );
             result = VerifyService.matchIp( this.bIps, ip );
         }
-
         return result;
     }
     /**
@@ -246,6 +247,7 @@ public class VerifyService {
                 }
             }
         }
+
         return result;
     }
     /**

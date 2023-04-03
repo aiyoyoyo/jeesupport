@@ -1,12 +1,16 @@
 package com.jees.webs.core.service;
 
 import com.jees.common.CommonConfig;
+import com.jees.common.CommonContextHolder;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.tool.utils.FileUtil;
 import com.jees.tool.utils.RandomUtil;
+import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
+import com.jees.webs.security.exception.RequestException;
+import com.jees.webs.security.interf.IVerifyUser;
 import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +70,9 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
             user.setUsername( _username );
             user.setPassword( supermanPassword );
             user.setEnabled( true );
-            user.setLocked( false );
+            user.setAccountNonExpired( true );
+            user.setCredentialsNonExpired( true );
+            user.setAccountNonLocked( true );
 
             SuperRole role = new SuperRole();
             role.setName( ROLE_SUPERMAN );
@@ -85,16 +91,22 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
             user = verifyService.findUserByUsername( _username );
         }
         if( user == null ){
-            throw new UsernameNotFoundException( "用户[" + _username + "]不存在" );
+            log.debug( "用户[" + _username + "]不存在！" );
+            throw new RequestException(ICodeDefine.Login_NotFoundUser);
         }
         log.debug("--验证登陆用户信息：U=[" + _username + "] P=[" + user.getPassword() + "]");
-        build(user);
-        log.debug("--用户信息：U=[" + user + "]");
         return user;
     }
 
-    protected void build( SuperUser _user ){
-        User.withUserDetails( _user ).roles( "" + _user.getRoles() ).build();
+    public void build( UserDetails _user ){
+        SuperUser user = (SuperUser) _user;
+        User.withUserDetails( _user ).roles( "" + user.getRoles() ).build();
+
+        // TIPS 用户默认为禁用，通过实现自定义属性加载，来控制账号有效状态
+        IVerifyUser user_impl = CommonContextHolder.getBean( IVerifyUser.class );
+        if( user_impl != null ){
+            user_impl.loadUser( user );
+        }
     }
 
     protected Class< U > superClass(){

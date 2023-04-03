@@ -296,7 +296,7 @@ public abstract class AbsSuperService<M extends SuperMenu,U extends SuperUser,R 
         if(!u.getPassword().equals( pwd ) ){
             u.setPassword( pwd );
         }
-        u.setLocked( _user.isLocked() );
+//        u.setLocked( _user.isLocked() );
         u.setEnabled( _user.isEnabled() );
         u.setUsername( _user.getUsername() );
 //        u.setRoles( _user.getRoles() );

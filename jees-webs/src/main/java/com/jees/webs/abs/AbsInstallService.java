@@ -26,7 +26,7 @@ public abstract class AbsInstallService< M extends SuperMenu, U extends SuperUse
         u.setUsername( _account );
         u.setPassword( _password );
         u.setEnabled( true );
-        u.setLocked( false );
+//        u.setLocked( false );
 
         R r = buildRole();
         u.setId( identityDao.build( IdentityDao.IdentityType.RID, 0 ) );

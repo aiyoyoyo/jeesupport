@@ -31,6 +31,7 @@ public class LocalConfig {
     VerifyService verifyService;
 
     public void initialize(){
+        loadConfig();
         this._load_config_line( null );
         // 系统匿名配置
         // /login,/logout,/error*
@@ -43,7 +44,6 @@ public class LocalConfig {
             verifyService.getAnonymous().add( anon );
         }
     }
-
     /**
      * 加载每行内容，并分解成授权信息
      * @param _node
@@ -55,24 +55,24 @@ public class LocalConfig {
         AtomicReference<Boolean> is_read_user = new AtomicReference<>(false);
         AtomicReference<Boolean> is_read_role = new AtomicReference<>(false);
         AtomicReference<Boolean> is_read_blank = new AtomicReference<>(false);
-        FileUtil.read( FileUtil.classpath() + "/" + cfg_file + "/verify.cfg", (_line )->{
+        for( String line : cfgLines ){
             // 逐行解释
             // 路径节点： [*]，[/]，[/parent]，[/parent/child]
             // 用户节点： [users]
-            if( _line.trim().startsWith("#") ) return;
-            if( _line.equalsIgnoreCase( "[users]" ) ){
+            if( line.trim().startsWith("#") ) continue;
+            if( line.equalsIgnoreCase( "[users]" ) ){
                 is_read_auth.set(false);
                 is_read_user.set(true);
-                return;
-            }else if( _line.equalsIgnoreCase( "[roles]" ) ){
+                continue;
+            }else if( line.equalsIgnoreCase( "[roles]" ) ){
                 is_read_user.set(false);
                 is_read_role.set(true);
-                return;
-            } else if( _line.equalsIgnoreCase( "[black]" ) ){
+                continue;
+            } else if( line.equalsIgnoreCase( "[black]" ) ){
                 is_read_role.set(false);
                 is_read_blank.set(true);
-                return;
-            } else if( _line.startsWith("[") && _line.endsWith( "]")){
+                continue;
+            } else if( line.startsWith("[") && line.endsWith( "]")){
                 is_read_auth.set( true );
                 is_read_user.set( false );
                 is_read_role.set( false );
@@ -81,28 +81,28 @@ public class LocalConfig {
             if(is_read_auth.get()){
                 if( _node == null || _node.equalsIgnoreCase( "auth" ) ) {
                     // 解析待分析的授权地址
-                    _load_config_line_auth( _line );
+                    _load_config_line_auth( line );
                 }
             }
             if(is_read_user.get()){
                 if( _node == null || _node.equalsIgnoreCase( "users" ) ) {
                     // 解析授权地址中的用户
-                    _load_config_line_users( _line );
+                    _load_config_line_users( line );
                 }
             }
             if(is_read_role.get()){
                 if( _node == null || _node.equalsIgnoreCase( "role" ) ) {
                     // 解析授权中的角色
-                    _load_config_line_roles( _line );
+                    _load_config_line_roles( line );
                 }
             }
             if(is_read_blank.get()){
                 if( _node == null || _node.equalsIgnoreCase( "black" ) ) {
                     // 解析授权中的角色
-                    _load_config_line_blacks( _line );
+                    _load_config_line_blacks( line );
                 }
             }
-        } );
+        }
     }
 
     String lastAuth = null;
@@ -187,8 +187,6 @@ public class LocalConfig {
             return;
         }
         SuperUser user = new SuperUser();
-        user.setEnabled( true );
-        user.setLocked( false );
         user.setUsername( line_str[0].trim() );
         user.setPassword( line_str[1].trim() );
         verifyService.getUsers().put( user.getUsername().toLowerCase(), user );

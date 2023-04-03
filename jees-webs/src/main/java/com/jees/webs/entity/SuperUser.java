@@ -30,9 +30,15 @@ public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements Use
     @RemoteProperty
     String                        password;
     @RemoteProperty
-    boolean                       enabled;
+    boolean                       accountNonLocked;  // 账号是否锁定
     @RemoteProperty
-    boolean                       locked;
+    boolean                       accountNonExpired; // 账号是否过期
+    @RemoteProperty
+    boolean                       credentialsNonExpired; // 密码是否过期
+    @RemoteProperty
+    boolean                       enabled;              // 是否有效
+    @RemoteProperty
+    boolean                       thirdUser;            // 第三方用户
     @RemoteProperty
     Set< Integer >                roles       = new HashSet<>();
     @RemoteProperty
@@ -43,25 +49,6 @@ public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements Use
     Set< M >                      menus       = new HashSet<>();
     @RemoteProperty
     Map< String, Object > properties = new HashMap<>();
-    @Override
-    public boolean isAccountNonExpired(){
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked(){
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired(){
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled(){
-        return enabled;
-    }
 
     @Override
     public String toString(){

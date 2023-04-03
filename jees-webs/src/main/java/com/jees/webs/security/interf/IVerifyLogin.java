@@ -1,4 +1,4 @@
-package com.jees.webs.core.interf;
+package com.jees.webs.security.interf;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: 2023/2/6 13:30
  * @Version: 1.0
  */
-public interface ISuperLogin {
+public interface IVerifyLogin {
     /**
      * 登录成功的自定义处理
      * @param _request

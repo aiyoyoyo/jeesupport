@@ -44,7 +44,7 @@ public class MgrUserRemote{
         }
 
         u.setEnabled( false );
-        u.setLocked( true );
+//        u.setLocked( true );
 
         absSS.add( u );
         return u;
