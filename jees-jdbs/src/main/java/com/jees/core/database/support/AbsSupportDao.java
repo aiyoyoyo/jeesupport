@@ -566,6 +566,12 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public <T> List<T> select(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit ){
 		// jees.jdbs.config.testa.dbtype = mysql //不同数据库会有不同语法情况
 		// jees.jdbs.config.testa.orm = hibernate //可能增加mybatis支持
+		String db = _db + ".";
+		String type = CommonConfig.get( "jees.jdbs.config." + _db + ".dbtype", "mysql" );
+		if( type.equalsIgnoreCase( "sqlite") ){
+			db = "";
+		}
+
 		String sql = "SELECT ";
 		// 生成column字段
 		if( _column != null && _column.size() > 0 ){
@@ -576,7 +582,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 		}else{
 			sql += "*";
 		}
-		sql += " FROM " + _db + "." + _table + " WHERE 1=1 ";
+		sql += " FROM " + db + _table + " WHERE 1=1 ";
 		String order_by = null;
 		// 生成 where
 		if( _param!= null && _param.size() > 0 ) {

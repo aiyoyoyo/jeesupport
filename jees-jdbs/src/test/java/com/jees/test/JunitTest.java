@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -230,8 +231,11 @@ public void testReConnect(){
 	@Rollback(false)
 	public void testSqlite(){
 		// 查询
+		List<DS_DATA> list = supportDao.select("DS_DATA", new HashMap<String, String>(){{
+			this.put("id","123");
+		}});
 //		List<DS_DATA> list = supportDao.select(DS_DATA.class);
-//		System.out.println(list.size());
+		System.out.println(list.size());
 
 		DS_DATA data1 = new DS_DATA();
 		data1.setId( "1");
@@ -249,9 +253,8 @@ public void testReConnect(){
 //		supportDao.delete( list.get( 1 ) );
 
 		// 更新
-		data1.setUnit( "bbb" );
-		supportDao.update( data1 );
-
-		supportDao.commit();
+//		data1.setUnit( "bbb" );
+//		supportDao.update( data1 );
+//		supportDao.commit();
 	}
 }
