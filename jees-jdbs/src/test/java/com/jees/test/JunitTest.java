@@ -6,6 +6,7 @@ import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.core.database.support.ISupportDao;
+import com.jees.test.entity.DS_DATA;
 import com.jees.test.entity.RedisUser;
 import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,14 +37,14 @@ import java.util.Map;
 @Log4j2
 @PropertySource(value={"classpath: config/com.jees.test.cfg"})
 public class JunitTest implements Runnable {
-	public long				id;
-	public int				right;
-	public int				faild_a;
-	public int				faild_i;
-	public int				faild_r;
+	public long id;
+	public int right;
+	public int faild_a;
+	public int faild_i;
+	public int faild_r;
 
 	@Autowired
-	public TestController	ctr;
+	public TestController ctr;
 
 	@Autowired
 	AbsRedisDao redisDao;
@@ -51,54 +53,54 @@ public class JunitTest implements Runnable {
 	AbsSupportDao supportDao;
 
 //	@Test
-	public void RedisTest() throws Exception{
-		CommonContextHolder.getBean( IRedisDao.class ).initialize();
+public void RedisTest() throws Exception{
+	CommonContextHolder.getBean( IRedisDao.class ).initialize();
 
-		for( int i = 0; i < 3000; i ++ ){
-			RedisUser a = new RedisUser();
-			a.setId( i );
-			a.setDate( new Date( DateTime.now().getMillis() ) );
-			redisDao.insert( a );
-		}
+	for( int i = 0; i < 3000; i ++ ){
+		RedisUser a = new RedisUser();
+		a.setId( i );
+		a.setDate( new Date( DateTime.now().getMillis() ) );
+		redisDao.insert( a );
+	}
 
 //		RedisUser u = redisDao.findById( 1, 1L, RedisUser.class );
 //		System.out.println( new DateTime( u.getDate().getTime() ).getMillisOfSecond() );
-	}
+}
 //	@Test
 //	@Transactional
-	public void SimpleTest(){
-		ctr.simpleTest();
-	}
+public void SimpleTest(){
+	ctr.simpleTest();
+}
 //	 @Test
-	public void ExTest() {
-		try {
+public void ExTest() {
+	try {
 //			ctr.insertA();
-		} catch ( Exception e ) {}
-		try {
-			ctr.insertATransSucc();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
+		ctr.insertATransSucc();
+	} catch ( Exception e ) {}
+	try {
 //			ctr.insertATransFail();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.updateA();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.updateATransSucc();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.updateATransFail();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.deleteA();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.deleteATransSucc();
-		} catch ( Exception e ) {}
-		try {
+	} catch ( Exception e ) {}
+	try {
 //			ctr.deleteATransFail();
-		} catch ( Exception e ) {}
-	}
+	} catch ( Exception e ) {}
+}
 
 	// @Test
 	public void ExMoreDBTest() {
@@ -117,22 +119,22 @@ public class JunitTest implements Runnable {
 	}
 
 //	@Test
-	public void test1() {
-		try {
-			ctr.insertABTransFail();
-		} catch ( Exception e ) {
-			String str = e.toString();
-			if ( str.indexOf( "identifier of an instance of" ) != - 1 )
-				log.error( "--执行的实体对象不符合操作规则，例如ID发生了变化后执行了更新操作。" );
-			else if ( str.indexOf( "The given object has a null identifier" ) != - 1 )
-				log.error( "--执行的实体对象不符合操作规则，例如更新或删除为Null的对象。" );
-			else if ( str.indexOf( "Could not obtain transaction-synchronized Session for current thread" ) != - 1 )
-				log.error( "--业务方法没有显式声明事务注解@Transactional。" );
-			else if ( str.indexOf( "没有找到数据库" ) != - 1 ) log.error( "--没有配置的数据库连接池。" );
-			else log.error( "--其他错误，待分类说明：" , e );
-		}
-		log.info( "----------------run test1 end---------------" );
+public void test1() {
+	try {
+		ctr.insertABTransFail();
+	} catch ( Exception e ) {
+		String str = e.toString();
+		if ( str.indexOf( "identifier of an instance of" ) != - 1 )
+			log.error( "--执行的实体对象不符合操作规则，例如ID发生了变化后执行了更新操作。" );
+		else if ( str.indexOf( "The given object has a null identifier" ) != - 1 )
+			log.error( "--执行的实体对象不符合操作规则，例如更新或删除为Null的对象。" );
+		else if ( str.indexOf( "Could not obtain transaction-synchronized Session for current thread" ) != - 1 )
+			log.error( "--业务方法没有显式声明事务注解@Transactional。" );
+		else if ( str.indexOf( "没有找到数据库" ) != - 1 ) log.error( "--没有配置的数据库连接池。" );
+		else log.error( "--其他错误，待分类说明：" , e );
 	}
+	log.info( "----------------run test1 end---------------" );
+}
 
 	/**
 	 * 并发测试。1000个线程各100次访问。
@@ -212,14 +214,44 @@ public class JunitTest implements Runnable {
 		log.debug( "查询结果" + select.size() );
 	}
 
+//	@Test
+public void testReConnect(){
+	JunitTest t = new JunitTest();
+	t.id = 0;
+	t.ctr = ctr;
+	new Thread( t ).start();
+	try {
+		Thread.sleep( 1000 * 60 * 1 );
+	} catch ( InterruptedException e ) {}
+}
+
 	@Test
-	public void testReConnect(){
-		JunitTest t = new JunitTest();
-		t.id = 0;
-		t.ctr = ctr;
-		new Thread( t ).start();
-		try {
-			Thread.sleep( 1000 * 60 * 1 );
-		} catch ( InterruptedException e ) {}
+	@Transactional
+	@Rollback(false)
+	public void testSqlite(){
+		// 查询
+//		List<DS_DATA> list = supportDao.select(DS_DATA.class);
+//		System.out.println(list.size());
+
+		DS_DATA data1 = new DS_DATA();
+		data1.setId( "1");
+		data1.setFilename("aaaa");
+
+		DS_DATA data2 = new DS_DATA();
+		data2.setId( "2");
+		data2.setFilename("bbb");
+
+		// 新增
+//		supportDao.insert( data1 );
+//		supportDao.insert( data2 );
+
+		// 删除
+//		supportDao.delete( list.get( 1 ) );
+
+		// 更新
+		data1.setUnit( "bbb" );
+		supportDao.update( data1 );
+
+		supportDao.commit();
 	}
 }

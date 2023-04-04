@@ -16,14 +16,17 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
 
 import javax.naming.NameNotFoundException;
+import javax.sql.DataSource;
 import java.util.Properties;
 
 @Log4j2
 public class SessionFactoryRegistry {
     public SessionFactoryImpl registerSessionFactory(String _name) {
-        AtomikosDataSourceBean ds = _create_data_source( _name, null);
+        DataSource ds = _create_data_source( _name, null);
         SessionFactoryImpl bean = _create_session_factory( _name, ds, null );
         ISupportDao dao = CommonContextHolder.getBean(ISupportDao.class);
         dao.putSessionFactory( _name , bean );
@@ -34,7 +37,7 @@ public class SessionFactoryRegistry {
             throw new RuntimeException("动态数据源需要以DM_开头!");
         }
 
-        AtomikosDataSourceBean ds = _create_data_source(_name, _prop);
+        DataSource ds = _create_data_source(_name, _prop);
         SessionFactoryImpl bean = _create_session_factory( _name, ds, _prop );
 
         ISupportDao dao = CommonContextHolder.getBean(ISupportDao.class);
@@ -68,7 +71,7 @@ public class SessionFactoryRegistry {
             return (T) _prop.get( _key );
         }
     }
-    private AtomikosDataSourceBean _create_data_source(String _name, Properties _prop ){
+    private DataSource _create_data_source(String _name, Properties _prop ){
         String head = "jees.jdbs.config." + _name + ".";
         String type = _get_config( _prop, head + "dbtype", null );
         String uniqueResourceName = _get_config( _prop, head + "uniqueResourceName", null );
@@ -127,6 +130,14 @@ public class SessionFactoryRegistry {
             xaProperties.setProperty("URL", url);
         }else if("DB2".equalsIgnoreCase(type)){
             test_query = _get_config( _prop, head + "testQuery", "SELECT 1 FROM sysibm.sysdummy1" );
+        }else if("SQLite".equalsIgnoreCase(type)){
+            SQLiteConfig sqlite_cfg = new SQLiteConfig();
+            sqlite_cfg.setEncoding(SQLiteConfig.Encoding.UTF16);
+
+            SQLiteDataSource sqlite_ds = new SQLiteDataSource();
+            sqlite_ds.setUrl( _get_config( _prop, head + "url", null ) );
+//            sqlite_ds.setConfig( sqlite_cfg );
+            return sqlite_ds;
         }
 
         xaDataSource.setUniqueResourceName( uniqueResourceName );
@@ -141,7 +152,7 @@ public class SessionFactoryRegistry {
         log.debug("--创建XADataSource[" + bean + "]。");
         return xaDataSource;
     }
-    private SessionFactoryImpl _create_session_factory( String _name, AtomikosDataSourceBean _ds, Properties _prop ){
+    private SessionFactoryImpl _create_session_factory( String _name, DataSource _ds, Properties _prop ){
         String head = "jees.jdbs.config." + _name + ".";
         String hibernate = head + "hibernate.";
         String orm = _get_config( _prop,head + "orm", null );
@@ -167,6 +178,14 @@ public class SessionFactoryRegistry {
             }else if(type.equalsIgnoreCase("oracle")){
                 hibernateProperties.setProperty("hibernate.dialect",
                         _get_config( _prop,hibernate + "dialect", "org.hibernate.dialect.Oracle8iDialect" )
+                );
+            }else if(type.equalsIgnoreCase("sqlite")){
+                hibernateProperties.setProperty("hibernate.dialect",
+                        _get_config( _prop,hibernate + "dialect", "com.jees.core.database.dialect.SQLiteDialect" )
+                );
+            }else if(type.equalsIgnoreCase("db2")){
+                hibernateProperties.setProperty("hibernate.dialect",
+                        _get_config( _prop,hibernate + "dialect", "org.hibernate.dialect.DB2Dialect" )
                 );
             }
 

@@ -10,7 +10,6 @@
         <version>1.7.2</version>
     </parent>
 
-    <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jtls</artifactId>
     <name>Jeesupport Tools</name>
     <description>com.jees-jtls contains classes of some common tools or algorithms.</description>

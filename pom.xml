@@ -35,14 +35,14 @@
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
-        <spring.boot.version>2.7.7</spring.boot.version>
+        <spring.boot.version>2.7.10</spring.boot.version>
         <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
         <mysql.version>5.1.44</mysql.version>
         <mysql5.version>5.1.44</mysql5.version>
         <mysql8.version>8.0.30</mysql8.version>
         <jodatime.version>2.12.2</jodatime.version>
         <lombok.version>1.18.24</lombok.version>
-        <netty.version>4.1.50.Final</netty.version>
+        <netty.version>4.1.90.Final</netty.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons.pool2.version>2.11.1</commons.pool2.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
@@ -53,6 +53,9 @@
         <oracle.version>19.3.0.0</oracle.version>
         <sqlserver.version>11.2.2.jre8</sqlserver.version>
         <ucanaccess.version>4.0.1</ucanaccess.version>
+        <sqlite.version>3.41.2.1</sqlite.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
+        <protobuf-java.version>3.22.2</protobuf-java.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -345,6 +348,11 @@
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
             <!-- io protostuff -->
             <dependency>
                 <groupId>io.protostuff</groupId>
@@ -379,6 +387,22 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql8.version}</version>
 <!--                <version>${mysql5.version}</version>-->
+            </dependency>
+            <!-- SQLite -->
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>${sqlite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

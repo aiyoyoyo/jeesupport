@@ -10,7 +10,6 @@
         <version>1.7.2</version>
     </parent>
 
-    <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jdbs</artifactId>
     <name>Jeesupport Database</name>
     <description>Spring Atomikos support</description>
@@ -72,6 +71,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>provided</scope>
             <version>${mysql8.version}</version>
+        </dependency>
+        <!-- SQLite -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>${sqlite.version}</version>
         </dependency>
         <!-- Orcale
         <dependency>

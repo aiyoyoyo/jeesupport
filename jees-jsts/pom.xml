@@ -10,7 +10,6 @@
         <version>1.7.2</version>
     </parent>
 
-    <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-jsts</artifactId>
     <name>Jeesupport Socket</name>
     <description>Netty socket server supprot</description>
