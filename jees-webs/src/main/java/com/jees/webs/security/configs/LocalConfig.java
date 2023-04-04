@@ -1,12 +1,15 @@
 package com.jees.webs.security.configs;
 
 import com.jees.common.CommonConfig;
+import com.jees.core.database.support.ISupportDao;
 import com.jees.tool.utils.FileOperationUtil;
 import com.jees.tool.utils.FileUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
+import com.jees.webs.security.interf.IVerifyConfig;
 import com.jees.webs.security.service.VerifyService;
 import com.jees.webs.security.struct.PageAccess;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -15,33 +18,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 本地文件加载授权信息到VerifyModelService里面
  */
 @Log4j2
-@Component
-public class LocalConfig {
-    @Autowired
-    VerifyService verifyService;
+public class LocalConfig implements IVerifyConfig {
+
+    // 用户授权信息
+    @Getter
+    Map<String, SuperUser> users = new ConcurrentHashMap<>();
+    // 角色授权信息
+    @Getter
+    Map<String, SuperRole> roles = new ConcurrentHashMap<>();
+    // 页面授权信息
+    @Getter
+    Map<String, PageAccess> auths = new ConcurrentHashMap<>();
+
+    @Getter
+    Set<String> blackUsers = new HashSet<>();
+    @Getter
+    Set<String> blackRoles = new HashSet<>();
+    @Getter
+    Set<String> blackIps = new HashSet<>();
+    @Getter
+    Set<String> anonymous = new HashSet<>();
 
     public void initialize(){
         loadConfig();
         this._load_config_line( null );
         // 系统匿名配置
         // /login,/logout,/error*
-        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.login", "login" ) );
-        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" ) );
-        verifyService.getAnonymous().add( "/" + CommonConfig.getString( "jees.webs.security.error", "error*" ) );
+        this.anonymous.add( "/" + CommonConfig.getString( "jees.webs.security.login", "login" ) );
+        this.anonymous.add( "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" ) );
+        this.anonymous.add( "/" + CommonConfig.getString( "jees.webs.security.error", "error*" ) );
         // 将全局匿名配置加载
         String[] anons = CommonConfig.getArray( "jees.webs.security.anonymous", String.class );
         for( String anon : anons ){
-            verifyService.getAnonymous().add( anon );
+            this.anonymous.add( anon );
         }
     }
     /**
@@ -128,11 +145,11 @@ public class LocalConfig {
             auth_url = this.lastAuth;
         }
 
-        PageAccess page = verifyService.getAuths().get(auth_url);
+        PageAccess page = this.auths.get(auth_url);
         if (page == null) {
             page = new PageAccess();
             page.setUrl(auth_url);
-            verifyService.getAuths().put(auth_url, page);
+            this.auths.put(auth_url, page);
         }else{
             if( auth_arr != null ){
                 String[] elements = auth_arr[1].split( "," );
@@ -171,8 +188,8 @@ public class LocalConfig {
                 break;
             case "anonymous":
                 _page.setAnonymous( Boolean.parseBoolean( line_str[1].trim() ));
-                if( !verifyService.getAnonymous().contains( _page.getUrl())){
-                    verifyService.getAnonymous().add(_page.getUrl());
+                if( !this.anonymous.contains( _page.getUrl())){
+                    this.anonymous.add(_page.getUrl());
                 }
                 break;
         }
@@ -189,7 +206,7 @@ public class LocalConfig {
         SuperUser user = new SuperUser();
         user.setUsername( line_str[0].trim() );
         user.setPassword( line_str[1].trim() );
-        verifyService.getUsers().put( user.getUsername().toLowerCase(), user );
+        this.users.put( user.getUsername().toLowerCase(), user );
     }
 
     /**
@@ -205,7 +222,7 @@ public class LocalConfig {
         String[] role_user_str = line_str[1].split(",");
 
         SuperRole role = new SuperRole();
-        role.setId( verifyService.getRoles().size() );
+        role.setId( this.roles.size() );
         role.setName( line_str[0].trim() );
 
         Set<String> users = new HashSet<>();
@@ -217,7 +234,7 @@ public class LocalConfig {
         }
 
         for( String role_user : role_user_str ) {
-            SuperUser user = verifyService.findUserByUsername(role_user.trim());
+            SuperUser user = this.findUserByUsername(role_user.trim());
             if (user == null) {
                 log.warn("角色[" + line_str[0] + "]未找到相关用户[" + role_user + "]信息!");
                 return;
@@ -242,18 +259,18 @@ public class LocalConfig {
             val = val.trim();
             switch (line_key) {
                 case "user":
-                    if( !verifyService.getBUsers().contains( val ) ){
-                        verifyService.getBUsers().add( val );
+                    if( !this.blackUsers.contains( val ) ){
+                        this.blackUsers.add( val );
                     }
                     break;
                 case "role":
-                    if( !verifyService.getBRoles().contains( val ) ){
-                        verifyService.getBRoles().add( val );
+                    if( !this.blackRoles.contains( val ) ){
+                        this.blackRoles.add( val );
                     }
                     break;
                 case "ip":
-                    if( !verifyService.getBIps().contains( val ) ){
-                        verifyService.getBIps().add( val );
+                    if( !this.blackIps.contains( val ) ){
+                        this.blackIps.add( val );
                     }
                     break;
             }
@@ -436,5 +453,11 @@ public class LocalConfig {
         String cfg_file = CommonConfig.get( "spring.config.location", "config/" );
         String file_path = FileUtil.classpath() + "/" + cfg_file + "verify.cfg";
         FileOperationUtil.copyFile( file_path,file_path + ".bak." + DateTime.now().toString("yyyyMMddHHmmssSSS") );
+    }
+
+    @Override
+    public SuperUser findUserByUsername( String _username ) {
+        SuperUser user = this.users.getOrDefault(_username.trim().toLowerCase(), null);
+        return user;
     }
 }

@@ -2,6 +2,7 @@ package com.jees.webs.core.service;
 
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.core.database.support.ISupportDao;
 import com.jees.tool.crypto.MD5Utils;
 import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.security.exception.RequestException;
@@ -13,6 +14,7 @@ import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
@@ -59,10 +61,6 @@ public class SecurityService implements PasswordEncoder {
         this.cross = CommonConfig.getBoolean( "jees.webs.security.cross", false );
         this.encodePwd = CommonConfig.getBoolean( "jees.webs.security.encodePwd", true );
         log.info( "权限配置方案：" + model );
-        VerifyService verifyService = CommonContextHolder.getBean( VerifyService.class );
-        if( verifyService != null ){
-            verifyService.initialize( this.model );
-        }
     }
 
     public boolean isEnable(){
@@ -70,6 +68,10 @@ public class SecurityService implements PasswordEncoder {
     }
 
     public void setHttpSecurity(HttpSecurity _hs) throws Exception {
+        VerifyService verifyService = CommonContextHolder.getBean( VerifyService.class );
+        if( verifyService != null ){
+            verifyService.initialize( this.model );
+        }
         String login_page = "/" + CommonConfig.getString( "jees.webs.security.login", "login" );
         String logout_page = "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" );
         _hs.authorizeRequests()

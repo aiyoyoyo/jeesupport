@@ -86,6 +86,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 				Session sess = sessionFactory.getCurrentSession();
 				return sess;
 			}catch (RuntimeException e){
+				e.printStackTrace();
 				log.error("获取连接对象失败：" + e.getMessage() );
 			}
 		}

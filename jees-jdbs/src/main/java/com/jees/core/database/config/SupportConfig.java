@@ -6,6 +6,7 @@ import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
@@ -37,10 +38,13 @@ public class SupportConfig {
      */
     @Bean( initMethod = "init", destroyMethod = "close" )
     public UserTransactionManager atomikosTM(){
-        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
+        if( !CommonConfig.getBoolean( "jees.jdbs.enable" ) ){
+            if(!CommonConfig.getBoolean( "jees.jdbs.localdb.enable" )) {
+                return null;
+            }
+        }
 
         UserTransactionManager utm = new UserTransactionManager();
-
         utm.setForceShutdown( false );
 
         log.debug( "--Spring Bean[atomikosTM]初始化." );
@@ -56,7 +60,7 @@ public class SupportConfig {
     public UserTransactionImp atomikosUT() throws SystemException {
         UserTransactionImp uti = new UserTransactionImp();
 
-        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return uti;
+        if( !CommonConfig.getBoolean( "jees.jdbs.enable" ) ) return uti;
 
         uti.setTransactionTimeout( CommonConfig.getInteger("jees.jdbs.trans.timeout", 300 ) );
 
@@ -86,8 +90,12 @@ public class SupportConfig {
     }
 
     @Bean
-    public AtomikosJtaPlatform atomikosJP( @Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
-        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
+    public JtaPlatform atomikosJP(@Qualifier( "transactionManager" ) JtaTransactionManager _jtm ){
+        if( !CommonConfig.getBoolean( "jees.jdbs.enable" )){
+            if(!CommonConfig.getBoolean( "jees.jdbs.localdb.enable" )) {
+                return null;
+            }
+        }
         log.debug( "--Spring Bean[atomikosJP]初始化." );
         return new AtomikosJtaPlatform( _jtm );
     }
@@ -99,7 +107,16 @@ public class SupportConfig {
     @Bean
     @DependsOn( "atomikosJP" )
     public SessionFactory sessionFactory(){
-        if( CommonConfig.getBoolean( "jees.jdbs.enable" ) != true ) return null;
+        if( !CommonConfig.getBoolean( "jees.jdbs.enable" ) ){
+            //
+            if(CommonConfig.getBoolean( "jees.jdbs.localdb.enable" )) {
+                SessionFactoryRegistry sfr = new SessionFactoryRegistry();
+                sfr.registerSessionFactory(CommonConfig.getString( "jees.jdbs.localdb.name" ));
+                return null;
+            }else{
+                return null;
+            }
+        }
 
         SessionFactoryRegistry sfr = new SessionFactoryRegistry();
         SessionFactoryImpl def_ssf = null;

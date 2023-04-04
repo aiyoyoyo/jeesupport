@@ -78,8 +78,8 @@ public class SessionFactoryRegistry {
         String bean = _name + "DataSource";
         Properties xaProperties = new Properties();
 
-        xaProperties.setProperty("user", _get_config( _prop, head + "user", null ));
-        xaProperties.setProperty("password", _get_config( _prop, head + "password", null ));
+        xaProperties.setProperty("user", _get_config( _prop, head + "user", "" ));
+        xaProperties.setProperty("password", _get_config( _prop, head + "password", "" ));
 
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
 //        AtomikosNonXADataSourceBean nonXaDataSource = new AtomikosNonXADataSourceBean();
@@ -136,8 +136,14 @@ public class SessionFactoryRegistry {
 
             SQLiteDataSource sqlite_ds = new SQLiteDataSource();
             sqlite_ds.setUrl( _get_config( _prop, head + "url", null ) );
-//            sqlite_ds.setConfig( sqlite_cfg );
             return sqlite_ds;
+//            sqlite_ds.setConfig( sqlite_cfg );
+//            AtomikosNonXADataSourceBean nonXaDataSource = new AtomikosNonXADataSourceBean();
+//            nonXaDataSource.setUniqueResourceName(uniqueResourceName);
+//            nonXaDataSource.setDriverClassName(
+//                    _get_config( _prop, head + "xaDataSourceClassName", "org.sqlite.SQLiteDataSource" )
+//            );
+//            return nonXaDataSource;
         }
 
         xaDataSource.setUniqueResourceName( uniqueResourceName );
@@ -155,7 +161,7 @@ public class SessionFactoryRegistry {
     private SessionFactoryImpl _create_session_factory( String _name, DataSource _ds, Properties _prop ){
         String head = "jees.jdbs.config." + _name + ".";
         String hibernate = head + "hibernate.";
-        String orm = _get_config( _prop,head + "orm", null );
+        String orm = _get_config( _prop,head + "orm", "hibernate" );
         String bean = _name + "SessionFactory";
 
         BeanDefinitionBuilder beanDefinitionBuilder =

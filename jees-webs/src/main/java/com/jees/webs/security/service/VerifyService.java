@@ -6,11 +6,10 @@ import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.core.struct.ServerMessage;
-import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.configs.LocalConfig;
+import com.jees.webs.security.interf.IVerifyConfig;
 import com.jees.webs.security.struct.PageAccess;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -23,11 +22,8 @@ import org.thymeleaf.model.IProcessableElementTag;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 简易的授权服务
@@ -35,39 +31,27 @@ import java.util.concurrent.ConcurrentHashMap;
 @Log4j2
 @Service
 public class VerifyService {
+    IVerifyConfig iVerifyConfig;
+    SecurityService.SecurityModel model;
 
-    // 用户授权信息
-    @Getter
-    Map<String, SuperUser> users = new ConcurrentHashMap<>();
-    // 角色授权信息
-    @Getter
-    Map<String, SuperRole> roles = new ConcurrentHashMap<>();
-    // 页面授权信息
-    @Getter
-    Map<String, PageAccess> auths = new ConcurrentHashMap<>();
-
-    @Getter
-    Set<String> bUsers = new HashSet<>();
-    @Getter
-    Set<String> bRoles = new HashSet<>();
-    @Getter
-    Set<String> bIps = new HashSet<>();
-    @Getter
-    Set<String> anonymous = new HashSet<>();
-    LocalConfig localConfig;
     public void initialize(SecurityService.SecurityModel _model){
-        switch ( _model ){
-            case LOCAL: // 本地文件配置方案
-                localConfig = CommonContextHolder.getBean( LocalConfig.class );
-                localConfig.initialize();
-            break;
+        this.model = _model;
+    }
+
+    public IVerifyConfig getIVerifyConfig(){
+        if( this.iVerifyConfig == null ){
+            switch ( this.model ){
+                case LOCAL: // 本地文件配置方案
+                    iVerifyConfig = new LocalConfig();
+                    iVerifyConfig.initialize();
+                    break;
+            }
         }
+        return this.iVerifyConfig;
     }
 
     public SuperUser findUserByUsername( String _username ) {
-        SuperUser user = this.users.getOrDefault(_username.trim().toLowerCase(), null);
-
-        return user;
+        return this.getIVerifyConfig().findUserByUsername(_username);
     }
 
     public boolean validateUserPassword( String _username, String _password ){
@@ -166,7 +150,7 @@ public class VerifyService {
             user = (SuperUser) principal;
         }
         if( user != null ){
-            if (this.bUsers.contains(user.getUsername())) {
+            if (this.getIVerifyConfig().getBlackUsers().contains(user.getUsername())) {
                 result = true;
             }
             if (!result) {
@@ -174,7 +158,7 @@ public class VerifyService {
                 while (auth_it.hasNext()) {
                     SimpleGrantedAuthority auth = auth_it.next();
                     String user_auth = auth.getAuthority();
-                    if (this.bRoles.contains(user_auth)) {
+                    if (this.getIVerifyConfig().getBlackRoles().contains(user_auth)) {
                         result = true;
                         break;
                     }
@@ -184,7 +168,7 @@ public class VerifyService {
         if( !result ){
             // 验证ip
             String ip = VerifyService.getRequestIp( _request );
-            result = VerifyService.matchIp( this.bIps, ip );
+            result = VerifyService.matchIp( this.getIVerifyConfig().getBlackIps(), ip );
         }
         return result;
     }
@@ -195,7 +179,7 @@ public class VerifyService {
      */
     public boolean validateAnonymous( String _uri ){
         String[] uri_arr = _uri.split( "/" );
-        for( String anon : this.anonymous ){
+        for( String anon : this.getIVerifyConfig().getAnonymous() ){
             String[] anon_arr = anon.split( "/" );
             boolean match_anon = true;
             for( int i = 0; i < anon_arr.length; i++ ){
@@ -217,10 +201,10 @@ public class VerifyService {
                 return true;
             }
         }
-        if( this.anonymous.contains( _uri ) ){
+        if( this.getIVerifyConfig().getAnonymous().contains( _uri ) ){
             return true;
         }
-        PageAccess page = this.auths.get( _uri );
+        PageAccess page = this.getIVerifyConfig().getAuths().get( _uri );
         if( page == null ){
             return false;
         }
@@ -262,10 +246,10 @@ public class VerifyService {
         String uri = _request.getRequestURI();
         Object principal = _authentication.getPrincipal();
 
-        PageAccess page = this.auths.get( uri );
+        PageAccess page = this.getIVerifyConfig().getAuths().get( uri );
         if( page == null ){
-            if( this.auths.containsKey("*") ){
-                PageAccess any_page = this.auths.get("*");
+            if( iVerifyConfig.getAuths().containsKey("*") ){
+                PageAccess any_page = this.getIVerifyConfig().getAuths().get("*");
                 SuperUser user = (SuperUser) principal;
                 Set<SimpleGrantedAuthority> set_auth = user.getAuthorities();
                 for( SimpleGrantedAuthority sga : set_auth ){
@@ -337,7 +321,7 @@ public class VerifyService {
         if( _validate != null && _validate.equalsIgnoreCase("false") ) return true;
 
         String uri = _request.getRequestURI();
-        PageAccess page = this.auths.get( uri );
+        PageAccess page = this.getIVerifyConfig().getAuths().get( uri );
         if( page == null ){
             return false;
         }
@@ -538,9 +522,11 @@ public class VerifyService {
     public String rebuildUserPassword( String _username ) throws Exception {
         String password = RandomUtil.s_random_string( 8 );
         String save_password = this.updateUser( _username, password );
-        localConfig.backup();
-        localConfig.loadConfig();
-        localConfig.changeItem("users", _username, save_password );
+
+        LocalConfig config = (LocalConfig) this.getIVerifyConfig();
+        config.backup();
+        config.loadConfig();
+        config.changeItem("users", _username, save_password );
         return password;
     }
 }
