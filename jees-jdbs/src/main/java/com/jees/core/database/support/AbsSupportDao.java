@@ -1,16 +1,22 @@
 package com.jees.core.database.support;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.jees.common.CommonConfig;
 import com.jees.tool.utils.StringUtil;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
 
+import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -32,6 +38,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	String defaultDB;
+
 	@Override
 	public String getDefaultDB(){
 		if( defaultDB == null ){
@@ -117,6 +124,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public SessionFactory getSessionFactory(String _db){
 		return sessionFactoryMap.get( _db );
 	}
+
 	// insert /////////////////////////////////////////////////////////////
 	@Override
 	public void insert( String _db , Object _entity ) {
@@ -239,10 +247,11 @@ public abstract class AbsSupportDao implements ISupportDao {
 	public < T > List< T > selectByHQL( String _db , String _hql , String[] _param , Object[] _value, Class< T > _cls ){
 		return selectByHQL( _db, _hql, DEFAULT_FIRST, DEFAULT_LIMIT, _param, _value, _cls );
 	}
+
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectByHQL( String _db , String _hql , int _first , int _limit , String[] _param , Object[] _value,
-					Class< T > _cls ) {
+										Class< T > _cls ) {
 		Session session = _get_session( _db );
 		Query< T > query = session.createQuery( _hql );
 		query.setFirstResult( _first );
@@ -279,7 +288,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , String[] _param , Object[] _value,
-					Class< T > _cls ) {
+										Class< T > _cls ) {
 		Session session = _get_session( _db );
 
 		Query< T > query;
@@ -307,7 +316,7 @@ public abstract class AbsSupportDao implements ISupportDao {
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public < T > List< T > selectBySQL( String _db , String _sql , int _first , int _limit , Map _param,
-								 Class< T > _cls ){
+										Class< T > _cls ){
 		Session session = _get_session( _db );
 		Query< T > query;
 		if( _cls == null ){
@@ -518,38 +527,23 @@ public abstract class AbsSupportDao implements ISupportDao {
 	}
 
 	// 基于Map的查询 //////////////////////////////////////////////////////////
+	@Override
+	public <T> List<T> selectByMap( String _db, Object _tableOrParam, Class<T> _cls ) {
+		return this.selectByMap(_db, _tableOrParam, DEFAULT_FIRST, DEFAULT_LIMIT, _cls);
+	}
 
 	@Override
-	public <T> List<T> select( String _table ){
-		return this.select( getDefaultDB(), _table, null, 0, DEFAULT_LIMIT );
-	}
-	@Override
-	public <T> List<T> select( String _db, String _table ){
-		return this.select( _db, _table, null, 0, DEFAULT_LIMIT );
-	}
-	@Override
-	public <T> List<T> select( String _table, int _offset, int _limit ){
-		return this.select( getDefaultDB(), _table, null, _offset, _limit );
-	}
-	@Override
-	public <T> List<T> select( String _db, String _table, int _offset, int _limit ){
-		return this.select( _db, _table, null, _offset, _limit );
-	}
-	@Override
-	public <T> List<T> select( String _table, Map _param ){
-		return this.select( getDefaultDB(), _table, _param, 0, DEFAULT_LIMIT );
-	}
-	@Override
-	public <T> List<T> select( String _db, String _table, Map _param ){
-		return this.select( _db, _table, _param, 0, DEFAULT_LIMIT );
-	}
-	@Override
-	public <T> List<T> select( String _table, Map _param, int _offset, int _limit ){
-		return this.select( getDefaultDB(), _table, _param, _offset, _limit );
-	}
-	@Override
-	public <T> List<T> select( String _db, String _table, Map _param, int _offset, int _limit ){
-		return this.select( getDefaultDB(), _table, null, _param, _offset, _limit );
+	public <T> List<T> selectByMap( String _db, Object _tableOrParam, int _offset, int _limit, Class<T> _cls ){
+		if ( _tableOrParam == null || _tableOrParam instanceof Map) {
+			String table = ((Table) ((Class) _cls).getAnnotation(Table.class)).name();
+			Map param = null;
+			if(_tableOrParam instanceof Map){
+				param = (Map) _tableOrParam;
+			}
+			return this.selectByMap(_db, table, null, param, _offset, _limit, _cls);
+		}else{
+			return this.selectByMap(_db, _tableOrParam.toString(), null, null, _offset, _limit, _cls);
+		}
 	}
 
 	/**
@@ -560,15 +554,17 @@ public abstract class AbsSupportDao implements ISupportDao {
 	 * @param _param
 	 * @param _offset
 	 * @param _limit
+	 * @param _cls
 	 * @return
 	 * @param <T>
 	 */
 	@Override
-	public <T> List<T> select(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit ){
+	public <T> List<T> selectByMap(String _db, String _table, Set<String> _column,
+								   Map _param, int _offset, int _limit, Class<T> _cls){
 		// jees.jdbs.config.testa.dbtype = mysql //不同数据库会有不同语法情况
 		// jees.jdbs.config.testa.orm = hibernate //可能增加mybatis支持
 		String db = _db + ".";
-		String type = CommonConfig.get( "jees.jdbs.config." + _db + ".dbtype", "mysql" );
+		String type = CommonConfig.get( "jees.jdbs.config." + _db + ".dbtype", "mysql" ).toLowerCase();
 		if( type.equalsIgnoreCase( "sqlite") ){
 			db = "";
 		}
@@ -597,7 +593,15 @@ public abstract class AbsSupportDao implements ISupportDao {
 					// 不判断 列是否存在, 仅排除特殊字段
 					sql += " AND ";
 					// 这里仅列出  type == mysql;
-					sql += "`" + key + "`";
+					switch( type ){
+						case "sqlite":
+							sql += key;
+							break;
+						case "mysql":
+						default:
+							sql += "`" + key + "`";
+							break;
+					}
 					// 仅支持简单条件，以防字符串拼接注入
 					if( value instanceof String ){
 						String tmp_val = ((String) value).trim();
@@ -606,10 +610,14 @@ public abstract class AbsSupportDao implements ISupportDao {
 							if( tmp_val.startsWith( "!%") ){
 								tmp_val = " NOT LIKE " + tmp_val;
 							}else {
-								tmp_val = " LIKE " + tmp_val;
+								if( tmp_val.startsWith("'") && tmp_val.endsWith("'") ){
+									tmp_val = " LIKE " + tmp_val;
+								}else{
+									tmp_val = " LIKE '" + tmp_val + "'";
+								}
 							}
 						}else if( tmp_val.startsWith( ">" ) || tmp_val.startsWith( "<" ) || tmp_val.startsWith( "=" )
-							|| tmp_val.toLowerCase().startsWith( "not" ) ){
+								|| tmp_val.toLowerCase().startsWith( "not" ) ){
 							// TODO 不做处理直接拼接，但是需要判定结尾是否合法 防止sql注入
 							// not like 要重新
 							// > >= < <= <> = 都需要限定是数字或者时间
@@ -653,7 +661,8 @@ public abstract class AbsSupportDao implements ISupportDao {
 			sql += " ORDER BY " + order_by;
 		}
 		log.debug( "生成查询语句：" + sql );
-		return this.selectBySQL( sql, new String[]{}, new String[]{}, null );
+		// TODO sql的替换字符串拼接
+		return this.selectBySQL( _db, sql, new String[]{}, new String[]{}, _cls );
 	}
 
 	public static List<Object> toList(Object val) {

@@ -3,7 +3,6 @@ package com.jees.test;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.AbsRedisDao;
-import com.jees.core.database.support.AbsSupportDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.core.database.support.ISupportDao;
 import com.jees.test.entity.DS_DATA;
@@ -51,7 +50,7 @@ public class JunitTest implements Runnable {
 	AbsRedisDao redisDao;
 
 	@Autowired
-	AbsSupportDao supportDao;
+	ISupportDao dao;
 
 //	@Test
 public void RedisTest() throws Exception{
@@ -210,8 +209,8 @@ public void test1() {
 //	@Test
 	public void testMap(){
 		String[] test = CommonConfig.getArray( "test.list", String.class );
-//		List<Map> As = supportDao.select("A");
-		List<TabA> select = supportDao.select(TabA.class);
+//		List<Map> As = dao.select("A");
+		List<TabA> select = dao.select(TabA.class);
 		log.debug( "查询结果" + select.size() );
 	}
 
@@ -231,30 +230,34 @@ public void testReConnect(){
 	@Rollback(false)
 	public void testSqlite(){
 		// 查询
-		List<DS_DATA> list = supportDao.select("DS_DATA", new HashMap<String, String>(){{
+		dao.selectByMap( "localdb", null, DS_DATA.class );
+		List<DS_DATA> list = dao.selectByMap( "localdb", new HashMap<String, String>(){{
 			this.put("id","123");
-		}});
-//		List<DS_DATA> list = supportDao.select(DS_DATA.class);
+		}}, DS_DATA.class );
+//		List<DS_DATA> list = dao.selectByMap( "localdb", "DS_DATA", new HashMap<String, String>(){{
+//			this.put("id","123");
+//		}}, DS_DATA.class);
+////		List<DS_DATA> list = dao.select(DS_DATA.class);
 		System.out.println(list.size());
-
-		DS_DATA data1 = new DS_DATA();
-		data1.setId( "1");
-		data1.setFilename("aaaa");
-
-		DS_DATA data2 = new DS_DATA();
-		data2.setId( "2");
-		data2.setFilename("bbb");
+//
+//		DS_DATA data1 = new DS_DATA();
+//		data1.setId( "1");
+//		data1.setFilename("aaaa");
+//
+//		DS_DATA data2 = new DS_DATA();
+//		data2.setId( "2");
+//		data2.setFilename("bbb");
 
 		// 新增
-//		supportDao.insert( data1 );
-//		supportDao.insert( data2 );
+//		dao.insert( data1 );
+//		dao.insert( data2 );
 
 		// 删除
-//		supportDao.delete( list.get( 1 ) );
+//		dao.delete( list.get( 1 ) );
 
 		// 更新
 //		data1.setUnit( "bbb" );
-//		supportDao.update( data1 );
-//		supportDao.commit();
+//		dao.update( data1 );
+//		dao.commit();
 	}
 }

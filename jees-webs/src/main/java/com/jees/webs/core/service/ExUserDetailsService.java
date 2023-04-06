@@ -66,7 +66,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
         SuperUser user = new SuperUser();
         if( _username.equals( CommonConfig.getString( "jees.webs.security.superman", USER_SUPERMAN ) ) ){
             log.warn( "--使用超级账号登陆。" );
-            user.setId( 0 );
+            user.setId( "superman" );
             user.setUsername( _username );
             user.setPassword( supermanPassword );
             user.setEnabled( true );
@@ -77,7 +77,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
             SuperRole role = new SuperRole();
             role.setName( ROLE_SUPERMAN );
 
-            user.addRole( role );
+            user.addRole( role.getName() );
             return user;
         }
 
@@ -100,7 +100,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
 
     public void build( UserDetails _user ){
         SuperUser user = (SuperUser) _user;
-        User.withUserDetails( _user ).roles( "" + user.getRoles() ).build();
+        User.withUserDetails( _user ).roles( user.getRoles() ).build();
 
         // TIPS 用户默认为禁用，通过实现自定义属性加载，来控制账号有效状态
         IVerifyUser user_impl = CommonContextHolder.getBean( IVerifyUser.class );

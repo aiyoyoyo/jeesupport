@@ -1,21 +1,15 @@
 package com.jees.webs.security.configs;
 
 import com.jees.common.CommonConfig;
-import com.jees.core.database.support.ISupportDao;
 import com.jees.tool.utils.FileOperationUtil;
 import com.jees.tool.utils.FileUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.interf.IVerifyConfig;
-import com.jees.webs.security.service.VerifyService;
 import com.jees.webs.security.struct.PageAccess;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.directwebremoting.annotations.RemoteMethod;
-import org.directwebremoting.annotations.RemoteProxy;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -181,7 +175,13 @@ public class LocalConfig implements IVerifyConfig {
                 _page.addRoles(auth_data);
                 break;
             case "deny":
-                _page.addDenys(auth_data);
+                _page.addDenyUsers(auth_data);
+                break;
+            case "denyUser":
+                _page.addDenyUsers(auth_data);
+                break;
+            case "denyRole":
+                _page.addDenyRoles(auth_data);
                 break;
             case "user":
                 _page.addUsers(auth_data);
@@ -239,7 +239,7 @@ public class LocalConfig implements IVerifyConfig {
                 log.warn("角色[" + line_str[0] + "]未找到相关用户[" + role_user + "]信息!");
                 return;
             }else{
-                user.addRole( role );
+                user.addRole( role.getName() );
             }
         }
     }
@@ -459,5 +459,10 @@ public class LocalConfig implements IVerifyConfig {
     public SuperUser findUserByUsername( String _username ) {
         SuperUser user = this.users.getOrDefault(_username.trim().toLowerCase(), null);
         return user;
+    }
+
+    @Override
+    public PageAccess findPageByUri(String[] _uri) {
+        return null;
     }
 }

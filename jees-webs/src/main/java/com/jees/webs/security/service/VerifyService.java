@@ -273,7 +273,10 @@ public class VerifyService {
             if( page.getUsers().contains( "*" ) || page.getUsers().contains( user.getUsername() ) ){
                 is_auth = true;
             }
-            if( page.getDenys().contains( "*" ) || page.getDenys().contains( user.getUsername() ) ){
+            if( page.getDenyUsers().contains( "*" ) || page.getDenyUsers().contains( user.getUsername() ) ){
+                is_deny = true;
+            }
+            if( page.getDenyRoles().contains( "*" ) || page.getDenyRoles().contains( user.getUsername() ) ){
                 is_deny = true;
             }
             if( page.isAnonymous() ){
@@ -395,11 +398,11 @@ public class VerifyService {
         boolean user_has = false;
         boolean role_has = false;
         if (pa != null) {
-            if (pa.getDenys().contains( _user ) ) {
+            if (pa.getDenyUsers().contains( _user ) ) {
                 deny_has = true;
             }
             for( SimpleGrantedAuthority role : _roles ){
-                if( pa.getDenys().contains( role.getAuthority() ) ){
+                if( pa.getDenyRoles().contains( role.getAuthority() ) ){
                     deny_has = true;
                     break;
                 }

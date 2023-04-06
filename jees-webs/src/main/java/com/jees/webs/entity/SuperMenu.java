@@ -16,51 +16,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @DataTransferObject
-public class SuperMenu <R extends SuperRole> {
-    @Id
+public class SuperMenu {
     @RemoteProperty
-    int id;
+    String id;          // 菜单ID
     @RemoteProperty
-    String name;
+    String name;        // 菜单名称
     @RemoteProperty
-    String url;
-
-
-
-
+    String url;         // 菜单路径
     @RemoteProperty
-    String tpl;
+    String tpl;         // 模板路径
     @RemoteProperty
-    int visible;
+    boolean visible;    // 是否可见
     @RemoteProperty
-    int parentId;
+    String parentId;    // 父节点
     @RemoteProperty
-    int index;
-    @RemoteProperty @JSONField(serialize = false)
-    List<String> roles = new ArrayList<>();
-    @RemoteProperty @JSONField(serialize = false)
-    List<SuperMenu> menus = new ArrayList<>();
-
+    int index;          // 顺序
+    @RemoteProperty
+    List<SuperMenu> menus = new ArrayList<>(); // 子菜单
     @Override
     public String toString(){
         return JsonUtil.toString( this );
     }
 
     public boolean isRoot(){
-        return parentId == id;
+        return parentId.equalsIgnoreCase(id);
     }
-
-    public boolean isPermit(){
-        return roles.isEmpty();
-    }
-
     public boolean hasMenus(){
         return menus.size() > 0;
-    }
-
-    public void addRole( R _role ){
-        if( this.roles.contains( _role ) ) return;
-        roles.add( _role.getName() );
     }
 
     public void addMenu( SuperMenu _menu ){

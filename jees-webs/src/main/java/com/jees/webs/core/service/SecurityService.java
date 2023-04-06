@@ -224,7 +224,7 @@ public class SecurityService implements PasswordEncoder {
         SuperUser user = null;
         if( match ){
             String role = CommonConfig.get("jees.webs.security.third.role", "ThirdUser" );
-            user = new SuperUser<>();
+            user = new SuperUser();
             user.setUsername( _username );
             user.setPassword( _pwd.toString() );
             user.setThirdUser(true);

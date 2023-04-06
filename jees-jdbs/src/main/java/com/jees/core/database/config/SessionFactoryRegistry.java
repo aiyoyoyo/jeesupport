@@ -189,6 +189,9 @@ public class SessionFactoryRegistry {
                 hibernateProperties.setProperty("hibernate.dialect",
                         _get_config( _prop,hibernate + "dialect", "com.jees.core.database.dialect.SQLiteDialect" )
                 );
+                hibernateProperties.setProperty("hibernate.allow_update_outside_transaction",
+                        _get_config( _prop,hibernate + "allow_update_outside_transaction", "true" )
+                );
             }else if(type.equalsIgnoreCase("db2")){
                 hibernateProperties.setProperty("hibernate.dialect",
                         _get_config( _prop,hibernate + "dialect", "org.hibernate.dialect.DB2Dialect" )

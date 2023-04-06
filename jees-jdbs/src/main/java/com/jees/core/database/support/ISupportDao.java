@@ -141,13 +141,9 @@ public interface ISupportDao {
 
 	int executeBySQL( String _sql , Map _data );
 
-	<T> List<T> select( String _table );
-	<T> List<T> select( String _db, String _table );
-	<T> List<T> select( String _table, int _offset, int _limit );
-	<T> List<T> select( String _db, String _table, int _offset, int _limit );
-	<T> List<T> select( String _table, Map _param );
-	<T> List<T> select( String _db, String _table, Map _param );
-	<T> List<T> select( String _table, Map _param, int _offset, int _limit );
-	<T> List<T> select( String _db, String _table, Map _param, int _offset, int _limit );
-	<T> List<T> select(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit );
+	// 基于Map参数的查询接口
+	// 结尾参数Class<T> _cls为null时，返回List<Map>
+	<T> List<T> selectByMap( String _db, Object _tableOrParam, Class<T> _cls );
+	<T> List<T> selectByMap( String _db, Object _tableOrParam, int _offset, int _limit, Class<T> _cls );
+	<T> List<T> selectByMap(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit, Class<T> _cls);
 }

@@ -9,10 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Id;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @Setter
@@ -21,14 +18,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @DataTransferObject
-public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements UserDetails{
-    @Id
+public class SuperUser implements UserDetails{
     @RemoteProperty
-    long                          id;
+    String                        id;               // 用户ID
     @RemoteProperty
-    String                        username;
+    String                        username;         // 用户名
     @RemoteProperty
-    String                        password;
+    String                        password;         // 密码
     @RemoteProperty
     boolean                       accountNonLocked;  // 账号是否锁定
     @RemoteProperty
@@ -38,31 +34,33 @@ public class SuperUser<R extends SuperRole, M extends  SuperMenu> implements Use
     @RemoteProperty
     boolean                       enabled;              // 是否有效
     @RemoteProperty
-    boolean                       thirdUser;            // 第三方用户
-    @RemoteProperty
-    Set< Integer >                roles       = new HashSet<>();
-    @RemoteProperty
     @JSONField( serialize = false )
     Set< SimpleGrantedAuthority > authorities = new HashSet<>();
+    // 扩展信息
     @RemoteProperty
-    @JSONField( serialize = false )
-    Set< M >                      menus       = new HashSet<>();
+    boolean                       thirdUser;            // 第三方用户
     @RemoteProperty
-    Map< String, Object > properties = new HashMap<>();
+    Map< String, Object >         properties = new HashMap<>(); // 其他信息
 
     @Override
     public String toString(){
         return JsonUtil.toString( this );
     }
 
-    public void addRole( R _role ){
-        if( !roles.contains( _role.getId() ) ){
-            roles.add( _role.getId() );
-            authorities.add( new SimpleGrantedAuthority(_role.getName() ) );
+    public void addRole( String _role ){
+        SimpleGrantedAuthority role = new SimpleGrantedAuthority(_role);
+        if( !authorities.contains( role ) ){
+            authorities.add( role );
         }
     }
 
-    public long getRoles(){
-        return roles.stream().mapToLong(Integer::longValue).sum();
+    public String[] getRoles() {
+        String[] roles = new String[authorities.size()];
+        Iterator<SimpleGrantedAuthority> auth_it = authorities.iterator();
+        int i = 0;
+        while( i ++ < authorities.size() ){
+            roles[i] = auth_it.next().toString();
+        }
+        return roles;
     }
 }
