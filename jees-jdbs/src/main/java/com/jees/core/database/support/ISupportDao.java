@@ -143,6 +143,8 @@ public interface ISupportDao {
 
 	// 基于Map参数的查询接口
 	// 结尾参数Class<T> _cls为null时，返回List<Map>
+	<T> List<T> selectByMap( String _db, String _tbale, Map _param );
+	<T> List<T> selectByMap( String _db, String _tbale, Map _param, int _offset, int _limit );
 	<T> List<T> selectByMap( String _db, Object _tableOrParam, Class<T> _cls );
 	<T> List<T> selectByMap( String _db, Object _tableOrParam, int _offset, int _limit, Class<T> _cls );
 	<T> List<T> selectByMap(String _db, String _table, Set<String> _column, Map _param, int _offset, int _limit, Class<T> _cls);

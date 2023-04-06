@@ -528,6 +528,14 @@ public abstract class AbsSupportDao implements ISupportDao {
 
 	// 基于Map的查询 //////////////////////////////////////////////////////////
 	@Override
+	public <T> List<T> selectByMap( String _db, String _tbale, Map _param ){
+		return this.selectByMap(_db, _tbale, _param, DEFAULT_FIRST, DEFAULT_LIMIT );
+	}
+	@Override
+	public <T> List<T> selectByMap( String _db, String _tbale, Map _param, int _offset, int _limit ){
+		return this.selectByMap(_db, _tbale, null, _param, _offset, _limit, null );
+	}
+	@Override
 	public <T> List<T> selectByMap( String _db, Object _tableOrParam, Class<T> _cls ) {
 		return this.selectByMap(_db, _tableOrParam, DEFAULT_FIRST, DEFAULT_LIMIT, _cls);
 	}
