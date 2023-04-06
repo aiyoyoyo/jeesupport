@@ -76,7 +76,8 @@ public class SecurityService implements PasswordEncoder {
         String logout_page = "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" );
         _hs.authorizeRequests()
                 .and().formLogin().loginPage( login_page ).loginProcessingUrl( login_page )
-                .successHandler( successHandler() ).failureHandler( failureHandler() )
+                .successHandler( successHandler() )
+                .failureHandler( failureHandler() )
                 .permitAll()
                 .and().exceptionHandling().accessDeniedHandler( deniedHandler() )
                 .and().logout().logoutUrl( logout_page ).permitAll()
@@ -153,8 +154,8 @@ public class SecurityService implements PasswordEncoder {
                 msg.setCode( ICodeDefine.ErrorCode );
             }
 
-            _request.getSession().setAttribute( ISupportEL.Message_EL, msg );
             String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
+            _request.getSession().setAttribute( ISupportEL.Message_EL, msg );
             _response.sendRedirect(login_page);
         };
     }
@@ -166,14 +167,15 @@ public class SecurityService implements PasswordEncoder {
     public AccessDeniedHandler deniedHandler() {
         return (_request, _response, _e) -> {
             String uri = _request.getRequestURI();
-            String login_page = "/" + CommonConfig.getString("jees.webs.login", "login");
             String error_page = "/error";
             if (uri.equals("/")) {
-                // 登录页面无权限则重定向至登录页面
-                _response.sendRedirect(login_page);
+                // 首页页面无权限则重定向至登录页面
+                String logout_page = "/" + CommonConfig.getString("jees.webs.logout", "logout");
+                _response.sendRedirect(logout_page);
             } else {
                 // 其他页面无权限则重定向至自定义错误页面
-                _response.sendRedirect(error_page);
+                _request.setAttribute("MESSAGE", new ServerMessage(ICodeDefine.User_IsDeny));
+                _request.getRequestDispatcher(error_page).forward(_request, _response);
             }
         };
     }

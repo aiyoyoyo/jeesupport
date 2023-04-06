@@ -58,8 +58,9 @@ public class SuperUser implements UserDetails{
         String[] roles = new String[authorities.size()];
         Iterator<SimpleGrantedAuthority> auth_it = authorities.iterator();
         int i = 0;
-        while( i ++ < authorities.size() ){
+        while( i < authorities.size() ){
             roles[i] = auth_it.next().toString();
+            i++;
         }
         return roles;
     }

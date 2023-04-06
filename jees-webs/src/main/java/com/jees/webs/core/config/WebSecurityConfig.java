@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -72,51 +71,5 @@ public class WebSecurityConfig{
         //使用自定义验证
         SecurityFilterChain sfc = _hs.authenticationProvider( authenticationProviderService ).build();
         return sfc;
-    }
-
-
-    // 由于WebSecurityConfigurerAdapter被弃用，所以重写验证方法
-    /**
-     * 通过栏目包含的权限，来决定所需要的权限
-     *
-     * @param _hs 权限管理器
-     * @throws Exception 错误
-     */
-    @Deprecated
-    protected void configure( HttpSecurity _hs ) throws Exception{
-        if( CommonConfig.getBoolean( "jees.webs.security.header.frameOptions", false ) ) {
-            _hs.headers().frameOptions().disable();
-        }
-        _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) )
-                .sessionRegistry( sessionRegistry );
-
-        dwrConfig.setHttpSecurity( _hs );
-        if( securityService.isEnable() ){
-            templateService.setHttpSecurity( _hs );
-            securityService.setHttpSecurity( _hs );
-        }else{
-            log.warn( "服务器未启用安全访问，默认可以访问所有页面文件！" );
-            _hs.authorizeRequests().antMatchers("/**").permitAll();
-        }
-    }
-
-    /**
-     * 通过userDetailsService来读取用户账号，密码，权限
-     * @param _auth 权限
-     */
-    @Deprecated
-//    @Override
-    protected void configure( AuthenticationManagerBuilder _auth ) throws Exception{
-        _auth.userDetailsService( userDetailsService ).passwordEncoder( new PasswordEncoder(){
-            @Override
-            public String encode( CharSequence _pwd ){
-                return securityService.encodePwd((String) _pwd);
-            }
-
-            @Override
-            public boolean matches( CharSequence _pwd, String _encode ){
-                return _encode.equals( securityService.encodePwd((String) _pwd) );
-            }
-        } );
     }
 }

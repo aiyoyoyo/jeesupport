@@ -462,7 +462,7 @@ public class LocalConfig implements IVerifyConfig {
     }
 
     @Override
-    public PageAccess findPageByUri(String[] _uri) {
+    public PageAccess findPageByUri(String _uri) {
         return null;
     }
 }

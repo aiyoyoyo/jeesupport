@@ -4,5 +4,5 @@ import com.jees.webs.entity.SuperUser;
 import org.directwebremoting.annotations.DataTransferObject;
 
 @DataTransferObject
-public class User extends SuperUser< Role, Menu > {
+public class User extends SuperUser {
 }

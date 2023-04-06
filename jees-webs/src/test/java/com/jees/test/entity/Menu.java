@@ -4,5 +4,5 @@ import com.jees.webs.entity.SuperMenu;
 import org.directwebremoting.annotations.DataTransferObject;
 
 @DataTransferObject
-public class Menu extends SuperMenu< Role > {
+public class Menu extends SuperMenu {
 }

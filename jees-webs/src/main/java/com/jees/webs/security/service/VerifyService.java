@@ -1,5 +1,6 @@
 package com.jees.webs.security.service;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.core.interf.ICodeDefine;
@@ -178,6 +179,12 @@ public class VerifyService {
      * @return
      */
     public boolean validateAnonymous( String _uri ){
+        String login_page = "/" + CommonConfig.getString( "jees.webs.security.login", "login" );
+        String logout_page = "/" + CommonConfig.getString( "jees.webs.security.logout", "logout" );
+        String error_page = "/" + CommonConfig.getString( "jees.webs.security.error", "error" );
+        if( _uri.equalsIgnoreCase( login_page ) || _uri.equalsIgnoreCase(logout_page)||_uri.equalsIgnoreCase(error_page)){
+            return true;
+        }
         String[] uri_arr = _uri.split( "/" );
         for( String anon : this.getIVerifyConfig().getAnonymous() ){
             String[] anon_arr = anon.split( "/" );

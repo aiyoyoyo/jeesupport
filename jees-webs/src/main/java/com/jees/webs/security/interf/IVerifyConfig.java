@@ -14,5 +14,5 @@ public interface IVerifyConfig{
     Set<String> getBlackIps();
     Set<String> getAnonymous();
     Map<String, PageAccess> getAuths();
-    PageAccess findPageByUri( String[] _uri );
+    PageAccess findPageByUri( String _uri );
 }
