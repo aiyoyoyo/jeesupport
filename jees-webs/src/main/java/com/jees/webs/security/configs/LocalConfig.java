@@ -7,10 +7,12 @@ import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.interf.IVerifyConfig;
 import com.jees.webs.security.struct.PageAccess;
+import com.jees.webs.security.struct.PageInfo;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -463,6 +465,11 @@ public class LocalConfig implements IVerifyConfig {
 
     @Override
     public PageAccess findPageByUri(String _uri) {
+        return null;
+    }
+
+    @Override
+    public PageInfo loadPageInfo(String _uri) {
         return null;
     }
 }

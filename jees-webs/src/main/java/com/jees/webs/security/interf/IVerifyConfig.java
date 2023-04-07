@@ -2,6 +2,7 @@ package com.jees.webs.security.interf;
 
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.struct.PageAccess;
+import com.jees.webs.security.struct.PageInfo;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,4 +16,5 @@ public interface IVerifyConfig{
     Set<String> getAnonymous();
     Map<String, PageAccess> getAuths();
     PageAccess findPageByUri( String _uri );
+    PageInfo loadPageInfo( String _uri );
 }
