@@ -1,6 +1,0 @@
-<ol class="breadcrumb pull-right" th:fragment="html">
-    <li th:class="|breadcrumb-item ${b.url eq PAGE ? 'active':''}|" th:each="b:${session.BREADCRUMB}">
-        <a th:unless="${b.url eq PAGE}" th:href="${b.url}" th:text="${b.name}"></a>
-        <t th:if="${b.url eq PAGE}" th:text="${b.name}"></t>
-    </li>
-</ol>
