@@ -5,7 +5,6 @@ import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.AbsRedisDao;
 import com.jees.core.database.support.IRedisDao;
 import com.jees.core.database.support.ISupportDao;
-import com.jees.test.entity.DS_DATA;
 import com.jees.test.entity.RedisUser;
 import com.jees.test.entity.TabA;
 import lombok.extern.log4j.Log4j2;
@@ -245,10 +244,10 @@ public class JunitTest implements Runnable {
     @Rollback(false)
     public void testSqlite() {
         // 查询
-        dao.selectByMap("localdb", null, DS_DATA.class);
-        List<DS_DATA> list = dao.selectByMap("localdb", new HashMap<String, String>() {{
+        dao.selectByMap("localdb", null, TabA.class);
+        List<TabA> list = dao.selectByMap("localdb", new HashMap<String, String>() {{
             this.put("id", "123");
-        }}, DS_DATA.class);
+        }}, TabA.class);
 //		List<DS_DATA> list = dao.selectByMap( "localdb", "DS_DATA", new HashMap<String, String>(){{
 //			this.put("id","123");
 //		}}, DS_DATA.class);
