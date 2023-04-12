@@ -19,20 +19,21 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Spring security核心配置项
+ *
  * @author aiyoyoyo
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Log4j2
-public class WebSecurityConfig{
+public class WebSecurityConfig {
     @Autowired
     ExUserDetailsService userDetailsService;
     @Autowired
-    DwrConfig           dwrConfig;
+    DwrConfig dwrConfig;
     @Autowired
-    SecurityService     securityService;
+    SecurityService securityService;
     @Autowired
-    TemplateService     templateService;
+    TemplateService templateService;
     @Autowired
     AuthenticationProviderService authenticationProviderService;
     @Autowired
@@ -40,17 +41,17 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity _hs) throws Exception {
-        if( CommonConfig.getBoolean( "jees.webs.security.header.frameOptions", false ) ) {
+        if (CommonConfig.getBoolean("jees.webs.security.header.frameOptions", false)) {
             _hs.headers().frameOptions().disable();
         }
-        _hs.sessionManagement().maximumSessions( CommonConfig.getInteger( "jees.webs.maxSession", 1000 ) )
-                .sessionRegistry( sessionRegistry );
-        dwrConfig.setHttpSecurity( _hs );
-        if( securityService.isEnable() ){
-            templateService.setHttpSecurity( _hs );
-            securityService.setHttpSecurity( _hs );
-        }else{
-            log.warn( "服务器未启用安全访问，默认可以访问所有页面文件！" );
+        _hs.sessionManagement().maximumSessions(CommonConfig.getInteger("jees.webs.maxSession", 1000))
+                .sessionRegistry(sessionRegistry);
+        dwrConfig.setHttpSecurity(_hs);
+        if (securityService.isEnable()) {
+            templateService.setHttpSecurity(_hs);
+            securityService.setHttpSecurity(_hs);
+        } else {
+            log.warn("服务器未启用安全访问，默认可以访问所有页面文件！");
             _hs.authorizeRequests().antMatchers("/**").permitAll();
         }
         return _hs.build();
@@ -69,7 +70,7 @@ public class WebSecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager _authMgr, HttpSecurity _hs) throws Exception {
         //使用自定义验证
-        SecurityFilterChain sfc = _hs.authenticationProvider( authenticationProviderService ).build();
+        SecurityFilterChain sfc = _hs.authenticationProvider(authenticationProviderService).build();
         return sfc;
     }
 }

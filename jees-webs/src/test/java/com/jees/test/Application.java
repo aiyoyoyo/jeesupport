@@ -17,9 +17,9 @@ import org.springframework.context.annotation.DependsOn;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-@ComponentScan( "com.jees" )
-@DependsOn({"commonContextHolder", "commonConfig" })
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@ComponentScan("com.jees")
+@DependsOn({"commonContextHolder", "commonConfig"})
 @Log4j2
 public class Application extends SpringBootServletInitializer {
     @Override
@@ -31,13 +31,13 @@ public class Application extends SpringBootServletInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
 
-        System.out.println( "Project Path:" + FileUtil.path( "classpath:" ) );
-        CommonContextHolder.getBean( ISupport.class ).initialize();
-        log.info( "服务器启动: http"
-                + ( CommonConfig.getBoolean( "server.useSSL", false ) ? "s" : "" )
-                + "://" + CustomSystemUtil.INTRANET_IP  + ":"
-                + CommonConfig.getString( "server.port", "8080" )
-                + CommonConfig.getString( "server.servlet.context-path", "/" )
+        System.out.println("Project Path:" + FileUtil.path("classpath:"));
+        CommonContextHolder.getBean(ISupport.class).initialize();
+        log.info("服务器启动: http"
+                + (CommonConfig.getBoolean("server.useSSL", false) ? "s" : "")
+                + "://" + CustomSystemUtil.INTRANET_IP + ":"
+                + CommonConfig.getString("server.port", "8080")
+                + CommonConfig.getString("server.servlet.context-path", "/")
         );
     }
 

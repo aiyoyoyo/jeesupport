@@ -19,36 +19,37 @@ public class DwrConfig extends AbsSupportModel {
     public void initialize() {
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Bean
-    @DependsOn( "commonConfig" )
+    @DependsOn("commonConfig")
     public ServletRegistrationBean servletRegistrationBean() {
-        String dwr_url = this.getModelConfig( "dwr.url","/dwr" );
+        String dwr_url = this.getModelConfig("dwr.url", "/dwr");
         DwrSpringServlet servlet = new DwrSpringServlet();
         ServletRegistrationBean registrationBean = new ServletRegistrationBean(servlet, dwr_url + "/*");
-        registrationBean.addInitParameter("debug", this.getModelConfig( "dwr.debug","false" ) );
+        registrationBean.addInitParameter("debug", this.getModelConfig("dwr.debug", "false"));
         return registrationBean;
     }
 
     /**
      * 去掉@Bean注释，如果包含懒加载的部分，则不需要在代码中显示调用。即让懒加载生效。
+     *
      * @return 过滤器
      */
 //    @Bean
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         OpenSessionInViewFilter filter = new OpenSessionInViewFilter();
-        registrationBean.setFilter( filter );
+        registrationBean.setFilter(filter);
         return registrationBean;
     }
 
-    public void setHttpSecurity( HttpSecurity _hs ) throws Exception {
-        String dwr_url = this.getModelConfig( "dwr.url","/dwr" );
-        _hs.authorizeRequests().antMatchers( dwr_url + "/**" ).permitAll();
-        if( CommonConfig.getBoolean( "jees.webs.security.cross", false ) ){
-            _hs.csrf().ignoringAntMatchers( dwr_url + "/**" );
-        }else{
+    public void setHttpSecurity(HttpSecurity _hs) throws Exception {
+        String dwr_url = this.getModelConfig("dwr.url", "/dwr");
+        _hs.authorizeRequests().antMatchers(dwr_url + "/**").permitAll();
+        if (CommonConfig.getBoolean("jees.webs.security.cross", false)) {
+            _hs.csrf().ignoringAntMatchers(dwr_url + "/**");
+        } else {
             _hs.csrf().disable();
         }
     }

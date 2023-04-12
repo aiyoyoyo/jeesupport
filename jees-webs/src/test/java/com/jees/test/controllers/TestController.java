@@ -25,14 +25,14 @@ public class TestController {
     @Autowired
     ISupportDao dao;
 
-    @RequestMapping( "/test1" )
+    @RequestMapping("/test1")
     @ResponseBody
     @Transactional
-    public String test1(HttpServletRequest _request){
+    public String test1(HttpServletRequest _request) {
         try {
-            String id = _request.getParameter( "id" );
+            String id = _request.getParameter("id");
 //            List<Test> list = dao.select(Test.class, 0, 1);
-            Test data = dao.selectById( Test.class, "00778f4a-9f58-4449-98fb-a9e48c8c88d8" );
+            Test data = dao.selectById(Test.class, "00778f4a-9f58-4449-98fb-a9e48c8c88d8");
 //            data = list.get(0);
             return "查询结果：" + data;
         } catch (RuntimeException e) {
@@ -42,17 +42,17 @@ public class TestController {
         }
     }
 
-    @RequestMapping( "/test2")
+    @RequestMapping("/test2")
     @ResponseBody
     @Transactional
-    public String test2(){
-        SessionFactoryRegistry.reRegisterSessionFactory( dao.getDefaultDB() );
+    public String test2() {
+        SessionFactoryRegistry.reRegisterSessionFactory(dao.getDefaultDB());
         return "测试页面";
     }
 
-    @RequestMapping( "/test2/{_test}")
+    @RequestMapping("/test2/{_test}")
     @ResponseBody
-    public String test2( @PathVariable String _test ){
+    public String test2(@PathVariable String _test) {
         return "测试页面2";
     }
 }

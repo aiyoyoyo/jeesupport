@@ -10,13 +10,13 @@ import java.util.Set;
 @Log4j2
 public class SensitiveWordTest {
     @Test
-    public void test() throws FileNotFoundException{
-        SensitiveWordUtil.initialize( "classpath:dict/" );
+    public void test() throws FileNotFoundException {
+        SensitiveWordUtil.initialize("classpath:dict/");
 
-        String        text = "xAxBxCxABxBCxABCxDxDCxCDxDCDxAISISFUCKisisIsiSfUCk";
-        Set< String > sets = SensitiveWordUtil.check( text, false );
-        log.debug(  "找到敏感词：" + sets );
-        text = SensitiveWordUtil.replace( text, "*", false );
-        log.debug(  "替换敏感词：" + text );
+        String text = "xAxBxCxABxBCxABCxDxDCxCDxDCDxAISISFUCKisisIsiSfUCk";
+        Set<String> sets = SensitiveWordUtil.check(text, false);
+        log.debug("找到敏感词：" + sets);
+        text = SensitiveWordUtil.replace(text, "*", false);
+        log.debug("替换敏感词：" + text);
     }
 }

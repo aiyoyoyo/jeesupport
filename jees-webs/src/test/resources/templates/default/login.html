@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,14 +8,18 @@
     <title th:text="${APP}">Title</title>
 </head>
 <body>
-登录页 - 当前访问模式<t th:text="*{@commonConfig.get('jees.webs.security.model')}"></t>
-<form th:action="@{/login}" method="post" >
-    <input type="text" name="username" />
-    <input type="password" name="password" />
+登录页 - 当前访问模式
+<t th:text="*{@commonConfig.get('jees.webs.security.model')}"></t>
+<form th:action="@{/login}" method="post">
+    <input type="text" name="username"/>
+    <input type="password" name="password"/>
     <button type="submit">登录</button>
 </form>
 <div th:if="${session.MESSAGE}">
-    显示登录失败的结果：代码=<t th:text="${session.MESSAGE.code}">无</t>，描述=<t th:text="${session.MESSAGE.desc}">无</t>
+    显示登录失败的结果：代码=
+    <t th:text="${session.MESSAGE.code}">无</t>
+    ，描述=
+    <t th:text="${session.MESSAGE.desc}">无</t>
 </div>
 </br>
 <a th:href="|${APP}${TPL}/anonymous.html|" target="_blank">测试匿名页面</a></br>

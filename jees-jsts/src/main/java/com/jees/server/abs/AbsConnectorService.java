@@ -15,26 +15,26 @@ import java.util.StringTokenizer;
  * 提供连接器的服务，用于服务器之间的通讯
  */
 @Log4j2
-public abstract class AbsConnectorService implements IConnectorService{
+public abstract class AbsConnectorService implements IConnectorService {
     @Getter
-    List< Connector >          connectors;
+    List<Connector> connectors;
 
     @Override
     public void onload() {
         connectors = new ArrayList<>();
         //连接中心服务器
-        StringTokenizer st = CommonConfig.getStringTokenizer( "jees.jsts.connector.hosts" );
+        StringTokenizer st = CommonConfig.getStringTokenizer("jees.jsts.connector.hosts");
 
-        while ( st.hasMoreTokens() ) {
+        while (st.hasMoreTokens()) {
             String connect_info = st.nextToken().trim();
 
-            int idx0 = connect_info.indexOf( ":" );
-            String host = connect_info.substring( 0 , idx0 );
-            String port = connect_info.substring( idx0 + 1 );
+            int idx0 = connect_info.indexOf(":");
+            String host = connect_info.substring(0, idx0);
+            String port = connect_info.substring(idx0 + 1);
 
-            Connector sc = CommonContextHolder.getBean( Connector.class );
-            sc.initialize( host , port );
-            connectors.add( sc );
+            Connector sc = CommonContextHolder.getBean(Connector.class);
+            sc.initialize(host, port);
+            connectors.add(sc);
             sc.onload();
         }
     }
@@ -45,12 +45,12 @@ public abstract class AbsConnectorService implements IConnectorService{
 
     @Override
     public void reload() {
-        connectors.forEach( Connector::reload );
+        connectors.forEach(Connector::reload);
     }
 
     @Override
-    public Connector getConnector ( int _index ) {
-        if( _index < connectors.size() ) return connectors.get( _index );
+    public Connector getConnector(int _index) {
+        if (_index < connectors.size()) return connectors.get(_index);
         return null;
     }
 }

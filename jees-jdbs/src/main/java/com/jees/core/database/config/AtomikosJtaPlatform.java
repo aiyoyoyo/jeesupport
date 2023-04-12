@@ -8,27 +8,25 @@ import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
 /**
- *
  * 提供Atomikos的桥接入口，此为Hibernate5需要的内容。
  *
  * @author aiyoyoyo
- *
  */
 @Log4j2
 public class AtomikosJtaPlatform extends AbstractJtaPlatform {
 
-    static JtaTransactionManager   jtaTransactionManager;
+    static JtaTransactionManager jtaTransactionManager;
 
-    public AtomikosJtaPlatform(){
+    public AtomikosJtaPlatform() {
         super();
     }
 
-    public AtomikosJtaPlatform( JtaTransactionManager _jtm ){
+    public AtomikosJtaPlatform(JtaTransactionManager _jtm) {
         jtaTransactionManager = _jtm;
     }
 
-    public void setJtaTransactionManager( JtaTransactionManager jtaTransactionManager ){
-        log.debug( "设置JtaTransactionManager：" + jtaTransactionManager );
+    public void setJtaTransactionManager(JtaTransactionManager jtaTransactionManager) {
+        log.debug("设置JtaTransactionManager：" + jtaTransactionManager);
         AtomikosJtaPlatform.jtaTransactionManager = jtaTransactionManager;
     }
 

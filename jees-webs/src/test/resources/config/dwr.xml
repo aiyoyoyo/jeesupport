@@ -8,7 +8,7 @@
     <dwr:annotation-config/>
     <dwr:annotation-scan base-package="com.jees"/>
     <dwr:configuration>
-        <dwr:convert class="org.springframework.security.core.authority.SimpleGrantedAuthority" type="bean" />
+        <dwr:convert class="org.springframework.security.core.authority.SimpleGrantedAuthority" type="bean"/>
         <dwr:signatures>
             <![CDATA[
             ]]>

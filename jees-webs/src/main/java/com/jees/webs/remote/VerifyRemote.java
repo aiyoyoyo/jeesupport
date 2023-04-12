@@ -16,7 +16,7 @@ public class VerifyRemote implements ISupportEL {
 
     @SneakyThrows
     @RemoteMethod
-    public void test1(){
+    public void test1() {
 //        localConfig.loadConfig();
 
         // users
@@ -40,7 +40,7 @@ public class VerifyRemote implements ISupportEL {
 //        localConfig.changeItem( "/test1", "anonymous", "true" );
     }
 
-    public void changeUserPassword( String _username, String _password) throws Exception {
+    public void changeUserPassword(String _username, String _password) throws Exception {
 //        String password = this.verifyService.encodeString(_password);
 //        localConfig.backup();
 //        localConfig.loadConfig();

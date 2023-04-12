@@ -25,38 +25,45 @@ public class PageAccess {
     private Set<String> denyIps = new HashSet<>();
     private Map<String, PageAccess> elAccess = new ConcurrentHashMap<>();
 
-    private void _add_data( Set<String> _sets, String[] _datas ){
-        for( String data : _datas ){
+    private void _add_data(Set<String> _sets, String[] _datas) {
+        for (String data : _datas) {
             String real_data = data.toLowerCase().trim();
-            if( !_sets.contains( real_data ) ){
-                _sets.add( real_data );
+            if (!_sets.contains(real_data)) {
+                _sets.add(real_data);
             }
         }
     }
 
     public void addUsers(String[] _datas) {
-        this._add_data( this.users, _datas );
+        this._add_data(this.users, _datas);
     }
+
     public void addRoles(String[] _datas) {
-        this._add_data( this.roles, _datas );
+        this._add_data(this.roles, _datas);
     }
+
     public void addIps(String[] _datas) {
-        this._add_data( this.ips, _datas );
+        this._add_data(this.ips, _datas);
     }
+
     public void addDenyUsers(String[] _datas) {
-        this._add_data( this.denyUsers, _datas );
+        this._add_data(this.denyUsers, _datas);
     }
+
     public void addDenyRoles(String[] _datas) {
-        this._add_data( this.denyRoles, _datas );
+        this._add_data(this.denyRoles, _datas);
     }
+
     public void addDenyIps(String[] _datas) {
-        this._add_data( this.denyIps, _datas );
+        this._add_data(this.denyIps, _datas);
     }
+
     public PageAccess getElPage(String _el) {
-        return elAccess.get( _el );
+        return elAccess.get(_el);
     }
+
     public void addElPage(String _el, PageAccess _elPage) {
-        elAccess.put( _el, _elPage );
+        elAccess.put(_el, _elPage);
     }
 
 }

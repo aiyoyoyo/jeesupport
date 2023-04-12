@@ -31,15 +31,16 @@ public class AuthenticationProviderService implements AuthenticationProvider {
     SecurityService securityService;
     @Autowired
     UserDetailsChecker checker;
+
     @Override
     public Authentication authenticate(Authentication _auth) throws AuthenticationException {
         String username = _auth.getName();
         String password = _auth.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        if( !securityService.matches( password, user.getPassword() ) ){
+        if (!securityService.matches(password, user.getPassword())) {
             log.debug("本地用户名密码不匹配！");
-            user = securityService.thirdMatches( username, password );
-            if( user == null ){
+            user = securityService.thirdMatches(username, password);
+            if (user == null) {
                 log.debug("第三方系统用户名密码不匹配！");
                 throw new RequestException(ICodeDefine.Login_PasswordInvalid);
             }
@@ -47,13 +48,13 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         // 构建用户信息
         userDetailsService.build(user);
         // 检查账号状态
-        checker.check( user );
+        checker.check(user);
 
         UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken
                 .authenticated(
                         user,
                         _auth.getCredentials(),
-                        user.getAuthorities() );
+                        user.getAuthorities());
         result.setDetails(_auth.getDetails());
         return result;
     }

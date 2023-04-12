@@ -9,27 +9,28 @@ import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @MessageRequest
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class JstsModel {
-    @MessageLabel( "测试命令" )
-    public static final int   CMD_PROXY        = 100;
+    @MessageLabel("测试命令")
+    public static final int CMD_PROXY = 100;
 
-    @MessageLabel( "测试命令" )
-    public static final int   CMD_PROTO        = 101;
+    @MessageLabel("测试命令")
+    public static final int CMD_PROTO = 101;
 
     @Autowired
     IChannelHandler handler;
-    @MessageRequest( CMD_PROXY )
-    public void CMD_PROXY( ChannelHandlerContext _ctx, Message _msg ){
-        System.out.println( "CMD_PROXY-->" + _msg.toString() );
 
-        handler.response( _msg, _ctx );
+    @MessageRequest(CMD_PROXY)
+    public void CMD_PROXY(ChannelHandlerContext _ctx, Message _msg) {
+        System.out.println("CMD_PROXY-->" + _msg.toString());
+
+        handler.response(_msg, _ctx);
     }
 
-    @MessageRequest( CMD_PROTO )
-    public void CMD_PROTO( ChannelHandlerContext _ctx, CustomMessage _msg ){
-        System.out.println( "CMD_PROTO-->" + _msg.toString() );
+    @MessageRequest(CMD_PROTO)
+    public void CMD_PROTO(ChannelHandlerContext _ctx, CustomMessage _msg) {
+        System.out.println("CMD_PROTO-->" + _msg.toString());
 
-        handler.response( _msg, _ctx );
+        handler.response(_msg, _ctx);
     }
 }

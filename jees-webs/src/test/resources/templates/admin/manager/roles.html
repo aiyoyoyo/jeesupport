@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:replace="|${TPL}/_inc/_utils|::head( 'Jees Webs | ' + ${MENU eq null ? PAGE : MENU.name}, '', 'editable' )" />
+<head th:replace="|${TPL}/_inc/_utils|::head( 'Jees Webs | ' + ${MENU eq null ? PAGE : MENU.name}, '', 'editable' )"/>
 <body>
 <!-- begin page-cover -->
 <div class="page-cover"></div>
@@ -16,21 +17,21 @@
 <!-- begin #page-container -->
 <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
     <!-- begin #header -->
-    <div th:replace="|${TPL}/_inc/_header|::html" />
+    <div th:replace="|${TPL}/_inc/_header|::html"/>
     <!-- end #header -->
 
     <!-- begin #sidebar -->
-    <div th:replace="|${TPL}/_inc/_sidebar|::html" />
+    <div th:replace="|${TPL}/_inc/_sidebar|::html"/>
     <div class="sidebar-bg"></div>
     <!-- end #sidebar -->
 
     <!-- begin #content -->
     <div id="content" class="content">
         <!-- begin breadcrumb -->
-        <ol th:replace="|${TPL}/_inc/_breadcrumb|::html" />
+        <ol th:replace="|${TPL}/_inc/_breadcrumb|::html"/>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header" th:text="${MENU eq null ? PAGE : MENU.name}" />
+        <h1 class="page-header" th:text="${MENU eq null ? PAGE : MENU.name}"/>
         <!-- end page-header -->
         <!-- begin row -->
         <div class="row">
@@ -40,7 +41,8 @@
                 <div class="panel panel-inverse">
                     <div class="panel-heading p">
                         <div class="panel-heading-btn">
-                            <a href="javascript:MGR.Roles.onClick_Add();" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-plus"></i></a>
+                            <a href="javascript:MGR.Roles.onClick_Add();"
+                               class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-plus"></i></a>
                         </div>
                         <h4 class="panel-title">角色列表</h4>
                     </div>
@@ -64,24 +66,26 @@
         <!-- end #content -->
 
         <!-- begin theme-panel -->
-        <div th:replace="|${TPL}/_inc/_theme|::html" />
+        <div th:replace="|${TPL}/_inc/_theme|::html"/>
         <!-- end theme-panel -->
 
         <!-- begin scroll to top btn -->
-        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
+           data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
         <!-- end scroll to top btn -->
     </div>
     <!-- end page container -->
 </div>
-<c th:include="|${TPL}/_inc/_utils|::js( 'editable, sweetalert, dwr' )" />
-<c th:include="|${TPL}/_inc/_utils|::dwr( 'MgrRoleRemote' )" />
-<c th:include="|${TPL}/_inc/_utils|::dwr( 'MgrMenuRemote' )" />
-<c th:include="|${TPL}/_inc/_utils|::custom( 'manager/roles' )" />
-    <script>
+<c th:include="|${TPL}/_inc/_utils|::js( 'editable, sweetalert, dwr' )"/>
+<c th:include="|${TPL}/_inc/_utils|::dwr( 'MgrRoleRemote' )"/>
+<c th:include="|${TPL}/_inc/_utils|::dwr( 'MgrMenuRemote' )"/>
+<c th:include="|${TPL}/_inc/_utils|::custom( 'manager/roles' )"/>
+<script>
 		$(document).ready(function() {
 			App.init();
 			MGR.Roles.init();
 		});
-	</script>
+
+</script>
 </body>
 </html>

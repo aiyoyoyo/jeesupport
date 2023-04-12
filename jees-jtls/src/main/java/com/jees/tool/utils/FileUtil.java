@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- *
  * 基础的文件读写类
  *
  * @author aiyoyoyo
@@ -26,53 +25,54 @@ public class FileUtil {
     public static final String FILE_ENCODING = "UTF-8";
 
     static String classpath = null;
-    public static String classpath(){
-        if( classpath == null ){
-            classpath = path( "classpath:" );
-            log.info( "Class Path:" + classpath );
+
+    public static String classpath() {
+        if (classpath == null) {
+            classpath = path("classpath:");
+            log.info("Class Path:" + classpath);
         }
         return classpath;
     }
 
-    public static File load( String _path, boolean _make ){
+    public static File load(String _path, boolean _make) {
         File file = null;
         boolean is_dir = _path.endsWith("/");
         try {
-            log.debug( "尝试直接加载文件: " + _path );
-            file = ResourceUtils.getFile( _path );
-            if( !file.exists() ) file = null;
+            log.debug("尝试直接加载文件: " + _path);
+            file = ResourceUtils.getFile(_path);
+            if (!file.exists()) file = null;
         } catch (FileNotFoundException e) {
-            log.warn("尝试直接加载失败，文件不存在: " + _path );
+            log.warn("尝试直接加载失败，文件不存在: " + _path);
         }
-        if( file == null ){
-            _path = _path.replace( "classpath:", "" );
-            _path = _path.replace( "classpath*:", "" );
+        if (file == null) {
+            _path = _path.replace("classpath:", "");
+            _path = _path.replace("classpath*:", "");
             try {
-                log.debug( "尝试加载相对路径文件:" + _path );
-                file = ResourceUtils.getFile( _path );
-                if( !file.exists() ) file = null;
+                log.debug("尝试加载相对路径文件:" + _path);
+                file = ResourceUtils.getFile(_path);
+                if (!file.exists()) file = null;
             } catch (FileNotFoundException e) {
-                log.warn("尝试加载相对路径失败，文件不存在:" + _path );
+                log.warn("尝试加载相对路径失败，文件不存在:" + _path);
             }
         }
-        if( file == null ){
-            if( _path.indexOf( ":" ) != -1 ){
-            }else if( _path.startsWith("/") ){
-            }else{
+        if (file == null) {
+            if (_path.indexOf(":") != -1) {
+            } else if (_path.startsWith("/")) {
+            } else {
                 _path = classpath() + "/" + _path;
             }
             try {
-                log.debug( "尝试加载绝对路径文件:" + _path );
-                file = ResourceUtils.getFile( _path );
+                log.debug("尝试加载绝对路径文件:" + _path);
+                file = ResourceUtils.getFile(_path);
             } catch (FileNotFoundException e) {
-                log.warn("尝试加载绝对路径失败，文件不存在:" + _path );
+                log.warn("尝试加载绝对路径失败，文件不存在:" + _path);
             }
         }
-        if( file == null ){
-            log.debug( "File is not exist: " + _path );
-            file = new File( _path );
+        if (file == null) {
+            log.debug("File is not exist: " + _path);
+            file = new File(_path);
         }
-        if( !file.exists() && _make ) make( file, is_dir );
+        if (!file.exists() && _make) make(file, is_dir);
         return file;
     }
 
@@ -80,31 +80,30 @@ public class FileUtil {
      * 读取文件内容转为字符串
      *
      * @param _filepath 文件路径
-     * @param _thr 是否抛出异常
+     * @param _thr      是否抛出异常
      * @return 文件内容
      * @throws IOException 读写异常
      */
-    public static String read ( String _filepath, boolean _thr ) throws IOException{
-        File   file   = load( _filepath, _thr );
-        return read( file );
+    public static String read(String _filepath, boolean _thr) throws IOException {
+        File file = load(_filepath, _thr);
+        return read(file);
     }
 
     /**
-     *
      * @param _file 文件对象
      * @return 文件内容
      * @throws IOException 读写异常
      */
-    public static String read( File _file ) throws IOException{
-        Long   length = _file.length();
-        byte[] bytes  = new byte[length.intValue()];
+    public static String read(File _file) throws IOException {
+        Long length = _file.length();
+        byte[] bytes = new byte[length.intValue()];
 
-        try{
-            @Cleanup FileInputStream fis = new FileInputStream( _file );
-            fis.read( bytes );
+        try {
+            @Cleanup FileInputStream fis = new FileInputStream(_file);
+            fis.read(bytes);
 
-            return new String( bytes, FILE_ENCODING );
-        }catch( Exception e ){
+            return new String(bytes, FILE_ENCODING);
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -113,35 +112,35 @@ public class FileUtil {
      * 往文件里写入字符串
      *
      * @param _conent 写入内容
-     * @param _file 待写入对象
+     * @param _file   待写入对象
      * @throws IOException 读写异常
      */
-    public static void write ( String _conent, String _file, boolean _thr ) throws IOException {
-        write( _conent.getBytes( FILE_ENCODING ), _file, _thr );
+    public static void write(String _conent, String _file, boolean _thr) throws IOException {
+        write(_conent.getBytes(FILE_ENCODING), _file, _thr);
     }
 
     /**
      * @param _conent 待写入内容
-     * @param _file 待写入文件
+     * @param _file   待写入文件
      * @throws IOException 读写异常
      */
-    public static void write( String _conent, File _file ) throws IOException {
-        write( _conent.getBytes( FILE_ENCODING ), _file );
+    public static void write(String _conent, File _file) throws IOException {
+        write(_conent.getBytes(FILE_ENCODING), _file);
     }
 
-    public static void write( byte[] _bytes, String _path, boolean _thr ) throws IOException {
-        File file = load( _path , _thr );
-        write( _bytes, file );
+    public static void write(byte[] _bytes, String _path, boolean _thr) throws IOException {
+        File file = load(_path, _thr);
+        write(_bytes, file);
     }
 
-    public static void write( byte[] _bytes, File _file ) throws IOException {
-        if ( !_file.getParentFile().exists() ) {
+    public static void write(byte[] _bytes, File _file) throws IOException {
+        if (!_file.getParentFile().exists()) {
             _file.getParentFile().mkdirs();
         }
-        try{
-            @Cleanup FileOutputStream fos = new FileOutputStream( _file );
-            fos.write( _bytes );
-        } catch ( Exception e ) {
+        try {
+            @Cleanup FileOutputStream fos = new FileOutputStream(_file);
+            fos.write(_bytes);
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -149,112 +148,114 @@ public class FileUtil {
     /**
      * 读取文件内容，并进行自定义处理
      *
-     * @param _file 待读取文件
+     * @param _file     待读取文件
      * @param _consumer 每行处理方法
      */
-    public static String read ( String _file, Consumer< ? super String > _consumer ) {
+    public static String read(String _file, Consumer<? super String> _consumer) {
         int read_count = 0;
         String read_line;
         StringBuffer sb = new StringBuffer();
         try {
-            File   file   = load( _file, false );
-            @Cleanup BufferedReader buff_read = new BufferedReader( new FileReader( file ) );
-            while ( ( read_line = buff_read.readLine() ) != null ) {
-                if ( _consumer != null ) {
-                    _consumer.accept( read_line );
+            File file = load(_file, false);
+            @Cleanup BufferedReader buff_read = new BufferedReader(new FileReader(file));
+            while ((read_line = buff_read.readLine()) != null) {
+                if (_consumer != null) {
+                    _consumer.accept(read_line);
                 }
-                sb.append( read_line );
+                sb.append(read_line);
                 read_count++;
             }
-        } catch ( FileNotFoundException e ) {
-            log.error( "文件没有找到:FILE=[" + _file + "]" );
-        } catch ( IOException e ) {
-            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
+        } catch (FileNotFoundException e) {
+            log.error("文件没有找到:FILE=[" + _file + "]");
+        } catch (IOException e) {
+            log.error("文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]");
         }
         return sb.toString();
     }
 
     /**
      * 按指定编码读取文件内容
-     * @param _file 文件地址
-     * @param _charset 编码
+     *
+     * @param _file     文件地址
+     * @param _charset  编码
      * @param _consumer 读取每行的处理过程
      * @return
      * @throws Exception
      */
-    public static String read( String _file, String _charset, Consumer< ? super String > _consumer ){
+    public static String read(String _file, String _charset, Consumer<? super String> _consumer) {
         int read_count = 0;
         StringBuffer sb = new StringBuffer();
         try {
-            @Cleanup LineIterator line_it = FileUtils.lineIterator( ResourceUtils.getFile( _file ), _charset );
+            @Cleanup LineIterator line_it = FileUtils.lineIterator(ResourceUtils.getFile(_file), _charset);
             try {
                 String read_line;
                 while (line_it.hasNext()) {
                     read_line = line_it.nextLine();
-                    if ( _consumer != null ) {
-                        _consumer.accept( read_line );
+                    if (_consumer != null) {
+                        _consumer.accept(read_line);
                     }
-                    sb.append( read_line );
+                    sb.append(read_line);
                     read_count++;
                 }
             } finally {
                 line_it.close();
             }
-        } catch ( IOException e ) {
-            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
+        } catch (IOException e) {
+            log.error("文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]");
         }
         return sb.toString();
     }
 
-    public static void make( File _file, boolean _dir ){
+    public static void make(File _file, boolean _dir) {
         File parent_file = _file.getParentFile();
         List<File> list = new ArrayList<>();
         while (!parent_file.exists()) {
-            list.add( 0, parent_file );
+            list.add(0, parent_file);
             parent_file = parent_file.getParentFile();
         }
 
-        for( File f : list ){
-            if( !f.exists() ) f.mkdir();
+        for (File f : list) {
+            if (!f.exists()) f.mkdir();
         }
 
-        if( _dir ){
-            log.debug("创建目录:" + _file.getPath() );
+        if (_dir) {
+            log.debug("创建目录:" + _file.getPath());
             _file.mkdir();
-        }else {
-            log.debug("创建文件:" + _file.getPath() );
+        } else {
+            log.debug("创建文件:" + _file.getPath());
             try {
                 _file.createNewFile();
             } catch (IOException e) {
-                log.error("创建文件失败:" + _file.getPath() );
+                log.error("创建文件失败:" + _file.getPath());
             }
         }
     }
 
-    public static String path( String _path ){
+    public static String path(String _path) {
         try {
-            File file = load( _path, false );
+            File file = load(_path, false);
             return file.getCanonicalPath().replaceAll("\\\\", "/");
         } catch (IOException e) {
-            log.error( "文件[" + _path + "]路径获取失败:", e );
+            log.error("文件[" + _path + "]路径获取失败:", e);
         }
         return null;
     }
 
     /**
      * 获取文件实际路径，/结尾的字符串将创建文件夹，否则创建文件
+     *
      * @param _path 路径
      * @param _make 是否创建
      * @return 文件地址
      */
-    public static String path( String _path, boolean _make ){
-        String file_path = path( _path );
-        if( _make ){
-            File file = load( _path, _make );
+    public static String path(String _path, boolean _make) {
+        String file_path = path(_path);
+        if (_make) {
+            File file = load(_path, _make);
             try {
                 return file.getCanonicalPath().replaceAll("\\\\", "/");
             } catch (IOException e) {
-                log.error( "文件[" + _path + "]路径获取失败:", e );
+                log.error("文件[" + _path + "]路径获取失败:", e);
             }
         }
         return file_path;
@@ -262,11 +263,12 @@ public class FileUtil {
 
     /**
      * 获取文件的真实路径
+     *
      * @param _cls
      * @return
      */
-    public static String path( Class _cls ){
-        return _cls.getResource( "" ).getPath();
+    public static String path(Class _cls) {
+        return _cls.getResource("").getPath();
     }
 
     static String projectPath;
@@ -280,13 +282,14 @@ public class FileUtil {
 
     /**
      * 获取工程开发路径，如果是部署路径则返回部署路径
+     *
      * @return
      */
     public static String project() {
-        if( projectPath == null ) {
+        if (projectPath == null) {
             Class app = null;
             try {
-                app = Class.forName( FileUtil.class.getName() );
+                app = Class.forName(FileUtil.class.getName());
             } catch (ClassNotFoundException e) {
             }
             String path = app.getResource("").getPath();
@@ -299,7 +302,7 @@ public class FileUtil {
             if (!devMaven) {
                 sub_idx = FileUtil.classpath().indexOf("target");
                 devMaven = sub_idx != -1;
-                if( devMaven ){
+                if (devMaven) {
                     path = FileUtil.classpath();
                 }
             }
@@ -317,42 +320,43 @@ public class FileUtil {
                 }
             }
 
-            if( !depTomcat && !depServer ){
+            if (!depTomcat && !depServer) {
                 projectPath = path.substring(0, sub_idx);
-            }else{
+            } else {
                 projectPath = "";
-                if( path.startsWith( "/" ) ){
+                if (path.startsWith("/")) {
                     String os = System.getProperty("os.name");
-                    log.info( "os.name: " + os );
-                    if(os.toLowerCase().startsWith("win")){
-                        if( path.startsWith( "/" ) ){
-                            path = path.substring( 1 );
+                    log.info("os.name: " + os);
+                    if (os.toLowerCase().startsWith("win")) {
+                        if (path.startsWith("/")) {
+                            path = path.substring(1);
                         }
                     }
                 }
                 String[] paths = path.split("/");
-                for( int i = 0; i< paths.length; i ++ ){
+                for (int i = 0; i < paths.length; i++) {
                     String p = paths[i];
-                    if( p.equalsIgnoreCase( "webapps") ){
+                    if (p.equalsIgnoreCase("webapps")) {
                         projectPath += p + "/" + paths[i + 1] + "/";
                         break;
-                    }else if( p.equalsIgnoreCase( "WEB-INF" ) ){
+                    } else if (p.equalsIgnoreCase("WEB-INF")) {
                         break;
-                    }else projectPath += p + "/";
+                    } else projectPath += p + "/";
                 }
             }
 
-            log.info( "Project path:" + projectPath );
+            log.info("Project path:" + projectPath);
         }
         return projectPath.replaceAll("%20", " ");
     }
 
     /**
      * 获取源代码路径
+     *
      * @return
      */
-    public static String source(){
-        if( srcPath == null ) {
+    public static String source() {
+        if (srcPath == null) {
             String project_path = project();
             if (devMaven) {
                 srcPath = project_path + "src/main/java/";
@@ -367,20 +371,21 @@ public class FileUtil {
                 log.warn("Can't find Src Path:" + srcPath);
                 srcPath = null;
             }
-            log.info( "Src Path:" + srcPath );
+            log.info("Src Path:" + srcPath);
         }
         return srcPath;
     }
 
     /**
      * 获取webroot的路径，没有找到正确的地址返回null
+     *
      * @return
      */
-    public static String webroot(){
-        if( webPath == null ) {
+    public static String webroot() {
+        if (webPath == null) {
             String project_path = project();
             if (devMaven) {
-                webPath = project_path + CommonConfig.get( "jees.webs.devWebRoot", "src/main/resources/" );
+                webPath = project_path + CommonConfig.get("jees.webs.devWebRoot", "src/main/resources/");
             } else if (devWebroot) {
                 webPath = project_path + "WebRoot/";
             } else if (depTomcat || depServer) {
@@ -392,33 +397,34 @@ public class FileUtil {
                 log.warn("Can't find WebRoot Path:" + webPath);
                 webPath = null;
             }
-            log.info( "Web Path:" + webPath );
+            log.info("Web Path:" + webPath);
         }
         return webPath;
     }
 
     /**
      * 获取模版路径
+     *
      * @return
      */
-    public static String template(){
-        if( tmpPath == null ){
+    public static String template() {
+        if (tmpPath == null) {
             String path = webroot() + "WEB-INF/";
 
             tmpPath = "";
-            if( path.startsWith( "/" ) ){
-                path = path.substring( 1 );
+            if (path.startsWith("/")) {
+                path = path.substring(1);
             }
             String[] paths = path.split("/");
-            for( int i = 0; i< paths.length; i ++ ){
+            for (int i = 0; i < paths.length; i++) {
                 String p = paths[i];
-                if( p.startsWith( "icomm-") && p.endsWith(".jar") ){
+                if (p.startsWith("icomm-") && p.endsWith(".jar")) {
                     projectPath += p + "/" + paths[i + 1] + "/";
                     break;
-                }else tmpPath = path + "temp/";
+                } else tmpPath = path + "temp/";
             }
 
-            log.info( "Template Path:" + tmpPath );
+            log.info("Template Path:" + tmpPath);
         }
 
         return tmpPath;
@@ -426,134 +432,141 @@ public class FileUtil {
 
     /**
      * 拷贝文件到指定目录
+     *
      * @param _form 源文件
-     * @param _to 目标文件夹
-     * @param _all 为真时，当源文件为目录时拷贝源文件夹下的所有子文件到目标文件夹
+     * @param _to   目标文件夹
+     * @param _all  为真时，当源文件为目录时拷贝源文件夹下的所有子文件到目标文件夹
      */
-    public void copy( String _form, String _to, boolean _all ){
+    public void copy(String _form, String _to, boolean _all) {
 //        File file_form = new File( _form );
 //        file_form.renameTo( new File( _to ) );
     }
 
     /**
-     *  读取jar包中的资源文件
+     * 读取jar包中的资源文件
+     *
      * @param _file 文件名
      * @return 文件内容
      * @throws IOException 读取错误
      */
-    public static String read( String _file ) throws IOException{
+    public static String read(String _file) throws IOException {
         int read_count = 0;
         String read_line;
         StringBuilder buffer = new StringBuilder();
         try {
-            @Cleanup BufferedReader buff_read = new BufferedReader( new InputStreamReader( FileUtil.class.getClassLoader().getResourceAsStream(_file)) );
-            while ( ( read_line = buff_read.readLine() ) != null ) {
-                buffer.append( new String( read_line.getBytes(), FILE_ENCODING ) + "\n" );
+            @Cleanup BufferedReader buff_read = new BufferedReader(new InputStreamReader(FileUtil.class.getClassLoader().getResourceAsStream(_file)));
+            while ((read_line = buff_read.readLine()) != null) {
+                buffer.append(new String(read_line.getBytes(), FILE_ENCODING) + "\n");
                 read_count++;
             }
-        } catch ( FileNotFoundException e ) {
-            log.error( "文件没有找到:FILE=[" + _file + "]" );
-        } catch ( IOException e ) {
-            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
+        } catch (FileNotFoundException e) {
+            log.error("文件没有找到:FILE=[" + _file + "]");
+        } catch (IOException e) {
+            log.error("文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]");
         }
         return buffer.toString();
     }
 
     /**
      * 删除文件
+     *
      * @param _file
      */
-    public void delete( String _file ){
+    public void delete(String _file) {
 
     }
 
     /**
      * 查找目录下所有匹配格式的文件
-     * @param _path 路径
+     *
+     * @param _path   路径
      * @param _suffix 指定文件后缀，不指定则查找全部, "/"参数代表仅查找目录
      * @return
      */
-    public static Map<String, File> scanFolder(String _path, String _suffix ){
+    public static Map<String, File> scanFolder(String _path, String _suffix) {
         Map<String, File> files = new HashMap<>();
-        _scan_files( files, _path, _suffix );
+        _scan_files(files, _path, _suffix);
         return files;
     }
 
     /**
      * 特殊扫描方式，排除filename.ds文件
+     *
      * @param _loads
      * @param _dir
      */
-    private static void _scan_files(Map<String, File> _loads, String _dir, String _suffix ){
-        File file = new File( _dir );
-        if( file.exists() && file.isDirectory() ){
+    private static void _scan_files(Map<String, File> _loads, String _dir, String _suffix) {
+        File file = new File(_dir);
+        if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
-            for( File f : files ){
-                if( _suffix != null && _suffix.equals( "/" ) ){
-                    if( f.isDirectory() ){
-                        _scan_files_load( _loads, f, null );
+            for (File f : files) {
+                if (_suffix != null && _suffix.equals("/")) {
+                    if (f.isDirectory()) {
+                        _scan_files_load(_loads, f, null);
                     }
-                }else{
-                    if( f.isDirectory() ){
-                        _scan_files( _loads, f.getAbsolutePath(), _suffix );
-                    }else{
-                        _scan_files_load( _loads, f, _suffix );
+                } else {
+                    if (f.isDirectory()) {
+                        _scan_files(_loads, f.getAbsolutePath(), _suffix);
+                    } else {
+                        _scan_files_load(_loads, f, _suffix);
                     }
                 }
             }
-        }else{
-            _scan_files_load( _loads, file, _suffix );
+        } else {
+            _scan_files_load(_loads, file, _suffix);
         }
     }
 
     /**
      * 排除filename.ds文件
+     *
      * @param _file
      */
-    private static void _scan_files_load( Map<String, File> _loads, File _file, String _suffix ){
+    private static void _scan_files_load(Map<String, File> _loads, File _file, String _suffix) {
         String[] file_nanmes = _file.getName().split("\\.");
         String file_suffix = file_nanmes[file_nanmes.length - 1];
         String file_full_name = _file.getAbsolutePath();
-        if( _suffix != null && _suffix.indexOf( file_suffix + "," ) == -1 ) { // 如果指定后缀，则进行匹配
-            _loads.put( file_full_name, _file );
-        }else{
-            _loads.put( file_full_name, _file );
+        if (_suffix != null && _suffix.indexOf(file_suffix + ",") == -1) { // 如果指定后缀，则进行匹配
+            _loads.put(file_full_name, _file);
+        } else {
+            _loads.put(file_full_name, _file);
         }
     }
 
     /**
      * 读取gz压缩文件内容
+     *
      * @param _file
      * @param _buffSize
      * @param _consumer
      */
-    public static String[] readGZ( String _file, int _buffSize, Consumer< ? super String > _consumer ){
+    public static String[] readGZ(String _file, int _buffSize, Consumer<? super String> _consumer) {
         int read_count = 0;
         String read_line;
         StringBuffer sb = new StringBuffer();
         try {
             @Cleanup FileInputStream fis = new FileInputStream(_file);
             //使用GZIPInputStream解压GZ文件
-            @Cleanup GzipCompressorInputStream gcis = new GzipCompressorInputStream( fis );
+            @Cleanup GzipCompressorInputStream gcis = new GzipCompressorInputStream(fis);
             @Cleanup ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
             int count;
             byte[] buffer = new byte[_buffSize];
             while ((count = gcis.read(buffer)) != -1) {
                 baos.write(buffer, 0, count);
             }
-            String str = new String( baos.toByteArray() );
-            String[] str_arr = str.split( "\r\n" );
-            if( _consumer != null ) {
+            String str = new String(baos.toByteArray());
+            String[] str_arr = str.split("\r\n");
+            if (_consumer != null) {
                 for (String tmp : str_arr) {
-                    _consumer.accept( tmp );
+                    _consumer.accept(tmp);
                     read_count++;
                 }
             }
             return str_arr;
-        } catch ( FileNotFoundException e ) {
-            log.error( "文件没有找到:FILE=[" + _file + "]" );
-        } catch ( IOException e ) {
-            log.error( "文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]" );
+        } catch (FileNotFoundException e) {
+            log.error("文件没有找到:FILE=[" + _file + "]");
+        } catch (IOException e) {
+            log.error("文件内容读取失败:FILE=[" + _file + "], LINE=[" + read_count + "]");
         }
         return new String[0];
     }

@@ -6,7 +6,7 @@ import com.jees.webs.entity.SuperUser;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface ISuperService<M extends SuperMenu,U extends SuperUser,R extends SuperRole >{
+public interface ISuperService<M extends SuperMenu, U extends SuperUser, R extends SuperRole> {
 
     void initialize();
 
@@ -28,11 +28,11 @@ public interface ISuperService<M extends SuperMenu,U extends SuperUser,R extends
 //
 //    void saveRole( R _role );
 
-    void loadUserMenus( HttpServletRequest _request );
+    void loadUserMenus(HttpServletRequest _request);
 
-    void loadUserBreadcrumb( HttpServletRequest _request );
+    void loadUserBreadcrumb(HttpServletRequest _request);
 
-    void loadUserActiveMenus( HttpServletRequest request );
+    void loadUserActiveMenus(HttpServletRequest request);
 
     Class<M> getExMenuClass();
 

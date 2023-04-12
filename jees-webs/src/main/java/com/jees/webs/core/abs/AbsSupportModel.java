@@ -8,11 +8,13 @@ public abstract class AbsSupportModel implements ISupportModel {
 
     @Getter
     protected boolean enable;
+
     /**
      * 获取模块配置，以 jees.webs.modals 开头拼接
+     *
      * @param _key
      */
-    public <T> T getModelConfig( String _key, T _def ){
-        return CommonConfig.get( "jees.webs.modals." + _key ,_def );
+    public <T> T getModelConfig(String _key, T _def) {
+        return CommonConfig.get("jees.webs.modals." + _key, _def);
     }
 }

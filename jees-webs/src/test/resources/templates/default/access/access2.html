@@ -17,7 +17,7 @@
     user = john
     deny = lina
 </pre>
-<div class="CSS_BLOCK_ID" th:verify >
+<div class="CSS_BLOCK_ID" th:verify>
     admin/john/marry能访问这个区域。lina是看不见的。
 </div>
 <pre>
@@ -25,6 +25,6 @@
     # admin/lina/marry可以访问，lina/john不可以访问
     deny = john
 </pre>
-<button id="BTN_SUBMIT" th:verify >admin/marry可以访问，john/lina/jack是看不见的。</button>
+<button id="BTN_SUBMIT" th:verify>admin/marry可以访问，john/lina/jack是看不见的。</button>
 </body>
 </html>

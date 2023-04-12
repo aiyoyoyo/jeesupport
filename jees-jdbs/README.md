@@ -1,10 +1,13 @@
 # jees-jdbs
 
 ## 内容介绍
+
 本工具基于Spring和Atomikos实现分布式数据库配置方案，后续见更新说明。
 
 ## 基本用法
+
 > pom.xml
+
 ```
 <dependency>
 	<groupId>com.github.aiyoyoyo</groupId>
@@ -14,7 +17,9 @@
 ```
 
 ## 配置文件说明
+
 > application.yml
+
 ```
 jees:
  jdbs:
@@ -59,7 +64,9 @@ jees:
 ```
 
 ## 程序实现Demo
+
 * DAO继承
+
 ```
 @Component
 public class YourDao extends AbsSupportDao{
@@ -67,9 +74,11 @@ public class YourDao extends AbsSupportDao{
     ... AbsSupportDao已经包含了部分基础数据库操作，后续可能重命名为AbsHibernateDao ...
 }
 ```
+
 * 事务
-以web开发中的Controller举例，使用@Transactional注解来声明事务范围。  
-Spring的事务代理将会以抛出异常到包含该标签的最上层方法作回滚处理。  
+  以web开发中的Controller举例，使用@Transactional注解来声明事务范围。  
+  Spring的事务代理将会以抛出异常到包含该标签的最上层方法作回滚处理。
+
 ```
 @Controller
 public class MyController{
@@ -84,20 +93,26 @@ public class MyController{
 ```
 
 ## 部分内容说明
+
 * com.jees.core.database.config
-现已有原来的多配置文件形式简化到application.yml中。详情请参考Github中示例。
+  现已有原来的多配置文件形式简化到application.yml中。详情请参考Github中示例。
 * com.jees.core.database.repository
-该内容为JPA方式的数据库操作，部分内容尚未生效。
+  该内容为JPA方式的数据库操作，部分内容尚未生效。
 * com.jees.core.database.support
-AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
+  AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
 
 ## 更新内容
+
 ### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+
 1. 增加了SqlServer链接方式，需要启用分布式事务支持
-2. 
-### 1.2.3-SNAPSHOT 
+2.
+
+### 1.2.3-SNAPSHOT
+
 1. 增加orcale连接方式，需要增加xa授权。
    [comment]: <参考> ( https://blog.csdn.net/qq_43601813/article/details/107248968)
+
 ```
  1. cmd使用sqlplus登陆orcale
  2. 使用sys连接数据库
@@ -109,15 +124,23 @@ AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestCo
     grant select on sys.dba_2pc_pending to [USER];
     grant execute on sys.dbms_system to [USER];
 ```
-### 1.2.1-SNAPSHOT 
+
+### 1.2.1-SNAPSHOT
+
 1. 优化日志文件
 2. 优化打包内容
+
 ### 1.1.6-SNAPSHOT
+
 1. 加入Redis数据操作相关函数
 2. 优化相关内容
+
 ### Ver 1.1.5-SNAPSHOT
+
 1. 优化配置细节，详情见AbstractDataSorceBean得配置项
+
 ### 1.1.4-SNAPSHOT
+
 1. 更新了jdbs配置方案，由多文件形式转为集中到application.yml中。详细内容见测试代码和配置文件。
 2. 程序配置使用了较多的约定形式，如果不理解，请参考SpringBoot官方文档，或加群咨询。
 3. 建议自定义Dao继承BaseDao来重写自己所需的数据库操作。

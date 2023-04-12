@@ -8,9 +8,9 @@ import java.util.Collection;
 
 public abstract class AbsSupport implements ISupport {
     @Override
-    public void initialize(){
+    public void initialize() {
         Collection<ISupportModel> models = CommonContextHolder.getBeans(ISupportModel.class);
-        for( ISupportModel model : models ){
+        for (ISupportModel model : models) {
             // 如果初始化失败，则停止服务器
             model.initialize();
         }

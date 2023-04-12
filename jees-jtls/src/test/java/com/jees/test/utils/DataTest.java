@@ -21,38 +21,38 @@ public class DataTest {
 //        log.debug( "bytes 2 long:" + DataUtil.bytes2long( new byte[]{ 0,0,0,0, 0, 0, 0, 1 } ) );  //00000001->1
 
 //        log.debug( DataUtil.bytes_2_hex( new byte[]{48}));
-        log.debug(CustomSystemUtil.INTERNET_IP + ", " + CustomSystemUtil.INTRANET_IP );
+        log.debug(CustomSystemUtil.INTERNET_IP + ", " + CustomSystemUtil.INTRANET_IP);
     }
 
     @Test
-    public void test2(){
-        log.debug( "10-->2---------------------------");
+    public void test2() {
+        log.debug("10-->2---------------------------");
         log.debug(Integer.toBinaryString(0));
         log.debug(Integer.toBinaryString(1));
         log.debug(Integer.toBinaryString(2));
         log.debug(Integer.toBinaryString(8));
         log.debug(Integer.toBinaryString(10));
         log.debug(Integer.toBinaryString(16));
-        log.debug( "10-->8---------------------------");
+        log.debug("10-->8---------------------------");
         log.debug(Integer.toOctalString(0));
         log.debug(Integer.toOctalString(1));
         log.debug(Integer.toOctalString(2));
         log.debug(Integer.toOctalString(8));
         log.debug(Integer.toOctalString(10));
         log.debug(Integer.toOctalString(16));
-        log.debug( "10-->16---------------------------");
+        log.debug("10-->16---------------------------");
         log.debug(Integer.toHexString(0));
         log.debug(Integer.toHexString(1));
         log.debug(Integer.toHexString(2));
         log.debug(Integer.toHexString(8));
         log.debug(Integer.toHexString(10));
         log.debug(Integer.toHexString(16));
-        log.debug( "2-->10---------------------------");
-        log.debug(Integer.parseInt( "0", 2 ) );
-        log.debug(Integer.parseInt( "1", 2 ) );
-        log.debug(Integer.parseInt( "10", 2 ) );
-        log.debug(Integer.parseInt( "1000", 2 ) );
-        log.debug(Integer.parseInt( "1010", 2 ) );
-        log.debug(Integer.parseInt( "10000", 2 ) );
+        log.debug("2-->10---------------------------");
+        log.debug(Integer.parseInt("0", 2));
+        log.debug(Integer.parseInt("1", 2));
+        log.debug(Integer.parseInt("10", 2));
+        log.debug(Integer.parseInt("1000", 2));
+        log.debug(Integer.parseInt("1010", 2));
+        log.debug(Integer.parseInt("10000", 2));
     }
 }

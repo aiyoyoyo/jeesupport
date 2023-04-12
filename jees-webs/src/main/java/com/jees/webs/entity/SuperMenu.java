@@ -1,12 +1,10 @@
 package com.jees.webs.entity;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.jees.tool.utils.JsonUtil;
 import lombok.*;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.annotations.RemoteProperty;
 
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,20 +31,22 @@ public class SuperMenu {
     int index;          // 顺序
     @RemoteProperty
     List<SuperMenu> menus = new ArrayList<>(); // 子菜单
+
     @Override
-    public String toString(){
-        return JsonUtil.toString( this );
+    public String toString() {
+        return JsonUtil.toString(this);
     }
 
-    public boolean isRoot(){
+    public boolean isRoot() {
         return parentId.equalsIgnoreCase(id);
     }
-    public boolean hasMenus(){
+
+    public boolean hasMenus() {
         return menus.size() > 0;
     }
 
-    public void addMenu( SuperMenu _menu ){
-        if( this.menus.contains( _menu ) ) return;
-        this.menus.add( _menu );
+    public void addMenu(SuperMenu _menu) {
+        if (this.menus.contains(_menu)) return;
+        this.menus.add(_menu);
     }
 }

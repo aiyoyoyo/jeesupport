@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ExtendDao extends CacheDao {
-	
+
 }

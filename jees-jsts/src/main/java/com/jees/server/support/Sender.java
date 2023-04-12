@@ -12,51 +12,51 @@ import java.util.function.Consumer;
 
 @Log4j2
 @Component
-@Scope( value = "prototype" )
+@Scope(value = "prototype")
 @SuppressWarnings("unchecked")
-public class Sender{
-    Queue< Object > queue = new LinkedList<>();
+public class Sender {
+    Queue<Object> queue = new LinkedList<>();
 
-    public void insert( Object _obj ){
-        if( _obj == null ){
+    public void insert(Object _obj) {
+        if (_obj == null) {
             return;
         }
-        Optional< Object > finder = queue.stream().filter( o->o.equals( _obj ) ).findFirst();
-        if( finder.isPresent() ){
+        Optional<Object> finder = queue.stream().filter(o -> o.equals(_obj)).findFirst();
+        if (finder.isPresent()) {
             return;
         }
         // 针对多次处理的非Message类型消息做合并
-        if( _obj instanceof AbsMessage ){
-            AbsMessage tmp = ( AbsMessage ) _obj;
-            finder = queue.stream().filter( o->{
-                if( o instanceof AbsMessage ){
-                    return ( ( AbsMessage ) o ).check( tmp );
+        if (_obj instanceof AbsMessage) {
+            AbsMessage tmp = (AbsMessage) _obj;
+            finder = queue.stream().filter(o -> {
+                if (o instanceof AbsMessage) {
+                    return ((AbsMessage) o).check(tmp);
                 }
                 return false;
-            } ).findFirst();
-            if( finder.isPresent() ){
-                AbsMessage msg = ( AbsMessage ) finder.get();
-                msg.merge( tmp );
-            }else{
-                queue.offer( _obj );
+            }).findFirst();
+            if (finder.isPresent()) {
+                AbsMessage msg = (AbsMessage) finder.get();
+                msg.merge(tmp);
+            } else {
+                queue.offer(_obj);
             }
-        }else{
-            queue.offer( _obj );
+        } else {
+            queue.offer(_obj);
         }
     }
 
-    public void clear(){
+    public void clear() {
         queue.clear();
     }
 
-    public void flush( Consumer _action ){
-        if( queue.size() == 0 ){
+    public void flush(Consumer _action) {
+        if (queue.size() == 0) {
             return;
         }
 
-        queue.forEach( o->{
-            _action.accept( o );
-        } );
+        queue.forEach(o -> {
+            _action.accept(o);
+        });
 
         queue.clear();
     }

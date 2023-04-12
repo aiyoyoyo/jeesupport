@@ -16,14 +16,14 @@
         <RollingFile name="ConsoleLog" fileName="${console_file}" filePattern="${console_file_pattern}" append="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="128MB" />
-                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="128MB"/>
+                <TimeBasedTriggeringPolicy/>
                 <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
             </Policies>
             <!-- 实测没效果，用别的方式重写了-->
             <DefaultRolloverStrategy>
                 <Delete basePath="${baseDir}" maxDepth="1">
-                    <IfFileName glob="*/${project_name}.*.*.log.gz" />
+                    <IfFileName glob="*/${project_name}.*.*.log.gz"/>
                     <IfLastModified age="30d">
                     </IfLastModified>
                 </Delete>
@@ -47,7 +47,7 @@
 
         <Root level="debug">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="Async" />
+            <AppenderRef ref="Async"/>
         </Root>
     </Loggers>
 </Configuration>

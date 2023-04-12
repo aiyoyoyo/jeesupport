@@ -23,28 +23,28 @@ public class ExUserDetailsChecker implements UserDetailsChecker {
     public void check(UserDetails _user) {
         SuperUser user = (SuperUser) _user;
         if (!user.isAccountNonLocked()) {
-            if( log.isDebugEnabled() ){
+            if (log.isDebugEnabled()) {
                 log.debug("用户[" + user.getUsername() + "]账号被锁定！");
             }
             throw new RequestException(ICodeDefine.User_IsLocked);
         }
 
         if (!user.isEnabled()) {
-            if( log.isDebugEnabled() ) {
+            if (log.isDebugEnabled()) {
                 log.debug("用户[" + user.getUsername() + "]账号被禁用！");
             }
             throw new RequestException(ICodeDefine.User_IsBlack);
         }
 
         if (!user.isAccountNonExpired()) {
-            if( log.isDebugEnabled() ) {
+            if (log.isDebugEnabled()) {
                 log.debug("用户[" + user.getUsername() + "]账号已过有效期！");
             }
             throw new RequestException(ICodeDefine.User_IsExpired);
         }
 
         if (!user.isCredentialsNonExpired()) {
-            if( log.isDebugEnabled() ) {
+            if (log.isDebugEnabled()) {
                 log.debug("用户[" + user.getUsername() + "]账号密码已过有效期！");
             }
             throw new RequestException(ICodeDefine.Password_IsExpired);

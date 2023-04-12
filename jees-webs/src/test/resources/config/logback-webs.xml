@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 转载：http://blog.csdn.net/appleyk/article/details/78717388 -->
 <included>
-	<property name="WEBS_FILE" value="jeesupport.webs" />
-	<appender name="WEBS_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${WEBS_FILE}.log</file>
-		<append>true</append>
-		<encoder>
-			<charset>UTF-8</charset>
-			<pattern>${LOG_PATTERN}</pattern>
-		</encoder>
-		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
- 			<fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${WEBS_FILE}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
-			<maxHistory>31</maxHistory>
-			<maxFileSize>4MB</maxFileSize>
-		</rollingPolicy>
-	</appender>
-	<!-- DBUEG 模式下，非必要日志 -->
-	<logger name="org.springframework.data.convert" level="INFO"/>
-	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="INFO"/>
-	<logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener"
-			level="INFO"/>
-	<logger name="org.thymeleaf.ConfigurationPrinterHelper" level="INFO"/>
-	<logger name="com.jees.common.CommonConfig" level="INFO"/>
+    <property name="WEBS_FILE" value="jeesupport.webs"/>
+    <appender name="WEBS_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${WEBS_FILE}.log</file>
+        <append>true</append>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${WEBS_FILE}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
+            <maxHistory>31</maxHistory>
+            <maxFileSize>4MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <!-- DBUEG 模式下，非必要日志 -->
+    <logger name="org.springframework.data.convert" level="INFO"/>
+    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="INFO"/>
+    <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener"
+            level="INFO"/>
+    <logger name="org.thymeleaf.ConfigurationPrinterHelper" level="INFO"/>
+    <logger name="com.jees.common.CommonConfig" level="INFO"/>
 
-	<logger name="com.jees.webs" level="DEBUG">
-		<appender-ref ref="WEBS_APPENDER"/>
-	</logger>
-	<logger name="com.jees.test" level="DEBUG">
-		<appender-ref ref="WEBS_APPENDER"/>
-	</logger>
+    <logger name="com.jees.webs" level="DEBUG">
+        <appender-ref ref="WEBS_APPENDER"/>
+    </logger>
+    <logger name="com.jees.test" level="DEBUG">
+        <appender-ref ref="WEBS_APPENDER"/>
+    </logger>
 </included>

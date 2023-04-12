@@ -37,8 +37,9 @@ public class Page {
      * 错误页面
      */
     private boolean errorPage;
+
     @Override
-    public String toString(){
-        return JsonUtil.toString( this );
+    public String toString() {
+        return JsonUtil.toString(this);
     }
 }

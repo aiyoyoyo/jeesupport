@@ -39,20 +39,21 @@ public class InstallModelService extends AbsSupportModel implements IInstallMode
 
     @Override
     public void initialize() {
-        this.enable = this.getModelConfig( "install.enable" ,false );
-        log.info( "安装模块：" + (this.enable ? "开启" : "关闭" )  );
-        if( this.enable ) {
+        this.enable = this.getModelConfig("install.enable", false);
+        log.info("安装模块：" + (this.enable ? "开启" : "关闭"));
+        if (this.enable) {
             this.steps = new ArrayList<>();
-            if( !this.finish ) {
+            if (!this.finish) {
                 throw new RuntimeException("安装模块执行失败!");
             }
-        }else{
+        } else {
             this.finish = true;
         }
     }
 
     /**
      * 打开页面时调用
+     *
      * @return
      */
     @Override
@@ -62,49 +63,50 @@ public class InstallModelService extends AbsSupportModel implements IInstallMode
 
     @Override
     public InstallStep submit() {
-        InstallStep step = this.steps.get( this.index );
-        step.setFinish( true );
-        return _build_install_step( ++this.index );
+        InstallStep step = this.steps.get(this.index);
+        step.setFinish(true);
+        return _build_install_step(++this.index);
     }
 
     @Override
     public InstallStep back() {
-        InstallStep step = this.steps.get( this.index );
-        step.setFinish( false );
-        return _build_install_step( --this.index );
+        InstallStep step = this.steps.get(this.index);
+        step.setFinish(false);
+        return _build_install_step(--this.index);
     }
 
     @Override
     public void finish() {
-        InstallStep step = this.steps.get( this.index );
-        step.setFinish( true );
+        InstallStep step = this.steps.get(this.index);
+        step.setFinish(true);
         this._save_step();
         this.finish = true;
     }
 
-    private List<Page> _load_install_pages(){
+    private List<Page> _load_install_pages() {
         List<Page> view_pages = new ArrayList<>();
-        String root_path = CommonConfig.getString( "spring.thymeleaf.prefix" );
-        String install_path = this.getModelConfig( "install.tpl", "install" );
+        String root_path = CommonConfig.getString("spring.thymeleaf.prefix");
+        String install_path = this.getModelConfig("install.tpl", "install");
 
         return view_pages;
     }
 
     /**
      * 配置安装页面的访问路径
+     *
      * @param _registry
      */
     @Override
     public void setViewController(ViewControllerRegistry _registry) {
-        if( this.enable && this.finish ){
+        if (this.enable && this.finish) {
             List<Page> list = _load_install_pages();
-            list.forEach( p -> _registry.addViewController( p.getUrl() ).setViewName( p.getFilepath() ) );
+            list.forEach(p -> _registry.addViewController(p.getUrl()).setViewName(p.getFilepath()));
 
-            if( list.size() > 0 ){
-                Page p = list.get( 0 );
-                String install_path = this.getModelConfig( "install.tpl", "install" );
-                _registry.addViewController( "" ).setViewName( p.getFilepath() );
-                _registry.addViewController( "/" + install_path ).setViewName( p.getFilepath() );
+            if (list.size() > 0) {
+                Page p = list.get(0);
+                String install_path = this.getModelConfig("install.tpl", "install");
+                _registry.addViewController("").setViewName(p.getFilepath());
+                _registry.addViewController("/" + install_path).setViewName(p.getFilepath());
             }
         }
     }
@@ -112,40 +114,43 @@ public class InstallModelService extends AbsSupportModel implements IInstallMode
     /**
      * 将安装进度保存至安装文件
      */
-    private void _save_step(){
-        for( InstallStep step : this.steps ){
+    private void _save_step() {
+        for (InstallStep step : this.steps) {
         }
     }
 
     /**
      * 从安装文件中加载安装状态
+     *
      * @return
      */
-    private InstallStep _load_step(){
+    private InstallStep _load_step() {
         boolean is_loaded = false;
-        if( is_loaded ){
+        if (is_loaded) {
             //TODO 从安装结果文件中获取进度
             this.index = 0;
-            _build_install_step( this.index );
-        }else{
+            _build_install_step(this.index);
+        } else {
             this.index = 0;
         }
-        return _build_install_step( this.index );
+        return _build_install_step(this.index);
     }
+
     /**
      * 构建安装进度对象
+     *
      * @param _idx 默认加载的安装进度对象索引
      * @return 安装进度对象
      */
-    private InstallStep _build_install_step( int _idx ){
+    private InstallStep _build_install_step(int _idx) {
         InstallStep step;
-        if( this.steps.isEmpty() ){
+        if (this.steps.isEmpty()) {
             step = new InstallStep();
-            step.setIndex( this.steps.size() );
-            step.setStepInfo( new HashMap() );
-        }else{
+            step.setIndex(this.steps.size());
+            step.setStepInfo(new HashMap());
+        } else {
             // 此处未判断上下限
-            step = this.steps.get( _idx );
+            step = this.steps.get(_idx);
         }
         return step;
     }

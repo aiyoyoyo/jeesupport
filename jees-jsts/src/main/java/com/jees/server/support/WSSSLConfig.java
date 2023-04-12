@@ -18,11 +18,11 @@ import java.security.KeyStore;
 @Log4j2
 public class WSSSLConfig {
 
-//    @Bean
+    //    @Bean
     public SslContext SslContext() throws SSLException {
-        if( CommonConfig.getBoolean( "jees.jsts.websocket.ssl.enable", false ) ) {
-            File file = new File( CommonConfig.getString( "jees.jsts.websocket.ssl.file" ) );
-            File key = new File( CommonConfig.getString( "jees.jsts.websocket.ssl.keyfile" ) );
+        if (CommonConfig.getBoolean("jees.jsts.websocket.ssl.enable", false)) {
+            File file = new File(CommonConfig.getString("jees.jsts.websocket.ssl.file"));
+            File key = new File(CommonConfig.getString("jees.jsts.websocket.ssl.keyfile"));
 
             return SslContextBuilder.forServer(file, key).build();
         }
@@ -32,20 +32,20 @@ public class WSSSLConfig {
 
     @Bean
     public SSLContext SSLContext() throws Exception {
-        boolean enable = CommonConfig.getBoolean( "jees.jsts.websocket.ssl.enable", false );
+        boolean enable = CommonConfig.getBoolean("jees.jsts.websocket.ssl.enable", false);
 
-        log.info( "SSL：状态[" + enable + "]"  );
-        if( enable ){
-            String keyStorePath = CommonConfig.getString( "jees.jsts.websocket.ssl.file" );
-            String keyPassword = CommonConfig.getString( "jees.jsts.websocket.ssl.pass" );
+        log.info("SSL：状态[" + enable + "]");
+        if (enable) {
+            String keyStorePath = CommonConfig.getString("jees.jsts.websocket.ssl.file");
+            String keyPassword = CommonConfig.getString("jees.jsts.websocket.ssl.pass");
 
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
-            KeyStore ks = KeyStore.getInstance( CommonConfig.getString( "jees.jsts.websocket.ssl.type" ) );
-            ks.load( new FileInputStream( keyStorePath ), keyPassword.toCharArray() );
-            kmf.init( ks, keyPassword.toCharArray() );
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            KeyStore ks = KeyStore.getInstance(CommonConfig.getString("jees.jsts.websocket.ssl.type"));
+            ks.load(new FileInputStream(keyStorePath), keyPassword.toCharArray());
+            kmf.init(ks, keyPassword.toCharArray());
 
-            SSLContext sslContext = SSLContext.getInstance( "SSL" );
-            sslContext.init( kmf.getKeyManagers(), null, null);
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(kmf.getKeyManagers(), null, null);
 
             return sslContext;
         }

@@ -6,8 +6,6 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.annotations.RemoteProperty;
 
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -16,15 +14,17 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @DataTransferObject
-public class SuperRole < M extends SuperMenu, U extends SuperUser >{
-    @Id @RemoteProperty
+public class SuperRole<M extends SuperMenu, U extends SuperUser> {
+    @Id
+    @RemoteProperty
     int id;
     @RemoteProperty
     String name;
     @RemoteProperty
     Set<String> users;
+
     @Override
-    public String toString(){
-        return JsonUtil.toString( this );
+    public String toString() {
+        return JsonUtil.toString(this);
     }
 }

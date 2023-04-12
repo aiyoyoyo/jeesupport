@@ -38,9 +38,10 @@ public interface ICodeDefine {
     @CodeDesc("页面缺少授权信息")
     int Page_NotAccess = 504;
 
-    Map<Integer,String> sCodeDesc = new HashMap<>();
-    static String getCodeDesc( int _code ){
-        if( sCodeDesc.isEmpty() ) {
+    Map<Integer, String> sCodeDesc = new HashMap<>();
+
+    static String getCodeDesc(int _code) {
+        if (sCodeDesc.isEmpty()) {
             Class cls;
             try {
                 cls = Class.forName("com.jees.webs.core.interf.ICodeDefine");
@@ -55,7 +56,7 @@ public interface ICodeDefine {
             } catch (ClassNotFoundException e) {
             }
         }
-        return sCodeDesc.getOrDefault( _code, "" );
+        return sCodeDesc.getOrDefault(_code, "");
     }
 
 }

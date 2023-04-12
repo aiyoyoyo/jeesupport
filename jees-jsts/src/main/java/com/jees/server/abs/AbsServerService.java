@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Lazy;
  */
 @Lazy
 @Log4j2
-public abstract class AbsServerService implements IServerService{
+public abstract class AbsServerService implements IServerService {
     @Override
     public void onload() {
-        log.debug( "--服务器组件加载..." );
+        log.debug("--服务器组件加载...");
         _check_support_service();
-        log.debug( "--服务器组件加载完毕" );
+        log.debug("--服务器组件加载完毕");
     }
 
     @Override
@@ -30,23 +30,23 @@ public abstract class AbsServerService implements IServerService{
     public void reload() {
     }
 
-    private void _check_support_service(){
-        boolean socket_server_enable = CommonConfig.getBoolean( "jees.jsts.socket.enable", false );
-        boolean websocket_server_enable = CommonConfig.getBoolean( "jees.jsts.websocket.enable", false );
-        boolean connector_enable = CommonConfig.getBoolean( "jees.jsts.connector.enable", false );
+    private void _check_support_service() {
+        boolean socket_server_enable = CommonConfig.getBoolean("jees.jsts.socket.enable", false);
+        boolean websocket_server_enable = CommonConfig.getBoolean("jees.jsts.websocket.enable", false);
+        boolean connector_enable = CommonConfig.getBoolean("jees.jsts.connector.enable", false);
 
-        if( socket_server_enable ){
-            CommonContextHolder.getBean( ISocketServer.class ).onload( false );
-            log.debug( "--服务器支持[Socket]已加载." );
+        if (socket_server_enable) {
+            CommonContextHolder.getBean(ISocketServer.class).onload(false);
+            log.debug("--服务器支持[Socket]已加载.");
         }
-        if( websocket_server_enable ) {
-            CommonContextHolder.getBean( ISocketServer.class ).onload( true );
+        if (websocket_server_enable) {
+            CommonContextHolder.getBean(ISocketServer.class).onload(true);
             log.debug("--服务器支持[WebSocket]已加载.");
         }
-        if( connector_enable ) {
-            CommonContextHolder.getBean( IConnectorService.class ).onload();
+        if (connector_enable) {
+            CommonContextHolder.getBean(IConnectorService.class).onload();
             log.debug("--服务器支持[连接器]已加载.");
         }
-        CommonContextHolder.getBean( IChannelHandler.class ).onload();
+        CommonContextHolder.getBean(IChannelHandler.class).onload();
     }
 }

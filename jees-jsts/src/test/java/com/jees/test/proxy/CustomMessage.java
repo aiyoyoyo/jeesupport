@@ -5,7 +5,7 @@ import com.jees.server.annotation.MessageProxy;
 import lombok.Getter;
 import lombok.Setter;
 
-@MessageProxy( 101 )
+@MessageProxy(101)
 @Getter
 @Setter
 public class CustomMessage {
@@ -14,7 +14,7 @@ public class CustomMessage {
     String str;
 
     @Override
-    public String toString () {
-        return JSON.toJSONString( this );
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

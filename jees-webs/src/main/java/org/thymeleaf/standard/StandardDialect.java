@@ -5,77 +5,25 @@
 
 package org.thymeleaf.standard;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 import com.jees.webs.security.processor.StandardVerifyProcessor;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExecutionAttributeDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 import org.thymeleaf.processor.IProcessor;
-import org.thymeleaf.standard.expression.IStandardConversionService;
-import org.thymeleaf.standard.expression.IStandardExpressionParser;
-import org.thymeleaf.standard.expression.IStandardVariableExpressionEvaluator;
-import org.thymeleaf.standard.expression.OGNLVariableExpressionEvaluator;
-import org.thymeleaf.standard.expression.StandardConversionService;
-import org.thymeleaf.standard.expression.StandardExpressionObjectFactory;
-import org.thymeleaf.standard.expression.StandardExpressionParser;
-import org.thymeleaf.standard.processor.StandardActionTagProcessor;
-import org.thymeleaf.standard.processor.StandardAltTitleTagProcessor;
-import org.thymeleaf.standard.processor.StandardAssertTagProcessor;
-import org.thymeleaf.standard.processor.StandardAttrTagProcessor;
-import org.thymeleaf.standard.processor.StandardAttrappendTagProcessor;
-import org.thymeleaf.standard.processor.StandardAttrprependTagProcessor;
-import org.thymeleaf.standard.processor.StandardBlockTagProcessor;
-import org.thymeleaf.standard.processor.StandardCaseTagProcessor;
-import org.thymeleaf.standard.processor.StandardClassappendTagProcessor;
-import org.thymeleaf.standard.processor.StandardConditionalCommentProcessor;
-import org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor;
-import org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor;
-import org.thymeleaf.standard.processor.StandardDefaultAttributesTagProcessor;
-import org.thymeleaf.standard.processor.StandardEachTagProcessor;
-import org.thymeleaf.standard.processor.StandardFragmentTagProcessor;
-import org.thymeleaf.standard.processor.StandardHrefTagProcessor;
-import org.thymeleaf.standard.processor.StandardIfTagProcessor;
-import org.thymeleaf.standard.processor.StandardIncludeTagProcessor;
-import org.thymeleaf.standard.processor.StandardInlineEnablementTemplateBoundariesProcessor;
-import org.thymeleaf.standard.processor.StandardInlineHTMLTagProcessor;
-import org.thymeleaf.standard.processor.StandardInlineTextualTagProcessor;
-import org.thymeleaf.standard.processor.StandardInlineXMLTagProcessor;
-import org.thymeleaf.standard.processor.StandardInliningCDATASectionProcessor;
-import org.thymeleaf.standard.processor.StandardInliningCommentProcessor;
-import org.thymeleaf.standard.processor.StandardInliningTextProcessor;
-import org.thymeleaf.standard.processor.StandardInsertTagProcessor;
-import org.thymeleaf.standard.processor.StandardLangXmlLangTagProcessor;
-import org.thymeleaf.standard.processor.StandardMethodTagProcessor;
-import org.thymeleaf.standard.processor.StandardNonRemovableAttributeTagProcessor;
-import org.thymeleaf.standard.processor.StandardObjectTagProcessor;
-import org.thymeleaf.standard.processor.StandardRefAttributeTagProcessor;
-import org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor;
-import org.thymeleaf.standard.processor.StandardRemoveTagProcessor;
-import org.thymeleaf.standard.processor.StandardReplaceTagProcessor;
-import org.thymeleaf.standard.processor.StandardSrcTagProcessor;
-import org.thymeleaf.standard.processor.StandardStyleappendTagProcessor;
-import org.thymeleaf.standard.processor.StandardSubstituteByTagProcessor;
-import org.thymeleaf.standard.processor.StandardSwitchTagProcessor;
-import org.thymeleaf.standard.processor.StandardTextTagProcessor;
-import org.thymeleaf.standard.processor.StandardTranslationDocTypeProcessor;
-import org.thymeleaf.standard.processor.StandardUnlessTagProcessor;
-import org.thymeleaf.standard.processor.StandardUtextTagProcessor;
-import org.thymeleaf.standard.processor.StandardValueTagProcessor;
-import org.thymeleaf.standard.processor.StandardWithTagProcessor;
-import org.thymeleaf.standard.processor.StandardXmlBaseTagProcessor;
-import org.thymeleaf.standard.processor.StandardXmlLangTagProcessor;
-import org.thymeleaf.standard.processor.StandardXmlNsTagProcessor;
-import org.thymeleaf.standard.processor.StandardXmlSpaceTagProcessor;
+import org.thymeleaf.standard.expression.*;
+import org.thymeleaf.standard.processor.*;
 import org.thymeleaf.standard.serializer.IStandardCSSSerializer;
 import org.thymeleaf.standard.serializer.IStandardJavaScriptSerializer;
 import org.thymeleaf.standard.serializer.StandardCSSSerializer;
 import org.thymeleaf.standard.serializer.StandardJavaScriptSerializer;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.Validate;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class StandardDialect extends AbstractProcessorDialect implements IExecutionAttributeDialect, IExpressionObjectDialect {
     public static final String NAME = "Standard";
@@ -198,7 +146,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
 
         int var4;
         String attrName;
-        for(var4 = 0; var4 < var3; ++var4) {
+        for (var4 = 0; var4 < var3; ++var4) {
             attrName = var2[var4];
             processors.add(new StandardConditionalFixedValueTagProcessor(dialectPrefix, attrName));
         }
@@ -206,7 +154,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         var2 = StandardDOMEventAttributeTagProcessor.ATTR_NAMES;
         var3 = var2.length;
 
-        for(var4 = 0; var4 < var3; ++var4) {
+        for (var4 = 0; var4 < var3; ++var4) {
             attrName = var2[var4];
             processors.add(new StandardDOMEventAttributeTagProcessor(dialectPrefix, attrName));
         }
@@ -224,7 +172,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         var2 = StandardNonRemovableAttributeTagProcessor.ATTR_NAMES;
         var3 = var2.length;
 
-        for(var4 = 0; var4 < var3; ++var4) {
+        for (var4 = 0; var4 < var3; ++var4) {
             attrName = var2[var4];
             processors.add(new StandardNonRemovableAttributeTagProcessor(dialectPrefix, attrName));
         }
@@ -233,7 +181,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         var2 = StandardRemovableAttributeTagProcessor.ATTR_NAMES;
         var3 = var2.length;
 
-        for(var4 = 0; var4 < var3; ++var4) {
+        for (var4 = 0; var4 < var3; ++var4) {
             attrName = var2[var4];
             processors.add(new StandardRemovableAttributeTagProcessor(dialectPrefix, attrName));
         }
@@ -305,7 +253,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         processors.add(new StandardUtextTagProcessor(TemplateMode.TEXT, dialectPrefix));
         processors.add(new StandardWithTagProcessor(TemplateMode.TEXT, dialectPrefix));
         processors.add(new StandardBlockTagProcessor(TemplateMode.TEXT, dialectPrefix, "block"));
-        processors.add(new StandardBlockTagProcessor(TemplateMode.TEXT, (String)null, ""));
+        processors.add(new StandardBlockTagProcessor(TemplateMode.TEXT, (String) null, ""));
         processors.add(new StandardInliningTextProcessor(TemplateMode.TEXT));
         processors.add(new StandardInlineEnablementTemplateBoundariesProcessor(TemplateMode.TEXT));
         processors.add(new StandardAssertTagProcessor(TemplateMode.JAVASCRIPT, dialectPrefix));
@@ -323,7 +271,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         processors.add(new StandardUtextTagProcessor(TemplateMode.JAVASCRIPT, dialectPrefix));
         processors.add(new StandardWithTagProcessor(TemplateMode.JAVASCRIPT, dialectPrefix));
         processors.add(new StandardBlockTagProcessor(TemplateMode.JAVASCRIPT, dialectPrefix, "block"));
-        processors.add(new StandardBlockTagProcessor(TemplateMode.JAVASCRIPT, (String)null, ""));
+        processors.add(new StandardBlockTagProcessor(TemplateMode.JAVASCRIPT, (String) null, ""));
         processors.add(new StandardInliningTextProcessor(TemplateMode.JAVASCRIPT));
         processors.add(new StandardInlineEnablementTemplateBoundariesProcessor(TemplateMode.JAVASCRIPT));
         processors.add(new StandardAssertTagProcessor(TemplateMode.CSS, dialectPrefix));
@@ -341,7 +289,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
         processors.add(new StandardUtextTagProcessor(TemplateMode.CSS, dialectPrefix));
         processors.add(new StandardWithTagProcessor(TemplateMode.CSS, dialectPrefix));
         processors.add(new StandardBlockTagProcessor(TemplateMode.CSS, dialectPrefix, "block"));
-        processors.add(new StandardBlockTagProcessor(TemplateMode.CSS, (String)null, ""));
+        processors.add(new StandardBlockTagProcessor(TemplateMode.CSS, (String) null, ""));
         processors.add(new StandardInliningTextProcessor(TemplateMode.CSS));
         processors.add(new StandardInlineEnablementTemplateBoundariesProcessor(TemplateMode.CSS));
         return processors;

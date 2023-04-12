@@ -11,9 +11,9 @@ import java.io.Serializable;
 @Setter
 @MappedSuperclass
 public abstract class SuperEntity<ID extends Serializable> {
-    @GenericGenerator( name = "generator" , strategy = "identity" )
+    @GenericGenerator(name = "generator", strategy = "identity")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column( name = "id" , unique = true , nullable = false )
-    private ID  id;
+    @Column(name = "id", unique = true, nullable = false)
+    private ID id;
 }

@@ -13,6 +13,7 @@ import com.jees.webs.entity.SuperUser;
 public interface IVerifyUser {
     /**
      * 自定义加载用户信息
+     *
      * @param _user
      */
     public void loadUser(SuperUser _user);

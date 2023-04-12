@@ -89,14 +89,14 @@ public class FileOperationUtil {
     /**
      * 移动文件或文件夹
      *
-     * @param sourcePath 原文件路径
-     * @param targetPath 目标文件路径
+     * @param sourcePath   原文件路径
+     * @param targetPath   目标文件路径
      * @param deleteSource 移动成功是否删除源文件
      * @return true：移动成功，false：移动失败
      */
     public static boolean moveFile(String sourcePath, String targetPath, boolean deleteSource) {
         if (copyFile(sourcePath, targetPath)) {
-            if( deleteSource ){
+            if (deleteSource) {
                 deleteFile(sourcePath);
             }
             return true;

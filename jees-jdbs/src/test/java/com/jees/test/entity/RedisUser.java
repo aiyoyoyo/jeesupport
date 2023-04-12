@@ -15,6 +15,6 @@ public class RedisUser {
     @Id
     int id;
 
-    @JSONField(format="yyyy-MM-dd HH:mm:ss:SSS")
-    Date    date;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss:SSS")
+    Date date;
 }

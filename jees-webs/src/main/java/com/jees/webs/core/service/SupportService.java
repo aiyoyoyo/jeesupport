@@ -23,12 +23,12 @@ public class SupportService extends AbsSupport {
      * @return 拦截器
      */
     @Bean
-    public HandlerInterceptor handlerInterceptor(){
-        log.debug( "--应用DefaultController拦截器。" );
-        return new HandlerInterceptor(){
+    public HandlerInterceptor handlerInterceptor() {
+        log.debug("--应用DefaultController拦截器。");
+        return new HandlerInterceptor() {
             @Override
-            public boolean preHandle(HttpServletRequest _request, HttpServletResponse _response, Object _handler ){
-                supportELService.onPreHandle( _request, _response, _handler );
+            public boolean preHandle(HttpServletRequest _request, HttpServletResponse _response, Object _handler) {
+                supportELService.onPreHandle(_request, _response, _handler);
 //                String uri = UrlUtil.uri2root( _request.getRequestURI() );
 //                _load_menus( _request );
 

@@ -18,18 +18,19 @@ public class SupportELService extends AbsSupportEL {
 
     /**
      * 请求页面时
+     *
      * @param _request
      * @param _response
      * @param _handler
      */
     public void onPreHandle(HttpServletRequest _request, HttpServletResponse _response, Object _handler) {
-        String app_path = CommonConfig.getString( "server.servlet.context-path", "/" );
-        if( app_path.endsWith( "/" ) ){
-            app_path = app_path.substring( 0, app_path.length() - 1 );
+        String app_path = CommonConfig.getString("server.servlet.context-path", "/");
+        if (app_path.endsWith("/")) {
+            app_path = app_path.substring(0, app_path.length() - 1);
         }
-        _request.setAttribute( App_EL, app_path );
+        _request.setAttribute(App_EL, app_path);
 
-        templateService.setRequestEL( _request );
+        templateService.setRequestEL(_request);
 
 //        session.setAttribute( Session_Templates_EL, templates.values() );
 
@@ -41,10 +42,11 @@ public class SupportELService extends AbsSupportEL {
 
     /**
      * 有权限访问时，存入用户（SuperUser）信息到session中
+     *
      * @param _request
      * @see com.jees.webs.entity.SuperUser
      */
     public void registerLoginSession(HttpServletRequest _request, HttpServletResponse _response, Authentication _auth) {
-        _request.getSession().setAttribute( ISupportEL.Session_User_EL, _auth.getPrincipal() );
+        _request.getSession().setAttribute(ISupportEL.Session_User_EL, _auth.getPrincipal());
     }
 }

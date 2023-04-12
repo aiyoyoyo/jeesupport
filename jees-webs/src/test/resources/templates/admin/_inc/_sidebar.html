@@ -1,49 +1,51 @@
 <div id="sidebar" class="sidebar" th:fragment="html">
-	<!-- begin sidebar scrollbar -->
-	<div data-scrollbar="true" data-height="100%">
-		<!-- begin sidebar user -->
-		<ul th:replace="|${TPL}/_inc/_sidebar_user|::html" />
-		<!-- end sidebar user -->
-		<!-- begin sidebar nav -->
-		<ul th:replace="|${TPL}/_inc/_sidebar|::${@commonConfig.get('jees.webs.superman')} eq ${session.USER.username} ? supermenu : usermenu" />
-		<!-- end sidebar nav -->
-	</div>
-	<!-- end sidebar scrollbar -->
+    <!-- begin sidebar scrollbar -->
+    <div data-scrollbar="true" data-height="100%">
+        <!-- begin sidebar user -->
+        <ul th:replace="|${TPL}/_inc/_sidebar_user|::html"/>
+        <!-- end sidebar user -->
+        <!-- begin sidebar nav -->
+        <ul th:replace="|${TPL}/_inc/_sidebar|::${@commonConfig.get('jees.webs.superman')} eq ${session.USER.username} ? supermenu : usermenu"/>
+        <!-- end sidebar nav -->
+    </div>
+    <!-- end sidebar scrollbar -->
 </div>
 <ul th:each="m:${session.MENUS}" class="nav" th:fragment="usermenu">
-	<t th:html="${ACTIVES.contains(m.value.url)}"></t>
-	<li th:class="|has-sub ${ACTIVES.contains( m.value.url ) ? 'active' : ''}|">
-		<a href="javascript:;">
-			<b class="caret"></b>
-			<i class="fa fa-align-left"></i> <span th:text="${m.value.name}"></span>
-		</a>
-		<ul class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m.value}, ${m.value.url} )" />
-	</li>
+    <t th:html="${ACTIVES.contains(m.value.url)}"></t>
+    <li th:class="|has-sub ${ACTIVES.contains( m.value.url ) ? 'active' : ''}|">
+        <a href="javascript:;">
+            <b class="caret"></b>
+            <i class="fa fa-align-left"></i> <span th:text="${m.value.name}"></span>
+        </a>
+        <ul class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m.value}, ${m.value.url} )"/>
+    </li>
 </ul>
 <ul th:fragment="submenu( menu, parent )">
-	<li th:class="${( PAGE eq menu.url and ACTIVES.contains( menu.url ) ) ? 'active' : ''}">
-		<a th:href="${menu.url}" th:text="${menu.name}"></a>
-	</li>
-	<li th:if="${menu.hasMenus()}" th:each="m:${menu.menus}" th:class="${(!(parent eq m.url) and m.hasMenus() ) ? 'has-sub ' : ''} + ${ACTIVES.contains( m.url ) ? 'active' : ''}">
-		<a th:if="${m.hasMenus()}" href="javascript:;">
-			<b class="caret"></b>
-			<i class="fa fa-align-left"></i> <span th:text="${m.name}"></span>
-		</a>
-		<a th:unless="${m.hasMenus()}" th:href="${m.url}" th:text="${m.name}"></a>
-		<ul th:if="${m.hasMenus()}" class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m}, ${m.url} )" />
+    <li th:class="${( PAGE eq menu.url and ACTIVES.contains( menu.url ) ) ? 'active' : ''}">
+        <a th:href="${menu.url}" th:text="${menu.name}"></a>
+    </li>
+    <li th:if="${menu.hasMenus()}" th:each="m:${menu.menus}"
+        th:class="${(!(parent eq m.url) and m.hasMenus() ) ? 'has-sub ' : ''} + ${ACTIVES.contains( m.url ) ? 'active' : ''}">
+        <a th:if="${m.hasMenus()}" href="javascript:;">
+            <b class="caret"></b>
+            <i class="fa fa-align-left"></i> <span th:text="${m.name}"></span>
+        </a>
+        <a th:unless="${m.hasMenus()}" th:href="${m.url}" th:text="${m.name}"></a>
+        <ul th:if="${m.hasMenus()}" class="sub-menu" th:include="|${TPL}/_inc/_sidebar|::submenu( ${m}, ${m.url} )"/>
 
-	</li>
+    </li>
 </ul>
 <ul class="nav" th:fragment="supermenu">
-	<li class="系统工具"></li>
-	<li th:class="|has-sub ${PAGE eq '/super_tools/' ? 'active' : ''}|">
-		<a href="javascript:;">
-			<b class="caret"></b>
-			<i class="fa fa-align-left"></i> <span>辅助功能</span>
-		</a>
-		<ul class="sub-menu">
-			<li th:class="${PAGE eq '/super_tools/install' ? 'active' : ''}"><a href="/super_tools/install">初始设置</a></li>
-			<li th:class="${PAGE eq '/' ? 'active' : ''}"><a href="/super_tools/">目录结构</a></li>
-		</ul>
-	</li>
+    <li class="系统工具"></li>
+    <li th:class="|has-sub ${PAGE eq '/super_tools/' ? 'active' : ''}|">
+        <a href="javascript:;">
+            <b class="caret"></b>
+            <i class="fa fa-align-left"></i> <span>辅助功能</span>
+        </a>
+        <ul class="sub-menu">
+            <li th:class="${PAGE eq '/super_tools/install' ? 'active' : ''}"><a href="/super_tools/install">初始设置</a>
+            </li>
+            <li th:class="${PAGE eq '/' ? 'active' : ''}"><a href="/super_tools/">目录结构</a></li>
+        </ul>
+    </li>
 </ul>

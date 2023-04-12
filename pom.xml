@@ -118,20 +118,20 @@
                         </configuration>
                     </plugin>
                     <!-- Gpg Signature -->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                        <version>1.6</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <id>sign-artifacts</id>-->
-<!--                                <phase>verify</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>sign</goal>-->
-<!--                                </goals>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                    </plugin>-->
+                    <!--                    <plugin>-->
+                    <!--                        <groupId>org.apache.maven.plugins</groupId>-->
+                    <!--                        <artifactId>maven-gpg-plugin</artifactId>-->
+                    <!--                        <version>1.6</version>-->
+                    <!--                        <executions>-->
+                    <!--                            <execution>-->
+                    <!--                                <id>sign-artifacts</id>-->
+                    <!--                                <phase>verify</phase>-->
+                    <!--                                <goals>-->
+                    <!--                                    <goal>sign</goal>-->
+                    <!--                                </goals>-->
+                    <!--                            </execution>-->
+                    <!--                        </executions>-->
+                    <!--                    </plugin>-->
                     <!-- 发布Release版本以及生成DOC -->
                     <!--
                     <plugin>
@@ -206,16 +206,16 @@
         </resources>
     </build>
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-compiler-plugin</artifactId>-->
-<!--            <version>3.3</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-release-plugin</artifactId>-->
-<!--            <version>2.5.3</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven.plugins</groupId>-->
+        <!--            <artifactId>maven-compiler-plugin</artifactId>-->
+        <!--            <version>3.3</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven.plugins</groupId>-->
+        <!--            <artifactId>maven-release-plugin</artifactId>-->
+        <!--            <version>2.5.3</version>-->
+        <!--        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -386,7 +386,7 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql8.version}</version>
-<!--                <version>${mysql5.version}</version>-->
+                <!--                <version>${mysql5.version}</version>-->
             </dependency>
             <!-- SQLite -->
             <dependency>

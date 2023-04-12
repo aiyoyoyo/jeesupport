@@ -5,7 +5,7 @@ logging:
 spring:
  application:
   name: jees-jdbs
-# Redis数据库索引（默认为0）
+ # Redis数据库索引（默认为0）
  autoconfigure:
   exclude:org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
  config:

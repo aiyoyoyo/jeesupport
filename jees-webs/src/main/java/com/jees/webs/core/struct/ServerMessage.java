@@ -11,19 +11,20 @@ public class ServerMessage {
     int code;
     String desc;
 
-    public ServerMessage(){}
+    public ServerMessage() {
+    }
 
-    public ServerMessage(int _code){
+    public ServerMessage(int _code) {
         this.setCode(_code);
     }
 
     public void setCode(int code) {
         this.code = code;
-        this.desc = ICodeDefine.getCodeDesc( code );
+        this.desc = ICodeDefine.getCodeDesc(code);
     }
 
     @Override
     public String toString() {
-        return JsonUtil.toString( this );
+        return JsonUtil.toString(this);
     }
 }

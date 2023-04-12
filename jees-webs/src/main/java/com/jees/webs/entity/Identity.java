@@ -10,12 +10,13 @@ import javax.persistence.Id;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Identity{
+public class Identity {
     @Id
     IdentityDao.IdentityType id;
 
     long nextId;
-    public void next(){
-        nextId ++;
+
+    public void next() {
+        nextId++;
     }
 }

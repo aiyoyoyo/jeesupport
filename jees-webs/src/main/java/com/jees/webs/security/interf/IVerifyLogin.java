@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface IVerifyLogin {
     /**
      * 登录成功的自定义处理
+     *
      * @param _request
      * @param _response
      * @param _auth
@@ -25,6 +26,7 @@ public interface IVerifyLogin {
 
     /**
      * 登录失败的自定义处理
+     *
      * @param _request
      * @param _response
      * @param _ex
@@ -33,6 +35,7 @@ public interface IVerifyLogin {
 
     /**
      * 自定义登录密码校验，需要开启
+     *
      * @param _username
      * @param _pwd
      * @return

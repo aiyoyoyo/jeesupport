@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 转载：http://blog.csdn.net/appleyk/article/details/78717388 -->
 <configuration>
-	<property name="LOG_PATH" value=".log" />
-	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{1.} - %msg%n" />
-	<property name="JEESUPPORT_FILE" value="jeesupport" />
+    <property name="LOG_PATH" value=".log"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{1.} - %msg%n"/>
+    <property name="JEESUPPORT_FILE" value="jeesupport"/>
 
-	<appender name="JEESUPPORT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>${LOG_PATTERN}</pattern>
-			<charset>UTF-8</charset>
-		</encoder>
-	</appender>
-	<appender name="JEESUPPORT_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${JEESUPPORT_FILE}.log</file>
-		　　　　　<append>true</append>
-		　　　　　<encoder>
-		<charset>UTF-8</charset>
-		　　　　　	<pattern>${LOG_PATTERN}</pattern>
-	</encoder>
-		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			　　　　　	<fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${JEESUPPORT_FILE}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
-			<maxHistory>31</maxHistory>
-			<maxFileSize>4MB</maxFileSize>
-		</rollingPolicy>
-	</appender>
+    <appender name="JEESUPPORT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="JEESUPPORT_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${JEESUPPORT_FILE}.log</file>
+        　　　　　
+        <append>true</append>
+        　　　　　
+        <encoder>
+            <charset>UTF-8</charset>
+            　　　　　
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            　　　　　
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${JEESUPPORT_FILE}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
+            <maxHistory>31</maxHistory>
+            <maxFileSize>4MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
 
-	<include resource="config/logback-jtls.xml" />
-	<include resource="config/logback-jdbs.xml" />
-	<include resource="config/logback-webs.xml" />
+    <include resource="config/logback-jtls.xml"/>
+    <include resource="config/logback-jdbs.xml"/>
+    <include resource="config/logback-webs.xml"/>
 
-	<root level="DEBUG">
-		<appender-ref ref="JEESUPPORT"/>
-		<appender-ref ref="JEESUPPORT_APPENDER"/>
-	</root>
+    <root level="DEBUG">
+        <appender-ref ref="JEESUPPORT"/>
+        <appender-ref ref="JEESUPPORT_APPENDER"/>
+    </root>
 </configuration>

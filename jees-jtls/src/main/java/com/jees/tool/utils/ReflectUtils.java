@@ -16,7 +16,7 @@ public class ReflectUtils {
      * java反射bean的get方法
      *
      * @param objectClass objectClass
-     * @param fieldName fieldName
+     * @param fieldName   fieldName
      * @return Method
      * @throws RuntimeException
      */
@@ -37,7 +37,7 @@ public class ReflectUtils {
      * java反射bean的set方法
      *
      * @param objectClass objectClass
-     * @param fieldName fieldName
+     * @param fieldName   fieldName
      * @return Method
      * @throws RuntimeException
      */
@@ -59,9 +59,9 @@ public class ReflectUtils {
     /**
      * 执行set方法
      *
-     * @param obj 执行对象
+     * @param obj       执行对象
      * @param fieldName 属性
-     * @param value 值
+     * @param value     值
      * @throws RuntimeException
      */
     public static void invokeSet(Object obj, String fieldName, Object value) {
@@ -76,7 +76,7 @@ public class ReflectUtils {
     /**
      * 执行get方法
      *
-     * @param obj 执行对象
+     * @param obj       执行对象
      * @param fieldName 属性
      * @return Object
      * @throws RuntimeException

@@ -1,6 +1,6 @@
 package com.jees.server.interf;
 
-public interface IServerBase{
+public interface IServerBase {
     void onload();
 
     void unload();

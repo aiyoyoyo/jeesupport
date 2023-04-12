@@ -11,18 +11,18 @@ import java.util.List;
 
 @Log4j2
 @RemoteProxy
-public class SuperRemote{
+public class SuperRemote {
 
     @Autowired
     TemplateService templateService;
 
     @RemoteMethod
-    public List< Template > loadTemplates(){
+    public List<Template> loadTemplates() {
         return templateService.getTemplateAll();
     }
 
     @RemoteMethod
-    public void reload() throws Exception{
-        log.debug( "--reload" );
+    public void reload() throws Exception {
+        log.debug("--reload");
     }
 }

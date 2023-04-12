@@ -13,21 +13,20 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Netty初始化实现类，这里暂无更多接入方式。
- * 
- * @author aiyoyoyo
  *
+ * @author aiyoyoyo
  */
 @Component
 @Log4j2
-public class SocketInitializer extends ChannelInitializer< SocketChannel >{
-	@Override
-	protected void initChannel( SocketChannel _channel ){
-		log.info( "Socket Server初始化: " + _channel.isActive() );
+public class SocketInitializer extends ChannelInitializer<SocketChannel> {
+    @Override
+    protected void initChannel(SocketChannel _channel) {
+        log.info("Socket Server初始化: " + _channel.isActive());
 
-		ChannelPipeline pipeline = _channel.pipeline();
+        ChannelPipeline pipeline = _channel.pipeline();
 
-		pipeline.addLast( CommonContextHolder.getBean( AbsNettyDecoder.class ) );
-		pipeline.addLast( new IdleStateHandler( 100, 0, 0, TimeUnit.SECONDS ) );
-		pipeline.addLast( CommonContextHolder.getBean( SocketHandler.class ) );
-	}
+        pipeline.addLast(CommonContextHolder.getBean(AbsNettyDecoder.class));
+        pipeline.addLast(new IdleStateHandler(100, 0, 0, TimeUnit.SECONDS));
+        pipeline.addLast(CommonContextHolder.getBean(SocketHandler.class));
+    }
 }

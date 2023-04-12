@@ -18,12 +18,12 @@ import org.thymeleaf.util.EvaluationUtils;
  * 增加了Thymeleaf标签支持： th:verify
  * 可以对页面某个元素独立授权，支持jquery的ID、CLASS标记
  */
-public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor{
+public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor {
     public static final int PRECEDENCE = 300;
     public static final String ATTR_NAME = "verify";
 
     public StandardVerifyProcessor(final TemplateMode templateMode, final String dialectPrefix) {
-        super(templateMode, dialectPrefix, (String)null, false, ATTR_NAME, true, PRECEDENCE, true);
+        super(templateMode, dialectPrefix, (String) null, false, ATTR_NAME, true, PRECEDENCE, true);
     }
 
     protected boolean isVisible(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue) {
@@ -32,7 +32,7 @@ public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor
         Object value = expression.execute(context);
 
         boolean check_result = false;
-        if( value.toString().equalsIgnoreCase( "true" ) ){
+        if (value.toString().equalsIgnoreCase("true")) {
             // 判断拿到的是什么标记，仅支持 id, class
 
             check_result = true;
@@ -42,8 +42,8 @@ public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor
 
     @Override
     protected final void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) {
-        VerifyService vms = CommonContextHolder.getBean( VerifyService.class );
-        boolean visible = vms.validateElement( ((WebEngineContext)context).getRequest(), tag, attributeValue );
+        VerifyService vms = CommonContextHolder.getBean(VerifyService.class);
+        boolean visible = vms.validateElement(((WebEngineContext) context).getRequest(), tag, attributeValue);
         if (!visible) {
             structureHandler.removeElement();
         }

@@ -17,6 +17,7 @@ public class RequestException extends AuthenticationException {
 
     @Getter
     ServerMessage serverMessage;
+
     public RequestException(String _msg, Throwable _thr) {
         super(_msg, _thr);
         serverMessage = new ServerMessage();
@@ -24,18 +25,19 @@ public class RequestException extends AuthenticationException {
         serverMessage.setDesc(_msg);
     }
 
-    public RequestException( String _msg ){
+    public RequestException(String _msg) {
         super(_msg);
         serverMessage = new ServerMessage();
         serverMessage.setCode(ICodeDefine.ErrorCode);
         serverMessage.setDesc(_msg);
     }
-    public RequestException(ServerMessage _msg){
+
+    public RequestException(ServerMessage _msg) {
         super(_msg.getDesc());
         serverMessage = _msg;
     }
 
-    public RequestException(int _code){
+    public RequestException(int _code) {
         super(new ServerMessage(_code).getDesc());
         serverMessage = new ServerMessage();
         serverMessage.setCode(_code);
