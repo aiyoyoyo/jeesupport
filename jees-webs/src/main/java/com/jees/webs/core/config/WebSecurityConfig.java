@@ -1,6 +1,7 @@
 package com.jees.webs.core.config;
 
 import com.jees.common.CommonConfig;
+import com.jees.common.CommonContextHolder;
 import com.jees.webs.core.service.ExUserDetailsService;
 import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.modals.dwr.config.DwrConfig;
@@ -33,8 +34,6 @@ public class WebSecurityConfig {
     @Autowired
     SecurityService securityService;
     @Autowired
-    TemplateService templateService;
-    @Autowired
     AuthenticationProviderService authenticationProviderService;
     @Autowired
     SessionRegistry sessionRegistry;
@@ -48,6 +47,7 @@ public class WebSecurityConfig {
                 .sessionRegistry(sessionRegistry);
         dwrConfig.setHttpSecurity(_hs);
         if (securityService.isEnable()) {
+            TemplateService templateService = CommonContextHolder.getBean( TemplateService.class );
             templateService.setHttpSecurity(_hs);
             securityService.setHttpSecurity(_hs);
         } else {

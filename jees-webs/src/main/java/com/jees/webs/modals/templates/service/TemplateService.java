@@ -32,9 +32,6 @@ public class TemplateService<M> implements ISupportEL {
     IRedisDao rDao;
     @Autowired
     ISupportDao sDao;
-    @Autowired
-    ResourcePatternResolver resourcePatternResolver;
-
     String sIndexPage; // 默认首页名称
     String sRootTpl; // 模板根路径
     String sTplName; // 当前模板名称
@@ -86,10 +83,12 @@ public class TemplateService<M> implements ISupportEL {
         tpl_cfg.setName(tpl);
         tpl_cfg.setAssets(CommonConfig.get("jees.webs.modals.templates." + tpl + ".assets", "assets"));
 //        tpl_cfg.setPages( this._load_template_pages( tpl, tpl_cfg.getAssets() ) );// 这里不能在初始化时执行
-        tpl_cfg.setTemplatePath(getRootTpl() + "/" + tpl);
+        tpl_cfg.setTemplatePath(getRootTpl() + tpl);
         return tpl_cfg;
     }
 
+    @Autowired
+    ResourcePatternResolver loader;
     /**
      * 加载模板页面，排除资源路径
      * 排除以下路径: 资源路径(assets)、_[dir_name]（下划线开头文件/文件夹）
@@ -103,7 +102,10 @@ public class TemplateService<M> implements ISupportEL {
         String res_path = getRootTpl() + _tpl + "/**/*.*";
         Resource[] rfs = new Resource[0];
         try {
-            rfs = resourcePatternResolver.getResources(res_path);
+//            ResourcePatternResolver loader = CommonContextHolder.getBean(ResourcePatternResolver.class);
+            if( loader != null ){
+                rfs = this.loader.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "templates/"+_tpl+"/**/*.*");
+            }
         } catch (IOException e) {
             log.error("模板[" + _tpl + "]加载失败：", e);
         }
