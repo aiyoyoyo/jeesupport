@@ -41,4 +41,6 @@ public interface IVerifyLogin {
      * @return
      */
     boolean matches(String _username, CharSequence _pwd);
+
+    void logout( HttpServletRequest _request, HttpServletResponse _response );
 }

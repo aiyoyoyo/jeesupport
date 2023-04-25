@@ -9,6 +9,7 @@ import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.core.struct.ServerMessage;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.configs.LocalConfig;
+import com.jees.webs.security.exception.RequestException;
 import com.jees.webs.security.interf.IVerifyConfig;
 import com.jees.webs.security.struct.PageAccess;
 import lombok.extern.log4j.Log4j2;
