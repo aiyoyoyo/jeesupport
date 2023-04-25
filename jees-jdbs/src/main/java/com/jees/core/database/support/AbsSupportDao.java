@@ -568,7 +568,7 @@ public abstract class AbsSupportDao implements ISupportDao {
     public <T> List<T> selectByMap(String _db, String _table, Set<String> _column,
                                    Map _param, int _offset, int _limit, Class<T> _cls) {
 
-        String schema = CommonConfig.get( "jdbs.config." + _db + ".schema", _db );
+        String schema = CommonConfig.get( "jdbs.jdbs.config." + _db + ".schema", _db );
         // jees.jdbs.config.testa.dbtype = mysql //不同数据库会有不同语法情况
         // jees.jdbs.config.testa.orm = hibernate //可能增加mybatis支持
         String db = schema + ".";
