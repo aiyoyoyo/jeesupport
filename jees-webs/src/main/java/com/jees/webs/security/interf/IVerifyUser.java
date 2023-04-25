@@ -16,5 +16,11 @@ public interface IVerifyUser {
      *
      * @param _user
      */
-    public void loadUser(SuperUser _user);
+    void loadUser(SuperUser _user);
+
+    /**
+     * 后台动态账号信息
+     * @param _user
+     */
+    void loadSuperMan(SuperUser _user);
 }

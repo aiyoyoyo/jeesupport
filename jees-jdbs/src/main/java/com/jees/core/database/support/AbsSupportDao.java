@@ -523,13 +523,13 @@ public abstract class AbsSupportDao implements ISupportDao {
 
     // 基于Map的查询 //////////////////////////////////////////////////////////
     @Override
-    public <T> List<T> selectByMap(String _db, String _tbale, Map _param) {
-        return this.selectByMap(_db, _tbale, _param, DEFAULT_FIRST, DEFAULT_LIMIT);
+    public <T> List<T> selectByMap(String _db, String _table, Map _param) {
+        return this.selectByMap(_db, _table, _param, DEFAULT_FIRST, DEFAULT_LIMIT);
     }
 
     @Override
-    public <T> List<T> selectByMap(String _db, String _tbale, Map _param, int _offset, int _limit) {
-        return this.selectByMap(_db, _tbale, null, _param, _offset, _limit, null);
+    public <T> List<T> selectByMap(String _db, String _table, Map _param, int _offset, int _limit) {
+        return this.selectByMap(_db, _table, null, _param, _offset, _limit, null);
     }
 
     @Override
@@ -567,9 +567,11 @@ public abstract class AbsSupportDao implements ISupportDao {
     @Override
     public <T> List<T> selectByMap(String _db, String _table, Set<String> _column,
                                    Map _param, int _offset, int _limit, Class<T> _cls) {
+
+        String schema = CommonConfig.get( "jdbs.config." + _db + ".schema", _db );
         // jees.jdbs.config.testa.dbtype = mysql //不同数据库会有不同语法情况
         // jees.jdbs.config.testa.orm = hibernate //可能增加mybatis支持
-        String db = _db + ".";
+        String db = schema + ".";
         String type = CommonConfig.get("jees.jdbs.config." + _db + ".dbtype", "mysql").toLowerCase();
         if (type.equalsIgnoreCase("sqlite")) {
             db = "";

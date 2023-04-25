@@ -65,7 +65,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
     @SuppressWarnings("unchecked")
     protected SuperUser checkSuperman(String _username) {
         SuperUser user = new SuperUser();
-        if (_username.equals(CommonConfig.getString("jees.webs.security.superman", USER_SUPERMAN))) {
+        if (_username.equalsIgnoreCase(CommonConfig.getString("jees.webs.security.superman", USER_SUPERMAN))) {
             log.warn("--使用超级账号登陆。");
             user.setId("superman");
             user.setUsername(_username);
@@ -104,10 +104,17 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
         SuperUser user = (SuperUser) _user;
         User.withUserDetails(_user).roles(user.getRoles()).build();
 
-        // TIPS 用户默认为禁用，通过实现自定义属性加载，来控制账号有效状态
         IVerifyUser user_impl = CommonContextHolder.getBean(IVerifyUser.class);
-        if (user_impl != null) {
-            user_impl.loadUser(user);
+        // TIPS 用户默认为禁用，通过实现自定义属性加载，来控制账号有效状态
+        if (user.getUsername().equalsIgnoreCase(
+                CommonConfig.getString("jees.webs.security.superman", USER_SUPERMAN))) {
+            if (user_impl != null) {
+                user_impl.loadSuperMan(user);
+            }
+        }else{
+            if (user_impl != null) {
+                user_impl.loadUser(user);
+            }
         }
     }
 
