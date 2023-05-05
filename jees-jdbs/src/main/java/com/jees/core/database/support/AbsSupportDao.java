@@ -12,6 +12,7 @@ import org.hibernate.transform.Transformers;
 import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -332,21 +333,21 @@ public abstract class AbsSupportDao implements ISupportDao {
     public <T> long selectCount(String _db, Class<T> _cls) {
         String hql = "SELECT COUNT(*) FROM ";
         Query query = _get_session(_db).createQuery(hql + _cls.getName());
-        return (long) query.getResultList().get(0);
+        return query.getResultList().size() > 0 ? (long) query.getResultList().get(0) : 0;
     }
 
     @Override
     public long selectCountBySQL(String _db, String _sql, String[] _param, Object[] _value) {
         Query query = _get_session(_db).createNativeQuery(_sql);
         _set_parameter(query, _param, _value);
-        return (long) query.getResultList().get(0);
+        return query.getResultList().size() > 0 ? ((BigInteger) query.getResultList().get(0)).intValue() : 0;
     }
 
     @Override
     public long selectCountByHQL(String _db, String _hql, String[] _param, Object[] _value) {
         Query query = _get_session(_db).createQuery(_hql);
         _set_parameter(query, _param, _value);
-        return (long) query.getResultList().get(0);
+        return query.getResultList().size() > 0 ? (long) query.getResultList().get(0) : 0;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.jees.test.utils;
 import com.jees.tool.crypto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import sun.security.provider.Sun;
 
 import java.security.Key;
 import java.util.Map;
@@ -81,8 +82,14 @@ public class CryptoTest {
     public void testRSA() {
         log.debug("-- RSA ---------------------");
         try {
-            Map<String, Key> key_map = RSAUtils.s_genkeys_map();
+            Map<String, Key> key_map = RSAUtils.s_genkeys_map("123");
 
+//            Sun RSA public key, 1024 bits
+//            modulus: 101799295182428744795505144996528983770529190547129454356838916476888256502005289240107974912970304726464852922390387153088384082171304329920303782387065477279147518721453180655575017240905228425534574705215608241330444395513135794984599960437491467012980369291666943809031411045825273968268308735404951984501
+//            public exponent: 65537
+//            Sun RSA public key, 1024 bits
+//            modulus: 101799295182428744795505144996528983770529190547129454356838916476888256502005289240107974912970304726464852922390387153088384082171304329920303782387065477279147518721453180655575017240905228425534574705215608241330444395513135794984599960437491467012980369291666943809031411045825273968268308735404951984501
+//            public exponent: 65537
             byte[] pub_key = RSAUtils.s_public_key_byte(key_map);
             byte[] pri_key = RSAUtils.s_private_key_byte(key_map);
 
@@ -97,10 +104,14 @@ public class CryptoTest {
             byte[] byt_e = RSAUtils.s_encrypt_private(pri_key, txt.getBytes());
             byte[] byt_d = RSAUtils.s_decrypt_public(B64Utils.s_decode(pub_key_str), byt_e);
             log.debug("私钥加密，公钥解密: [" + new String(byt_d) + "]");
+//            byt_d = RSAUtils.s_decrypt_private(pri_key, byt_e);
+//            log.debug("私钥加密，私钥解密: [" + new String(byt_d) + "]");// 失败
 
             byt_e = RSAUtils.s_encrypt_public(pub_key, txt.getBytes());
             byt_d = RSAUtils.s_decrypt_private(pri_key, byt_e);
             log.debug("公钥加密，私钥解密: [" + new String(byt_d) + "]");
+            byt_d = RSAUtils.s_decrypt_public(pri_key, byt_e);
+            log.debug("公钥加密，公钥解密: [" + new String(byt_d) + "]");
         } catch (Exception e) {
             log.debug("私钥或者内容错误！");
         }
