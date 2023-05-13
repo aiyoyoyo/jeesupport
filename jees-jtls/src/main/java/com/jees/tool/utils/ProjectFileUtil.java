@@ -2,6 +2,7 @@ package com.jees.tool.utils;
 
 import com.jees.common.CommonConfig;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
@@ -21,7 +22,7 @@ import java.util.function.Consumer;
  * @author aiyoyoyo
  */
 @Log4j2
-public class FileUtil {
+public class ProjectFileUtil {
     public static final String FILE_ENCODING = "UTF-8";
 
     static String classpath = null;
@@ -44,9 +45,15 @@ public class FileUtil {
         } catch (FileNotFoundException e) {
             log.warn("尝试直接加载失败，文件不存在: " + _path);
         }
+        if( _path.startsWith("resource:") ){
+            file = new File( ProjectFileUtil.class.getResource( _path.replace("resource:","") ).getPath() );
+            if( !file.exists() ){
+                file = null;
+            }
+        }
         if (file == null) {
-            _path = _path.replace("classpath:", "");
             _path = _path.replace("classpath*:", "");
+            _path = _path.replace("classpath:", "");
             try {
                 log.debug("尝试加载相对路径文件:" + _path);
                 file = ResourceUtils.getFile(_path);
@@ -275,9 +282,13 @@ public class FileUtil {
     static String webPath;
     static String srcPath;
     static String tmpPath;
+    @Getter
     static boolean devWebroot;  // 普通开发
+    @Getter
     static boolean devMaven;    // Maven开发
+    @Getter
     static boolean depTomcat;   // Tomcat部署
+    @Getter
     static boolean depServer;   // Server部署(SpringBoot)
 
     /**
@@ -289,7 +300,7 @@ public class FileUtil {
         if (projectPath == null) {
             Class app = null;
             try {
-                app = Class.forName(FileUtil.class.getName());
+                app = Class.forName(ProjectFileUtil.class.getName());
             } catch (ClassNotFoundException e) {
             }
             String path = app.getResource("").getPath();
@@ -300,10 +311,10 @@ public class FileUtil {
             sub_idx = path.indexOf("target");
             devMaven = sub_idx != -1;
             if (!devMaven) {
-                sub_idx = FileUtil.classpath().indexOf("target");
+                sub_idx = ProjectFileUtil.classpath().indexOf("target");
                 devMaven = sub_idx != -1;
                 if (devMaven) {
-                    path = FileUtil.classpath();
+                    path = ProjectFileUtil.classpath();
                 }
             }
             if (!devMaven) {
@@ -366,7 +377,7 @@ public class FileUtil {
                 srcPath = project_path + "WEB-INF/classes/";
             }
 
-            File try_file = FileUtil.load(srcPath, false);
+            File try_file = ProjectFileUtil.load(srcPath, false);
             if (!try_file.exists()) {
                 log.warn("Can't find Src Path:" + srcPath);
                 srcPath = null;
@@ -392,7 +403,7 @@ public class FileUtil {
                 webPath = project_path;
             }
 
-            File try_file = FileUtil.load(webPath, false);
+            File try_file = ProjectFileUtil.load(webPath, false);
             if (!try_file.exists()) {
                 log.warn("Can't find WebRoot Path:" + webPath);
                 webPath = null;
@@ -418,10 +429,7 @@ public class FileUtil {
             String[] paths = path.split("/");
             for (int i = 0; i < paths.length; i++) {
                 String p = paths[i];
-                if (p.startsWith("icomm-") && p.endsWith(".jar")) {
-                    projectPath += p + "/" + paths[i + 1] + "/";
-                    break;
-                } else tmpPath = path + "temp/";
+                tmpPath = path + "temp/";
             }
 
             log.info("Template Path:" + tmpPath);
@@ -454,7 +462,7 @@ public class FileUtil {
         String read_line;
         StringBuilder buffer = new StringBuilder();
         try {
-            @Cleanup BufferedReader buff_read = new BufferedReader(new InputStreamReader(FileUtil.class.getClassLoader().getResourceAsStream(_file)));
+            @Cleanup BufferedReader buff_read = new BufferedReader(new InputStreamReader(ProjectFileUtil.class.getClassLoader().getResourceAsStream(_file)));
             while ((read_line = buff_read.readLine()) != null) {
                 buffer.append(new String(read_line.getBytes(), FILE_ENCODING) + "\n");
                 read_count++;

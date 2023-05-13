@@ -31,9 +31,9 @@ public class UrlUtil {
      */
     public static String path2url(String _path, boolean _make) {
         try {
-            File cls_file = FileUtil.load("classpath:", false);
+            File cls_file = ProjectFileUtil.load("classpath:", false);
             String cls_path = cls_file.getCanonicalPath();
-            File file = FileUtil.load(_path, false);
+            File file = ProjectFileUtil.load(_path, false);
             String path = file.getAbsolutePath();
             path = path.replace(cls_path, "");
             if (path.startsWith("/") || path.startsWith("\\")) path = path.
@@ -52,6 +52,6 @@ public class UrlUtil {
      * @return 路径
      */
     public static String url2path(String _url, boolean _make) {
-        return FileUtil.path("classpath:" + _url, _make);
+        return ProjectFileUtil.path("classpath:" + _url, _make);
     }
 }

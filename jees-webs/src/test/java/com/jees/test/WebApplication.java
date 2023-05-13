@@ -3,7 +3,7 @@ package com.jees.test;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.CustomSystemUtil;
-import com.jees.tool.utils.FileUtil;
+import com.jees.tool.utils.ProjectFileUtil;
 import com.jees.webs.core.interf.ISupport;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
@@ -22,9 +22,9 @@ import java.util.Arrays;
 public class WebApplication {
     public static void main(String... args) {
         System.out.println("Start with:" + Arrays.toString(args));
-        FileUtil.classpath();
-        FileUtil.project();
-        FileUtil.webroot();
+        ProjectFileUtil.classpath();
+        ProjectFileUtil.project();
+        ProjectFileUtil.webroot();
         SpringApplication.run(WebApplication.class, args);
         CommonContextHolder.getBean(ISupport.class).initialize();
         log.info("服务器启动: http"

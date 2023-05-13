@@ -3,7 +3,7 @@ package com.jees.webs.core.service;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.crypto.MD5Utils;
-import com.jees.tool.utils.FileUtil;
+import com.jees.tool.utils.ProjectFileUtil;
 import com.jees.tool.utils.RandomUtil;
 import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
@@ -47,7 +47,7 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
             supermanPassword = RandomUtil.s_random_string(len);
             log.debug("--超级密码：" + supermanPassword);
             try {
-                FileUtil.write(supermanPassword, "classpath:.pw", false);
+                ProjectFileUtil.write(supermanPassword, "classpath:.pw", false);
             } catch (IOException e) {
             }
             if (CommonConfig.getBoolean("jees.webs.security.encodePwd", true)) {

@@ -2,7 +2,7 @@ package com.jees.server.message;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.jees.common.CommonConfig;
-import com.jees.tool.utils.FileUtil;
+import com.jees.tool.utils.ProjectFileUtil;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -30,7 +30,7 @@ public class MessageFile<ID> {
             if (CommonConfig.getBoolean("jees.jsts.message.jsonLogs", false)) {
                 log.info("--生成消息文件：" + file);
             }
-            FileUtil.write(_str, file, false);
+            ProjectFileUtil.write(_str, file, false);
         } catch (IOException e) {
             log.warn("写入文件失败：" + e.toString());
         }

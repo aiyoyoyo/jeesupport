@@ -3,7 +3,7 @@ package com.jees.test;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.utils.CustomSystemUtil;
-import com.jees.tool.utils.FileUtil;
+import com.jees.tool.utils.ProjectFileUtil;
 import com.jees.webs.core.interf.ISupport;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +31,7 @@ public class Application extends SpringBootServletInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
 
-        System.out.println("Project Path:" + FileUtil.path("classpath:"));
+        System.out.println("Project Path:" + ProjectFileUtil.path("classpath:"));
         CommonContextHolder.getBean(ISupport.class).initialize();
         log.info("服务器启动: http"
                 + (CommonConfig.getBoolean("server.useSSL", false) ? "s" : "")

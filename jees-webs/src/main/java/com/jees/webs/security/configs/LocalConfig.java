@@ -2,7 +2,7 @@ package com.jees.webs.security.configs;
 
 import com.jees.common.CommonConfig;
 import com.jees.tool.utils.FileOperationUtil;
-import com.jees.tool.utils.FileUtil;
+import com.jees.tool.utils.ProjectFileUtil;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.interf.IVerifyConfig;
@@ -294,7 +294,7 @@ public class LocalConfig implements IVerifyConfig {
     public void loadConfig() {
         cfgLines.clear();
         String cfg_file = CommonConfig.get("spring.config.location", "config/");
-        FileUtil.read(FileUtil.classpath() + "/" + cfg_file + "verify.cfg", (_line) -> {
+        ProjectFileUtil.read(ProjectFileUtil.classpath() + "/" + cfg_file + "verify.cfg", (_line) -> {
             cfgLines.add(_line);
         });
     }
@@ -306,7 +306,7 @@ public class LocalConfig implements IVerifyConfig {
             sb.append(line + "\r\n");
         }
         try {
-            FileUtil.write(sb.toString(), FileUtil.classpath() + "/" + cfg_file + "verify.cfg", false);
+            ProjectFileUtil.write(sb.toString(), ProjectFileUtil.classpath() + "/" + cfg_file + "verify.cfg", false);
         } catch (IOException e) {
             log.error("写入文件失败：", e);
         }
@@ -462,7 +462,7 @@ public class LocalConfig implements IVerifyConfig {
 
     public void backup() {
         String cfg_file = CommonConfig.get("spring.config.location", "config/");
-        String file_path = FileUtil.classpath() + "/" + cfg_file + "verify.cfg";
+        String file_path = ProjectFileUtil.classpath() + "/" + cfg_file + "verify.cfg";
         FileOperationUtil.copyFile(file_path, file_path + ".bak." + DateTime.now().toString("yyyyMMddHHmmssSSS"));
     }
 

@@ -97,7 +97,7 @@ public class CryptoTest {
             log.debug("  公钥              : [" + new String(pub_key) + "]");
             log.debug("  公钥BASE64: [" + pub_key_str + "]");
             log.debug("  私钥: [" + new String(pri_key) + "]");
-            log.debug("  私钥BASE64: [" + B64Utils.s_encode(pub_key) + "]");
+            log.debug("  私钥BASE64: [" + B64Utils.s_encode(pri_key) + "]");
 
             String txt = "DABA-C5D2-05C127B8-77D330BCB674F506";
             log.debug("  内容：[" + txt + "]");

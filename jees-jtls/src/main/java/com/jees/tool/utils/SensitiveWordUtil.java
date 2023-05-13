@@ -62,15 +62,15 @@ public class SensitiveWordUtil {
     }
 
     private static void _load_txt_file(String _path) throws FileNotFoundException {
-        File file = FileUtil.load(_path, true);
+        File file = ProjectFileUtil.load(_path, true);
 
         if (file.isDirectory()) {
             String[] file_list = file.list();
             for (String p : file_list) {
-                File txt = FileUtil.load(_path + "/" + p, true);
+                File txt = ProjectFileUtil.load(_path + "/" + p, true);
 
                 if (txt.isFile()) {
-                    FileUtil.read(txt.getAbsolutePath(), s -> {
+                    ProjectFileUtil.read(txt.getAbsolutePath(), s -> {
                         String tmp = s.trim();
                         if (!tmp.trim().isEmpty()) {
                             wordMap.put(tmp, new HashMap<>());
@@ -79,7 +79,7 @@ public class SensitiveWordUtil {
                 }
             }
         } else {
-            FileUtil.read(_path, s -> {
+            ProjectFileUtil.read(_path, s -> {
                 if (!s.isEmpty()) {
                     wordMap.put(s, new HashMap<>());
                 }
