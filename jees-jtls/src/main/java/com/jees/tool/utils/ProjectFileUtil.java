@@ -45,9 +45,17 @@ public class ProjectFileUtil {
         } catch (FileNotFoundException e) {
             log.warn("尝试直接加载失败，文件不存在: " + _path);
         }
-        if( _path.startsWith("resource:") ){
-            file = new File( ProjectFileUtil.class.getResource( _path.replace("resource:","") ).getPath() );
-            if( !file.exists() ){
+        if( _path.startsWith("resource:") ) {
+            try {
+                file = new File(ProjectFileUtil.class.getResource(_path.replace("resource:", "")).getPath());
+                if( !file.exists() ){
+                    if( _make ){
+                        throw new RuntimeException("resource:无法主动创建文件，请改为classpath:!");
+                    }
+                    file = null;
+                }
+            }catch (Exception e){
+                log.warn("尝试加载资源引用路径失败，文件不存在: " + _path);
                 file = null;
             }
         }
@@ -76,7 +84,7 @@ public class ProjectFileUtil {
             }
         }
         if (file == null) {
-            log.debug("File is not exist: " + _path);
+            log.debug("文件没有找到: " + _path);
             file = new File(_path);
         }
         if (!file.exists() && _make) make(file, is_dir);
@@ -242,7 +250,7 @@ public class ProjectFileUtil {
         try {
             File file = load(_path, false);
             return file.getCanonicalPath().replaceAll("\\\\", "/");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("文件[" + _path + "]路径获取失败:", e);
         }
         return null;
@@ -256,8 +264,7 @@ public class ProjectFileUtil {
      * @return 文件地址
      */
     public static String path(String _path, boolean _make) {
-        String file_path = path(_path);
-        if (_make) {
+        if( _make ){
             File file = load(_path, _make);
             try {
                 return file.getCanonicalPath().replaceAll("\\\\", "/");
@@ -265,7 +272,7 @@ public class ProjectFileUtil {
                 log.error("文件[" + _path + "]路径获取失败:", e);
             }
         }
-        return file_path;
+        return path(_path);
     }
 
     /**
