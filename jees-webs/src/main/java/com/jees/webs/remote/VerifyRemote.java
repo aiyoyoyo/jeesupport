@@ -1,18 +1,14 @@
 package com.jees.webs.remote;
 
 import com.jees.webs.core.interf.ISupportEL;
-import com.jees.webs.security.service.VerifyService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Log4j2
 @RemoteProxy
 public class VerifyRemote implements ISupportEL {
-    @Autowired
-    VerifyService verifyService;
 
     @SneakyThrows
     @RemoteMethod

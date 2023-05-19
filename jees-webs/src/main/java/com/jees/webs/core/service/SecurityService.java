@@ -3,13 +3,14 @@ package com.jees.webs.core.service;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.tool.crypto.MD5Utils;
+import com.jees.tool.utils.StringUtil;
 import com.jees.webs.core.interf.ICodeDefine;
 import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.core.struct.ServerMessage;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.exception.RequestException;
 import com.jees.webs.security.interf.IVerifyLogin;
-import com.jees.webs.security.service.VerifyService;
+import com.jees.webs.security.interf.IVerifySerivce;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +74,8 @@ public class SecurityService implements PasswordEncoder {
     }
 
     public void setHttpSecurity(HttpSecurity _hs) throws Exception {
-        VerifyService verifyService = CommonContextHolder.getBean(VerifyService.class);
+        String verify_service = CommonConfig.getString("jees.webs.security.verifyService", "verifyService");
+        IVerifySerivce verifyService = CommonContextHolder.getBean(verify_service);
         if (verifyService != null) {
             verifyService.initialize(this.model);
         }
@@ -86,7 +88,7 @@ public class SecurityService implements PasswordEncoder {
                 .permitAll()
                 .and().exceptionHandling().accessDeniedHandler(deniedHandler())
                 .and().logout().logoutUrl(logout_page).permitAll()
-                .and().authorizeRequests().anyRequest().access("@verifyService.validate( request, authentication )");
+                .and().authorizeRequests().anyRequest().access("@" + verify_service + ".validate( request, authentication )");
     }
 
     public String encodePwd(String _pwd) {

@@ -10,10 +10,9 @@ import com.jees.webs.core.interf.ISupportEL;
 import com.jees.webs.entity.SuperRole;
 import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.exception.RequestException;
+import com.jees.webs.security.interf.IVerifySerivce;
 import com.jees.webs.security.interf.IVerifyUser;
-import com.jees.webs.security.service.VerifyService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,9 +31,6 @@ import java.io.IOException;
 public class ExUserDetailsService<U extends SuperUser> implements UserDetailsService, ISupportEL {
     private final String USER_SUPERMAN = "sUpermAn";
     private String supermanPassword;
-
-    @Autowired
-    VerifyService verifyService;
 
     /**
      * 超级账号在启动时随机生成密码，可以通过日志查询。
@@ -90,6 +86,8 @@ public class ExUserDetailsService<U extends SuperUser> implements UserDetailsSer
         SuperUser user = checkSuperman(_username);
         if (user == null) {
             // 一般用户入库
+            String verify_service = CommonConfig.getString("jees.webs.security.verifyService", "verifyService");
+            IVerifySerivce verifyService = CommonContextHolder.getBean(verify_service);
             user = verifyService.findUserByUsername(_username);
         }
         if (user == null) {

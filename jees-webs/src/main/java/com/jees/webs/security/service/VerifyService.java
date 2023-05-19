@@ -11,6 +11,7 @@ import com.jees.webs.entity.SuperUser;
 import com.jees.webs.security.configs.LocalConfig;
 import com.jees.webs.security.exception.RequestException;
 import com.jees.webs.security.interf.IVerifyConfig;
+import com.jees.webs.security.interf.IVerifySerivce;
 import com.jees.webs.security.struct.PageAccess;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,7 @@ import java.util.Set;
  */
 @Log4j2
 @Service
-public class VerifyService {
+public class VerifyService implements IVerifySerivce {
     IVerifyConfig iVerifyConfig;
     SecurityService.SecurityModel model;
 

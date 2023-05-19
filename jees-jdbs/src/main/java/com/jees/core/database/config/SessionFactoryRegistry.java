@@ -5,6 +5,7 @@ import com.atomikos.util.IntraVmObjectRegistry;
 import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
 import com.jees.core.database.support.ISupportDao;
+import com.jees.tool.utils.ProjectFileUtil;
 import com.microsoft.sqlserver.jdbc.SQLServerXADataSource;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
@@ -20,6 +21,7 @@ import org.sqlite.SQLiteDataSource;
 
 import javax.naming.NameNotFoundException;
 import javax.sql.DataSource;
+import java.io.File;
 import java.util.Properties;
 
 @Log4j2
@@ -137,7 +139,13 @@ public class SessionFactoryRegistry {
             sqlite_cfg.setEncoding(SQLiteConfig.Encoding.UTF16);
 
             SQLiteDataSource sqlite_ds = new SQLiteDataSource();
-            sqlite_ds.setUrl(_get_config(_prop, head + "url", null));
+            String path = _get_config(_prop, head + "url", null);
+            File db_file = ProjectFileUtil.load(path.replace("jdbc:sqlite:", ""),false);
+            if( !db_file.exists() ){
+                log.error("数据库文件不存在，请确认配置是否正确：" + db_file.getPath() );
+                throw new RuntimeException("数据库文件不存在，请确认配置是否正确!");
+            }
+            sqlite_ds.setUrl( "jdbc:sqlite:" + db_file.getPath());
             return sqlite_ds;
 //            sqlite_ds.setConfig( sqlite_cfg );
 //            AtomikosNonXADataSourceBean nonXaDataSource = new AtomikosNonXADataSourceBean();

@@ -1,6 +1,8 @@
 package com.jees.webs.security.processor;
 
+import com.jees.common.CommonConfig;
 import com.jees.common.CommonContextHolder;
+import com.jees.webs.security.interf.IVerifySerivce;
 import com.jees.webs.security.service.VerifyService;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.context.WebEngineContext;
@@ -42,11 +44,13 @@ public final class StandardVerifyProcessor extends AbstractAttributeTagProcessor
 
     @Override
     protected final void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) {
-        VerifyService vms = CommonContextHolder.getBean(VerifyService.class);
-        boolean visible = vms.validateElement(((WebEngineContext) context).getRequest(), tag, attributeValue);
-        if (!visible) {
-            structureHandler.removeElement();
+        String verify_service = CommonConfig.getString("jees.webs.security.verifyService", "verifyService");
+        IVerifySerivce verifyService = CommonContextHolder.getBean(verify_service);
+        if (verifyService != null) {
+            boolean visible = verifyService.validateElement(((WebEngineContext) context).getRequest(), tag, attributeValue);
+            if (!visible) {
+                structureHandler.removeElement();
+            }
         }
-
     }
 }
