@@ -78,7 +78,7 @@ public class SessionFactoryRegistry {
     private DataSource _create_data_source(String _name, Properties _prop) {
         String head = "jees.jdbs.config." + _name + ".";
         String type = _get_config(_prop, head + "dbtype", null);
-        String uniqueResourceName = _get_config(_prop, head + "uniqueResourceName", null);
+        String uniqueResourceName = _get_config(_prop, head + "uniqueResourceName", _name + "DS");
         String bean = _name + "DataSource";
         Properties xaProperties = new Properties();
 
