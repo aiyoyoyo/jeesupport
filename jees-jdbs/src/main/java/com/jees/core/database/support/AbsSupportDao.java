@@ -150,6 +150,33 @@ public abstract class AbsSupportDao implements ISupportDao {
         _flush_session(session);
     }
 
+    @Override
+    public void saveOrUpdate(String _db, Object _entity){
+        Session session = _get_session(_db);
+        session.saveOrUpdate(_entity);
+    }
+
+    @Override
+    public <T> void saveOrUpdateAll(String _db, List<T> _list) {
+        saveOrUpdateAll(_db, _list, DEFAULT_FLUSH);
+    }
+
+    @Override
+    public <T> void saveOrUpdateAll(String _db, List<T> _list, int _flush) {
+        Session session = _get_session(_db);
+
+        int exnum = 0;
+        int monum = _flush - 1;
+
+        for (T e : _list) {
+            session.saveOrUpdate(e);
+            if (++exnum % _flush == monum) {
+                _flush_session(session);
+            }
+        }
+
+        _flush_session(session);
+    }
     // delete //////////////////////////////////////////////////////////////
     @Override
     public void delete(String _db, Object _entity) {

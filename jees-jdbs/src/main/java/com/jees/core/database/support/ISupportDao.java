@@ -1,5 +1,6 @@
 package com.jees.core.database.support;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
@@ -26,6 +27,12 @@ public interface ISupportDao {
     <T> void insertAll(String _db, List<T> _list);
 
     <T> void insertAll(String _db, List<T> _list, int _flush);
+
+    void saveOrUpdate(String _db, Object _entity);
+
+    <T> void saveOrUpdateAll(String _db, List<T> _list);
+
+    <T> void saveOrUpdateAll(String _db, List<T> _list, int _flush);
 
     void delete(String _db, Object _entity);
 

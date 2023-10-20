@@ -46,7 +46,7 @@ public class SessionFactoryRegistry {
         dao.putSessionFactory(_name, bean);
     }
 
-    public static synchronized void reRegisterSessionFactory(String _name) {
+    public static void removeSessionFactory(String _name) {
         ISupportDao dao = CommonContextHolder.getBean(ISupportDao.class);
         SessionFactory ssf = dao.getSessionFactory(_name);
 
@@ -64,6 +64,10 @@ public class SessionFactoryRegistry {
             IntraVmObjectRegistry.removeResource(res_name);
         } catch (NameNotFoundException e) {
         }
+    }
+
+    public static synchronized void reRegisterSessionFactory(String _name) {
+        removeSessionFactory(_name);
         new SessionFactoryRegistry().registerSessionFactory(_name);
     }
 
@@ -71,7 +75,7 @@ public class SessionFactoryRegistry {
         if (_prop == null) {
             return CommonConfig.get(_key, _def);
         } else {
-            return (T) _prop.get(_key);
+            return (T) _prop.getOrDefault(_key, _def);
         }
     }
 
