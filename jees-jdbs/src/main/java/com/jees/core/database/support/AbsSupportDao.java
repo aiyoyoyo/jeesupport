@@ -616,13 +616,13 @@ public abstract class AbsSupportDao implements ISupportDao {
             sql += "*";
         }
         sql += " FROM " + db + _table + " WHERE 1=1 ";
-        String order_by = null;
+
         // 生成 where
         if (_param != null && _param.size() > 0) {
-            order_by = (String) _param.remove("orderBy");
-
             Set<String> keys = _param.keySet();
             for (String key : keys) {
+                if( key.equalsIgnoreCase("orderBy") ) continue;
+                if( key.equalsIgnoreCase("groupBy") ) continue;
                 // 生成where的值
                 Object value = _param.get(key);
                 if (value != null) {
@@ -696,8 +696,13 @@ public abstract class AbsSupportDao implements ISupportDao {
             }
         }
         // 生成 order by
+        String order_by = (String) _param.get("orderBy");
         if (StringUtil.isNotEmpty(order_by)) {
             sql += " ORDER BY " + order_by;
+        }
+        String groupBy = (String) _param.get("groupBy");
+        if (StringUtil.isNotEmpty(groupBy)) {
+            sql += " GROUP BY " + groupBy;
         }
 
         log.debug("生成查询语句：" + sql);
