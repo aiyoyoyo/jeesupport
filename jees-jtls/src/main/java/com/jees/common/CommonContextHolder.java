@@ -1,6 +1,8 @@
 package com.jees.common;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -83,7 +85,7 @@ public class CommonContextHolder implements ApplicationContextAware {
     /**
      * 清除applicationContext静态变量.
      */
-    public static void cleanApplicationContext() {
+    protected static void cleanApplicationContext() {
         applicationContext = null;
     }
 
@@ -94,5 +96,10 @@ public class CommonContextHolder implements ApplicationContextAware {
         if (applicationContext == null) {
             throw new IllegalStateException("applicaitonContext未注入, 请检查相关配置。");
         }
+    }
+
+    public static <T> void removeBean(String _name){
+        BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) CommonContextHolder.getApplicationContext().getAutowireCapableBeanFactory();
+        beanDefinitionRegistry.removeBeanDefinition(_name );
     }
 }
