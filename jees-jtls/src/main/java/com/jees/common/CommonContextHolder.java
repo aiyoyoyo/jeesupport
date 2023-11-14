@@ -2,9 +2,11 @@ package com.jees.common;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -98,8 +100,13 @@ public class CommonContextHolder implements ApplicationContextAware {
         }
     }
 
-    public static <T> void removeBean(String _name){
+    public static void removeBean(String _name){
         BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) CommonContextHolder.getApplicationContext().getAutowireCapableBeanFactory();
         beanDefinitionRegistry.removeBeanDefinition(_name );
+    }
+
+    public static <T> void registerBean(String _name, Class<T> _cls){
+        BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) CommonContextHolder.getApplicationContext().getAutowireCapableBeanFactory();
+        beanDefinitionRegistry.registerBeanDefinition(_name, BeanDefinitionBuilder.genericBeanDefinition(_cls).getBeanDefinition());
     }
 }
