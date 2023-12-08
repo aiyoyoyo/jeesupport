@@ -71,12 +71,12 @@ public class ProjectFileUtil {
             }
         }
         if (file == null) {
-            if (_path.indexOf(":") != -1) {
-            } else if (_path.startsWith("/")) {
-            } else {
-                _path = classpath() + "/" + _path;
-            }
             try {
+                if (_path.indexOf(":") != -1) {
+                } else if (_path.startsWith("/")) {
+                } else {
+                    _path = ResourceUtils.getFile("classpath:").getPath() + "/" + _path;
+                }
                 log.debug("尝试加载绝对路径文件:" + _path);
                 file = ResourceUtils.getFile(_path);
             } catch (FileNotFoundException e) {
@@ -337,9 +337,17 @@ public class ProjectFileUtil {
                     depServer = sub_idx != -1;
                 }
             }
-
             if (!depTomcat && !depServer) {
-                projectPath = path.substring(0, sub_idx);
+                if( sub_idx != -1 ){
+                    projectPath = path.substring(0, sub_idx);
+                }else{
+                    sub_idx = path.indexOf("/lib");
+                    if( sub_idx != -1 ){
+                        projectPath = path.substring(0,sub_idx).replace("file:/", "");
+                    }else{
+                        projectPath = path;
+                    }
+                }
             } else {
                 projectPath = "";
                 if (path.startsWith("/")) {
@@ -382,6 +390,8 @@ public class ProjectFileUtil {
                 srcPath = project_path + "src/";
             } else if (depTomcat || depServer) {
                 srcPath = project_path + "WEB-INF/classes/";
+            } else{
+                srcPath = project_path + "/";
             }
 
             File try_file = ProjectFileUtil.load(srcPath, false);
@@ -408,6 +418,9 @@ public class ProjectFileUtil {
                 webPath = project_path + "WebRoot/";
             } else if (depTomcat || depServer) {
                 webPath = project_path;
+            }else{
+                // zip打包时的默认路径
+                webPath = project_path + "/templates/";
             }
 
             File try_file = ProjectFileUtil.load(webPath, false);
