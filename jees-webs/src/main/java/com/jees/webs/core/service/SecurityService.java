@@ -82,13 +82,14 @@ public class SecurityService implements PasswordEncoder {
         String login_page = "/" + CommonConfig.getString("jees.webs.security.login", "login");
         String logout_page = "/" + CommonConfig.getString("jees.webs.security.logout", "logout");
         _hs.authorizeRequests()
+                .and().authorizeRequests().anyRequest().access("@" + verify_service + ".validate( request, authentication )")
+                .and().exceptionHandling().accessDeniedHandler(deniedHandler())
+                .and().logout().logoutUrl(logout_page).permitAll()
                 .and().formLogin().loginPage(login_page).loginProcessingUrl(login_page)
                 .successHandler(successHandler())
                 .failureHandler(failureHandler())
                 .permitAll()
-                .and().exceptionHandling().accessDeniedHandler(deniedHandler())
-                .and().logout().logoutUrl(logout_page).permitAll()
-                .and().authorizeRequests().anyRequest().access("@" + verify_service + ".validate( request, authentication )");
+        ;
     }
 
     public String encodePwd(String _pwd) {

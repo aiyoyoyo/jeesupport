@@ -45,6 +45,13 @@ public class WebSecurityConfig {
         }
         _hs.sessionManagement().maximumSessions(CommonConfig.getInteger("jees.webs.maxSession", 1000))
                 .sessionRegistry(sessionRegistry);
+
+        if (CommonConfig.getBoolean("jees.webs.security.cross", false)) {
+            _hs.csrf().ignoringAntMatchers("/**");
+        } else {
+            _hs.csrf().disable();
+        }
+
         dwrConfig.setHttpSecurity(_hs);
         if (securityService.isEnable()) {
             TemplateService templateService = CommonContextHolder.getBean( TemplateService.class );
