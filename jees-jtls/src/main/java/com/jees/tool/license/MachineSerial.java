@@ -111,12 +111,77 @@ public class MachineSerial {
         return cpu + hd;
     }
 
+    private static String _s_os_linux_code(){
+        String cpu = s_serial_linux_CPU();
+        String hd = s_os_bois_version();
+
+        if (cpu == null || hd == null) {
+            return null;
+        }
+        return cpu + hd;
+    }
+
     /**
      * 获取当前计算机的机器码
      *
      * @return 机器码
      */
     public static String s_code() {
+        String property = System.getProperty("os.name").toLowerCase();
+        if (property.contains("windows")) {
+            return _s_os_windows_code();
+        } else if (property.contains("linux")) {
+            return _s_os_linux_code();
+        }
         return _s_os_windows_code();
+    }
+
+    /* 注：liunx上 如果想获取的话 需要root用户来执行；
+     如果使用普通用户 执行的话 需要输入当前用户的密码（普通用户不支持dmidecode命令 因为没权限）
+    */
+    /**
+     * bois版本号(linux) * * @return
+     */
+    public static String s_os_bois_version() {
+        String result = "";
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("sudo dmidecode -s bios-version");
+            // 管道
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = br.readLine()) != null) {
+                result += line;
+                break;
+            }
+            br.close();
+        } catch (IOException e) {
+            log.error("获取主板信息错误:", e);
+        }
+        return result;
+    }
+
+    /**
+     * 获取系统序列号(linux)
+     * @return
+     */
+    public static String s_serial_linux_CPU() {
+        String result = "";
+        try {
+            Process process = Runtime.getRuntime().exec("sudo dmidecode -s system-uuid");
+            InputStream in;
+            BufferedReader br;
+            in = process.getInputStream();
+            br = new BufferedReader(new InputStreamReader(in));
+            while (in.read() != -1) {
+                result = br.readLine();
+            }
+            br.close();
+            in.close();
+            process.destroy();
+        } catch (Throwable e) {
+            log.error("获取本机序列失败:", e);
+        }
+        return result;
     }
 }
