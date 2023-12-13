@@ -694,16 +694,17 @@ public abstract class AbsSupportDao implements ISupportDao {
                     // 这里可能有2种情况，一种是查 is null 一种是不查，这里取不查
                 }
             }
+            String groupBy = (String) _param.get("groupBy");
+            if (StringUtil.isNotEmpty(groupBy)) {
+                sql += " GROUP BY " + groupBy;
+            }
+            // 生成 order by
+            String order_by = (String) _param.get("orderBy");
+            if (StringUtil.isNotEmpty(order_by)) {
+                sql += " ORDER BY " + order_by;
+            }
         }
-        String groupBy = (String) _param.get("groupBy");
-        if (StringUtil.isNotEmpty(groupBy)) {
-            sql += " GROUP BY " + groupBy;
-        }
-        // 生成 order by
-        String order_by = (String) _param.get("orderBy");
-        if (StringUtil.isNotEmpty(order_by)) {
-            sql += " ORDER BY " + order_by;
-        }
+
         log.debug("生成查询语句：" + sql);
         // TODO sql的替换字符串拼接
         return this.selectBySQL(_db, sql, _offset, _limit, new String[]{}, new String[]{}, _cls);
