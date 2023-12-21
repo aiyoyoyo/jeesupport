@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 本地文件加载授权信息到VerifyModelService里面
  */
+@SuppressWarnings("unused")
 @Log4j2
 public class LocalConfig implements IVerifyConfig {
 
@@ -27,6 +28,7 @@ public class LocalConfig implements IVerifyConfig {
     @Getter
     Map<String, SuperUser> users = new ConcurrentHashMap<>();
     // 角色授权信息
+    @SuppressWarnings("rawtypes")
     @Getter
     Map<String, SuperRole> roles = new ConcurrentHashMap<>();
     // 页面授权信息
@@ -44,7 +46,7 @@ public class LocalConfig implements IVerifyConfig {
 
     public void initialize() {
         loadConfig();
-        this._load_config_line(null);
+        this._load_config_line();
         // 系统匿名配置
         // /login,/logout,/error*
         this.anonymous.add("/" + CommonConfig.getString("jees.webs.security.login", "login"));
@@ -52,17 +54,13 @@ public class LocalConfig implements IVerifyConfig {
         this.anonymous.add("/" + CommonConfig.getString("jees.webs.security.error", "error*"));
         // 将全局匿名配置加载
         String[] anons = CommonConfig.getArray("jees.webs.security.anonymous", String.class);
-        for (String anon : anons) {
-            this.anonymous.add(anon);
-        }
+        this.anonymous.addAll(Arrays.asList(anons));
     }
 
     /**
      * 加载每行内容，并分解成授权信息
-     *
-     * @param _node
      */
-    private void _load_config_line(String _node) {
+    private void _load_config_line() {
         // 配置文件夹需要带上/结束
         String cfg_file = CommonConfig.get("spring.config.location", "config/");
         AtomicReference<Boolean> is_read_auth = new AtomicReference<>(true);
@@ -93,28 +91,20 @@ public class LocalConfig implements IVerifyConfig {
                 is_read_blank.set(false);
             }
             if (is_read_auth.get()) {
-                if (_node == null || _node.equalsIgnoreCase("auth")) {
-                    // 解析待分析的授权地址
-                    _load_config_line_auth(line);
-                }
+                // 解析待分析的授权地址
+                _load_config_line_auth(line);
             }
             if (is_read_user.get()) {
-                if (_node == null || _node.equalsIgnoreCase("users")) {
-                    // 解析授权地址中的用户
-                    _load_config_line_users(line);
-                }
+                // 解析授权地址中的用户
+                _load_config_line_users(line);
             }
             if (is_read_role.get()) {
-                if (_node == null || _node.equalsIgnoreCase("role")) {
-                    // 解析授权中的角色
-                    _load_config_line_roles(line);
-                }
+                // 解析授权中的角色
+                _load_config_line_roles(line);
             }
             if (is_read_blank.get()) {
-                if (_node == null || _node.equalsIgnoreCase("black")) {
-                    // 解析授权中的角色
-                    _load_config_line_blacks(line);
-                }
+                // 解析授权中的角色
+                _load_config_line_blacks(line);
             }
         }
     }
@@ -123,8 +113,6 @@ public class LocalConfig implements IVerifyConfig {
 
     /**
      * 解析待授权地址下的配置信息
-     *
-     * @param _line
      */
     private void _load_config_line_auth(String _line) {
         if (_line.startsWith("[") && _line.endsWith("]")) {
@@ -134,7 +122,7 @@ public class LocalConfig implements IVerifyConfig {
         String auth_url;
         String[] auth_arr = null;
         // 这里分元素授权
-        if (this.lastAuth.indexOf(":") != -1) {
+        if (this.lastAuth.contains(":")) {
             // 需要分割并处理元素
             auth_arr = this.lastAuth.split(":");
             auth_url = auth_arr[0];
@@ -192,17 +180,13 @@ public class LocalConfig implements IVerifyConfig {
                 break;
             case "anonymous":
                 _page.setAnonymous(Boolean.parseBoolean(line_str[1].trim()));
-                if (!this.anonymous.contains(_page.getUrl())) {
-                    this.anonymous.add(_page.getUrl());
-                }
+                this.anonymous.add(_page.getUrl());
                 break;
         }
     }
 
     /**
      * 读取用户行内容
-     *
-     * @param _line
      */
     private void _load_config_line_users(String _line) {
         String[] line_str = _line.split("=");
@@ -217,9 +201,8 @@ public class LocalConfig implements IVerifyConfig {
 
     /**
      * 读取角色行内容
-     *
-     * @param _line
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void _load_config_line_roles(String _line) {
         // 角色 = 用户1, ..., 用户N
         String[] line_str = _line.split("=");
@@ -234,11 +217,7 @@ public class LocalConfig implements IVerifyConfig {
 
         Set<String> users = new HashSet<>();
         role.setUsers(users);
-        for (String role_user : role_user_str) {
-            if (!users.contains(role_user)) {
-                users.add(role_user);
-            }
-        }
+        users.addAll(Arrays.asList(role_user_str));
 
         for (String role_user : role_user_str) {
             SuperUser user = this.findUserByUsername(role_user.trim());
@@ -253,8 +232,6 @@ public class LocalConfig implements IVerifyConfig {
 
     /**
      * 读取黑名单行内容
-     *
-     * @param _line
      */
     private void _load_config_line_blacks(String _line) {
         String[] line_str = _line.split("=");
@@ -267,19 +244,13 @@ public class LocalConfig implements IVerifyConfig {
             val = val.trim();
             switch (line_key) {
                 case "user":
-                    if (!this.blackUsers.contains(val)) {
-                        this.blackUsers.add(val);
-                    }
+                    this.blackUsers.add(val);
                     break;
                 case "role":
-                    if (!this.blackRoles.contains(val)) {
-                        this.blackRoles.add(val);
-                    }
+                    this.blackRoles.add(val);
                     break;
                 case "ip":
-                    if (!this.blackIps.contains(val)) {
-                        this.blackIps.add(val);
-                    }
+                    this.blackIps.add(val);
                     break;
             }
         }
@@ -301,9 +272,9 @@ public class LocalConfig implements IVerifyConfig {
 
     public void writeConfig() {
         String cfg_file = CommonConfig.get("spring.config.location", "config/");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String line : cfgLines) {
-            sb.append(line + "\r\n");
+            sb.append(line).append("\r\n");
         }
         try {
             ProjectFileUtil.write(sb.toString(), ProjectFileUtil.classpath() + "/" + cfg_file + "verify.cfg", false);
@@ -350,7 +321,7 @@ public class LocalConfig implements IVerifyConfig {
             if (line.startsWith("#")) {
                 continue;
             }
-            if (line.indexOf("=") == -1) {
+            if (!line.contains("=")) {
                 continue;
             }
             String[] o_item = line.split("=");
@@ -373,7 +344,7 @@ public class LocalConfig implements IVerifyConfig {
             if (line.startsWith("#")) {
                 continue;
             }
-            if (line.indexOf("=") == -1) {
+            if (!line.contains("=")) {
                 continue;
             }
             String[] o_item = line.split("=");
@@ -399,13 +370,14 @@ public class LocalConfig implements IVerifyConfig {
             if (_item.equalsIgnoreCase("admin")) {
                 no_access = true;
             }
-        } else if (_name.equalsIgnoreCase("black")) {
-
-        } else if (_name.equalsIgnoreCase("*")) {
-
-        } else if (_name.equalsIgnoreCase("/")) {
-
         }
+//        else if (_name.equalsIgnoreCase("black")) {
+//            // 跳过检查
+//        } else if (_name.equalsIgnoreCase("*")) {
+//            // TODO
+//        } else if (_name.equalsIgnoreCase("/")) {
+//
+//        }
         if (no_access) {
             throw new Exception("该项目不允许删除：" + _name + "->" + _item);
         }
@@ -416,7 +388,7 @@ public class LocalConfig implements IVerifyConfig {
             if (line.startsWith("#")) {
                 continue;
             }
-            if (line.indexOf("=") == -1) {
+            if (!line.contains("=")) {
                 continue;
             }
             String[] o_item = line.split("=");
@@ -468,8 +440,7 @@ public class LocalConfig implements IVerifyConfig {
 
     @Override
     public SuperUser findUserByUsername(String _username) {
-        SuperUser user = this.users.getOrDefault(_username.trim().toLowerCase(), null);
-        return user;
+        return this.users.getOrDefault(_username.trim().toLowerCase(), null);
     }
 
     @Override

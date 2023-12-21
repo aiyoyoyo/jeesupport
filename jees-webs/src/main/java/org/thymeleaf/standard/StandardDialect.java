@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class StandardDialect extends AbstractProcessorDialect implements IExecutionAttributeDialect, IExpressionObjectDialect {
     public static final String NAME = "Standard";
     public static final String PREFIX = "th";
@@ -110,7 +111,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
     }
 
     public Map<String, Object> getExecutionAttributes() {
-        Map<String, Object> executionAttributes = new HashMap(5, 1.0F);
+        Map<String, Object> executionAttributes = new HashMap<>(5, 1.0F);
         executionAttributes.put("StandardVariableExpressionEvaluator", this.getVariableExpressionEvaluator());
         executionAttributes.put("StandardExpressionParser", this.getExpressionParser());
         executionAttributes.put("StandardConversionService", this.getConversionService());
@@ -132,7 +133,7 @@ public class StandardDialect extends AbstractProcessorDialect implements IExecut
     }
 
     public static Set<IProcessor> createStandardProcessorsSet(String dialectPrefix) {
-        Set<IProcessor> processors = new LinkedHashSet();
+        Set<IProcessor> processors = new LinkedHashSet<>();
         processors.add(new StandardActionTagProcessor(dialectPrefix));
         processors.add(new StandardAltTitleTagProcessor(dialectPrefix));
         processors.add(new StandardAssertTagProcessor(TemplateMode.HTML, dialectPrefix));

@@ -7,6 +7,7 @@ import com.jees.webs.core.service.SecurityService;
 import com.jees.webs.modals.dwr.config.DwrConfig;
 import com.jees.webs.modals.templates.service.TemplateService;
 import com.jees.webs.security.service.AuthenticationProviderService;
+import com.jees.webs.security.service.SecurityManagerService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +19,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Objects;
+
 /**
  * Spring security核心配置项
  *
  * @author aiyoyoyo
  */
+@SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection", "rawtypes"})
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Log4j2
@@ -35,8 +39,6 @@ public class WebSecurityConfig {
     SecurityService securityService;
     @Autowired
     AuthenticationProviderService authenticationProviderService;
-    @Autowired
-    SessionRegistry sessionRegistry;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity _hs) throws Exception {
@@ -44,7 +46,7 @@ public class WebSecurityConfig {
             _hs.headers().frameOptions().disable();
         }
         _hs.sessionManagement().maximumSessions(CommonConfig.getInteger("jees.webs.maxSession", 1000))
-                .sessionRegistry(sessionRegistry);
+                .sessionRegistry(Objects.requireNonNull(CommonContextHolder.getBean(SecurityManagerService.class)).getSessionRegistry());
 
         if (CommonConfig.getBoolean("jees.webs.security.cross", false)) {
             _hs.csrf().ignoringAntMatchers("/**");
@@ -55,7 +57,7 @@ public class WebSecurityConfig {
         dwrConfig.setHttpSecurity(_hs);
         if (securityService.isEnable()) {
             TemplateService templateService = CommonContextHolder.getBean( TemplateService.class );
-            templateService.setHttpSecurity(_hs);
+            Objects.requireNonNull(templateService).setHttpSecurity(_hs);
             securityService.setHttpSecurity(_hs);
         } else {
             log.warn("服务器未启用安全访问，默认可以访问所有页面文件！");
@@ -66,12 +68,11 @@ public class WebSecurityConfig {
 
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity _hs) throws Exception {
-        AuthenticationManager auth_mgr = _hs.getSharedObject(AuthenticationManagerBuilder.class)
+        return _hs.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(securityService)
                 .and()
                 .build();
-        return auth_mgr;
     }
 
     @Bean
