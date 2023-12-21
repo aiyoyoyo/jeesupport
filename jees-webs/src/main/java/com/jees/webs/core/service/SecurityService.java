@@ -72,7 +72,7 @@ public class SecurityService implements PasswordEncoder {
                 .logoutSuccessHandler(service.getSecurityLogoutSuccessHandler())
                 .logoutSuccessUrl(login_page)
                 .permitAll()
-                .and().formLogin().loginPage(login_page).loginProcessingUrl(login_page)
+                .and().formLogin().loginPage(login_page)
                 .successHandler(service.getSecurityAuthenticationSuccessHandler())
                 .failureHandler(service.getSecurityAuthenticationFailureHandler()).permitAll()
                 .and().authorizeRequests().anyRequest().access("@" + verify_service + ".validate(request, authentication )")
