@@ -136,7 +136,7 @@ public class SecurityService implements PasswordEncoder {
                 log.debug("--登陆后转向：" + redirect_url);
             }
             if (redirect_url == null) {// 默认跳转首页
-                redirectStrategy().sendRedirect(_request, _response, "/");
+                redirectStrategy().sendRedirect(_request, _response, CommonConfig.get("jees.webs.security.index", "/"));
             } else {
                 _response.sendRedirect(redirect_url);
             }

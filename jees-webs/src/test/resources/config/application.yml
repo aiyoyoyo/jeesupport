@@ -77,6 +77,7 @@ jees:
    superman: superman
    superpwd: 6
    encodePwd: true
+   index: /
    login: login
    logout: logout
    # *全局匿名可以访问的url
