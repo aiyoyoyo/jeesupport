@@ -10,6 +10,8 @@ import lombok.Setter;
 public class ServerMessage {
     int code;
     String desc;
+    String message;
+    String helper;
 
     public ServerMessage() {
     }
@@ -21,6 +23,7 @@ public class ServerMessage {
     public void setCode(int code) {
         this.code = code;
         this.desc = ICodeDefine.getCodeDesc(code);
+        this.message = ICodeDefine.getCodeDesc(code);
     }
 
     @Override
