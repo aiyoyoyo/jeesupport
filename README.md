@@ -10,6 +10,10 @@
      * 优化了页面访问配置
      * 增加可以自定义后台首页的机制
      * 优化了一些配置项的实现机制
+4. 排除依赖命令参考
+   * dependency:analyze -f pom.xml
+   * [Used undeclared dependencies found] pom.xml的使用了以下包，但是来自其他依赖包，可以在模块pom文件里显式声明
+   * [Unused declared dependencies found] pom.xml下没有内容使用以下包，可以将pom文件中的依赖移除
 
 ## 内容介绍
 

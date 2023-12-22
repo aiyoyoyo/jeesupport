@@ -57,6 +57,7 @@
         <sqlite.version>3.44.1.0</sqlite.version><!-- 最新版本依然存在风险 -->
         <snakeyaml.version>2.2</snakeyaml.version>
         <protobuf-java.version>3.25.1</protobuf-java.version>
+        <spring.version>6.1.2</spring.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -414,6 +415,17 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf-java.version}</version>
+            </dependency>
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
