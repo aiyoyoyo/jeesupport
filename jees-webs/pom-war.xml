@@ -10,7 +10,6 @@
         <version>1.7.3</version>
     </parent>
 
-    <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jees-webs</artifactId>
     <name>Jeesupport Website</name>
     <description>Jees with SpringBoot Support</description>
@@ -140,7 +139,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
