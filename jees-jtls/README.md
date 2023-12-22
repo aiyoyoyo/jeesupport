@@ -32,8 +32,9 @@
 > DataTest 数据转换测试类
 
 ## 更新历史
+### 新版本内容统一放在根目录README记录 <font color='red'>新</font>
 
-### 1.3.0-SNAPSHOT <font color='red'>新版本</font>
+### 1.3.0-SNAPSHOT 
 
 1. 使用标准目录结构构建项目
 2. 修正CommonConfig的部分函数使用的问题

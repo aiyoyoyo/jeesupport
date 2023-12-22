@@ -122,6 +122,7 @@ clean package -pom-war.xml
 2. 动态获取相对路径寻找更好的写法
 
 ## 更新历史
+### 新版本内容统一放在根目录README记录
 
 ### 1.7.0 <font color='red'>新版本</font>
 

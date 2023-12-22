@@ -102,8 +102,9 @@ public class MyController{
   AbsSupportDao调整为基于Hibernate5版本的操作方式。详情参考TestController的absTest方法。
 
 ## 更新内容
+### 新版本内容统一放在根目录README记录 <font color='red'>新</font>
 
-### 1.5.0-SNAPSHOT <font color='red'>新版本</font>
+### 1.5.0-SNAPSHOT 
 
 1. 增加了SqlServer链接方式，需要启用分布式事务支持
 2.

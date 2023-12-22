@@ -6,7 +6,7 @@
 
     <groupId>com.github.aiyoyoyo</groupId>
     <artifactId>jeesupport</artifactId>
-    <version>1.7.2</version>
+    <version>1.7.3</version>
     <name>Jeesupport Boot</name>
     <description>Jees with SpringBoot Support</description>
     <url>https://github.com/aiyoyoyo/jeesupport/tree/master/${project.artifactId}</url>
@@ -31,31 +31,32 @@
         <!-- Jees配置 -->
         <jees.groupId>com.github.aiyoyoyo</jees.groupId>
         <jees.artifactId>jeesupport</jees.artifactId>
-        <jees.version>1.7.2</jees.version>
+        <jees.version>1.7.3</jees.version>
         <jees.url>http://www.jeesupport.com</jees.url>
         <jees.scm>scm:git:git@github.com:aiyoyoyo</jees.scm>
         <jees.scm.url>scm:git:git@github.com:aiyoyoyo/jeesupport.git</jees.scm.url>
-        <spring.boot.version>2.7.17</spring.boot.version>
-        <extras.sec.version>3.0.4.RELEASE</extras.sec.version>
-        <mysql.version>5.1.44</mysql.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
+        <extras.sec.version>3.0.5.RELEASE</extras.sec.version>
+        <mysql.version>8.0.30</mysql.version>
         <mysql5.version>5.1.44</mysql5.version>
         <mysql8.version>8.0.30</mysql8.version>
-        <jodatime.version>2.12.2</jodatime.version>
-        <lombok.version>1.18.26</lombok.version>
-        <netty.version>4.1.90.Final</netty.version>
-        <commons.io.version>2.11.0</commons.io.version>
-        <commons.pool2.version>2.11.1</commons.pool2.version>
-        <commons.lang3.version>3.12.0</commons.lang3.version>
-        <commons.compress.version>1.22</commons.compress.version>
-        <fastjson.version>2.0.22</fastjson.version>
-        <protostuff.version>1.7.2</protostuff.version>
+        <mysqlj.version>8.2.0</mysqlj.version>
+        <jodatime.version>2.12.5</jodatime.version>
+        <lombok.version>1.18.30</lombok.version>
+        <netty.version>4.1.104.Final</netty.version>
+        <commons.io.version>2.15.1</commons.io.version>
+        <commons.pool2.version>2.12.0</commons.pool2.version>
+        <commons.lang3.version>3.14.0</commons.lang3.version>
+        <commons.compress.version>1.25.0</commons.compress.version>
+        <fastjson.version>2.0.43</fastjson.version>
+        <protostuff.version>1.8.0</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
-        <oracle.version>19.3.0.0</oracle.version>
-        <sqlserver.version>11.2.2.jre8</sqlserver.version>
-        <ucanaccess.version>4.0.1</ucanaccess.version>
-        <sqlite.version>3.43.2.1</sqlite.version>
-        <snakeyaml.version>2.0</snakeyaml.version>
-        <protobuf-java.version>3.22.2</protobuf-java.version>
+        <oracle.version>19.21.0.0</oracle.version>
+        <sqlserver.version>12.5.0.jre8-preview</sqlserver.version>
+        <ucanaccess.version>5.0.1</ucanaccess.version><!-- 最新版本依然存在风险 -->
+        <sqlite.version>3.44.1.0</sqlite.version><!-- 最新版本依然存在风险 -->
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <protobuf-java.version>3.25.1</protobuf-java.version>
     </properties>
     <!-- OSS配置，用于Maven Central -->
     <!-- 1. 账户见Setting.xml, 2. profiles用于公网下载 -->
@@ -381,12 +382,22 @@
                 <artifactId>dwr</artifactId>
                 <version>${dwr.version}</version>
             </dependency>
-            <!-- Mysql -->
+            <!-- mysql -->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql8.version}</version>
-                <!--                <version>${mysql5.version}</version>-->
+            </dependency>
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysqlj.version}</version>
+            </dependency>
+            <!-- oracle -->
+            <dependency>
+                <groupId>com.oracle.database.jdbc</groupId>
+                <artifactId>ojdbc10</artifactId>
+                <version>${oracle.version}</version>
             </dependency>
             <!-- SQLite -->
             <dependency>
