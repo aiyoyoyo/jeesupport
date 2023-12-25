@@ -1,5 +1,6 @@
 package com.jees.core.database.repository;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

@@ -1,7 +1,5 @@
 package com.jees.tool.crypto;
-
 import org.springframework.util.DigestUtils;
-
 /**
  * 通过MD5方式，对文本内容进行加密
  *
