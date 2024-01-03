@@ -54,6 +54,10 @@ public class WebSecurityConfig {
             _hs.csrf().disable();
         }
 
+        if (CommonConfig.getBoolean("jees.webs.cache.enable", false)) {
+            _hs.headers().cacheControl().disable();
+        }
+
         dwrConfig.setHttpSecurity(_hs);
         if (securityService.isEnable()) {
             TemplateService templateService = CommonContextHolder.getBean( TemplateService.class );
