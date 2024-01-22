@@ -115,7 +115,7 @@ public class SessionFactoryRegistry {
                     _get_config(_prop, head + "url", null)
             );
             xaDataSource.setXaDataSourceClassName(
-                    _get_config(_prop, head + "xaDataSourceClassName", null)
+                    _get_config(_prop, head + "xaDataSourceClassName", "oracle.jdbc.xa.client.OracleXADataSource")
             );
             test_query = _get_config(_prop, head + "testQuery", "SELECT 1 FROM dual");
         } else if (type.equalsIgnoreCase("sqlserver")) {
