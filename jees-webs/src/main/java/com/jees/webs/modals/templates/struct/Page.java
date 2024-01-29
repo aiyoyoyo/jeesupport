@@ -26,6 +26,10 @@ public class Page {
      */
     private String filepath;
     /**
+     * 文件后缀
+     */
+    private String fileSuffix;
+    /**
      * 所属模板
      */
     private String tpl;

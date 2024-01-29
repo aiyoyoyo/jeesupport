@@ -110,11 +110,11 @@ public class TemplateService implements ISupportEL {
                 if (r_path.startsWith("_")) continue;
                 if (r_path.contains("/_")) continue;
                 if (r_path.startsWith("/")) r_path = r_path.substring(1);
-                log.debug("页面文件路径:" + r_path);
-
                 String[] path_arr = r_path.split("/");
                 StringBuilder page_url = null;
                 String page_file = null;
+                String page_suffix = path_arr[path_arr.length - 1];
+
                 StringBuilder page_path = null;
                 for (int i = 0; i < path_arr.length; i++) {
                     String path = path_arr[i];
@@ -138,12 +138,25 @@ public class TemplateService implements ISupportEL {
                     }
                     page_file = path;
                 }
+
+                String url = Objects.requireNonNull(page_url).toString();
+                String path = page_path.toString();
+                // 修正一些url的使用问题
+                if( page_suffix.contains(".html") ){
+                    // 是页面路径不处理
+                    page_suffix = ".html";
+                }else{
+                    page_suffix = "." + page_suffix.split("\\.")[1];
+                    url += "/" + page_suffix;
+                }
+                log.debug("页面文件路径:{}->{}", url, path);
                 Page page = new Page();
                 page.setTpl(_tpl);
-                page.setUrl(Objects.requireNonNull(page_url).toString());
-                page.setPath(page_path.toString());
+                page.setUrl(url);
+                page.setPath(path);
                 page.setFilepath(r_path);
                 page.setFilename(page_file);
+                page.setFileSuffix(page_suffix);
 
                 tpl_pages.put(page.getUrl(), page);
             } catch (Exception e) {
@@ -226,6 +239,12 @@ public class TemplateService implements ISupportEL {
             _hs.authorizeRequests().antMatchers("/" + t.getName() + "/" + t.getAssets() + "/**").permitAll();
             if (this.isDefault(t.getName())) {
                 _hs.authorizeRequests().antMatchers("/" + t.getAssets() + "/**").permitAll();
+            }
+        }
+        String[] suffixes = CommonConfig.getArray("jees.webs.security.suffix", String.class);
+        if( suffixes != null ) {
+            for (String suffix : suffixes) {
+                _hs.authorizeRequests().antMatchers("/**/*" + suffix).permitAll();
             }
         }
     }
