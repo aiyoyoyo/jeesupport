@@ -1,0 +1,105 @@
+#日志配置，此处使用默认日志
+logging:
+ config: classpath:config/log4j2.xml
+
+spring:
+ application:
+  name: jees-jdbs-test
+ # Redis数据库索引（默认为0）
+ autoconfigure:
+  exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+ config:
+  location: /
+ devtools:
+  restart:
+   enabled: false
+ redis:
+  enable: false
+ main:
+  register-shutdown-hook: false
+
+jees:
+ jdbs:
+  localdb:
+   enable: true
+   name: localdb
+  enable: false
+  redis: false
+  dataSources: localdb
+  trans:
+   timeout: 3000
+   allowCustomIsolationLevels: true
+  config:
+   ### SQLite ###
+   localdb:
+    dbtype: sqlite
+    orm: hibernate
+    user:
+    password:
+    url: jdbc:sqlite:./jees.webs.db
+    packagesToScan: com.jees.test.entity
+    uniqueResourceName: datasourceA
+    hibernate:
+     dialect: com.jees.core.database.dialect.SQLiteDialect
+     showSql: true
+     hbm2ddl: none
+### MySQL ###
+#   testa:
+#    dbtype: mysql8
+#    orm: hibernate
+#    user: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306
+#    uniqueResourceName: datasourceA
+#    pinGlobalTxToPhysicalConnection: true
+#    xaDataSourceClassName: com.mysql.cj.jdbc.MysqlXADataSource
+#    maxPoolSize: 30
+#    minPoolSize: 10
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
+#    hibernate:
+#      dialect: org.hibernate.dialect.MySQL8Dialect
+#    showSql: true
+#    factoryClass: org.hibernate.transaction.JTATransactionFactory
+#    # create/update/none
+#    hbm2ddl: none
+#    platform: com.jees.core.database.config.AtomikosJtaPlatform
+#    coordinatorClass: jta
+#   dynamic:
+#    dm_default:
+#     dbtype: mysql8
+#     orm: hibernate
+#     user: root
+#     password: root
+#     url: jdbc:mysql://localhost:3306
+#     uniqueResourceName: datasourceA
+#     pinGlobalTxToPhysicalConnection: true
+#     xaDataSourceClassName: com.mysql.cj.jdbc.MysqlXADataSource
+#     maxPoolSize: 30
+#     minPoolSize: 10
+#     maxIdleTime: 60
+#     packagesToScan: com.jees.test.entity
+#     hibernate:
+#      dialect: org.hibernate.dialect.MySQL8Dialect
+#     showSql: true
+#     factoryClass: org.hibernate.transaction.JTATransactionFactory
+#     # create/update/none
+#     hbm2ddl: none
+#     platform: com.jees.core.database.config.AtomikosJtaPlatform
+#     coordinatorClass: jta
+## 多数据库 ###
+#   testb:
+#    dbtype: mysql
+#    orm: hibernate
+#    user: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306/testb
+#    pinGlobalTxToPhysicalConnection: true
+#    uniqueResourceName: datasourceB
+#    xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+#    poolSize: 1
+#    maxPoolSize: 3
+#    minPoolSize: 1
+#    maxIdleTime: 60
+#    packagesToScan: com.jees.test.entity
+

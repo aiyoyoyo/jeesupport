@@ -592,6 +592,7 @@ public abstract class AbsSupportDao implements ISupportDao {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> selectByMap(String _db, String _table, Set<String> _column,
                                    Map _param, int _offset, int _limit, Class<T> _cls) {
@@ -604,106 +605,121 @@ public abstract class AbsSupportDao implements ISupportDao {
         if (type.equalsIgnoreCase("sqlite")) {
             db = "";
         }
-
-        String sql = "SELECT ";
-        // 生成column字段
-        if (_column != null && _column.size() > 0) {
-            for (String col : _column) {
-                sql += col + ",";
-            }
-            sql = sql.substring(0, sql.length() - 1);
-        } else {
-            sql += "*";
+        if(!_table.contains(".")){
+            _table = db + _table;
         }
-        sql += " FROM " + db + _table + " WHERE 1=1 ";
 
-        // 生成 where
-        if (_param != null && _param.size() > 0) {
-            Set<String> keys = _param.keySet();
-            for (String key : keys) {
-                if( key.equalsIgnoreCase("orderBy") ) continue;
-                if( key.equalsIgnoreCase("groupBy") ) continue;
-                // 生成where的值
-                Object value = _param.get(key);
-                if (value != null) {
-                    // 不判断 列是否存在, 仅排除特殊字段
-                    String sql_value = "";
-                    // 仅支持简单条件，以防字符串拼接注入
-                    if (value instanceof String) {
-                        String tmp_val = ((String) value).trim();
-                        // 特殊字符开头的处理
-                        if (tmp_val.startsWith("%") || tmp_val.endsWith("%") || tmp_val.startsWith("!%")) {
-                            if (tmp_val.startsWith("!%")) {
-                                tmp_val = " NOT LIKE " + tmp_val;
-                            } else {
-                                if (tmp_val.startsWith("'") && tmp_val.endsWith("'")) {
-                                    tmp_val = " LIKE " + tmp_val;
-                                } else {
-                                    tmp_val = " LIKE '" + tmp_val + "'";
-                                }
-                            }
-                        } else if (tmp_val.startsWith(">") || tmp_val.startsWith("<") || tmp_val.startsWith("=") || tmp_val.startsWith("!=")
-                                || tmp_val.toLowerCase().startsWith("not")) {
-                            // TODO 不做处理直接拼接，但是需要判定结尾是否合法 防止sql注入
-                            // not like 要重新
-                            // > >= < <= <> = 都需要限定是数字或者时间
-                        } else {
-                            // TODO 处理字符串中的特殊符号 # ' " 等
-                            tmp_val = " = '" + tmp_val + "'";
-                        }
-                        sql_value = tmp_val;
-                    } else if (value instanceof List || value instanceof Set || value.getClass().isArray()) {
-                        List<Object> list = toList(value);
-                        if (list.isEmpty()) {
-                        } else {
-                            sql_value += " IN (";
-                            String tmp_o = "";
-                            for (Object o : list) {
-                                if (o == null) {
-                                    continue;
-                                }
-                                if (o instanceof String) {
-                                    tmp_o += "'" + o + "',";
-                                } else if (o instanceof Integer || o instanceof Double
-                                        || o instanceof Float || o instanceof Boolean) {
-                                    tmp_o += o + ",";
-                                } else {
-                                    log.warn("--未支持的数据类型：" + o);
-                                }
-                            }
-                            sql_value += tmp_o.substring(0, tmp_o.length() - 1) + ")";
-                        }
-                    } else {
-                        // 仅限整型和布尔型
-                        sql_value = " = " + value;
-                    }
+        SQLBuilder builder = new SQLBuilder(type);
 
-                    // 这里仅列出  type == mysql;
-                    if (!sql_value.trim().isEmpty()) {
-                        switch (type) {
-                            case "sqlite":
-                                sql += " AND " + key + sql_value;
-                                break;
-                            case "mysql":
-                            default:
-                                sql += " AND " + "`" + key + "`" + sql_value;
-                                break;
-                        }
-                    }
-                } else {
-                    // 这里可能有2种情况，一种是查 is null 一种是不查，这里取不查
-                }
-            }
-            String groupBy = (String) _param.get("groupBy");
-            if (StringUtil.isNotEmpty(groupBy)) {
-                sql += " GROUP BY " + groupBy;
-            }
-            // 生成 order by
-            String order_by = (String) _param.get("orderBy");
-            if (StringUtil.isNotEmpty(order_by)) {
-                sql += " ORDER BY " + order_by;
-            }
-        }
+
+        builder.select(_column != null && !_column.isEmpty() ? _column.toArray(new String[0]) : new String[]{"*"})
+                .from(_table)
+                .where(_param)
+                .groupBy((String) _param.get("groupBy"))
+                .orderBy((String) _param.get("orderBy"));
+
+        String sql = builder.build();
+
+
+//        String sql = "SELECT ";
+//        // 生成column字段
+//        if (_column != null && _column.size() > 0) {
+//            for (String col : _column) {
+//                sql += col + ",";
+//            }
+//            sql = sql.substring(0, sql.length() - 1);
+//        } else {
+//            sql += "*";
+//        }
+//        sql += " FROM " + db + _table + " WHERE 1=1 ";
+//
+//        // 生成 where
+//        if (_param != null && _param.size() > 0) {
+//            Set<String> keys = _param.keySet();
+//            for (String key : keys) {
+//                if( key.equalsIgnoreCase("orderBy") ) continue;
+//                if( key.equalsIgnoreCase("groupBy") ) continue;
+//                // 生成where的值
+//                Object value = _param.get(key);
+//                if (value != null) {
+//                    // 不判断 列是否存在, 仅排除特殊字段
+//                    String sql_value = "";
+//                    // 仅支持简单条件，以防字符串拼接注入
+//                    if (value instanceof String) {
+//                        String tmp_val = ((String) value).trim();
+//                        // 特殊字符开头的处理
+//                        if (tmp_val.startsWith("%") || tmp_val.endsWith("%") || tmp_val.startsWith("!%")) {
+//                            if (tmp_val.startsWith("!%")) {
+//                                tmp_val = " NOT LIKE " + tmp_val;
+//                            } else {
+//                                if (tmp_val.startsWith("'") && tmp_val.endsWith("'")) {
+//                                    tmp_val = " LIKE " + tmp_val;
+//                                } else {
+//                                    tmp_val = " LIKE '" + tmp_val + "'";
+//                                }
+//                            }
+//                        } else if (tmp_val.startsWith(">") || tmp_val.startsWith("<") || tmp_val.startsWith("=") || tmp_val.startsWith("!=")
+//                                || tmp_val.toLowerCase().startsWith("not")) {
+//                            // TODO 不做处理直接拼接，但是需要判定结尾是否合法 防止sql注入
+//                            // not like 要重新
+//                            // > >= < <= <> = 都需要限定是数字或者时间
+//                        } else {
+//                            // TODO 处理字符串中的特殊符号 # ' " 等
+//                            tmp_val = " = '" + tmp_val + "'";
+//                        }
+//                        sql_value = tmp_val;
+//                    } else if (value instanceof List || value instanceof Set || value.getClass().isArray()) {
+//                        List<Object> list = toList(value);
+//                        if (list.isEmpty()) {
+//                        } else {
+//                            sql_value += " IN (";
+//                            String tmp_o = "";
+//                            for (Object o : list) {
+//                                if (o == null) {
+//                                    continue;
+//                                }
+//                                if (o instanceof String) {
+//                                    tmp_o += "'" + o + "',";
+//                                } else if (o instanceof Integer || o instanceof Double
+//                                        || o instanceof Float || o instanceof Boolean) {
+//                                    tmp_o += o + ",";
+//                                } else {
+//                                    log.warn("--未支持的数据类型：" + o);
+//                                }
+//                            }
+//                            sql_value += tmp_o.substring(0, tmp_o.length() - 1) + ")";
+//                        }
+//                    } else {
+//                        // 仅限整型和布尔型
+//                        sql_value = " = " + value;
+//                    }
+//
+//                    // 这里仅列出  type == mysql;
+//                    if (!sql_value.trim().isEmpty()) {
+//                        switch (type) {
+//                            case "sqlite":
+//                                sql += " AND " + key + sql_value;
+//                                break;
+//                            case "mysql":
+//                            default:
+//                                sql += " AND " + "`" + key + "`" + sql_value;
+//                                break;
+//                        }
+//                    }
+//                } else {
+//                    // 这里可能有2种情况，一种是查 is null 一种是不查，这里取不查
+//                }
+//            }
+//            String groupBy = (String) _param.get("groupBy");
+//            if (StringUtil.isNotEmpty(groupBy)) {
+//                sql += " GROUP BY " + groupBy;
+//            }
+//            // 生成 order by
+//            String order_by = (String) _param.get("orderBy");
+//            if (StringUtil.isNotEmpty(order_by)) {
+//                sql += " ORDER BY " + order_by;
+//            }
+//        }
 
         log.debug("生成查询语句：" + sql);
         // TODO sql的替换字符串拼接
