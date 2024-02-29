@@ -47,7 +47,7 @@
         <commons.io.version>2.15.1</commons.io.version>
         <commons.pool2.version>2.12.0</commons.pool2.version>
         <commons.lang3.version>3.14.0</commons.lang3.version>
-        <commons.compress.version>1.25.0</commons.compress.version>
+        <commons.compress.version>1.26.0</commons.compress.version>
         <fastjson.version>2.0.43</fastjson.version>
         <protostuff.version>1.8.0</protostuff.version>
         <dwr.version>3.0.2-RELEASE</dwr.version>
