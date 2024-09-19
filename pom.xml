@@ -56,7 +56,7 @@
         <ucanaccess.version>5.0.1</ucanaccess.version><!-- 最新版本依然存在风险 -->
         <sqlite.version>3.44.1.0</sqlite.version><!-- 最新版本依然存在风险 -->
         <snakeyaml.version>2.2</snakeyaml.version>
-        <protobuf-java.version>3.25.1</protobuf-java.version>
+        <protobuf-java.version>3.25.5</protobuf-java.version>
         <spring.version>5.3.31</spring.version>
         <hibernate.version>5.6.15.Final</hibernate.version>
     </properties>
